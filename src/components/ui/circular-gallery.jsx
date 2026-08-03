@@ -214,6 +214,11 @@ export const CircularGallery = React.forwardRef(
                     src={item.photo.url}
                     alt={item.photo.text}
                     draggable="false"
+                    onError={(e) => {
+                      if (item.photo.fallback && e.currentTarget.src !== item.photo.fallback) {
+                        e.currentTarget.src = item.photo.fallback;
+                      }
+                    }}
                     style={{
                       position: 'absolute',
                       inset: 0,
