@@ -255,3 +255,33 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #a1a1a6;
 }
+
+/* --- Text Stroke Light Beam Animation --- */
+@keyframes strokeBeam {
+  0% {
+    stroke-dashoffset: 1400;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-stroke-beam {
+  stroke-dasharray: 250 500;
+  animation: strokeBeam 6s linear infinite;
+}
+
+@keyframes lightPulseGlow {
+  0%, 100% {
+    opacity: 0.75;
+    filter: drop-shadow(0 0 15px rgba(0, 102, 204, 0.6));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 35px rgba(60, 162, 250, 0.95));
+  }
+}
+
+.animate-glow-pulse {
+  animation: lightPulseGlow 3.5s ease-in-out infinite;
+}

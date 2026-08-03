@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, Compass } from 'lucide-react';
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 export const CircularGallery = React.forwardRef(
-  ({ items, className, radius = 560, autoRotateSpeed = 0.015, ...props }, ref) => {
+  ({ items, className, radius = 560, autoRotateSpeed = 0.06, ...props }, ref) => {
     const [rotation, setRotation] = useState(0);
     const [isInteracting, setIsInteracting] = useState(false);
 
@@ -22,7 +22,7 @@ export const CircularGallery = React.forwardRef(
       const handleWheel = (e) => {
         e.preventDefault();
         setIsInteracting(true);
-        setRotation((prev) => prev + e.deltaY * 0.12);
+        setRotation((prev) => prev + e.deltaY * 0.18);
       };
 
       el.addEventListener('wheel', handleWheel, { passive: false });
@@ -41,12 +41,12 @@ export const CircularGallery = React.forwardRef(
       if (!isDraggingRef.current) return;
       const currentX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
       const diff = currentX - startXRef.current;
-      setRotation(startRotationRef.current - diff * 0.25);
+      setRotation(startRotationRef.current - diff * 0.35);
     };
 
     const handleMouseUp = () => {
       isDraggingRef.current = false;
-      setTimeout(() => setIsInteracting(false), 2500);
+      setTimeout(() => setIsInteracting(false), 1200);
     };
 
     // Auto-rotate when idle
@@ -72,13 +72,13 @@ export const CircularGallery = React.forwardRef(
     const handleNext = () => {
       setIsInteracting(true);
       setRotation((prev) => prev - anglePerItem);
-      setTimeout(() => setIsInteracting(false), 2500);
+      setTimeout(() => setIsInteracting(false), 1000);
     };
 
     const handlePrev = () => {
       setIsInteracting(true);
       setRotation((prev) => prev + anglePerItem);
-      setTimeout(() => setIsInteracting(false), 2500);
+      setTimeout(() => setIsInteracting(false), 1000);
     };
 
     return (
@@ -160,7 +160,7 @@ export const CircularGallery = React.forwardRef(
           style={{
             transform: `rotateY(${rotation}deg)`,
             transformStyle: 'preserve-3d',
-            transition: isDraggingRef.current ? 'none' : 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+            transition: isDraggingRef.current ? 'none' : 'transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)'
           }}
         >
           {items.map((item, i) => {
@@ -191,7 +191,7 @@ export const CircularGallery = React.forwardRef(
                   marginTop: '-190px',
                   opacity: opacity,
                   visibility: opacity < 0.05 ? 'hidden' : 'visible',
-                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                  transition: 'all 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
                   backfaceVisibility: 'hidden',
                   cursor: 'grab',
                   zIndex: isCenter ? 30 : 10
