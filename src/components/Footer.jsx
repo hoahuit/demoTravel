@@ -24,22 +24,23 @@ export default function Footer() {
   ];
 
   return (
+
     <footer style={{ padding: 0, margin: 0, width: '100%', position: 'relative', overflow: 'hidden' }} id="about">
-      
+
       {/* 100% Full-Width Edge-to-Edge Glassmorphic Container */}
-      <div 
+      <div
+        className="footer-inner-card"
         style={{
           position: 'relative',
           width: '100%',
           background: 'rgba(15, 15, 17, 0.98)',
-          padding: '64px 60px 40px',
           boxShadow: '0 -20px 60px rgba(0, 0, 0, 0.3)',
           borderTop: '1px solid rgba(255, 255, 255, 0.1)',
           color: '#ffffff'
         }}
       >
         {/* Radial Ambient Glow Background */}
-        <div 
+        <div
           style={{
             position: 'absolute',
             inset: 0,
@@ -57,14 +58,14 @@ export default function Footer() {
             gap: '48px',
             paddingBottom: '48px'
           }}>
-            
+
             {/* Col 1: Brand & Bio */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <img 
-                  src="/images/logo.png" 
-                  alt="4U Tours Logo" 
-                  style={{ height: '48px', width: 'auto', objectFit: 'contain' }} 
+                <img
+                  src="/images/logo.png"
+                  alt="4U Tours Logo"
+                  style={{ height: '48px', width: 'auto', objectFit: 'contain' }}
                 />
               </div>
 
@@ -90,8 +91,8 @@ export default function Footer() {
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {['Company History', 'Meet the Team', 'International License', 'Private Van Fleet', 'Careers'].map((item, i) => (
                   <li key={i}>
-                    <a 
-                      href="#" 
+                    <a
+                      href="#"
                       style={{ color: '#a1a1a6', textDecoration: 'none', fontSize: '0.92rem', transition: 'color 0.2s ease' }}
                       onMouseEnter={(e) => e.target.style.color = '#3ca2fa'}
                       onMouseLeave={(e) => e.target.style.color = '#a1a1a6'}
@@ -164,7 +165,7 @@ export default function Footer() {
 
           {/* Accordion Partner Directory */}
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '24px', paddingBottom: '24px' }}>
-            <button 
+            <button
               onClick={() => setShowPartners(!showPartners)}
               style={{
                 background: 'none',
@@ -224,17 +225,14 @@ export default function Footer() {
               </a>
             </div>
 
-            <div>
-              © 2026 <strong>4U Tours</strong>. All rights reserved. International Tour Operator License No. 79-367 / 2012.
-            </div>
           </div>
 
           {/* ULTRA PROMINENT ANIMATED STROKE LIGHT WATERMARK "4U TOURS" */}
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            marginTop: '56px', 
-            marginBottom: '-20px', 
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: '56px',
+            marginBottom: '-20px',
             position: 'relative',
             cursor: 'pointer'
           }}>
@@ -248,34 +246,34 @@ export default function Footer() {
               </defs>
 
               {/* Layer 1: Base Outline */}
-              <text 
-                x="50%" 
-                y="50%" 
-                textAnchor="middle" 
-                dominantBaseline="middle" 
-                fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" 
-                fontSize="115" 
-                fontWeight="900" 
-                stroke="rgba(255, 255, 255, 0.18)" 
-                strokeWidth="1.5" 
-                fill="none" 
+              <text
+                x="50%"
+                y="50%"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif"
+                fontSize="115"
+                fontWeight="900"
+                stroke="rgba(255, 255, 255, 0.18)"
+                strokeWidth="1.5"
+                fill="none"
                 letterSpacing="16"
               >
                 4U TOURS
               </text>
 
               {/* Layer 2: Animated Continuous Light Beam Stroke Along Letters */}
-              <text 
-                x="50%" 
-                y="50%" 
-                textAnchor="middle" 
-                dominantBaseline="middle" 
-                fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" 
-                fontSize="115" 
-                fontWeight="900" 
-                stroke="#3ca2fa" 
-                strokeWidth="3" 
-                fill="none" 
+              <text
+                x="50%"
+                y="50%"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif"
+                fontSize="115"
+                fontWeight="900"
+                stroke="#3ca2fa"
+                strokeWidth="3"
+                fill="none"
                 letterSpacing="16"
                 className="animate-stroke-beam animate-glow-pulse"
               >
@@ -283,15 +281,15 @@ export default function Footer() {
               </text>
 
               {/* Layer 3: High Density Glowing Fill Text */}
-              <text 
-                x="50%" 
-                y="50%" 
-                textAnchor="middle" 
-                dominantBaseline="middle" 
-                fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" 
-                fontSize="115" 
-                fontWeight="900" 
-                fill="url(#textLightGradient)" 
+              <text
+                x="50%"
+                y="50%"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fontFamily="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif"
+                fontSize="115"
+                fontWeight="900"
+                fill="url(#textLightGradient)"
                 letterSpacing="16"
                 style={{ opacity: 0.15, filter: 'blur(1px)' }}
               >

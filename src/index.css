@@ -26,7 +26,9 @@
 }
 
 /* --- Base & Reset --- */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -92,20 +94,46 @@ body {
   gap: 24px;
 }
 
-.bento-col-12 { grid-column: span 12; }
-.bento-col-8 { grid-column: span 8; }
-.bento-col-7 { grid-column: span 7; }
-.bento-col-6 { grid-column: span 6; }
-.bento-col-5 { grid-column: span 5; }
-.bento-col-4 { grid-column: span 4; }
-.bento-col-3 { grid-column: span 3; }
+.bento-col-12 {
+  grid-column: span 12;
+}
+
+.bento-col-8 {
+  grid-column: span 8;
+}
+
+.bento-col-7 {
+  grid-column: span 7;
+}
+
+.bento-col-6 {
+  grid-column: span 6;
+}
+
+.bento-col-5 {
+  grid-column: span 5;
+}
+
+.bento-col-4 {
+  grid-column: span 4;
+}
+
+.bento-col-3 {
+  grid-column: span 3;
+}
 
 /* Responsive Bento Grid */
 @media (max-width: 992px) {
-  .bento-col-8, .bento-col-7, .bento-col-6, .bento-col-5 {
+
+  .bento-col-8,
+  .bento-col-7,
+  .bento-col-6,
+  .bento-col-5 {
     grid-column: span 12;
   }
-  .bento-col-4, .bento-col-3 {
+
+  .bento-col-4,
+  .bento-col-3 {
     grid-column: span 6;
   }
 }
@@ -114,7 +142,9 @@ body {
   .bento-grid {
     gap: 16px;
   }
-  .bento-col-4, .bento-col-3 {
+
+  .bento-col-4,
+  .bento-col-3 {
     grid-column: span 12;
   }
 }
@@ -215,6 +245,7 @@ body {
     opacity: 0;
     transform: scale(0.96) translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -227,8 +258,13 @@ body {
 
 /* --- Infinite Slider Animation --- */
 @keyframes infiniteScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-33.333%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-33.333%);
+  }
 }
 
 .infinite-slider-track {
@@ -245,13 +281,16 @@ body {
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--apple-bg);
 }
+
 ::-webkit-scrollbar-thumb {
   background: #d1d1d6;
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #a1a1a6;
 }
@@ -261,6 +300,7 @@ body {
   0% {
     stroke-dashoffset: 1400;
   }
+
   100% {
     stroke-dashoffset: 0;
   }
@@ -272,10 +312,13 @@ body {
 }
 
 @keyframes lightPulseGlow {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.75;
     filter: drop-shadow(0 0 15px rgba(0, 102, 204, 0.6));
   }
+
   50% {
     opacity: 1;
     filter: drop-shadow(0 0 35px rgba(60, 162, 250, 0.95));
@@ -284,4 +327,212 @@ body {
 
 .animate-glow-pulse {
   animation: lightPulseGlow 3.5s ease-in-out infinite;
+}
+
+/* ============================================
+   COMPREHENSIVE MOBILE RESPONSIVE SYSTEM
+   ============================================ */
+
+/* Base Container & Footer Padding */
+.footer-inner-card {
+  padding: 64px 60px 40px;
+}
+
+.audience-section {
+  padding: 140px 0 0px;
+  position: relative;
+  z-index: 5;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+.testimonials-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Header Display Rules */
+.desktop-nav {
+  display: flex;
+}
+
+.mobile-toggle-btn {
+  display: none;
+}
+
+/* On Tablet & Mobile (<1024px) */
+@media (max-width: 1024px) {
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .mobile-toggle-btn {
+    display: flex !important;
+  }
+
+  .hide-mobile {
+    display: none !important;
+  }
+
+  .header-inner {
+    padding: 0 16px !important;
+  }
+
+  .search-btn {
+    padding: 8px 10px !important;
+  }
+
+  .apple-container {
+    padding: 0 24px;
+  }
+
+  .apple-hero-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+
+  .apple-section-title {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+  }
+
+  .audience-section {
+    padding-top: 100px !important;
+    padding-bottom: 80px !important;
+  }
+}
+
+/* On Mobile (<768px) */
+@media (max-width: 768px) {
+
+  html,
+  body,
+  #root {
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+
+  .apple-container {
+    padding: 0 16px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Hero Section Mobile Centered */
+  .hero-content-container {
+    padding: 32px 16px !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+  }
+
+  .apple-hero-title {
+    font-size: 2.1rem !important;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .apple-subtitle {
+    font-size: 0.95rem !important;
+  }
+
+  /* Section Titles Centering & Sizing */
+  .apple-section-title {
+    font-size: 1.65rem !important;
+    text-align: center !important;
+    line-height: 1.25;
+  }
+
+  /* Section Padding Reduction on Mobile */
+  section {
+    padding-top: 50px !important;
+    padding-bottom: 60px !important;
+  }
+
+  .audience-section {
+    padding-top: 80px !important;
+    padding-bottom: 60px !important;
+  }
+
+  .audience-heading-block {
+    margin-bottom: 24px !important;
+  }
+
+  .testimonials-section {
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+  }
+
+  /* Testimonials Grid on Mobile */
+  .testimonials-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .testimonials-col {
+    gap: 16px !important;
+  }
+
+  .testimonial-card-item {
+    padding: 20px 16px !important;
+    border-radius: 18px !important;
+  }
+
+  /* Carousel Section Adjustments */
+  .carousel-wrapper {
+    padding-top: 10px !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* Vignettes on Mobile */
+  .vignette-left,
+  .vignette-right {
+    width: 30px !important;
+  }
+
+  /* Footer Card & Grid on Mobile */
+  .footer-inner-card {
+    padding: 40px 16px 24px !important;
+  }
+
+  footer grid,
+  footer>div>div>div:first-child {
+    gap: 28px !important;
+  }
+
+  /* Buttons on Mobile */
+  .apple-btn-primary,
+  .apple-btn-secondary {
+    padding: 12px 20px !important;
+    font-size: 0.88rem !important;
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* Bento Grid */
+  .bento-grid {
+    gap: 14px !important;
+  }
+}
+
+/* On Small Mobile (<480px) */
+@media (max-width: 480px) {
+  .apple-hero-title {
+    font-size: 1.8rem !important;
+  }
+
+  .apple-section-title {
+    font-size: 1.45rem !important;
+  }
+
+  .apple-container {
+    padding: 0 12px !important;
+  }
+
+  .footer-inner-card {
+    padding: 32px 14px 20px !important;
+  }
 }

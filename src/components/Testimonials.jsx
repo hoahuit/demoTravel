@@ -1,7 +1,70 @@
 import React from 'react';
-import { Quote, Star, ShieldCheck, Heart, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Star, Sparkles, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 export default function Testimonials() {
+  const brandLogos = [
+    {
+      name: 'Apple Music',
+      svg: (
+        <svg height="65" viewBox="0 0 280 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 32c0-6.8 5.5-10.1 5.8-10.3-3.1-4.6-8.1-5.3-9.8-5.4-4.2-.4-8.2 2.5-10.3 2.5-2.1 0-5.4-2.4-8.8-2.3-4.5.1-8.8 2.6-11.1 6.6-4.8 8.3-1.2 20.5 3.4 27.2 2.3 3.2 4.9 6.9 8.5 6.8 3.4-.1 4.8-2.2 8.9-2.2 4.1 0 5.2 2.2 8.8 2.1 3.7-.1 6-3.3 8.3-6.6 2.6-3.8 3.7-7.5 3.8-7.7-.1-.1-7.3-2.8-7.4-10.9z" fill="#1d1d1f" />
+          <path d="M33.6 11.9c1.9-2.3 3.2-5.5 2.8-8.7-2.7.1-6.1 1.8-8 4.1-1.8 2.1-3.3 5.4-2.9 8.5 3.1.2 6.2-1.6 8.1-3.9z" fill="#1d1d1f" />
+          <text x="64" y="44" fontFamily="-apple-system, BlinkMacSystemFont, sans-serif" fontSize="30" fontWeight="700" fill="#1d1d1f" letterSpacing="-0.5">Music</text>
+        </svg>
+      )
+    },
+    {
+      name: 'Chrome',
+      svg: (
+        <svg height="65" viewBox="0 0 220 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="26" fill="#EA4335" />
+          <circle cx="32" cy="32" r="18" fill="#FBBC05" />
+          <circle cx="32" cy="32" r="12" fill="#34A853" />
+          <circle cx="32" cy="32" r="9" fill="#4285F4" />
+          <circle cx="32" cy="32" r="5" fill="#FFFFFF" />
+          <text x="70" y="42" fontFamily="-apple-system, BlinkMacSystemFont, sans-serif" fontSize="30" fontWeight="700" fill="#202124" letterSpacing="-0.5">chrome</text>
+        </svg>
+      )
+    },
+    {
+      name: 'Strava',
+      svg: (
+        <svg height="65" viewBox="0 0 200 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 46l10-20h9L22 6 3 46h8.5l3.5-7h14l3.5 7H22zm-3-14l4-8 4 8h-8z" fill="#FC5200" />
+          <path d="M38 46l6-12h5.5l-6 12H38z" fill="#FC5200" opacity="0.6" />
+          <text x="65" y="42" fontFamily="-apple-system, BlinkMacSystemFont, sans-serif" fontSize="30" fontWeight="800" fill="#FC5200" letterSpacing="-0.5">STRAVA</text>
+        </svg>
+      )
+    },
+    {
+      name: 'Nintendo',
+      svg: (
+        <svg height="65" viewBox="0 0 220 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="5" y="10" width="210" height="45" rx="22.5" stroke="#E60012" strokeWidth="4" fill="none" />
+          <text x="110" y="42" textAnchor="middle" fontFamily="-apple-system, BlinkMacSystemFont, sans-serif" fontSize="28" fontWeight="800" fill="#E60012" letterSpacing="-0.5">Nintendo</text>
+        </svg>
+      )
+    },
+    {
+      name: 'jQuery',
+      svg: (
+        <svg height="65" viewBox="0 0 190 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 25c4-8 12-12 20-10-3 3-5 7-5 11 0 7 5 12 12 12 5 0 9-3 11-7-1 9-8 16-17 16-10 0-18-8-21-22z" fill="#0769AD" />
+          <text x="50" y="42" fontFamily="sans-serif" fontSize="28" fontWeight="800" fill="#0769AD" letterSpacing="-0.5">jQuery</text>
+        </svg>
+      )
+    },
+    {
+      name: 'Prada',
+      svg: (
+        <svg height="65" viewBox="0 0 190 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <text x="95" y="44" textAnchor="middle" fontFamily="'Times New Roman', serif" fontSize="34" fontWeight="900" fill="#000000" letterSpacing="5">PRADA</text>
+        </svg>
+      )
+    }
+  ];
+
+  const duplicatedLogos = [...brandLogos, ...brandLogos, ...brandLogos];
   const testimonialsColumn1 = [
     {
       quote: "The group enthusiastically experienced vegetable picking and a cooking class in Cu Chi. Highly professional team!",
@@ -60,11 +123,11 @@ export default function Testimonials() {
   ];
 
   return (
-    <section style={{ padding: '90px 0', background: '#f5f5f7', position: 'relative', overflow: 'hidden' }} id="testimonials">
+    <section className="testimonials-section" style={{ background: '#f5f5f7', position: 'relative', overflow: 'hidden' }} id="testimonials">
       <div className="apple-container">
-        
+
         {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '56px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <div style={{
             fontSize: '0.82rem',
             fontWeight: '700',
@@ -89,34 +152,127 @@ export default function Testimonials() {
         </div>
 
         {/* 21st.dev Testimonials Columns 3-Column Grid */}
-        <div style={{
+        <div className="testimonials-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
           gap: '24px',
           alignItems: 'start'
         }}>
-          
+
           {/* Column 1 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="testimonials-col" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {testimonialsColumn1.map((item, idx) => (
               <TestimonialCard key={idx} data={item} />
             ))}
           </div>
 
           {/* Column 2 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="testimonials-col" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {testimonialsColumn2.map((item, idx) => (
               <TestimonialCard key={idx} data={item} />
             ))}
           </div>
 
           {/* Column 3 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="testimonials-col" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {testimonialsColumn3.map((item, idx) => (
               <TestimonialCard key={idx} data={item} />
             ))}
           </div>
 
+        </div>
+
+        {/* MARQUEE SECTION BELOW TESTIMONIAL CARDS */}
+        <div style={{ marginTop: '60px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+            <div style={{
+              fontSize: '0.78rem',
+              fontWeight: '800',
+              textTransform: 'uppercase',
+              color: '#86868b',
+              letterSpacing: '0.14em',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              flexWrap: 'wrap'
+            }}>
+              <ShieldCheck size={16} color="#0066cc" /> TRUSTED BY GLOBAL TRAVEL & ENTERPRISE LEADERS
+            </div>
+          </div>
+
+          {/* Seamless Radial Dot Background Area */}
+          <div style={{
+            position: 'relative',
+            width: '100%',
+            overflow: 'hidden',
+            background: 'transparent',
+            padding: '24px 0'
+          }}>
+            {/* Radial Dot Grid Pattern overlay */}
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: 'radial-gradient(#00000021 1.5px, transparent 1.5px)',
+              backgroundSize: '24px 24px',
+              opacity: 0.5,
+              pointerEvents: 'none'
+            }}></div>
+
+            {/* Left Edge Vignette Fade */}
+            <div className="vignette-left" style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              width: '120px',
+              background: 'linear-gradient(to right, #f5f5f7 30%, transparent 100%)',
+              zIndex: 10,
+              pointerEvents: 'none'
+            }}></div>
+
+            {/* Right Edge Vignette Fade */}
+            <div className="vignette-right" style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              right: 0,
+              width: '120px',
+              background: 'linear-gradient(to right, transparent 0%, #f5f5f7 70%)',
+              zIndex: 10,
+              pointerEvents: 'none'
+            }}></div>
+
+            {/* Continuous Marquee Track */}
+            <div className="flex w-full justify-center relative">
+              <div className="overflow-hidden w-full h-full">
+                <div
+                  className="infinite-slider-track"
+                  style={{
+                    display: 'flex',
+                    gap: '48px',
+                    alignItems: 'center',
+                    width: 'max-content'
+                  }}
+                >
+                  {duplicatedLogos.map((brand, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '12px 20px'
+                      }}
+                    >
+                      {brand.svg}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
 
       </div>
@@ -126,8 +282,8 @@ export default function Testimonials() {
 
 function TestimonialCard({ data }) {
   return (
-    <div 
-      className="apple-squircle"
+    <div
+      className="apple-squircle testimonial-card-item"
       style={{
         background: '#ffffff',
         border: '1px solid var(--apple-border)',
@@ -136,14 +292,6 @@ function TestimonialCard({ data }) {
         boxShadow: '0 10px 30px rgba(0, 0, 0, 0.04)',
         transition: 'all 0.3s ease',
         position: 'relative'
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-4px)';
-        e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.08)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.04)';
       }}
     >
       {/* 5 Star Rating */}

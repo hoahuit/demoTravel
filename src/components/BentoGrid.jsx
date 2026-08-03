@@ -3,9 +3,9 @@ import { ArrowRight, Compass, Sparkles, Heart, Sun, MapPin, Anchor, Coffee } fro
 
 export default function BentoGrid() {
   return (
-    <section style={{ padding: '60px 0' }} id="signatures">
+    <section style={{ padding: '100px 0' }} id="signatures">
       <div className="apple-container">
-        
+
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <div style={{
@@ -31,7 +31,7 @@ export default function BentoGrid() {
 
           {/* Bento Item 1: Smooth Arrival Combos (8 Cols) */}
           <div className="bento-col-8">
-            <div 
+            <div
               className="apple-squircle apple-squircle-hover"
               style={{
                 position: 'relative',
@@ -67,7 +67,7 @@ export default function BentoGrid() {
                 <span className="apple-badge" style={{ background: '#f5f5f7', color: '#1d1d1f', marginBottom: '16px' }}>
                   <Anchor size={13} color="#0066cc" /> Transfer & Airport Combos
                 </span>
-                
+
                 <h3 style={{ fontSize: '2.2rem', fontWeight: '800', letterSpacing: '-0.025em', marginBottom: '12px', color: '#1d1d1f' }}>
                   “Smooth Arrival” Combos
                 </h3>
@@ -92,7 +92,7 @@ export default function BentoGrid() {
 
           {/* Bento Item 2: Da Nang & Hoi An (4 Cols) */}
           <div className="bento-col-4">
-            <div 
+            <div
               className="apple-squircle apple-squircle-hover"
               style={{
                 position: 'relative',
@@ -141,7 +141,7 @@ export default function BentoGrid() {
 
           {/* Bento Item 3: Healing Retreat Series (7 Cols) */}
           <div className="bento-col-7" id="retreats">
-            <div 
+            <div
               className="apple-squircle apple-squircle-hover"
               style={{
                 position: 'relative',
@@ -196,7 +196,7 @@ export default function BentoGrid() {
 
           {/* Bento Item 4: The Other Side of Hoi An (5 Cols) */}
           <div className="bento-col-5">
-            <div 
+            <div
               className="apple-squircle apple-squircle-hover"
               style={{
                 position: 'relative',

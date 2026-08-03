@@ -4,15 +4,29 @@ import { ChevronLeft, ChevronRight, Compass } from 'lucide-react';
 const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 export const CircularGallery = React.forwardRef(
-  ({ items, className, radius = 560, autoRotateSpeed = 0.06, ...props }, ref) => {
+  ({ items, className, radius: radiusProp = 560, autoRotateSpeed = 0.06, ...props }, ref) => {
     const [rotation, setRotation] = useState(0);
     const [isInteracting, setIsInteracting] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
     const containerRef = useRef(null);
     const isDraggingRef = useRef(false);
     const startXRef = useRef(0);
     const startRotationRef = useRef(0);
     const animationFrameRef = useRef(null);
+
+    // Responsive: detect mobile viewport
+    useEffect(() => {
+      const check = () => setIsMobile(window.innerWidth < 768);
+      check();
+      window.addEventListener('resize', check);
+      return () => window.removeEventListener('resize', check);
+    }, []);
+
+    const radius = isMobile ? 280 : radiusProp;
+    const cardW = isMobile ? 220 : 300;
+    const cardH = isMobile ? 280 : 380;
+    const btnSize = isMobile ? 40 : 56;
 
     // Mouse wheel rotation (prevents outer page scroll when mouse is inside carousel)
     useEffect(() => {
@@ -86,8 +100,8 @@ export const CircularGallery = React.forwardRef(
         ref={containerRef}
         role="region"
         aria-label="Coverflow 3D Gallery"
-        className={cn("relative w-full h-[460px] flex items-center justify-center overflow-visible select-none", className)}
-        style={{ perspective: '1800px', paddingTop: '20px', paddingBottom: '20px' }}
+        className={cn("relative w-full flex items-center justify-center overflow-visible select-none", className)}
+        style={{ perspective: '1800px', paddingTop: '0px', paddingBottom: '0px', height: isMobile ? '300px' : '420px' }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -103,11 +117,11 @@ export const CircularGallery = React.forwardRef(
           style={{
             position: 'absolute',
             left: '24px',
-            top: '50%',
+            top: '38%',
             transform: 'translateY(-50%)',
             zIndex: 50,
-            width: '56px',
-            height: '56px',
+            width: btnSize + 'px',
+            height: btnSize + 'px',
             borderRadius: '50%',
             background: 'rgba(255, 255, 255, 0.95)',
             border: '1px solid rgba(0, 0, 0, 0.08)',
@@ -132,11 +146,11 @@ export const CircularGallery = React.forwardRef(
           style={{
             position: 'absolute',
             right: '24px',
-            top: '50%',
+            top: '38%',
             transform: 'translateY(-50%)',
             zIndex: 50,
-            width: '56px',
-            height: '56px',
+            width: btnSize + 'px',
+            height: btnSize + 'px',
             borderRadius: '50%',
             background: 'rgba(255, 255, 255, 0.95)',
             border: '1px solid rgba(0, 0, 0, 0.08)',
@@ -168,7 +182,7 @@ export const CircularGallery = React.forwardRef(
             const totalRotation = rotation % 360;
             const relativeAngle = (itemAngle + totalRotation + 360) % 360;
             const normalizedAngle = Math.abs(relativeAngle > 180 ? 360 - relativeAngle : relativeAngle);
-            
+
             const isCenter = normalizedAngle < 30;
             const tilt = relativeAngle > 180 ? 9 : -9;
             const cardRotateY = isCenter ? 0 : tilt;
@@ -182,13 +196,13 @@ export const CircularGallery = React.forwardRef(
                 aria-label={item.common}
                 style={{
                   position: 'absolute',
-                  width: '300px',
-                  height: '380px',
+                  width: cardW + 'px',
+                  height: cardH + 'px',
                   transform: `rotateY(${itemAngle}deg) translateZ(${radius}px) rotateY(${cardRotateY}deg) scale(${scale})`,
                   left: '50%',
                   top: '50%',
-                  marginLeft: '-150px',
-                  marginTop: '-190px',
+                  marginLeft: -(cardW / 2) + 'px',
+                  marginTop: -(cardH / 2) + 'px',
                   opacity: opacity,
                   visibility: opacity < 0.05 ? 'hidden' : 'visible',
                   transition: 'all 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
@@ -197,7 +211,7 @@ export const CircularGallery = React.forwardRef(
                   zIndex: isCenter ? 30 : 10
                 }}
               >
-                <div 
+                <div
                   className="apple-squircle"
                   style={{
                     position: 'relative',
@@ -229,7 +243,7 @@ export const CircularGallery = React.forwardRef(
                       filter: isCenter ? 'none' : 'brightness(0.85)'
                     }}
                   />
-                  
+
                   {/* Card Vignette */}
                   <div style={{
                     position: 'absolute',
@@ -246,7 +260,7 @@ export const CircularGallery = React.forwardRef(
                     padding: '24px',
                     color: '#ffffff'
                   }}>
-                    <span style={{ 
+                    <span style={{
                       display: 'inline-block',
                       background: 'linear-gradient(135deg, #d4af37 0%, #aa820a 100%)',
                       color: '#ffffff',
@@ -269,10 +283,10 @@ export const CircularGallery = React.forwardRef(
                       {item.binomial}
                     </div>
 
-                    <div style={{ 
-                      fontSize: '0.78rem', 
-                      color: 'rgba(255,255,255,0.7)', 
-                      marginTop: '8px', 
+                    <div style={{
+                      fontSize: '0.78rem',
+                      color: 'rgba(255,255,255,0.7)',
+                      marginTop: '8px',
                       paddingTop: '8px',
                       borderTop: '1px solid rgba(255,255,255,0.15)',
                       display: 'flex',

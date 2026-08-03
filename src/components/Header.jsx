@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Menu, X, Phone, ChevronDown } from 'lucide-react';
+import { Search, Menu, X, Phone } from 'lucide-react';
 
 export default function Header({ onOpenSearch }) {
   const [scrolled, setScrolled] = useState(false);
@@ -7,9 +7,7 @@ export default function Header({ onOpenSearch }) {
   const [activeItem, setActiveItem] = useState(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -33,57 +31,46 @@ export default function Header({ onOpenSearch }) {
           right: 0,
           zIndex: 1000,
           transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-          padding: scrolled ? '10px 0' : '16px 0',
-          background: scrolled
-            ? 'rgba(10, 10, 12, 0.82)'
-            : 'transparent',
-          backdropFilter: scrolled ? 'blur(24px) saturate(160%)' : 'blur(0px)',
-          WebkitBackdropFilter: scrolled ? 'blur(24px) saturate(160%)' : 'blur(0px)',
-          borderBottom: scrolled
-            ? '1px solid rgba(255,255,255,0.08)'
-            : '1px solid rgba(255,255,255,0.06)',
+          padding: scrolled ? '10px 0' : '14px 0',
+          background: scrolled ? 'rgba(10, 10, 12, 0.88)' : 'rgba(10, 10, 12, 0.65)',
+          backdropFilter: 'blur(20px) saturate(160%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(160%)',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
         }}
       >
         <div
+          className="apple-container header-inner"
           style={{
-            maxWidth: '1400px',
-            margin: '0 auto',
-            padding: '0 40px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '24px',
+            gap: '16px',
+            width: '100%'
           }}
         >
           {/* ── LOGO ── */}
-          <a
-            href="#"
-            style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}
-          >
+          <a href="#" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
             <img
               src="/images/logo.png"
               alt="4U Tours"
               style={{
-                height: scrolled ? '36px' : '44px',
+                height: scrolled ? '34px' : '40px',
                 width: 'auto',
                 objectFit: 'contain',
-                transition: 'height 0.3s ease',
-                mixBlendMode: 'screen',
+                transition: 'all 0.3s ease',
+                filter: 'brightness(0) invert(1)',
                 opacity: 0.95,
               }}
             />
           </a>
 
-          {/* ── DESKTOP NAV (pill-style floating) ── */}
+          {/* ── DESKTOP NAV ── */}
           <nav
             className="desktop-nav"
             style={{
-              display: 'flex',
               alignItems: 'center',
               gap: '4px',
-              background: scrolled
-                ? 'rgba(255,255,255,0.06)'
-                : 'rgba(255,255,255,0.08)',
+              background: 'rgba(255,255,255,0.08)',
               border: '1px solid rgba(255,255,255,0.12)',
               borderRadius: '999px',
               padding: '6px 8px',
@@ -104,11 +91,9 @@ export default function Header({ onOpenSearch }) {
                   borderRadius: '999px',
                   fontSize: '0.84rem',
                   fontWeight: '600',
-                  color: activeItem === idx ? '#ffffff' : 'rgba(255,255,255,0.78)',
+                  color: activeItem === idx ? '#ffffff' : 'rgba(255,255,255,0.85)',
                   textDecoration: 'none',
-                  background: activeItem === idx
-                    ? 'rgba(255,255,255,0.15)'
-                    : 'transparent',
+                  background: activeItem === idx ? 'rgba(255,255,255,0.15)' : 'transparent',
                   transition: 'all 0.2s ease',
                   whiteSpace: 'nowrap',
                 }}
@@ -136,21 +121,22 @@ export default function Header({ onOpenSearch }) {
           </nav>
 
           {/* ── RIGHT ACTIONS ── */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-            {/* Search pill */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+            {/* Search button */}
             <button
               onClick={onOpenSearch}
+              className="search-btn"
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: '8px 16px',
+                padding: '8px 14px',
                 borderRadius: '999px',
                 border: '1px solid rgba(255,255,255,0.18)',
                 background: 'rgba(255,255,255,0.08)',
                 cursor: 'pointer',
                 fontSize: '0.84rem',
-                color: 'rgba(255,255,255,0.75)',
+                color: 'rgba(255,255,255,0.85)',
                 backdropFilter: 'blur(10px)',
                 transition: 'all 0.2s ease',
               }}
@@ -160,12 +146,13 @@ export default function Header({ onOpenSearch }) {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
-                e.currentTarget.style.color = 'rgba(255,255,255,0.75)';
+                e.currentTarget.style.color = 'rgba(255,255,255,0.85)';
               }}
             >
-              <Search size={15} color="currentColor" />
+              <Search size={15} />
               <span className="hide-mobile" style={{ fontWeight: 500 }}>Search</span>
               <kbd
+                className="hide-mobile"
                 style={{
                   background: 'rgba(255,255,255,0.16)',
                   color: 'rgba(255,255,255,0.85)',
@@ -180,7 +167,7 @@ export default function Header({ onOpenSearch }) {
               </kbd>
             </button>
 
-            {/* Call CTA – gold gradient */}
+            {/* Call CTA */}
             <a
               href="tel:0764886877"
               className="hide-mobile"
@@ -188,7 +175,7 @@ export default function Header({ onOpenSearch }) {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '7px',
-                padding: '9px 20px',
+                padding: '9px 18px',
                 borderRadius: '999px',
                 background: 'linear-gradient(135deg, #c9a050 0%, #a07030 100%)',
                 color: '#ffffff',
@@ -197,22 +184,13 @@ export default function Header({ onOpenSearch }) {
                 textDecoration: 'none',
                 boxShadow: '0 4px 16px rgba(201, 160, 80, 0.45)',
                 transition: 'all 0.25s ease',
-                letterSpacing: '-0.01em',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 8px 24px rgba(201, 160, 80, 0.55)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(201, 160, 80, 0.45)';
               }}
             >
               <Phone size={14} />
               076 488 6877
             </a>
 
-            {/* Mobile hamburger */}
+            {/* Mobile Hamburger Button */}
             <button
               className="mobile-toggle-btn"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -223,7 +201,6 @@ export default function Header({ onOpenSearch }) {
                 cursor: 'pointer',
                 padding: '8px',
                 color: '#ffffff',
-                display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
@@ -240,14 +217,15 @@ export default function Header({ onOpenSearch }) {
           style={{
             position: 'fixed',
             inset: 0,
-            top: '68px',
-            background: 'rgba(10, 10, 12, 0.97)',
+            top: '60px',
+            background: 'rgba(10, 10, 12, 0.98)',
             backdropFilter: 'blur(24px)',
             zIndex: 999,
-            padding: '32px 28px',
+            padding: '24px 20px',
             display: 'flex',
             flexDirection: 'column',
             gap: '6px',
+            overflowY: 'auto',
           }}
         >
           {navItems.map((item, idx) => (
@@ -256,7 +234,7 @@ export default function Header({ onOpenSearch }) {
               href={item.href}
               onClick={() => setMobileMenuOpen(false)}
               style={{
-                fontSize: '1.25rem',
+                fontSize: '1.2rem',
                 fontWeight: '700',
                 color: '#ffffff',
                 textDecoration: 'none',
@@ -289,17 +267,17 @@ export default function Header({ onOpenSearch }) {
           <a
             href="tel:0764886877"
             style={{
-              marginTop: '24px',
+              marginTop: '20px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '8px',
-              padding: '16px 24px',
+              padding: '14px 24px',
               borderRadius: '999px',
               background: 'linear-gradient(135deg, #c9a050 0%, #a07030 100%)',
               color: '#ffffff',
               fontWeight: '700',
-              fontSize: '1rem',
+              fontSize: '0.95rem',
               textDecoration: 'none',
               boxShadow: '0 6px 20px rgba(201, 160, 80, 0.4)',
             }}
