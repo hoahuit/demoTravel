@@ -55,28 +55,12 @@ export default function Hero() {
             padding: '60px 48px'
           }}
         >
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '6px 16px',
-            borderRadius: '999px',
-            background: 'rgba(212, 175, 55, 0.18)',
-            border: '1px solid rgba(212, 175, 55, 0.4)',
-            color: '#d4af37',
-            fontSize: '0.8rem',
-            fontWeight: '700',
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
-            marginBottom: '20px'
-          }}>
-            <Sparkles size={14} /> Summer Promo in Saigon
-          </div>
+
 
           <h1 className="apple-hero-title" style={{ color: '#ffffff', marginBottom: '16px' }}>
             Private transfer. <br />
             <span style={{
-              background: 'linear-gradient(135deg, #ffffff 0%, #c9a050 100%)',
+              background: 'linear-gradient(135deg, #ffffff 0%, #12ad6dff 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }}>
@@ -99,7 +83,7 @@ export default function Hero() {
             <button
               className="apple-btn-primary"
               style={{
-                background: 'linear-gradient(135deg, #d4af37 0%, #aa820a 100%)',
+                background: 'linear-gradient(135deg, #12ad6dff 0%, #12ad6dff 100%)',
                 color: '#ffffff',
                 boxShadow: '0 8px 24px rgba(212,175,55,0.3)',
                 padding: '14px 28px',

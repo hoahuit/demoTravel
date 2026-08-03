@@ -15,11 +15,11 @@ export default function SearchModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   const quickSearches = [
-    { title: 'Summer Promo in Saigon', category: 'Promotions', price: 'From USD 85' },
-    { title: '"Smooth Arrival" Combos', category: 'Transfers & Stay', price: 'From USD 99' },
-    { title: 'A Timeless Coastal Journey', category: 'Da Nang & Hoi An', price: 'Popular' },
-    { title: 'Tranquility & Purity Retreat', category: 'Healing & Wellness', price: 'Featured' },
-    { title: 'The Other Side of Hoi An', category: 'Cultural Exploration', price: 'Must-Try' }
+    { title: 'Series Retreat Chữa Lành Thân Tâm Trí', category: 'Series Retreat', price: 'HOT' },
+    { title: '"Bình Yên trên Cao Nguyên"', category: 'Retreat HOT', price: 'Trending' },
+    { title: '"Tĩnh Lặng Giữa Đại Ngàn"', category: 'Retreat Bảo tồn', price: 'Mới' },
+    { title: 'A Tip A Day - Cẩm Nang Tĩnh Tâm', category: '101 Điều HAY', price: 'Miễn Phí' },
+    { title: 'Thiết Kế Lịch Trình Retreat 1:1', category: 'Vì sao chọn 4U?', price: 'Đặc Quyền' }
   ];
 
   const filtered = quickSearches.filter(item => 
@@ -31,8 +31,8 @@ export default function SearchModal({ isOpen, onClose }) {
     <div style={{
       position: 'fixed',
       inset: 0,
-      zIndex: 9999,
-      background: 'rgba(0, 0, 0, 0.4)',
+      zIndex: 99999,
+      background: 'rgba(5, 12, 7, 0.65)',
       backdropFilter: 'blur(12px)',
       display: 'flex',
       alignItems: 'flex-start',
@@ -46,9 +46,9 @@ export default function SearchModal({ isOpen, onClose }) {
         maxWidth: '640px',
         background: '#ffffff',
         borderRadius: '24px',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+        boxShadow: '0 25px 50px -12px rgba(22, 48, 29, 0.4)',
         overflow: 'hidden',
-        border: '1px solid rgba(0, 0, 0, 0.08)'
+        border: '1px solid rgba(74, 124, 89, 0.25)'
       }} onClick={e => e.stopPropagation()}>
 
         {/* Search Input Bar */}
@@ -57,12 +57,12 @@ export default function SearchModal({ isOpen, onClose }) {
           alignItems: 'center',
           gap: '12px',
           padding: '18px 24px',
-          borderBottom: '1px solid #f0f0f0'
+          borderBottom: '1px solid rgba(74, 124, 89, 0.15)'
         }}>
-          <Search size={22} color="#86868b" />
+          <Search size={22} color="#2d5a36" />
           <input
             type="text"
-            placeholder="Search tours, retreats, destinations..."
+            placeholder="Tìm kiếm tour retreat, điểm đến, kinh nghiệm..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
@@ -72,13 +72,13 @@ export default function SearchModal({ isOpen, onClose }) {
               outline: 'none',
               fontSize: '1.1rem',
               fontFamily: 'inherit',
-              color: '#1d1d1f'
+              color: '#142619'
             }}
           />
           <button 
             onClick={onClose}
             style={{
-              background: '#f5f5f7',
+              background: '#f2f6f3',
               border: 'none',
               borderRadius: '50%',
               width: '32px',
@@ -87,7 +87,7 @@ export default function SearchModal({ isOpen, onClose }) {
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: '#86868b'
+              color: '#527059'
             }}
           >
             <X size={18} />
@@ -96,8 +96,8 @@ export default function SearchModal({ isOpen, onClose }) {
 
         {/* Search Results / Suggestions */}
         <div style={{ padding: '20px 24px', maxHeight: '400px', overflowY: 'auto' }}>
-          <div style={{ fontSize: '0.8rem', fontWeight: '700', textTransform: 'uppercase', color: '#86868b', letterSpacing: '0.05em', marginBottom: '12px' }}>
-            {query ? 'Search Results' : 'Suggested Experiences'}
+          <div style={{ fontSize: '0.8rem', fontWeight: '700', textTransform: 'uppercase', color: '#527059', letterSpacing: '0.05em', marginBottom: '12px' }}>
+            {query ? 'Kết quả tìm kiếm' : 'Gợi ý tìm kiếm nổi bật'}
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -110,35 +110,35 @@ export default function SearchModal({ isOpen, onClose }) {
                   justifyContent: 'space-between',
                   padding: '12px 16px',
                   borderRadius: '16px',
-                  background: '#f9f9fb',
+                  background: '#f5f9f6',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = '#f0f0f5'}
-                onMouseLeave={(e) => e.currentTarget.style.background = '#f9f9fb'}
-                onClick={() => { alert(`Opening ${item.title}`); onClose(); }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#eaf2eb'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#f5f9f6'}
+                onClick={() => { alert(`Mở ${item.title}`); onClose(); }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{
                     width: '36px',
                     height: '36px',
                     borderRadius: '10px',
-                    background: '#1d1d1f',
+                    background: 'linear-gradient(135deg, #2d5a36 0%, #16301d 100%)',
                     color: '#ffffff',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center'
                   }}>
-                    <Compass size={18} />
+                    <Compass size={18} style={{ color: '#4ade80' }} />
                   </div>
                   <div>
-                    <div style={{ fontWeight: '600', fontSize: '0.95rem', color: '#1d1d1f' }}>{item.title}</div>
-                    <div style={{ fontSize: '0.8rem', color: '#86868b' }}>{item.category}</div>
+                    <div style={{ fontWeight: '600', fontSize: '0.95rem', color: '#142619' }}>{item.title}</div>
+                    <div style={{ fontSize: '0.8rem', color: '#527059' }}>{item.category}</div>
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '0.85rem', fontWeight: '600', color: '#0066cc' }}>{item.price}</span>
-                  <ArrowRight size={16} color="#86868b" />
+                  <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#2d5a36' }}>{item.price}</span>
+                  <ArrowRight size={16} color="#527059" />
                 </div>
               </div>
             ))}
@@ -148,15 +148,15 @@ export default function SearchModal({ isOpen, onClose }) {
         {/* Footer info in Modal */}
         <div style={{
           padding: '12px 24px',
-          background: '#f5f5f7',
+          background: '#f2f6f3',
           fontSize: '0.8rem',
-          color: '#86868b',
+          color: '#527059',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
-          <span>Press <strong>ESC</strong> to close</span>
-          <span>4U Tours Search Engine</span>
+          <span>Nhấn <strong>ESC</strong> để đóng</span>
+          <span>4U Retreat Search Engine</span>
         </div>
       </div>
     </div>

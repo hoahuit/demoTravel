@@ -73,7 +73,7 @@ export default function AudienceBento() {
   ];
 
   return (
-    <section className="audience-section" style={{ background: '#f5f5f7', overflow: 'visible', position: 'relative', zIndex: 5 }} id="audience">
+    <section className="audience-section" style={{ background: '#f5f5f7', overflow: 'hidden', position: 'relative', zIndex: 5, padding: '80px 0 100px 0' }} id="audience">
       <div className="apple-container">
 
         {/* 1. HEADING + SUBTEXT BLOCK CLEARLY ABOVE 3D CARDS */}
@@ -82,7 +82,7 @@ export default function AudienceBento() {
             fontSize: '0.82rem',
             fontWeight: '700',
             textTransform: 'uppercase',
-            color: '#c9a050',
+            color: '#2d5a36',
             letterSpacing: '0.12em',
             display: 'inline-flex',
             alignItems: 'center',
@@ -90,20 +90,20 @@ export default function AudienceBento() {
             gap: '6px',
             marginBottom: '10px'
           }}>
-            <Sparkles size={16} /> 3D Interactive Showcase
+            <Sparkles size={16} style={{ color: '#4ade80' }} /> Trải Nghiệm Tương Tác 3D Showcase
           </div>
 
-          <h2 className="apple-section-title">
-            Whom are <span style={{ color: '#0066cc' }}>4U Tours</span> for?
+          <h2 className="apple-section-title" style={{ color: '#142619' }}>
+            Dành Riêng Cho Ai Tìm Về <span style={{ color: '#2d5a36' }}>4U Retreat</span>?
           </h2>
 
-          <p className="apple-subtitle" style={{ maxWidth: '620px', margin: '10px auto 0', fontSize: '1.05rem', color: '#86868b' }}>
-            Specially designed for Inbound travelers, Expats in Vietnam & discerning adventurers.
+          <p className="apple-subtitle" style={{ maxWidth: '620px', margin: '10px auto 0', fontSize: '1.05rem', color: '#527059' }}>
+            Hành trình được thiết kế may đo cho từng cá nhân, gia đình & nhóm bạn khao khát kết nối sâu sắc cùng thiên nhiên.
           </p>
         </div>
 
         {/* 2. 3D COVERFLOW CAROUSEL BELOW HEADING */}
-        <div className="carousel-wrapper" style={{ position: 'relative', width: '100%', paddingTop: '60px', marginBottom: '16px' }}>
+        <div className="carousel-wrapper" style={{ position: 'relative', width: '100%', paddingTop: '20px', paddingBottom: '40px' }}>
           <CircularGallery items={galleryData} radius={480} autoRotateSpeed={0.015} />
         </div>
 

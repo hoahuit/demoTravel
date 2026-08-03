@@ -67,7 +67,7 @@ export default function InfiniteSlider() {
   const duplicatedLogos = [...brandLogos, ...brandLogos, ...brandLogos, ...brandLogos];
 
   return (
-    <section style={{ padding: '60px 0', background: '#f5f5f7', overflow: 'hidden' }}>
+    <section style={{ padding: '60px 0', background: '#f3f7f4', overflow: 'hidden' }}>
       <div className="apple-container">
         
         {/* Section Header Title */}
@@ -76,13 +76,13 @@ export default function InfiniteSlider() {
             fontSize: '0.78rem',
             fontWeight: '800',
             textTransform: 'uppercase',
-            color: '#86868b',
+            color: '#527059',
             letterSpacing: '0.14em',
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px'
           }}>
-            <ShieldCheck size={16} color="#0066cc" /> TRUSTED BY GLOBAL TRAVEL & ENTERPRISE LEADERS
+            <ShieldCheck size={16} color="#2d5a36" /> ĐỐI TÁC VẬN HÀNH & DOANH NGHIỆP ĐỒNG HÀNH
           </div>
         </div>
 
@@ -98,7 +98,7 @@ export default function InfiniteSlider() {
           <div style={{
             position: 'absolute',
             inset: 0,
-            backgroundImage: 'radial-gradient(#00000021 1.5px, transparent 1.5px)',
+            backgroundImage: 'radial-gradient(#2d5a3618 1.5px, transparent 1.5px)',
             backgroundSize: '24px 24px',
             opacity: 0.5,
             pointerEvents: 'none'
@@ -111,7 +111,7 @@ export default function InfiniteSlider() {
             bottom: 0,
             left: 0,
             width: '120px',
-            background: 'linear-gradient(to right, #f5f5f7 30%, transparent 100%)',
+            background: 'linear-gradient(to right, #f3f7f4 30%, transparent 100%)',
             zIndex: 10,
             pointerEvents: 'none'
           }}></div>
@@ -123,7 +123,7 @@ export default function InfiniteSlider() {
             bottom: 0,
             right: 0,
             width: '120px',
-            background: 'linear-gradient(to left, #f5f5f7 30%, transparent 100%)',
+            background: 'linear-gradient(to left, #f3f7f4 30%, transparent 100%)',
             zIndex: 10,
             pointerEvents: 'none'
           }}></div>
@@ -149,19 +149,19 @@ export default function InfiniteSlider() {
                       justifyContent: 'center',
                       padding: '12px 24px',
                       borderRadius: '20px',
-                      background: 'rgba(255, 255, 255, 0.9)',
+                      background: 'rgba(255, 255, 255, 0.95)',
                       backdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(0,0,0,0.06)',
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.04)',
+                      border: '1px solid rgba(74, 124, 89, 0.18)',
+                      boxShadow: '0 8px 24px rgba(22, 48, 29, 0.05)',
                       transition: 'all 0.3s ease'
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'scale(1.06)';
-                      e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.08)';
+                      e.currentTarget.style.boxShadow = '0 12px 32px rgba(22, 48, 29, 0.1)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'scale(1)';
-                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.04)';
+                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(22, 48, 29, 0.05)';
                     }}
                   >
                     {brand.svg}

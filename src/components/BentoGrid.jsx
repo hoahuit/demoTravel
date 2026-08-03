@@ -12,24 +12,24 @@ export default function BentoGrid() {
             fontSize: '0.85rem',
             fontWeight: '700',
             textTransform: 'uppercase',
-            color: '#c9a050',
+            color: '#2d5a36',
             letterSpacing: '0.1em',
             marginBottom: '8px'
           }}>
-            Signatures 4U & Combos
+            Signatures 4U & Series Retreat
           </div>
-          <h2 className="apple-section-title">
-            Uniquely Crafted <span style={{ color: '#0066cc' }}>4U Packages</span>
+          <h2 className="apple-section-title" style={{ color: '#142619' }}>
+            Hành Trình Độc Quyền <span style={{ color: '#2d5a36' }}>4U Retreat</span>
           </h2>
-          <p className="apple-subtitle" style={{ maxWidth: '600px', margin: '12px auto 0' }}>
-            Handpicked journeys designed with ultimate attention to detail, comfort, and authenticity.
+          <p className="apple-subtitle" style={{ maxWidth: '600px', margin: '12px auto 0', color: '#527059' }}>
+            Những chuyến đi tĩnh lặng được may đo tỉ mỉ từng chi tiết, đưa bạn trở về với sự thư thái trọn vẹn.
           </p>
         </div>
 
         {/* Apple Bento Grid Container */}
         <div className="bento-grid">
 
-          {/* Bento Item 1: Smooth Arrival Combos (8 Cols) */}
+          {/* Bento Item 1: Series Retreat Chữa Lành (8 Cols) */}
           <div className="bento-col-8">
             <div
               className="apple-squircle apple-squircle-hover"
@@ -38,7 +38,7 @@ export default function BentoGrid() {
                 minHeight: '380px',
                 height: '100%',
                 background: '#ffffff',
-                border: '1px solid var(--apple-border)',
+                border: '1px solid rgba(74, 124, 89, 0.2)',
                 boxShadow: 'var(--apple-shadow-card)',
                 overflow: 'hidden',
                 display: 'flex',
@@ -64,33 +64,33 @@ export default function BentoGrid() {
 
               {/* Card Text Content */}
               <div style={{ position: 'relative', zIndex: 2, maxWidth: '420px' }}>
-                <span className="apple-badge" style={{ background: '#f5f5f7', color: '#1d1d1f', marginBottom: '16px' }}>
-                  <Anchor size={13} color="#0066cc" /> Transfer & Airport Combos
+                <span className="apple-badge" style={{ background: 'rgba(74, 124, 89, 0.12)', color: '#2d5a36', marginBottom: '16px' }}>
+                  <Anchor size={13} color="#2d5a36" /> Retreat Chữa Lành Thân Tâm Trí
                 </span>
 
-                <h3 style={{ fontSize: '2.2rem', fontWeight: '800', letterSpacing: '-0.025em', marginBottom: '12px', color: '#1d1d1f' }}>
-                  “Smooth Arrival” Combos
+                <h3 style={{ fontSize: '2.2rem', fontWeight: '800', letterSpacing: '-0.025em', marginBottom: '12px', color: '#142619' }}>
+                  “Bình Yên Trên Cao Nguyên”
                 </h3>
 
-                <p style={{ fontSize: '1.05rem', color: '#86868b', lineHeight: '1.6', marginBottom: '24px' }}>
-                  Sit back, enjoy and let Us handle All the arrangements. Private luxury vehicle pickup, VIP fast-track & boutique accommodation.
+                <p style={{ fontSize: '1.05rem', color: '#527059', lineHeight: '1.6', marginBottom: '24px' }}>
+                  Tận hưởng không khí trong lành giữa đại ngàn, xe luxury đưa đón riêng tư & liệu trình yoga, thiền định thực hành 1:1.
                 </p>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                   <div>
-                    <span style={{ fontSize: '0.75rem', color: '#86868b', textTransform: 'uppercase' }}>Starting from</span>
-                    <div style={{ fontSize: '1.6rem', fontWeight: '800', color: '#1d1d1f' }}>USD 99</div>
+                    <span style={{ fontSize: '0.75rem', color: '#527059', textTransform: 'uppercase' }}>Giá trọn gói từ</span>
+                    <div style={{ fontSize: '1.6rem', fontWeight: '800', color: '#2d5a36' }}>4.990.000 VNĐ</div>
                   </div>
 
                   <a href="#smooth-arrival" className="apple-btn-primary" style={{ padding: '12px 24px', fontSize: '0.9rem' }}>
-                    Discover MORE <ArrowRight size={16} />
+                    Khám Phá Ngay <ArrowRight size={16} />
                   </a>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Bento Item 2: Da Nang & Hoi An (4 Cols) */}
+          {/* Bento Item 2: Tĩnh Lặng Giữa Đại Ngàn (4 Cols) */}
           <div className="bento-col-4">
             <div
               className="apple-squircle apple-squircle-hover"
@@ -98,9 +98,9 @@ export default function BentoGrid() {
                 position: 'relative',
                 minHeight: '380px',
                 height: '100%',
-                background: 'linear-gradient(145deg, #1d1d1f 0%, #2c2c2e 100%)',
+                background: 'linear-gradient(145deg, #0d1710 0%, #16281c 100%)',
                 color: '#ffffff',
-                border: '1px solid rgba(255,255,255,0.1)',
+                border: '1px solid rgba(74, 222, 128, 0.25)',
                 boxShadow: 'var(--apple-shadow-card)',
                 overflow: 'hidden',
                 padding: '36px',
@@ -119,21 +119,21 @@ export default function BentoGrid() {
               }}></div>
 
               <div style={{ position: 'relative', zIndex: 2 }}>
-                <span className="apple-badge" style={{ background: 'rgba(255,255,255,0.15)', color: '#ffffff', marginBottom: '16px' }}>
-                  <Sun size={13} color="#c9a050" /> Coastal Journey
+                <span className="apple-badge" style={{ background: 'rgba(74, 222, 128, 0.18)', color: '#4ade80', marginBottom: '16px' }}>
+                  <Sun size={13} color="#e5c158" /> Hành Trình Rừng Xanh
                 </span>
 
                 <h3 style={{ fontSize: '1.8rem', fontWeight: '800', letterSpacing: '-0.02em', lineHeight: '1.2', marginBottom: '10px' }}>
-                  “A Timeless Coastal Journey”
+                  “Tĩnh Lặng Giữa Đại Ngàn”
                 </h3>
-                <p style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.7)' }}>
-                  Da Nang & Hoi An Ancient Town
+                <p style={{ fontSize: '0.95rem', color: 'rgba(235, 245, 237, 0.75)' }}>
+                  Hành trình kết nối sâu sắc cùng rừng già & suối khoáng tự nhiên
                 </p>
               </div>
 
               <div style={{ position: 'relative', zIndex: 2, paddingTop: '20px' }}>
-                <a href="#coastal-journey" className="apple-btn-secondary" style={{ width: '100%', background: 'rgba(255,255,255,0.15)', color: '#ffffff', border: 'none' }}>
-                  Discover MORE <ArrowRight size={16} />
+                <a href="#coastal-journey" className="apple-btn-secondary" style={{ width: '100%', background: 'rgba(74, 222, 128, 0.2)', color: '#ffffff', border: '1px solid rgba(74, 222, 128, 0.4)' }}>
+                  Khám Phá Chi Tiết <ArrowRight size={16} />
                 </a>
               </div>
             </div>
@@ -146,8 +146,8 @@ export default function BentoGrid() {
               style={{
                 position: 'relative',
                 minHeight: '360px',
-                background: 'linear-gradient(135deg, #fbf5e8 0%, #f7ebe0 100%)',
-                border: '1px solid rgba(212, 175, 55, 0.25)',
+                background: 'linear-gradient(135deg, #eaf2eb 0%, #d8e6db 100%)',
+                border: '1px solid rgba(74, 124, 89, 0.3)',
                 boxShadow: 'var(--apple-shadow-card)',
                 overflow: 'hidden',
                 padding: '40px',
@@ -165,30 +165,30 @@ export default function BentoGrid() {
                 backgroundImage: `url('images/dest_dalat.png')`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                opacity: 0.6,
+                opacity: 0.65,
                 maskImage: 'linear-gradient(to right, transparent 0%, black 100%)',
                 WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 100%)'
               }}></div>
 
               <div style={{ position: 'relative', zIndex: 2, maxWidth: '400px' }}>
-                <span className="apple-badge" style={{ background: '#d4af37', color: '#ffffff', marginBottom: '12px' }}>
-                  <Heart size={13} /> Series "YOU CANNOT MISS"
+                <span className="apple-badge" style={{ background: '#2d5a36', color: '#ffffff', marginBottom: '12px' }}>
+                  <Heart size={13} /> Series Nổi Bật 2026
                 </span>
 
-                <h3 style={{ fontSize: '2.1rem', fontStyle: 'italic', fontFamily: 'var(--font-editorial)', fontWeight: '700', color: '#1d1d1f', marginBottom: '8px' }}>
-                  “Tranquility & Purity”
+                <h3 style={{ fontSize: '2.1rem', fontStyle: 'italic', fontFamily: 'var(--font-editorial)', fontWeight: '700', color: '#142619', marginBottom: '8px' }}>
+                  “Tìm Lại Kết Nối”
                 </h3>
 
-                <p style={{ fontSize: '1.1rem', fontWeight: '600', color: '#1d1d1f', marginBottom: '12px' }}>
-                  A Healing Retreat for Families & Friends
+                <p style={{ fontSize: '1.1rem', fontWeight: '600', color: '#2d5a36', marginBottom: '12px' }}>
+                  Chuyến Đi Tái Tạo Năng Lượng Cho Gia Đình
                 </p>
 
-                <p style={{ fontSize: '0.95rem', color: '#86868b', lineHeight: '1.5', marginBottom: '20px' }}>
-                  Reconnect with nature through mindfulness, farm-to-table organic dining, and private wellness workshops in mountain sanctuaries.
+                <p style={{ fontSize: '0.95rem', color: '#527059', lineHeight: '1.5', marginBottom: '20px' }}>
+                  Lối sống chậm cùng thực đơn hữu cơ từ nông trại, tham gia workshop nghệ thuật & tận hưởng không gian riêng tư giữa thiên nhiên.
                 </p>
 
-                <a href="#retreat" className="apple-btn-primary apple-btn-gold">
-                  Let’s Retreat <ArrowRight size={16} />
+                <a href="#retreat" className="apple-btn-primary" style={{ background: 'linear-gradient(135deg, #2d5a36 0%, #16301d 100%)' }}>
+                  Trải Nghiệm Ngay <ArrowRight size={16} />
                 </a>
               </div>
             </div>
@@ -202,7 +202,7 @@ export default function BentoGrid() {
                 position: 'relative',
                 minHeight: '360px',
                 background: '#ffffff',
-                border: '1px solid var(--apple-border)',
+                border: '1px solid rgba(74, 124, 89, 0.2)',
                 boxShadow: 'var(--apple-shadow-card)',
                 overflow: 'hidden',
                 padding: '40px',
@@ -221,22 +221,22 @@ export default function BentoGrid() {
               }}></div>
 
               <div style={{ position: 'relative', zIndex: 2 }}>
-                <span className="apple-badge" style={{ background: '#f5f5f7', color: '#1d1d1f', marginBottom: '16px' }}>
-                  <MapPin size={13} color="#e30050" /> Off the Beaten Track
+                <span className="apple-badge" style={{ background: 'rgba(74, 124, 89, 0.12)', color: '#2d5a36', marginBottom: '16px' }}>
+                  <MapPin size={13} color="#2d5a36" /> Retreat Bảo Tồn & Thiên Nhiên
                 </span>
 
-                <h3 style={{ fontSize: '1.9rem', fontWeight: '800', letterSpacing: '-0.02em', color: '#1d1d1f', marginBottom: '12px' }}>
-                  “The Other Side of Hoi An”
+                <h3 style={{ fontSize: '1.9rem', fontWeight: '800', letterSpacing: '-0.02em', color: '#142619', marginBottom: '12px' }}>
+                  “Hành Trình Xanh Bảo Tồn”
                 </h3>
 
-                <p style={{ fontSize: '0.95rem', color: '#86868b', lineHeight: '1.6', marginBottom: '24px' }}>
-                  Paddle through nipa palm groves, meet artisan lantern makers, and dine in organic bamboo gardens away from the tourist crowd.
+                <p style={{ fontSize: '0.95rem', color: '#527059', lineHeight: '1.6', marginBottom: '24px' }}>
+                  Tham gia hoạt động trồng cây, khám phá hệ sinh thái rừng nguyên sinh & dùng bữa tối lãng mạn giữa vườn tre tự nhiên.
                 </p>
               </div>
 
               <div style={{ position: 'relative', zIndex: 2 }}>
-                <a href="#hoi-an-hidden" className="apple-btn-secondary" style={{ width: '100%' }}>
-                  Explore NOW <ArrowRight size={16} />
+                <a href="#hoi-an-hidden" className="apple-btn-secondary" style={{ width: '100%', borderColor: 'rgba(74, 124, 89, 0.3)' }}>
+                  Xem Chi Tiết <ArrowRight size={16} />
                 </a>
               </div>
             </div>

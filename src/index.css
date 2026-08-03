@@ -1,24 +1,27 @@
+@import "tailwindcss";
+
 /* ============================================
    4U TOURS - APPLE DESIGN SYSTEM CSS
    ============================================ */
 
-/* --- CSS Variables & Design Tokens --- */
+/* --- CSS Variables & Design Tokens (Moss Green Theme) --- */
 :root {
-  --apple-bg: #f5f5f7;
+  --apple-bg: #f3f7f4;
   --apple-bg-card: #ffffff;
-  --apple-dark-card: #000000;
-  --apple-text: #1d1d1f;
-  --apple-text-secondary: #86868b;
-  --apple-accent-blue: #0066cc;
+  --apple-dark-card: #0d1710;
+  --apple-text: #142619;
+  --apple-text-secondary: #527059;
+  --apple-accent-blue: #2d5a36;
+  --apple-accent-moss: #4ade80;
   --apple-accent-gold: #c9a050;
-  --apple-gold-light: #fbf5e8;
-  --apple-border: rgba(0, 0, 0, 0.08);
-  --apple-border-dark: rgba(255, 255, 255, 0.12);
-  --apple-glass-bg: rgba(255, 255, 255, 0.75);
-  --apple-glass-border: rgba(255, 255, 255, 0.3);
-  --apple-shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.04);
-  --apple-shadow-card: 0 12px 32px rgba(0, 0, 0, 0.06);
-  --apple-shadow-hover: 0 20px 48px rgba(0, 0, 0, 0.12);
+  --apple-gold-light: #f8f4e9;
+  --apple-border: rgba(74, 124, 89, 0.18);
+  --apple-border-dark: rgba(74, 222, 128, 0.25);
+  --apple-glass-bg: rgba(243, 247, 244, 0.85);
+  --apple-glass-border: rgba(74, 124, 89, 0.25);
+  --apple-shadow-subtle: 0 4px 20px rgba(22, 48, 29, 0.05);
+  --apple-shadow-card: 0 12px 32px rgba(22, 48, 29, 0.08);
+  --apple-shadow-hover: 0 20px 48px rgba(22, 48, 29, 0.15);
   --apple-radius-squircle: 28px;
   --apple-radius-pill: 999px;
   --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
@@ -190,7 +193,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: var(--apple-text);
+  background: linear-gradient(135deg, #2d5a36 0%, #16301d 100%);
   color: #ffffff;
   padding: 14px 28px;
   border-radius: var(--apple-radius-pill);
@@ -198,13 +201,15 @@ body {
   font-size: 0.95rem;
   text-decoration: none;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  border: none;
+  border: 1px solid rgba(74, 222, 128, 0.3);
   cursor: pointer;
+  box-shadow: 0 4px 16px rgba(22, 48, 29, 0.25);
 }
 
 .apple-btn-primary:hover {
-  background: #333336;
+  background: linear-gradient(135deg, #376d42 0%, #1c3b24 100%);
   transform: scale(1.03);
+  box-shadow: 0 8px 24px rgba(74, 222, 128, 0.3);
 }
 
 .apple-btn-secondary {
@@ -535,4 +540,91 @@ body {
   .footer-inner-card {
     padding: 32px 14px 20px !important;
   }
+}
+
+@keyframes fadeInFlyout {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleUpModal {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ============================================
+   PREMIUM ARTISANAL BOOKING MODAL STYLES
+   ============================================ */
+.premium-modal {
+  padding: 50px !important;
+  border-radius: 5px !important;
+  background-color: #0d2317 !important;
+  background-image: linear-gradient(180deg, rgba(13, 35, 23, 1) 0%, rgba(8, 22, 14, 1) 100%) !important;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.85) !important;
+  border: 1px solid rgba(173, 206, 185, 0.15) !important;
+}
+
+.glass-input {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(173, 206, 185, 0.2) !important;
+  color: #d8e6db !important;
+  border-radius: 6px !important;
+  padding: 12px 16px !important;
+  font-size: 14px !important;
+  outline: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.glass-input:focus {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(173, 206, 185, 0.5) !important;
+  box-shadow: 0 0 0 2px rgba(173, 206, 185, 0.1) !important;
+}
+
+.glass-input option {
+  background-color: #0d2317 !important;
+  color: #d8e6db !important;
+}
+
+.glass-input::placeholder {
+  color: rgba(216, 230, 219, 0.4) !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(173, 206, 185, 0.2);
+  border-radius: 4px;
 }

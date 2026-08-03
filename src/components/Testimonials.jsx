@@ -123,7 +123,7 @@ export default function Testimonials() {
   ];
 
   return (
-    <section className="testimonials-section" style={{ background: '#f5f5f7', position: 'relative', overflow: 'hidden' }} id="testimonials">
+    <section className="testimonials-section" style={{ background: '#f5f5f7', position: 'relative', overflow: 'hidden', padding: '60px 0 80px 0' }} id="testimonials">
       <div className="apple-container">
 
         {/* Section Header */}
@@ -132,22 +132,22 @@ export default function Testimonials() {
             fontSize: '0.82rem',
             fontWeight: '700',
             textTransform: 'uppercase',
-            color: '#c9a050',
+            color: '#2d5a36',
             letterSpacing: '0.12em',
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px',
             marginBottom: '10px'
           }}>
-            <Sparkles size={16} /> Verified Traveler Reviews
+            <Sparkles size={16} style={{ color: '#4ade80' }} /> Đánh Giá Thực Từ Khách Hàng
           </div>
 
-          <h2 className="apple-section-title">
-            What travelers are saying about <span style={{ color: '#0066cc' }}>4U Tours</span>?
+          <h2 className="apple-section-title" style={{ color: '#142619' }}>
+            Khách hàng nói gì về trải nghiệm <span style={{ color: '#2d5a36' }}>4U Retreat</span>?
           </h2>
 
-          <p className="apple-subtitle" style={{ maxWidth: '620px', margin: '12px auto 0', color: '#86868b', fontSize: '1.05rem' }}>
-            Hear from our corporate partners, expat families, and discerning international explorers.
+          <p className="apple-subtitle" style={{ maxWidth: '620px', margin: '12px auto 0', color: '#527059', fontSize: '1.05rem' }}>
+            Lắng nghe cảm nhận thực tế từ các gia đình, doanh nghiệp & khách du lịch quốc tế sau chuyến đi.
           </p>
         </div>
 
@@ -286,10 +286,10 @@ function TestimonialCard({ data }) {
       className="apple-squircle testimonial-card-item"
       style={{
         background: '#ffffff',
-        border: '1px solid var(--apple-border)',
+        border: '1px solid rgba(74, 124, 89, 0.2)',
         borderRadius: '24px',
         padding: '28px 24px',
-        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.04)',
+        boxShadow: '0 10px 30px rgba(22, 48, 29, 0.05)',
         transition: 'all 0.3s ease',
         position: 'relative'
       }}
@@ -297,7 +297,7 @@ function TestimonialCard({ data }) {
       {/* 5 Star Rating */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '16px' }}>
         {[...Array(data.stars)].map((_, i) => (
-          <Star key={i} size={15} color="#d4af37" fill="#d4af37" />
+          <Star key={i} size={15} color="#e5c158" fill="#e5c158" />
         ))}
       </div>
 
@@ -305,7 +305,7 @@ function TestimonialCard({ data }) {
       <p style={{
         fontSize: '0.98rem',
         lineHeight: '1.65',
-        color: '#1d1d1f',
+        color: '#142619',
         fontWeight: '400',
         marginBottom: '24px'
       }}>
@@ -318,13 +318,13 @@ function TestimonialCard({ data }) {
         alignItems: 'center',
         gap: '12px',
         paddingTop: '16px',
-        borderTop: '1px solid rgba(0,0,0,0.06)'
+        borderTop: '1px solid rgba(74, 124, 89, 0.15)'
       }}>
         <div style={{
           width: '42px',
           height: '42px',
           borderRadius: '50%',
-          background: 'linear-gradient(135deg, #0066cc 0%, #1d1d1f 100%)',
+          background: 'linear-gradient(135deg, #2d5a36 0%, #16301d 100%)',
           color: '#ffffff',
           display: 'flex',
           alignItems: 'center',
@@ -340,16 +340,16 @@ function TestimonialCard({ data }) {
           <div style={{
             fontSize: '0.92rem',
             fontWeight: '700',
-            color: '#1d1d1f',
+            color: '#142619',
             display: 'flex',
             alignItems: 'center',
             gap: '6px'
           }}>
             {data.author}
-            {data.verified && <CheckCircle2 size={14} color="#0066cc" />}
+            {data.verified && <CheckCircle2 size={14} color="#2d5a36" />}
           </div>
 
-          <div style={{ fontSize: '0.78rem', color: '#86868b' }}>
+          <div style={{ fontSize: '0.78rem', color: '#527059' }}>
             {data.role}
           </div>
         </div>
