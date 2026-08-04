@@ -137,28 +137,28 @@ export default function Hero() {
           }}
         >
           {/* Editorial Destination Eyebrow */}
-          <div style={{ marginBottom: '28px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-              {/* Mint Accent Line */}
-              <span style={{ width: '28px', height: '1.5px', background: '#12ad6dff', display: 'inline-block' }} />
-
-              {/* Serial & Destination Name */}
+          <div style={{ marginBottom: '24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+              <span style={{ width: '28px', height: '2px', background: '#34d399', display: 'inline-block' }} />
               <span style={{
-                fontSize: '0.78rem',
-                fontWeight: '700',
-                letterSpacing: '0.24em',
+                fontSize: '0.8rem',
+                fontWeight: '800',
+                letterSpacing: '0.2em',
                 textTransform: 'uppercase',
-                color: '#34d399'
+                color: '#34d399',
+                background: 'rgba(52, 211, 153, 0.12)',
+                padding: '4px 12px',
+                borderRadius: '20px',
+                border: '1px solid rgba(52, 211, 153, 0.3)'
               }}>
-                ĐIỂM ĐẾN 0{activeIdx + 1} — {currentSlide.location}
+                🔥 RETREAT HOT THÁNG NÀY • {currentSlide.location}
               </span>
             </div>
 
-            {/* Editorial Tagline */}
             <p style={{
-              fontSize: '0.9rem',
+              fontSize: '0.92rem',
               letterSpacing: '0.03em',
-              color: 'rgba(255, 255, 255, 0.72)',
+              color: 'rgba(255, 255, 255, 0.75)',
               fontWeight: '400',
               margin: 0,
               paddingLeft: '40px'
@@ -167,25 +167,27 @@ export default function Hero() {
             </p>
           </div>
 
-          <h1 className="apple-hero-title" style={{ color: '#ffffff', marginBottom: '16px' }}>
-            Xe đưa đón riêng. <br />
+          <h1 className="apple-hero-title" style={{ color: '#ffffff', marginBottom: '16px', lineHeight: 1.15 }}>
+            Retreat Kết Nối <br />
             <span style={{
-              background: 'linear-gradient(135deg, #ffffff 0%, #12ad6dff 100%)',
+              background: 'linear-gradient(135deg, #ffffff 0%, #34d399 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }}>
-              Nghỉ dưỡng ấm cúng.
+              & Chữa Lành
             </span>
           </h1>
 
           <p style={{
-            fontSize: '1.2rem',
-            color: 'rgba(255, 255, 255, 0.85)',
-            fontWeight: '400',
+            fontSize: '1.4rem',
+            color: '#adceb9',
+            fontFamily: "'Playfair Display', Georgia, serif",
+            fontStyle: 'italic',
+            fontWeight: '600',
             marginBottom: '28px',
-            lineHeight: '1.6'
+            lineHeight: '1.5'
           }}>
-            Đón tiễn chu đáo cho gia đình Chuyên gia & Du khách quốc tế. Hành trình thiết kế riêng với xe VIP & hỗ trợ 24/7.
+            "Tĩnh Lặng Giữa Đại Ngàn"
           </p>
 
           {/* CTA Buttons */}

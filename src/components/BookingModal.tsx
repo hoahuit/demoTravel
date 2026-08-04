@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronUp, Calendar, X, CheckCircle2 } from 'lucide-react';
+import { ChevronUp, Calendar, X, CheckCircle2, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export interface BookingModalProps {
   externalOpen?: boolean;
@@ -128,8 +128,8 @@ export default function BookingModal({ externalOpen, onExternalClose }: BookingM
             {!submitted ? (
               <div className="overflow-y-auto w-full custom-scrollbar">
                 {/* Header Section */}
-                <div className="relative pt-8 sm:pt-10 px-6 sm:px-12 pb-6 text-center border-b border-white/5">
-                  <h1 className="text-4xl sm:text-5xl font-serif text-[#adceb9] mb-3 tracking-wide" style={{ fontFamily: "'Playfair Display', 'Libre Caslon Text', Georgia, serif" }}>
+                <div className="relative pt-10 sm:pt-14 px-6 sm:px-12 pb-8 sm:pb-10 text-center border-b border-white/10 mb-2">
+                  <h1 className="text-4xl sm:text-5xl font-serif text-[#adceb9] tracking-wider font-semibold" style={{ fontFamily: "'Playfair Display', 'Libre Caslon Text', Georgia, serif" }}>
                     Booking
                   </h1>
                 </div>
@@ -325,20 +325,14 @@ export default function BookingModal({ externalOpen, onExternalClose }: BookingM
                         </div>
                       </div>
 
-                      <div className="mt-auto pt-4 flex flex-col gap-3 border-t border-white/5">
-                        <p className="text-[11px] text-[#c2c8c2]/70 leading-relaxed">
+                      <div className="mt-auto pt-6 flex flex-col items-center gap-4 border-t border-white/10 w-full">
+                        <p className="text-[11px] text-[#adceb9]/80 leading-relaxed text-center w-full">
                           Bằng việc gửi thông tin, tôi xác nhận đã đọc chính sách bảo mật của 4U Tours và đồng ý để chuyên gia tư vấn liên hệ qua SĐT/Email để hỗ trợ xếp lịch trình.
                         </p>
+
                         <button
                           type="submit"
-                          className="w-full font-bold py-3.5 px-6 rounded flex items-center justify-center gap-2 transition-all duration-300 uppercase tracking-widest text-xs sm:text-sm cursor-pointer shadow-lg mt-1"
-                          style={{
-                            backgroundColor: '#193627',
-                            color: '#adceb9',
-                            border: '1px solid rgba(173, 206, 185, 0.2)'
-                          }}
-                          onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#254f3a')}
-                          onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#193627')}
+                          className="w-full max-w-sm self-center min-h-[56px] font-extrabold py-5 px-8 rounded-xl flex items-center justify-center transition-all duration-300 uppercase tracking-widest text-xs sm:text-sm cursor-pointer shadow-[0_10px_30px_rgba(74,222,128,0.35)] hover:shadow-[0_15px_40px_rgba(74,222,128,0.5)] hover:scale-[1.02] active:scale-[0.98] mt-1 bg-gradient-to-r from-[#4ade80] via-[#34d399] to-[#22c55e] text-[#06160d]"
                         >
                           BOOK DEMO TOUR NGAY
                         </button>
@@ -349,23 +343,23 @@ export default function BookingModal({ externalOpen, onExternalClose }: BookingM
                 </div>
               </div>
             ) : (
-              <div className="text-center p-8 sm:p-14 my-auto">
-                <div className="w-14 h-14 rounded-full bg-[#193627] border-2 border-[#adceb9] text-[#adceb9] flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle2 size={32} />
+              <div className="text-center p-8 sm:p-14 my-auto flex flex-col items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-[#4ade80]/20 border-2 border-[#4ade80] text-[#4ade80] flex items-center justify-center mx-auto mb-4 shadow-xl shadow-[#4ade80]/20 animate-bounce">
+                  <CheckCircle2 size={36} />
                 </div>
 
-                <h3 className="text-2xl font-serif text-[#adceb9] mb-2" style={{ fontFamily: "'Playfair Display', 'Libre Caslon Text', Georgia, serif" }}>
+                <h3 className="text-2xl sm:text-3xl font-serif text-white mb-2" style={{ fontFamily: "'Playfair Display', 'Libre Caslon Text', Georgia, serif" }}>
                   Đã Gửi Yêu Cầu Booking!
                 </h3>
-                <p className="text-[#d8e6db]/80 text-sm leading-relaxed max-w-md mx-auto mb-6">
+                <p className="text-[#adceb9] text-sm leading-relaxed max-w-md mx-auto mb-6">
                   Cảm ơn <strong>{formData.name}</strong>. Chuyên gia 4U Tours sẽ liên hệ qua SĐT <strong>{formData.phone}</strong> trong ít phút để xếp lịch trình demo cho bạn.
                 </p>
 
                 <button
                   onClick={resetAndClose}
-                  className="px-6 py-2.5 rounded bg-[#193627] text-[#adceb9] font-bold text-xs uppercase tracking-widest border border-[#adceb9]/20 hover:bg-[#254f3a] transition-all cursor-pointer shadow-sm"
+                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#4ade80] to-[#22c55e] text-[#06160d] font-extrabold text-xs uppercase tracking-widest hover:scale-105 transition-all cursor-pointer shadow-lg shadow-[#4ade80]/30"
                 >
-                  Đóng Cửa Sổ
+                  Hoàn Tất & Đóng Cửa Sổ
                 </button>
               </div>
             )}
