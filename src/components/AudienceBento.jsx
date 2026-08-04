@@ -78,21 +78,6 @@ export default function AudienceBento() {
 
         {/* 1. HEADING + SUBTEXT BLOCK CLEARLY ABOVE 3D CARDS */}
         <div className="audience-heading-block" style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div style={{
-            fontSize: '0.82rem',
-            fontWeight: '700',
-            textTransform: 'uppercase',
-            color: '#2d5a36',
-            letterSpacing: '0.12em',
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '6px',
-            marginBottom: '10px'
-          }}>
-            <Sparkles size={16} style={{ color: '#4ade80' }} /> Trải Nghiệm Tương Tác 3D Showcase
-          </div>
-
           <h2 className="apple-section-title" style={{ color: '#142619' }}>
             Dành Riêng Cho Ai Tìm Về <span style={{ color: '#2d5a36' }}>4U Retreat</span>?
           </h2>

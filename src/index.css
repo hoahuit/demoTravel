@@ -628,3 +628,54 @@ body {
   background-color: rgba(173, 206, 185, 0.2);
   border-radius: 4px;
 }
+
+/* ============================================
+   KEN BURNS HERO SLIDESHOW ANIMATIONS
+   ============================================ */
+@keyframes kenburns-in {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes kenburns-out {
+  0% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.kenburns-zoom-in {
+  animation: kenburns-in 3.8s ease-out forwards;
+  will-change: transform;
+}
+
+.kenburns-zoom-out {
+  animation: kenburns-out 3.8s ease-out forwards;
+  will-change: transform;
+}
+
+@media (max-width: 1024px) {
+  .testimonials-animated-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .testimonials-animated-grid > *:nth-child(3) {
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .testimonials-animated-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .testimonials-animated-grid > *:nth-child(2) {
+    display: none !important;
+  }
+}
+
+
