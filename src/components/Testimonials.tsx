@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheck } from 'lucide-react';
-import { TestimonialsColumn } from './ui/testimonials-columns-1';
+import { TestimonialsColumn, TestimonialItem } from './ui/testimonials-columns-1';
 
-export const testimonials = [
+export const testimonials: TestimonialItem[] = [
   {
     text: "Đoàn doanh nghiệp của chúng tôi đã có trải nghiệm tuyệt vời với hoạt động hái rau và nấu ăn tại Củ Chi. Đội ngũ 4U Retreat phục vụ cực kỳ chuyên nghiệp!",
     image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop",
@@ -82,7 +82,12 @@ const firstColumn = testimonials.slice(0, 4);
 const secondColumn = testimonials.slice(4, 8);
 const thirdColumn = testimonials.slice(8, 12);
 
-const brandLogos = [
+interface BrandLogo {
+  name: string;
+  svg: React.ReactNode;
+}
+
+const brandLogos: BrandLogo[] = [
   {
     name: 'Apple Music',
     svg: (

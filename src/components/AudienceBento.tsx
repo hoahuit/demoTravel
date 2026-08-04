@@ -1,9 +1,8 @@
 import React from 'react';
-import { CircularGallery } from './ui/circular-gallery';
-import { Sparkles } from 'lucide-react';
+import { CircularGallery, GalleryItem } from './ui/circular-gallery';
 
 export default function AudienceBento() {
-  const galleryData = [
+  const galleryData: GalleryItem[] = [
     {
       common: 'Solo Travelers',
       binomial: 'Inbound & Independent Explorers',
@@ -76,7 +75,7 @@ export default function AudienceBento() {
     <section className="audience-section" style={{ background: '#f5f5f7', overflow: 'hidden', position: 'relative', zIndex: 5, padding: '80px 0 100px 0' }} id="audience">
       <div className="apple-container">
 
-        {/* 1. HEADING + SUBTEXT BLOCK CLEARLY ABOVE 3D CARDS */}
+        {/* HEADING BLOCK */}
         <div className="audience-heading-block" style={{ textAlign: 'center', marginBottom: '32px' }}>
           <h2 className="apple-section-title" style={{ color: '#142619' }}>
             Dành Riêng Cho Ai Tìm Về <span style={{ color: '#2d5a36' }}>4U Retreat</span>?
@@ -87,7 +86,7 @@ export default function AudienceBento() {
           </p>
         </div>
 
-        {/* 2. 3D COVERFLOW CAROUSEL BELOW HEADING */}
+        {/* 3D COVERFLOW CAROUSEL */}
         <div className="carousel-wrapper" style={{ position: 'relative', width: '100%', paddingTop: '20px', paddingBottom: '40px' }}>
           <CircularGallery items={galleryData} radius={480} autoRotateSpeed={0.015} />
         </div>

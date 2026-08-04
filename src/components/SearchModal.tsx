@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Search, X, Compass, MapPin, Calendar, Sparkles, ArrowRight } from 'lucide-react';
+import { Search, X, Sparkles, ArrowRight } from 'lucide-react';
 
-export default function SearchModal({ isOpen, onClose }) {
-  const [query, setQuery] = useState('');
+export interface SearchModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+interface QuickSearchItem {
+  title: string;
+  category: string;
+  price: string;
+}
+
+export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
+  const [query, setQuery] = useState<string>('');
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     if (isOpen) window.addEventListener('keydown', handleKeyDown);
@@ -14,7 +25,7 @@ export default function SearchModal({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
-  const quickSearches = [
+  const quickSearches: QuickSearchItem[] = [
     { title: 'Series Retreat Chữa Lành Thân Tâm Trí', category: 'Series Retreat', price: 'HOT' },
     { title: '"Bình Yên trên Cao Nguyên"', category: 'Retreat HOT', price: 'Trending' },
     { title: '"Tĩnh Lặng Giữa Đại Ngàn"', category: 'Retreat Bảo tồn', price: 'Mới' },
@@ -48,37 +59,36 @@ export default function SearchModal({ isOpen, onClose }) {
         borderRadius: '24px',
         boxShadow: '0 25px 50px -12px rgba(22, 48, 29, 0.4)',
         overflow: 'hidden',
-        border: '1px solid rgba(74, 124, 89, 0.25)'
+        border: '1px solid rgba(74, 124, 89, 0.2)'
       }} onClick={e => e.stopPropagation()}>
-
-        {/* Search Input Bar */}
+        {/* Search Header Input */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '12px',
-          padding: '18px 24px',
-          borderBottom: '1px solid rgba(74, 124, 89, 0.15)'
+          padding: '20px 24px',
+          borderBottom: '1px solid rgba(74, 124, 89, 0.15)',
+          gap: '12px'
         }}>
           <Search size={22} color="#2d5a36" />
           <input
             type="text"
-            placeholder="Tìm kiếm tour retreat, điểm đến, kinh nghiệm..."
+            placeholder="Tìm kiếm Retreat, Combo, hoặc điểm đến..."
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={e => setQuery(e.target.value)}
             autoFocus
             style={{
               flex: 1,
               border: 'none',
               outline: 'none',
               fontSize: '1.1rem',
-              fontFamily: 'inherit',
-              color: '#142619'
+              color: '#142619',
+              background: 'transparent'
             }}
           />
-          <button 
+          <button
             onClick={onClose}
             style={{
-              background: '#f2f6f3',
+              background: 'rgba(74, 124, 89, 0.1)',
               border: 'none',
               borderRadius: '50%',
               width: '32px',
@@ -87,76 +97,80 @@ export default function SearchModal({ isOpen, onClose }) {
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: '#527059'
+              color: '#142619'
             }}
           >
             <X size={18} />
           </button>
         </div>
 
-        {/* Search Results / Suggestions */}
-        <div style={{ padding: '20px 24px', maxHeight: '400px', overflowY: 'auto' }}>
-          <div style={{ fontSize: '0.8rem', fontWeight: '700', textTransform: 'uppercase', color: '#527059', letterSpacing: '0.05em', marginBottom: '12px' }}>
-            {query ? 'Kết quả tìm kiếm' : 'Gợi ý tìm kiếm nổi bật'}
+        {/* Search Results */}
+        <div style={{ padding: '24px', maxHeight: '420px', overflowY: 'auto' }}>
+          <div style={{
+            fontSize: '0.78rem',
+            fontWeight: '700',
+            color: '#527059',
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
+            marginBottom: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}>
+            <Sparkles size={14} color="#2d5a36" /> Gợi Ý Tìm Kiếm Phổ Biến
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {filtered.map((item, i) => (
-              <div 
-                key={i}
+            {filtered.map((item, idx) => (
+              <a
+                key={idx}
+                href="#signatures"
+                onClick={onClose}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  padding: '12px 16px',
+                  padding: '14px 18px',
                   borderRadius: '16px',
-                  background: '#f5f9f6',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
+                  textDecoration: 'none',
+                  background: 'rgba(74, 124, 89, 0.04)',
+                  transition: 'all 0.2s ease',
+                  border: '1px solid transparent'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = '#eaf2eb'}
-                onMouseLeave={(e) => e.currentTarget.style.background = '#f5f9f6'}
-                onClick={() => { alert(`Mở ${item.title}`); onClose(); }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = 'rgba(74, 124, 89, 0.1)';
+                  e.currentTarget.style.borderColor = 'rgba(74, 124, 89, 0.2)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = 'rgba(74, 124, 89, 0.04)';
+                  e.currentTarget.style.borderColor = 'transparent';
+                }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '10px',
-                    background: 'linear-gradient(135deg, #2d5a36 0%, #16301d 100%)',
-                    color: '#ffffff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    <Compass size={18} style={{ color: '#4ade80' }} />
+                <div>
+                  <div style={{ fontSize: '0.95rem', fontWeight: '700', color: '#142619' }}>
+                    {item.title}
                   </div>
-                  <div>
-                    <div style={{ fontWeight: '600', fontSize: '0.95rem', color: '#142619' }}>{item.title}</div>
-                    <div style={{ fontSize: '0.8rem', color: '#527059' }}>{item.category}</div>
+                  <div style={{ fontSize: '0.78rem', color: '#527059', marginTop: '2px' }}>
+                    {item.category}
                   </div>
                 </div>
+
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#2d5a36' }}>{item.price}</span>
+                  <span style={{
+                    fontSize: '0.75rem',
+                    fontWeight: '700',
+                    color: '#2d5a36',
+                    background: 'rgba(45, 90, 54, 0.1)',
+                    padding: '4px 10px',
+                    borderRadius: '20px'
+                  }}>
+                    {item.price}
+                  </span>
                   <ArrowRight size={16} color="#527059" />
                 </div>
-              </div>
+              </a>
             ))}
           </div>
-        </div>
-
-        {/* Footer info in Modal */}
-        <div style={{
-          padding: '12px 24px',
-          background: '#f2f6f3',
-          fontSize: '0.8rem',
-          color: '#527059',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <span>Nhấn <strong>ESC</strong> để đóng</span>
-          <span>4U Retreat Search Engine</span>
         </div>
       </div>
     </div>

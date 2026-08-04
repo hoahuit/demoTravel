@@ -636,6 +636,7 @@ body {
   0% {
     transform: scale(1);
   }
+
   100% {
     transform: scale(1.08);
   }
@@ -645,6 +646,7 @@ body {
   0% {
     transform: scale(1.08);
   }
+
   100% {
     transform: scale(1);
   }
@@ -664,7 +666,8 @@ body {
   .testimonials-animated-grid {
     grid-template-columns: repeat(2, 1fr) !important;
   }
-  .testimonials-animated-grid > *:nth-child(3) {
+
+  .testimonials-animated-grid>*:nth-child(3) {
     display: none !important;
   }
 }
@@ -673,9 +676,160 @@ body {
   .testimonials-animated-grid {
     grid-template-columns: 1fr !important;
   }
-  .testimonials-animated-grid > *:nth-child(2) {
+
+  .testimonials-animated-grid>*:nth-child(2) {
     display: none !important;
   }
 }
 
-
+/* ============================================
+   PRODUCT DETAIL RESPONSIVE STYLES
+   ============================================ */
+
+/* Main layout grid */
+.pd-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 48px;
+}
+
+@media (max-width: 1024px) {
+  .pd-main-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+}
+
+/* Sticky Subnav Bar */
+.pd-sticky-subnav {
+  position: sticky;
+  top: 72px;
+  z-index: 100;
+  background: #ffffff;
+  border-bottom: 1px solid #e1e3e2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.pd-subnav-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  gap: 16px;
+}
+
+.pd-subnav-tabs {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  height: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.pd-subnav-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.pd-subnav-cta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .pd-sticky-subnav {
+    top: 60px !important;
+  }
+  
+  .pd-subnav-container {
+    padding: 0 12px !important;
+    height: 48px !important;
+    gap: 8px !important;
+  }
+  
+  .pd-subnav-tabs {
+    gap: 14px !important;
+  }
+  
+  .pd-subnav-price-box {
+    display: none !important;
+  }
+  
+  .pd-subnav-cta-btn {
+    padding: 6px 14px !important;
+    font-size: 0.78rem !important;
+    white-space: nowrap;
+  }
+}
+
+/* Gallery Grid */
+.pd-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .pd-gallery-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .pd-gallery-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Inclusions Grid */
+.pd-inclusions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .pd-inclusions-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+}
+
+/* Sidebar Booking Card */
+.pd-sidebar-card {
+  position: sticky;
+  top: 150px;
+  background: #ffffff;
+  border: 1px solid #e1e3e2;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+}
+
+@media (max-width: 1024px) {
+  .pd-sidebar-card {
+    position: relative !important;
+    top: 0 !important;
+    padding: 24px 20px !important;
+    border-radius: 20px !important;
+  }
+}
+
+/* Section Container Padding */
+.pd-section-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+@media (max-width: 768px) {
+  .pd-section-container {
+    padding: 24px 16px 60px !important;
+  }
+}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ScrollExpandMedia from './scroll-expansion-hero';
 
 const sampleMediaContent = {
@@ -22,6 +22,7 @@ const sampleMediaContent = {
   },
   image: {
     src: 'https://images.unsplash.com/photo-1682687982501-1e58ab814714?q=80&w=1280&auto=format&fit=crop',
+    poster: '',
     background:
       'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&auto=format&fit=crop',
     title: 'Dynamic Image Showcase',
@@ -36,7 +37,7 @@ const sampleMediaContent = {
   },
 };
 
-const MediaContent = ({ mediaType }) => {
+const MediaContent: React.FC<{ mediaType: 'video' | 'image' }> = ({ mediaType }) => {
   const currentMedia = sampleMediaContent[mediaType];
 
   return (
@@ -54,44 +55,39 @@ const MediaContent = ({ mediaType }) => {
   );
 };
 
-const Demo = () => {
-  const [mediaType, setMediaType] = useState('video');
+const Demo: React.FC = () => {
+  const [mediaType, setMediaType] = useState<'video' | 'image'>('video');
   const currentMedia = sampleMediaContent[mediaType];
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [mediaType]);
-
   return (
-    <div className='min-h-screen'>
-      <div className='fixed top-4 right-4 z-50 flex gap-2'>
+    <div className='relative min-h-screen bg-black text-white'>
+      <div className='fixed top-4 left-4 z-50 flex gap-2'>
         <button
           onClick={() => setMediaType('video')}
-          className={`px-4 py-2 rounded-lg ${
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             mediaType === 'video'
-              ? 'bg-white text-black'
-              : 'bg-black/50 text-white border border-white/30'
+              ? 'bg-emerald-600 text-white'
+              : 'bg-zinc-800 text-zinc-400 hover:text-white'
           }`}
         >
-          Video
+          Video Mode
         </button>
-
         <button
           onClick={() => setMediaType('image')}
-          className={`px-4 py-2 rounded-lg ${
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             mediaType === 'image'
-              ? 'bg-white text-black'
-              : 'bg-black/50 text-white border border-white/30'
+              ? 'bg-emerald-600 text-white'
+              : 'bg-zinc-800 text-zinc-400 hover:text-white'
           }`}
         >
-          Image
+          Image Mode
         </button>
       </div>
 
       <ScrollExpandMedia
         mediaType={mediaType}
         mediaSrc={currentMedia.src}
-        posterSrc={mediaType === 'video' ? currentMedia.poster : undefined}
+        posterSrc={currentMedia.poster}
         bgImageSrc={currentMedia.background}
         title={currentMedia.title}
         date={currentMedia.date}

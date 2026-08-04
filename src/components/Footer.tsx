@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
-import { Compass, Mail, Phone, MapPin, ShieldCheck, FileText, Globe, ChevronDown, ChevronUp } from 'lucide-react';
+import { Mail, Phone, MapPin, ShieldCheck, FileText, Globe, ChevronDown, ChevronUp } from 'lucide-react';
+
+interface SeoLink {
+  title: string;
+  desc: string;
+  url: string;
+}
 
 export default function Footer() {
-  const [showPartners, setShowPartners] = useState(false);
+  const [showPartners, setShowPartners] = useState<boolean>(false);
 
-  const seoLinks = [
+  const seoLinks: SeoLink[] = [
     { title: 'Kursus SEO Medan', desc: 'Ingin Mencari Kursus SEO Terbaik Di Kota Medan', url: 'https://4utours.com/' },
     { title: 'Mitsubishi Medan', desc: 'Jika kamu mencari mobil mitsubishi di medan', url: 'https://4utours.com/' },
     { title: 'Honda Medan', desc: 'Ingin Membeli mobil baru honda di kota medan', url: 'https://4utours.com/' },
@@ -24,9 +30,7 @@ export default function Footer() {
   ];
 
   return (
-
     <footer style={{ padding: 0, margin: 0, width: '100%', position: 'relative', overflow: 'hidden' }} id="about">
-
       {/* 100% Full-Width Edge-to-Edge Glassmorphic Container */}
       <div
         className="footer-inner-card"
@@ -48,7 +52,7 @@ export default function Footer() {
             pointerEvents: 'none',
             zIndex: 0
           }}
-        ></div>
+        />
 
         {/* Main Footer Content Grid */}
         <div style={{ position: 'relative', zIndex: 10, maxWidth: '1400px', margin: '0 auto' }}>
@@ -94,8 +98,8 @@ export default function Footer() {
                     <a
                       href="#"
                       style={{ color: '#a3b899', textDecoration: 'none', fontSize: '0.92rem', transition: 'color 0.2s ease' }}
-                      onMouseEnter={(e) => e.target.style.color = '#4ade80'}
-                      onMouseLeave={(e) => e.target.style.color = '#a3b899'}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = '#a3b899')}
                     >
                       {item}
                     </a>
@@ -111,16 +115,16 @@ export default function Footer() {
               </h4>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <li>
-                  <a href="#" style={{ color: '#a3b899', textDecoration: 'none', fontSize: '0.92rem' }} onMouseEnter={(e) => e.target.style.color = '#4ade80'} onMouseLeave={(e) => e.target.style.color = '#a3b899'}>Câu Hỏi Thường Gặp</a>
+                  <a href="#" style={{ color: '#a3b899', textDecoration: 'none', fontSize: '0.92rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')} onMouseLeave={(e) => (e.currentTarget.style.color = '#a3b899')}>Câu Hỏi Thường Gặp</a>
                 </li>
                 <li>
-                  <a href="#" style={{ color: '#a3b899', textDecoration: 'none', fontSize: '0.92rem' }} onMouseEnter={(e) => e.target.style.color = '#4ade80'} onMouseLeave={(e) => e.target.style.color = '#a3b899'}>Series & Deal Mới</a>
+                  <a href="#" style={{ color: '#a3b899', textDecoration: 'none', fontSize: '0.92rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')} onMouseLeave={(e) => (e.currentTarget.style.color = '#a3b899')}>Series & Deal Mới</a>
                 </li>
                 <li>
-                  <a href="#" style={{ color: '#a3b899', textDecoration: 'none', fontSize: '0.92rem' }} onMouseEnter={(e) => e.target.style.color = '#4ade80'} onMouseLeave={(e) => e.target.style.color = '#a3b899'}>Tư Vấn Thiết Kế 1:1</a>
+                  <a href="#" style={{ color: '#a3b899', textDecoration: 'none', fontSize: '0.92rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')} onMouseLeave={(e) => (e.currentTarget.style.color = '#a3b899')}>Tư Vấn Thiết Kế 1:1</a>
                 </li>
                 <li style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                  <a href="#" style={{ color: '#a3b899', textDecoration: 'none', fontSize: '0.92rem' }} onMouseEnter={(e) => e.target.style.color = '#4ade80'} onMouseLeave={(e) => e.target.style.color = '#a3b899'}>Hỗ Trợ Trực Tuyến 24/7</a>
+                  <a href="#" style={{ color: '#a3b899', textDecoration: 'none', fontSize: '0.92rem' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')} onMouseLeave={(e) => (e.currentTarget.style.color = '#a3b899')}>Hỗ Trợ Trực Tuyến 24/7</a>
                   <span style={{
                     width: '8px',
                     height: '8px',
@@ -141,7 +145,7 @@ export default function Footer() {
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '18px' }}>
                 <li style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.92rem' }}>
                   <Mail size={18} color="#4ade80" />
-                  <a href="mailto:customercare@4utours.com" style={{ color: '#ffffff', textDecoration: 'none' }} onMouseEnter={(e) => e.target.style.color = '#4ade80'} onMouseLeave={(e) => e.target.style.color = '#ffffff'}>
+                  <a href="mailto:customercare@4utours.com" style={{ color: '#ffffff', textDecoration: 'none' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')} onMouseLeave={(e) => (e.currentTarget.style.color = '#ffffff')}>
                     customercare@4utours.com
                   </a>
                 </li>
@@ -198,7 +202,7 @@ export default function Footer() {
           {/* Divider Line */}
           <div style={{ borderTop: '1px solid rgba(74, 124, 89, 0.2)', margin: '16px 0 28px' }}></div>
 
-          {/* Bottom Bar: Social Icons & Copyright */}
+          {/* Bottom Bar */}
           <div style={{
             display: 'flex',
             flexDirection: 'row',
@@ -209,27 +213,23 @@ export default function Footer() {
             fontSize: '0.88rem',
             color: '#a3b899'
           }}>
-            {/* Social Icons */}
             <div style={{ display: 'flex', gap: '20px' }}>
-              <a href="#" aria-label="Facebook" style={{ color: '#a3b899', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#4ade80'} onMouseLeave={(e) => e.currentTarget.style.color = '#a3b899'}>
+              <a href="#" aria-label="Facebook" style={{ color: '#a3b899', transition: 'color 0.2s' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')} onMouseLeave={(e) => (e.currentTarget.style.color = '#a3b899')}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
               </a>
-              <a href="#" aria-label="Instagram" style={{ color: '#a3b899', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#4ade80'} onMouseLeave={(e) => e.currentTarget.style.color = '#a3b899'}>
+              <a href="#" aria-label="Instagram" style={{ color: '#a3b899', transition: 'color 0.2s' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')} onMouseLeave={(e) => (e.currentTarget.style.color = '#a3b899')}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
               </a>
-              <a href="#" aria-label="Twitter" style={{ color: '#a3b899', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#4ade80'} onMouseLeave={(e) => e.currentTarget.style.color = '#a3b899'}>
+              <a href="#" aria-label="Twitter" style={{ color: '#a3b899', transition: 'color 0.2s' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')} onMouseLeave={(e) => (e.currentTarget.style.color = '#a3b899')}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
               </a>
-              <a href="#" aria-label="Globe" style={{ color: '#a3b899', transition: 'color 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.color = '#4ade80'} onMouseLeave={(e) => e.currentTarget.style.color = '#a3b899'}>
+              <a href="#" aria-label="Globe" style={{ color: '#a3b899', transition: 'color 0.2s' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')} onMouseLeave={(e) => (e.currentTarget.style.color = '#a3b899')}>
                 <Globe size={20} />
               </a>
             </div>
-
           </div>
-
         </div>
       </div>
-
     </footer>
   );
 }

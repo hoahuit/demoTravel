@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Compass, Sparkles, Heart, Sun, MapPin, Anchor, Coffee } from 'lucide-react';
+import { ArrowRight, Anchor, Sun, Heart, MapPin } from 'lucide-react';
 
 export default function BentoGrid() {
   return (

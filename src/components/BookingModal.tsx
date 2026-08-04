@@ -1,10 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronUp, Calendar, X, CheckCircle2 } from 'lucide-react';
 
-export default function BookingModal({ externalOpen, onExternalClose }) {
-  const [showFloating, setShowFloating] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+export interface BookingModalProps {
+  externalOpen?: boolean;
+  onExternalClose?: () => void;
+}
+
+interface FormDataState {
+  name: string;
+  email: string;
+  phone: string;
+  tour: string;
+  date: string;
+  guests: string;
+}
+
+export default function BookingModal({ externalOpen, onExternalClose }: BookingModalProps) {
+  const [showFloating, setShowFloating] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [submitted, setSubmitted] = useState<boolean>(false);
 
   useEffect(() => {
     if (externalOpen) {
@@ -12,7 +26,7 @@ export default function BookingModal({ externalOpen, onExternalClose }) {
     }
   }, [externalOpen]);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormDataState>({
     name: '',
     email: '',
     phone: '',
@@ -37,7 +51,7 @@ export default function BookingModal({ externalOpen, onExternalClose }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.phone) {
       alert('Vui lòng nhập Họ tên và Số điện thoại!');
@@ -62,7 +76,7 @@ export default function BookingModal({ externalOpen, onExternalClose }) {
 
   return (
     <>
-      {/* ── FLOATING ACTION BUTTONS (BOTTOM RIGHT) ── */}
+      {/* FLOATING ACTION BUTTONS */}
       {showFloating && (
         <div className="fixed bottom-7 right-7 z-[9990] flex flex-col gap-3 items-center">
           <button
@@ -84,7 +98,7 @@ export default function BookingModal({ externalOpen, onExternalClose }) {
         </div>
       )}
 
-      {/* ── BOOKING MODAL (PREMIUM ARTISANAL DARK MOSS GREEN) ── */}
+      {/* BOOKING MODAL */}
       {modalOpen && (
         <div className="fixed inset-0 z-[10005] flex justify-center items-center p-3 sm:p-6 overflow-y-auto">
           {/* Backdrop */}
@@ -115,18 +129,15 @@ export default function BookingModal({ externalOpen, onExternalClose }) {
               <div className="overflow-y-auto w-full custom-scrollbar">
                 {/* Header Section */}
                 <div className="relative pt-8 sm:pt-10 px-6 sm:px-12 pb-6 text-center border-b border-white/5">
-                  <div className="flex items-center justify-center gap-2 mb-3">
-
-                  </div>
                   <h1 className="text-4xl sm:text-5xl font-serif text-[#adceb9] mb-3 tracking-wide" style={{ fontFamily: "'Playfair Display', 'Libre Caslon Text', Georgia, serif" }}>
                     Booking
                   </h1>
-
                 </div>
+
                 {/* Main Content Area */}
                 <div className="flex flex-col md:flex-row p-6 sm:p-10 gap-8 lg:gap-12">
 
-                  {/* Left Side: Benefits & Image */}
+                  {/* Left Side */}
                   <div className="w-full md:w-5/12 flex flex-col gap-6">
                     <div className="flex flex-col gap-4">
                       <p className="text-sm text-[#d8e6db] opacity-90 leading-relaxed">
@@ -174,10 +185,9 @@ export default function BookingModal({ externalOpen, onExternalClose }) {
                     </div>
                   </div>
 
-                  {/* Right Side: Form */}
+                  {/* Right Side */}
                   <div className="w-full md:w-7/12 flex flex-col">
                     <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-full pl-0 md:pl-6">
-                      {/* Full Name */}
                       <div className="flex flex-col gap-1.5">
                         <label className="text-[11px] font-bold text-[#adceb9]/80 uppercase tracking-widest" htmlFor="fullName">
                           Họ & Tên đầy đủ *
@@ -200,7 +210,6 @@ export default function BookingModal({ externalOpen, onExternalClose }) {
                         />
                       </div>
 
-                      {/* Email */}
                       <div className="flex flex-col gap-1.5">
                         <label className="text-[11px] font-bold text-[#adceb9]/80 uppercase tracking-widest" htmlFor="email">
                           Email liên hệ
@@ -222,7 +231,6 @@ export default function BookingModal({ externalOpen, onExternalClose }) {
                         />
                       </div>
 
-                      {/* Phone */}
                       <div className="flex flex-col gap-1.5">
                         <label className="text-[11px] font-bold text-[#adceb9]/80 uppercase tracking-widest" htmlFor="phone">
                           Số điện thoại / Zalo *
@@ -245,7 +253,6 @@ export default function BookingModal({ externalOpen, onExternalClose }) {
                         />
                       </div>
 
-                      {/* Retreat Package Selection */}
                       <div className="flex flex-col gap-1.5">
                         <label className="text-[11px] font-bold text-[#adceb9]/80 uppercase tracking-widest" htmlFor="package">
                           Chọn gói Retreat / Tour
@@ -272,7 +279,6 @@ export default function BookingModal({ externalOpen, onExternalClose }) {
                         </div>
                       </div>
 
-                      {/* Date & Guests Grid */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="flex flex-col gap-1.5">
                           <label className="text-[11px] font-bold text-[#adceb9]/80 uppercase tracking-widest" htmlFor="date">
@@ -319,7 +325,6 @@ export default function BookingModal({ externalOpen, onExternalClose }) {
                         </div>
                       </div>
 
-                      {/* Consent Text & Submit */}
                       <div className="mt-auto pt-4 flex flex-col gap-3 border-t border-white/5">
                         <p className="text-[11px] text-[#c2c8c2]/70 leading-relaxed">
                           Bằng việc gửi thông tin, tôi xác nhận đã đọc chính sách bảo mật của 4U Tours và đồng ý để chuyên gia tư vấn liên hệ qua SĐT/Email để hỗ trợ xếp lịch trình.
@@ -332,8 +337,8 @@ export default function BookingModal({ externalOpen, onExternalClose }) {
                             color: '#adceb9',
                             border: '1px solid rgba(173, 206, 185, 0.2)'
                           }}
-                          onMouseEnter={e => e.currentTarget.style.backgroundColor = '#254f3a'}
-                          onMouseLeave={e => e.currentTarget.style.backgroundColor = '#193627'}
+                          onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#254f3a')}
+                          onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#193627')}
                         >
                           BOOK DEMO TOUR NGAY
                         </button>
@@ -344,7 +349,6 @@ export default function BookingModal({ externalOpen, onExternalClose }) {
                 </div>
               </div>
             ) : (
-              /* Success State */
               <div className="text-center p-8 sm:p-14 my-auto">
                 <div className="w-14 h-14 rounded-full bg-[#193627] border-2 border-[#adceb9] text-[#adceb9] flex items-center justify-center mx-auto mb-4">
                   <CheckCircle2 size={32} />
@@ -366,9 +370,8 @@ export default function BookingModal({ externalOpen, onExternalClose }) {
               </div>
             )}
           </div>
-        </div >
-      )
-      }
+        </div>
+      )}
     </>
   );
 }

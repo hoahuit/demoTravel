@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, ShieldCheck, Star } from 'lucide-react';
 
-const HERO_SLIDES = [
+interface HeroSlide {
+  id: number;
+  image: string;
+  location: string;
+  tagline: string;
+}
+
+const HERO_SLIDES: HeroSlide[] = [
   {
     id: 1,
     image: '/images/hero_phuquoc.png',
@@ -35,7 +42,7 @@ const HERO_SLIDES = [
 ];
 
 export default function Hero() {
-  const [activeIdx, setActiveIdx] = useState(0);
+  const [activeIdx, setActiveIdx] = useState<number>(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -134,7 +141,7 @@ export default function Hero() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
               {/* Mint Accent Line */}
               <span style={{ width: '28px', height: '1.5px', background: '#12ad6dff', display: 'inline-block' }} />
-              
+
               {/* Serial & Destination Name */}
               <span style={{
                 fontSize: '0.78rem',

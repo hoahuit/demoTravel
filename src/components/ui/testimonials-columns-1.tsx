@@ -2,7 +2,20 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Star, CheckCircle2 } from "lucide-react";
 
-export const TestimonialsColumn = (props) => {
+export interface TestimonialItem {
+  text: string;
+  image: string;
+  name: string;
+  role: string;
+}
+
+export interface TestimonialsColumnProps {
+  className?: string;
+  testimonials: TestimonialItem[];
+  duration?: number;
+}
+
+export const TestimonialsColumn: React.FC<TestimonialsColumnProps> = (props) => {
   return (
     <div className={props.className} style={{ width: '100%', minWidth: 0 }}>
       <motion.div

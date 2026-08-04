@@ -4,16 +4,15 @@ import SearchModal from './components/SearchModal';
 import BookingModal from './components/BookingModal';
 import ProductDetail from './components/ProductDetail';
 import Hero from './components/Hero';
-import InfiniteSlider from './components/InfiniteSlider';
 import BentoGrid from './components/BentoGrid';
 import AudienceBento from './components/AudienceBento';
 import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
 
 export default function App() {
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [bookingOpen, setBookingOpen] = useState(false);
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  const [searchOpen, setSearchOpen] = useState<boolean>(false);
+  const [bookingOpen, setBookingOpen] = useState<boolean>(false);
+  const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -23,7 +22,7 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  const navigateTo = (path) => {
+  const navigateTo = (path: string) => {
     window.history.pushState({}, '', path);
     setCurrentPath(path);
     window.scrollTo({ top: 0, behavior: 'smooth' });

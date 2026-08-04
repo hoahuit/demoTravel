@@ -1,23 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Menu, X, Phone, ChevronDown, Crown, Zap, Flame, Heart, Leaf, Shield, Sparkles, Compass, BookOpen, Star, HelpCircle, Calendar, Briefcase, ArrowRight } from 'lucide-react';
+import { Search, Menu, X, Phone, ChevronDown, Crown, Zap, Flame, Heart, Leaf, Shield, Sparkles, Compass, BookOpen, Star, HelpCircle, Calendar, Briefcase, ArrowRight, LucideIcon } from 'lucide-react';
 
-export default function Header({ onOpenSearch, onNavigate }) {
-  const [scrolled, setScrolled] = useState(false);
-  const [row2Visible, setRow2Visible] = useState(true);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState(null);
-  const [mobileExpandedCat, setMobileExpandedCat] = useState(null);
+export interface HeaderProps {
+  onOpenSearch?: () => void;
+  onNavigate?: (path: string) => void;
+}
+
+interface MenuItem {
+  label: string;
+  href: string;
+  icon?: LucideIcon;
+  color?: string;
+}
+
+interface MenuCategory {
+  id: string;
+  title: string;
+  hasSubmenu: boolean;
+  href: string;
+  headerTitle: string;
+  items?: MenuItem[];
+}
+
+export default function Header({ onOpenSearch, onNavigate }: HeaderProps) {
+  const [scrolled, setScrolled] = useState<boolean>(false);
+  const [row2Visible, setRow2Visible] = useState<boolean>(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [mobileExpandedCat, setMobileExpandedCat] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Toggle scrolled state for Moss Green background
       if (window.scrollY > 30) {
         setScrolled(true);
       } else {
         setScrolled(false);
       }
 
-      // Hide Row 2 when scrolling down beyond 60px
       if (window.scrollY > 60) {
         setRow2Visible(false);
       } else {
@@ -28,15 +47,13 @@ export default function Header({ onOpenSearch, onNavigate }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Row 1 Plain Text Links (All White)
   const fixedBadges = [
     { label: 'Retreats ĐỘC QUYỀN', href: '#retreats', color: '#ffffff' },
     { label: 'Sắp Khởi hành', href: '#just-released', color: '#ffffff' },
     { label: 'Ưu đãi GIỜ CHÓT', href: '#todays-deal', color: '#ffffff' },
   ];
 
-  // Row 2 Main Navigation Categories strictly matching user list (No extra links)
-  const menuData = [
+  const menuData: MenuCategory[] = [
     {
       id: 'series-retreat',
       title: 'Series Retreat',
@@ -121,11 +138,11 @@ export default function Header({ onOpenSearch, onNavigate }) {
           left: 0,
           right: 0,
           zIndex: 10000,
-          background: activeCategory 
-            ? 'rgba(10, 15, 11, 0.98)' 
-            : (scrolled 
-                ? 'rgba(13, 23, 16, 0.88)' 
-                : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%)'),
+          background: activeCategory
+            ? 'rgba(10, 15, 11, 0.98)'
+            : (scrolled
+              ? 'rgba(13, 23, 16, 0.88)'
+              : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%)'),
           backdropFilter: (activeCategory || scrolled) ? 'blur(24px) saturate(180%)' : 'none',
           WebkitBackdropFilter: (activeCategory || scrolled) ? 'blur(24px) saturate(180%)' : 'none',
           borderBottom: scrolled ? '1px solid rgba(74, 124, 89, 0.28)' : 'none',
@@ -145,7 +162,7 @@ export default function Header({ onOpenSearch, onNavigate }) {
             gap: '28px',
           }}
         >
-          {/* 1. LEFT SIDE: Original /images/logo.png Image (Click returns to Home) */}
+          {/* Logo */}
           <a
             href="/"
             onClick={(e) => {
@@ -176,7 +193,7 @@ export default function Header({ onOpenSearch, onNavigate }) {
             />
           </a>
 
-          {/* 2. CENTER SECTION: 2-Row Nav Layout */}
+          {/* Center section */}
           <div
             style={{
               display: 'flex',
@@ -187,7 +204,6 @@ export default function Header({ onOpenSearch, onNavigate }) {
               flex: 1,
             }}
           >
-            {/* ROW 1: Plain Text Links (Larger 0.95rem / 15px font) */}
             <div
               className="hide-mobile"
               style={{
@@ -224,7 +240,6 @@ export default function Header({ onOpenSearch, onNavigate }) {
               ))}
             </div>
 
-            {/* ROW 2: 5 Main Navigation Menus (Larger 1.02rem / 16px font) */}
             <div
               style={{
                 maxHeight: row2Visible ? '48px' : '0px',
@@ -310,9 +325,8 @@ export default function Header({ onOpenSearch, onNavigate }) {
             </div>
           </div>
 
-          {/* 3. RIGHT SIDE: Prominent Moss Green "Retreat NGAY" Pill CTA */}
+          {/* Right CTA */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexShrink: 0 }}>
-            {/* Moss Green Pill CTA Button: "Retreat NGAY" */}
             <a
               href="tel:0764886877"
               className="hide-mobile"
@@ -344,7 +358,6 @@ export default function Header({ onOpenSearch, onNavigate }) {
               Retreat NGAY
             </a>
 
-            {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               style={{
@@ -364,7 +377,7 @@ export default function Header({ onOpenSearch, onNavigate }) {
           </div>
         </div>
 
-        {/* ── APPLE MEGA FLYOUT DROPDOWN SUBMENU PANEL ── */}
+        {/* Flyout panel */}
         {activeCategory && activeCategoryData && activeCategoryData.hasSubmenu && (
           <div
             style={{
@@ -391,7 +404,6 @@ export default function Header({ onOpenSearch, onNavigate }) {
                 gap: '32px',
               }}
             >
-              {/* Clean Streamlined Submenu Text List (Pure Text, No Icons) */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div
                   style={{
@@ -453,7 +465,7 @@ export default function Header({ onOpenSearch, onNavigate }) {
         )}
       </div>
 
-      {/* ── BACKDROP OVERLAY WHEN FLYOUT IS OPEN ── */}
+      {/* Backdrop */}
       {activeCategory && (
         <div
           onClick={() => setActiveCategory(null)}
@@ -468,7 +480,7 @@ export default function Header({ onOpenSearch, onNavigate }) {
         />
       )}
 
-      {/* ── MOBILE FULLSCREEN DRAWER ── */}
+      {/* Mobile drawer */}
       {mobileMenuOpen && (
         <div
           style={{

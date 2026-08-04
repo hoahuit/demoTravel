@@ -1,19 +1,40 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Compass } from 'lucide-react';
 
-const cn = (...classes) => classes.filter(Boolean).join(' ');
+const cn = (...classes: (string | undefined | false)[]) => classes.filter(Boolean).join(' ');
 
-export const CircularGallery = React.forwardRef(
+export interface GalleryPhoto {
+  url: string;
+  fallback?: string;
+  text?: string;
+  pos?: string;
+  by?: string;
+}
+
+export interface GalleryItem {
+  common: string;
+  binomial: string;
+  photo: GalleryPhoto;
+}
+
+export interface CircularGalleryProps extends React.HTMLAttributes<HTMLDivElement> {
+  items: GalleryItem[];
+  className?: string;
+  radius?: number;
+  autoRotateSpeed?: number;
+}
+
+export const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
   ({ items, className, radius: radiusProp = 560, autoRotateSpeed = 0.06, ...props }, ref) => {
-    const [rotation, setRotation] = useState(0);
-    const [isInteracting, setIsInteracting] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
+    const [rotation, setRotation] = useState<number>(0);
+    const [isInteracting, setIsInteracting] = useState<boolean>(false);
+    const [isMobile, setIsMobile] = useState<boolean>(false);
 
-    const containerRef = useRef(null);
-    const isDraggingRef = useRef(false);
-    const startXRef = useRef(0);
-    const startRotationRef = useRef(0);
-    const animationFrameRef = useRef(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const isDraggingRef = useRef<boolean>(false);
+    const startXRef = useRef<number>(0);
+    const startRotationRef = useRef<number>(0);
+    const animationFrameRef = useRef<number | null>(null);
 
     // Responsive: detect mobile viewport
     useEffect(() => {
@@ -28,12 +49,12 @@ export const CircularGallery = React.forwardRef(
     const cardH = isMobile ? 280 : 380;
     const btnSize = isMobile ? 40 : 56;
 
-    // Mouse wheel rotation (prevents outer page scroll when mouse is inside carousel)
+    // Mouse wheel rotation
     useEffect(() => {
       const el = containerRef.current;
       if (!el) return;
 
-      const handleWheel = (e) => {
+      const handleWheel = (e: WheelEvent) => {
         e.preventDefault();
         setIsInteracting(true);
         setRotation((prev) => prev + e.deltaY * 0.18);
@@ -44,17 +65,18 @@ export const CircularGallery = React.forwardRef(
     }, []);
 
     // Drag / Touch gestures for Coverflow rotation
-    const handleMouseDown = (e) => {
+    const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
       isDraggingRef.current = true;
-      startXRef.current = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+      const clientX = 'clientX' in e ? e.clientX : e.touches[0].clientX;
+      startXRef.current = clientX || 0;
       startRotationRef.current = rotation;
       setIsInteracting(true);
     };
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
       if (!isDraggingRef.current) return;
-      const currentX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
-      const diff = currentX - startXRef.current;
+      const clientX = 'clientX' in e ? e.clientX : e.touches[0].clientX;
+      const diff = clientX - startXRef.current;
       setRotation(startRotationRef.current - diff * 0.35);
     };
 
@@ -110,7 +132,7 @@ export const CircularGallery = React.forwardRef(
         onTouchEnd={handleMouseUp}
         {...props}
       >
-        {/* Fixed Prev Button at Left Edge */}
+        {/* Prev Button */}
         <button
           onClick={handlePrev}
           aria-label="Previous Card"
@@ -139,7 +161,7 @@ export const CircularGallery = React.forwardRef(
           <ChevronLeft size={28} />
         </button>
 
-        {/* Fixed Next Button at Right Edge */}
+        {/* Next Button */}
         <button
           onClick={handleNext}
           aria-label="Next Card"
@@ -226,7 +248,7 @@ export const CircularGallery = React.forwardRef(
                 >
                   <img
                     src={item.photo.url}
-                    alt={item.photo.text}
+                    alt={item.photo.text || ''}
                     draggable="false"
                     onError={(e) => {
                       if (item.photo.fallback && e.currentTarget.src !== item.photo.fallback) {
