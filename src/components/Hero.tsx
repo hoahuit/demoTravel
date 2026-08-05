@@ -74,7 +74,7 @@ export default function Hero() {
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
           {HERO_SLIDES.map((slide, index) => {
             const isActive = index === activeIdx;
-            const isZoomIn = index % 2 === 0; // Alternating direction: even = zoom in (scale 1 -> 1.08), odd = zoom out (scale 1.08 -> 1)
+            const isZoomIn = index % 2 === 0; // Alternating direction: even = zoom in, odd = zoom out
 
             return (
               <div
@@ -83,7 +83,7 @@ export default function Hero() {
                   position: 'absolute',
                   inset: 0,
                   opacity: isActive ? 1 : 0,
-                  transition: 'opacity 1000ms cubic-bezier(0.4, 0, 0.2, 1)', // ~1s crossfade duration
+                  transition: 'opacity 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
                   pointerEvents: 'none',
                   willChange: 'opacity'
                 }}
@@ -106,7 +106,7 @@ export default function Hero() {
           })}
         </div>
 
-        {/* ── 2. STATIC DARK GRADIENT OVERLAY (Always readable, fixed) ── */}
+        {/* ── 2. STATIC DARK GRADIENT OVERLAY ── */}
         <div
           style={{
             position: 'absolute',
@@ -151,7 +151,7 @@ export default function Hero() {
                 borderRadius: '20px',
                 border: '1px solid rgba(52, 211, 153, 0.3)'
               }}>
-                🔥 RETREAT HOT THÁNG NÀY • {currentSlide.location}
+                RETREAT HOT THÁNG NÀY • {currentSlide.location}
               </span>
             </div>
 
@@ -168,31 +168,32 @@ export default function Hero() {
           </div>
 
           <h1 className="apple-hero-title" style={{ color: '#ffffff', marginBottom: '16px', lineHeight: 1.15 }}>
-            Retreat Kết Nối <br />
+            Trở Về Với <br />
             <span style={{
               background: 'linear-gradient(135deg, #ffffff 0%, #34d399 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }}>
-              & Chữa Lành
+              Chính Mình
             </span>
           </h1>
 
           <p style={{
-            fontSize: '1.4rem',
+            fontSize: '1.25rem',
             color: '#adceb9',
             fontFamily: "'Playfair Display', Georgia, serif",
             fontStyle: 'italic',
-            fontWeight: '600',
+            fontWeight: '500',
             marginBottom: '28px',
-            lineHeight: '1.5'
+            lineHeight: '1.6'
           }}>
-            "Tĩnh Lặng Giữa Đại Ngàn"
+            "Phục hồi Thân · Tâm · Trí giữa Thiên nhiên Vườn Quốc Gia Cát Tiên, nơi được Buông, được Thở, và tìm lại câu trả lời cho chính mình."
           </p>
 
           {/* CTA Buttons */}
           <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
             <button
+              type="button"
               className="apple-btn-primary"
               style={{
                 background: 'linear-gradient(135deg, #12ad6dff 0%, #12ad6dff 100%)',
@@ -207,6 +208,7 @@ export default function Hero() {
             </button>
 
             <button
+              type="button"
               className="apple-btn-secondary"
               style={{
                 background: 'rgba(255, 255, 255, 0.12)',
