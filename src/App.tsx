@@ -25,8 +25,16 @@ import RetreatHot from './pages/retreat/retreathot/RetreatHot';
 
 export default function App() {
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
-  const [bookingOpen, setBookingOpen] = useState<boolean>(false);
+  const [bookingState, setBookingState] = useState<{ open: boolean; tour: any }>({ open: false, tour: null });
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
+
+  const handleOpenBooking = (tourData?: any) => {
+    setBookingState({ open: true, tour: tourData || null });
+  };
+
+  const handleCloseBooking = () => {
+    setBookingState({ open: false, tour: null });
+  };
 
   useEffect(() => {
     const handlePopState = () => {
@@ -89,37 +97,31 @@ export default function App() {
 
   const renderCurrentRoute = () => {
     if (isProductRoute) {
-      return (
-        <ProductDetail
-          productSlug={productSlug}
-          onBackHome={() => navigateTo('/')}
-          onOpenBooking={() => setBookingOpen(true)}
-        />
-      );
+      return <ProductDetail productSlug={productSlug} onBackHome={() => navigateTo('/')} onOpenBooking={handleOpenBooking} />;
     }
     if (isRetreatDocQuyenRoute) {
-      return <RetreatDocQuyen onNavigate={navigateTo} onOpenBooking={() => setBookingOpen(true)} />;
+      return <RetreatDocQuyen onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
     if (isSapKhoiHanhRoute) {
-      return <SapKhoiHanh onNavigate={navigateTo} onOpenBooking={() => setBookingOpen(true)} />;
+      return <SapKhoiHanh onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
     if (isKhongTheBoLoRoute) {
-      return <KhongTheBoLo onNavigate={navigateTo} onOpenBooking={() => setBookingOpen(true)} />;
+      return <KhongTheBoLo onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
     if (isUuDaiGioChotRoute) {
-      return <UuDaiGioChot onNavigate={navigateTo} onOpenBooking={() => setBookingOpen(true)} />;
+      return <UuDaiGioChot onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
     if (isRetreatHotRoute) {
-      return <RetreatHot onNavigate={navigateTo} onOpenBooking={() => setBookingOpen(true)} />;
+      return <RetreatHot onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
     if (isToursRoute) {
-      return <ToursPage currentPath={currentPath} onNavigate={navigateTo} onOpenBooking={() => setBookingOpen(true)} />;
+      return <ToursPage currentPath={currentPath} onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
     if (isDestinationsRoute) {
-      return <DestinationsPage onNavigate={navigateTo} />;
+      return <DestinationsPage onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
     if (isServicesRoute) {
-      return <ServicesPage onOpenBooking={() => setBookingOpen(true)} />;
+      return <ServicesPage onOpenBooking={handleOpenBooking} />;
     }
     if (isBlogRoute) {
       return <BlogPage onNavigate={navigateTo} />;
@@ -128,7 +130,7 @@ export default function App() {
       return <AboutPage />;
     }
     if (isPromotionsRoute) {
-      return <PromotionsPage onNavigate={navigateTo} onOpenBooking={() => setBookingOpen(true)} />;
+      return <PromotionsPage onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
     if (isFaqRoute) {
       return <FAQPage />;
@@ -137,13 +139,13 @@ export default function App() {
     return (
       <main>
         {/* Section 1: Apple Product Feature Hero */}
-        <Hero onOpenBooking={() => setBookingOpen(true)} />
+        <Hero onOpenBooking={handleOpenBooking} />
 
         {/* Section 2: Target Audience 3D Carousel */}
-        <AudienceBento />
+        <AudienceBento onOpenBooking={handleOpenBooking} onNavigate={navigateTo} />
 
         {/* Section 3: 4U Signature Retreats Bento Showcase */}
-        <BentoGrid onNavigate={navigateTo} onOpenBooking={() => setBookingOpen(true)} />
+        <BentoGrid onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />
 
         {/* Section 4: Testimonials Editorial Section */}
         <Testimonials />
@@ -156,14 +158,18 @@ export default function App() {
       {/* Search Modal */}
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
-      {/* Booking Calendar & Scroll-to-Top Floating Modal */}
-      <BookingModal externalOpen={bookingOpen} onExternalClose={() => setBookingOpen(false)} />
+      {/* Booking Calendar & Scroll-to-Top Floating Modal with PayPal Payment */}
+      <BookingModal
+        externalOpen={bookingState.open}
+        onExternalClose={handleCloseBooking}
+        selectedTour={bookingState.tour}
+      />
 
       {/* Header */}
       <Header
         onOpenSearch={() => setSearchOpen(true)}
         onNavigate={navigateTo}
-        onOpenBooking={() => setBookingOpen(true)}
+        onOpenBooking={handleOpenBooking}
       />
 
       {/* Conditional Route Rendering */}

@@ -4,9 +4,10 @@ import { MapPin, Compass, ArrowRight, Camera, Star } from 'lucide-react';
 
 interface DestinationsPageProps {
   onNavigate: (path: string) => void;
+  onOpenBooking?: (tourData?: any) => void;
 }
 
-export default function DestinationsPage({ onNavigate }: DestinationsPageProps) {
+export default function DestinationsPage({ onNavigate, onOpenBooking }: DestinationsPageProps) {
   const [activeRegion, setActiveRegion] = useState<string>('All');
 
   const regions = ['All', 'Đông Nam Á', 'Đông Bắc Á', 'Châu Âu'];

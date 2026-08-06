@@ -8,7 +8,7 @@ import ElegantCarousel, { SlideData } from './ui/elegant-carousel';
 export interface ProductDetailProps {
   productSlug?: string;
   onBackHome?: () => void;
-  onOpenBooking?: () => void;
+  onOpenBooking?: (tourData?: any) => void;
 }
 
 export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBackHome, onOpenBooking }: ProductDetailProps) {
@@ -557,7 +557,16 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
 
                   {/* Submit Booking Button */}
                   <button
-                    onClick={onOpenBooking}
+                    onClick={() => {
+                      if (onOpenBooking) {
+                        onOpenBooking({
+                          title: product.title,
+                          price: product.priceAdult,
+                          city: product.location,
+                          duration: product.duration
+                        });
+                      }
+                    }}
                     style={{
                       width: '100%',
                       background: '#062c23',

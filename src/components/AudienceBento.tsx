@@ -2,7 +2,12 @@ import React from 'react';
 import Carousel3D from './Carousel3D';
 import ScrollReveal from './ScrollReveal';
 
-export default function AudienceBento() {
+export interface AudienceBentoProps {
+  onOpenBooking?: (tourData?: any) => void;
+  onNavigate?: (path: string) => void;
+}
+
+export default function AudienceBento({ onOpenBooking, onNavigate }: AudienceBentoProps) {
   return (
     <section className="audience-section" style={{ background: '#f3f7f4', overflow: 'hidden', position: 'relative', zIndex: 5, padding: '90px 0 100px 0' }} id="audience">
       <div className="apple-container">
@@ -25,7 +30,7 @@ export default function AudienceBento() {
       {/* NEW 3D CAROUSEL COMPONENT — FULL SCREEN WIDTH */}
       <ScrollReveal delay={150}>
         <div style={{ width: '100%', overflow: 'hidden' }}>
-          <Carousel3D />
+          <Carousel3D onOpenBooking={onOpenBooking} onNavigate={onNavigate} />
         </div>
       </ScrollReveal>
     </section>

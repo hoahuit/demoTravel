@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 interface CardItem {
   id: number;
+  slug?: string;
   tag: string;
   title: string;
   subtitle: string;
@@ -20,6 +21,7 @@ interface CardItem {
 const CARDS: CardItem[] = [
   {
     id: 1,
+    slug: "tinh-lang-giua-dai-ngan",
     tag: "Retreat HOT",
     title: "Tĩnh Lặng Giữa Đại Ngàn",
     subtitle: "Nam Cát Tiên • Kết Nối & Chữa Lành",
@@ -34,6 +36,7 @@ const CARDS: CardItem[] = [
   },
   {
     id: 2,
+    slug: "di-san-vinh-ha-long",
     tag: "Retreat ĐỘC QUYỀN",
     title: "Di Sản Vịnh Hạ Long",
     subtitle: "Vịnh Hạ Long • Kỳ Quan Thiên Nhiên",
@@ -48,6 +51,7 @@ const CARDS: CardItem[] = [
   },
   {
     id: 3,
+    slug: "binh-yen-tren-cao-nguyen",
     tag: "KHÔNG THỂ BỎ LỠ",
     title: "Tìm Lại Bình Yên trên Cao Nguyên",
     subtitle: "Đà Lạt • Cân Bằng Thân Tâm Trí",
@@ -62,6 +66,7 @@ const CARDS: CardItem[] = [
   },
   {
     id: 4,
+    slug: "chon-bong-lai-sapa",
     tag: "ƯU ĐÃI GIỜ CHÓT",
     title: "Sương Mờ Đỉnh Fansipan",
     subtitle: "Sapa • Ruộng Bậc Thang & Bản Địa",
@@ -76,6 +81,7 @@ const CARDS: CardItem[] = [
   },
   {
     id: 5,
+    slug: "binh-yen-tren-cao-nguyen",
     tag: "Retreat HOT",
     title: "Hoàng Hôn Đảo Ngọc",
     subtitle: "Phú Quốc • Biển Xanh & Phục Hồi",
@@ -95,7 +101,12 @@ const EASING = "cubic-bezier(0.4, 0, 0.2, 1)";
 const ROTATE_SPEED = 0.00022;
 const EXPAND_MS = 480;
 
-export default function Carousel3D() {
+export interface Carousel3DProps {
+  onOpenBooking?: (tourData?: any) => void;
+  onNavigate?: (path: string) => void;
+}
+
+export default function Carousel3D({ onOpenBooking, onNavigate }: Carousel3DProps) {
   const [position, setPosition] = useState<number>(0);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [expandedCard, setExpandedCard] = useState<CardItem | null>(null);
@@ -386,6 +397,8 @@ export default function Carousel3D() {
           startRect={startRect}
           onClose={closeExpanded}
           durationMs={EXPAND_MS}
+          onOpenBooking={onOpenBooking}
+          onNavigate={onNavigate}
         />,
         document.body
       )}
@@ -399,12 +412,16 @@ function ExpandedCard({
   startRect,
   onClose,
   durationMs,
+  onOpenBooking,
+  onNavigate,
 }: {
   card: CardItem;
   phase: string;
   startRect: { left: number; top: number; width: number; height: number } | null;
   onClose: () => void;
   durationMs: number;
+  onOpenBooking?: (tourData?: any) => void;
+  onNavigate?: (path: string) => void;
 }) {
   const isOpenPhase = phase === "open";
 
@@ -713,11 +730,11 @@ function ExpandedCard({
               </span>
             </div>
 
-            <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
               <button
                 onClick={onClose}
                 style={{
-                  padding: "10px 18px",
+                  padding: "10px 16px",
                   borderRadius: 8,
                   border: "1px solid rgba(255,255,255,0.2)",
                   background: "transparent",
@@ -738,6 +755,45 @@ function ExpandedCard({
               </button>
 
               <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onClose();
+                  if (onNavigate) {
+                    onNavigate(`/sanpham/${card?.slug || 'tinh-lang-giua-dai-ngan'}`);
+                  }
+                }}
+                style={{
+                  padding: "10px 18px",
+                  borderRadius: 8,
+                  border: "1px solid rgba(255,255,255,0.3)",
+                  background: "rgba(255,255,255,0.12)",
+                  color: "#ffffff",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(255,255,255,0.25)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(255,255,255,0.12)";
+                }}
+              >
+                🔍 Xem Chi Tiết
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onOpenBooking) {
+                    onOpenBooking({
+                      title: card?.title || '4U Wellness Retreat',
+                      price: card?.price || 6500000,
+                      city: card?.tag || 'Retreat'
+                    });
+                  }
+                }}
                 style={{
                   padding: "10px 22px",
                   borderRadius: 8,
@@ -756,7 +812,7 @@ function ExpandedCard({
                   e.currentTarget.style.background = "#2d5a36";
                 }}
               >
-                Retreat NGAY
+                Đặt Ngay
               </button>
             </div>
           </div>
