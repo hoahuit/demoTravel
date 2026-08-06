@@ -372,7 +372,7 @@ export default function Testimonials() {
               letterSpacing: '-0.01em'
             }}
           >
-            Khách hàng nói gì về trải nghiệm <span style={{ color: '#2E86AB' }}>4U Retreat</span>?
+            Khách hàng nói gì về trải nghiệm <span style={{ color: '#2D5A36', fontWeight: 700 }}>4U Retreat</span>?
           </h2>
           <p style={{ fontSize: '15.5px', color: 'rgba(16,32,27,0.6)', lineHeight: 1.6, margin: 0 }}>
             Lắng nghe cảm nhận thực tế từ các gia đình, doanh nghiệp & khách du lịch quốc tế sau chuyến đi.

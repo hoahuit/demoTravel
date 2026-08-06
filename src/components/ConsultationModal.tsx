@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronUp, Phone, CheckCircle2, ShieldCheck, Sparkles, MessageCircle, User, Mail, Calendar, Heart } from 'lucide-react';
+import { MessageCircle, ChevronUp } from 'lucide-react';
 
 export interface ConsultationModalProps {
   externalOpen?: boolean;
@@ -128,7 +128,9 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
               justifyContent: 'center',
               boxShadow: '0 8px 32px rgba(34, 197, 94, 0.4), 0 4px 12px rgba(0,0,0,0.15)',
               transition: 'all 0.3s cubic-bezier(.22,.61,.36,1)',
-              position: 'relative'
+              position: 'relative',
+              fontWeight: 700,
+              fontSize: '13px'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'scale(1.12)';
@@ -215,8 +217,7 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
               borderRadius: '24px',
               boxShadow: '0 40px 90px -20px rgba(0, 0, 0, 0.5)',
               position: 'relative',
-              animation: 'cmSlide 0.4s cubic-bezier(.22,.61,.36,1) forwards',
-              fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif"
+              animation: 'cmSlide 0.4s cubic-bezier(.22,.61,.36,1) forwards'
             }}
           >
             {/* Close Button */}
@@ -238,20 +239,18 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.2s ease',
-                color: '#374151'
+                color: '#374151',
+                fontWeight: 'bold',
+                fontSize: '14px'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = 'rgba(0,0,0,0.12)';
-                e.currentTarget.style.transform = 'rotate(90deg)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'rgba(0,0,0,0.06)';
-                e.currentTarget.style.transform = 'rotate(0deg)';
               }}
             >
-              <svg viewBox="0 0 20 20" fill="none" style={{ width: '14px', height: '14px' }}>
-                <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" strokeWidth="2" />
-              </svg>
+              X
             </button>
 
             {!submitted ? (
@@ -296,7 +295,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                     borderRadius: '999px',
                     marginBottom: '16px'
                   }}>
-                    <Heart size={12} color="#4ade80" />
                     <span style={{
                       fontSize: '11px',
                       fontWeight: 700,
@@ -309,11 +307,10 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                   </div>
 
                   <h2 style={{
-                    fontSize: '28px',
+                    fontSize: '30px',
                     fontWeight: 800,
                     color: '#ffffff',
                     margin: '0 0 10px 0',
-                    fontFamily: "'Playfair Display', Georgia, serif",
                     lineHeight: 1.2
                   }}>
                     Đăng Ký Nhận Tư Vấn{' '}
@@ -326,7 +323,7 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                   </h2>
 
                   <p style={{
-                    fontSize: '14px',
+                    fontSize: '17px',
                     color: 'rgba(255,255,255,0.75)',
                     lineHeight: 1.6,
                     margin: 0
@@ -351,7 +348,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                         gap: '6px',
                         marginBottom: '8px'
                       }}>
-                        <User size={13} />
                         Họ & Tên <span style={{ color: '#ef4444' }}>*</span>
                       </label>
                       <input
@@ -371,7 +367,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                           color: '#0f172a',
                           outline: 'none',
                           transition: 'all 0.2s ease',
-                          fontFamily: "'Plus Jakarta Sans', sans-serif",
                           boxSizing: 'border-box' as const
                         }}
                         onFocus={(e) => {
@@ -401,7 +396,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                           gap: '6px',
                           marginBottom: '8px'
                         }}>
-                          <Phone size={13} />
                           SĐT / Zalo <span style={{ color: '#ef4444' }}>*</span>
                         </label>
                         <input
@@ -421,7 +415,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                             color: '#0f172a',
                             outline: 'none',
                             transition: 'all 0.2s ease',
-                            fontFamily: "'Plus Jakarta Sans', sans-serif",
                             boxSizing: 'border-box' as const
                           }}
                           onFocus={(e) => {
@@ -448,7 +441,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                           gap: '6px',
                           marginBottom: '8px'
                         }}>
-                          <Mail size={13} />
                           Email
                         </label>
                         <input
@@ -467,7 +459,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                             color: '#0f172a',
                             outline: 'none',
                             transition: 'all 0.2s ease',
-                            fontFamily: "'Plus Jakarta Sans', sans-serif",
                             boxSizing: 'border-box' as const
                           }}
                           onFocus={(e) => {
@@ -498,7 +489,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                           gap: '6px',
                           marginBottom: '8px'
                         }}>
-                          <Sparkles size={13} />
                           Gói Retreat Quan Tâm
                         </label>
                         <select
@@ -516,7 +506,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                             outline: 'none',
                             appearance: 'none' as const,
                             cursor: 'pointer',
-                            fontFamily: "'Plus Jakarta Sans', sans-serif",
                             boxSizing: 'border-box' as const,
                             backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%231E4A3D' stroke-width='1.6'><path d='M5 8l5 5 5-5'/></svg>\")",
                             backgroundRepeat: 'no-repeat',
@@ -545,7 +534,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                           gap: '6px',
                           marginBottom: '8px'
                         }}>
-                          <Calendar size={13} />
                           Thời Gian Tiện Gọi
                         </label>
                         <select
@@ -563,7 +551,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                             outline: 'none',
                             appearance: 'none' as const,
                             cursor: 'pointer',
-                            fontFamily: "'Plus Jakarta Sans', sans-serif",
                             boxSizing: 'border-box' as const,
                             backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%231E4A3D' stroke-width='1.6'><path d='M5 8l5 5 5-5'/></svg>\")",
                             backgroundRepeat: 'no-repeat',
@@ -593,7 +580,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                         gap: '6px',
                         marginBottom: '8px'
                       }}>
-                        <MessageCircle size={13} />
                         Lời Nhắn Thêm
                       </label>
                       <textarea
@@ -612,7 +598,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                           color: '#0f172a',
                           outline: 'none',
                           resize: 'vertical' as const,
-                          fontFamily: "'Plus Jakarta Sans', sans-serif",
                           lineHeight: 1.6,
                           minHeight: '80px',
                           boxSizing: 'border-box' as const,
@@ -642,7 +627,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                         cursor: 'pointer',
                         background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%)',
                         color: '#062c23',
-                        fontFamily: "'Plus Jakarta Sans', sans-serif",
                         fontSize: '15px',
                         fontWeight: 800,
                         letterSpacing: '0.04em',
@@ -662,7 +646,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                         e.currentTarget.style.boxShadow = '0 4px 20px rgba(34, 197, 94, 0.3)';
                       }}
                     >
-                      <Phone size={18} />
                       Gửi Yêu Cầu Tư Vấn Miễn Phí
                     </button>
 
@@ -673,10 +656,9 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                       justifyContent: 'center',
                       gap: '8px',
                       marginTop: '16px',
-                      fontSize: '12px',
+                      fontSize: '14px',
                       color: '#64748b'
                     }}>
-                      <ShieldCheck size={14} color="#22c55e" />
                       Thông tin bảo mật 100% • Tư vấn hoàn toàn miễn phí
                     </div>
                   </form>
@@ -698,7 +680,7 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                       <div style={{ fontSize: '11px', fontWeight: 700, color: '#1E4A3D', letterSpacing: '0.08em', textTransform: 'uppercase' as const, marginBottom: '4px' }}>
                         Hoặc gọi ngay Hotline
                       </div>
-                      <div style={{ fontSize: '13px', color: '#475569' }}>
+                      <div style={{ fontSize: '14px', color: '#475569' }}>
                         Chuyên gia tư vấn trực tuyến 24/7
                       </div>
                     </div>
@@ -715,12 +697,10 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                         textDecoration: 'none',
                         fontSize: '15px',
                         fontWeight: 700,
-                        fontFamily: "'Playfair Display', Georgia, serif",
                         transition: 'all 0.2s ease',
                         whiteSpace: 'nowrap' as const
                       }}
                     >
-                      <Phone size={15} />
                       0764.886.877
                     </a>
                   </div>
@@ -729,24 +709,8 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
             ) : (
               /* SUCCESS VIEW */
               <div style={{ padding: '60px 40px', textAlign: 'center' as const }}>
-                <div style={{
-                  width: '80px',
-                  height: '80px',
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #f0fdf4, #dcfce7)',
-                  border: '3px solid #22c55e',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 24px',
-                  animation: 'cmBounce 0.6s cubic-bezier(.22,.61,.36,1) forwards'
-                }}>
-                  <CheckCircle2 size={42} color="#166534" />
-                </div>
-
                 <h3 style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: '28px',
+                  fontSize: '30px',
                   color: '#0f172a',
                   marginBottom: '12px',
                   fontWeight: 800
@@ -755,7 +719,7 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                 </h3>
 
                 <p style={{
-                  fontSize: '15px',
+                  fontSize: '17px',
                   color: '#475569',
                   lineHeight: 1.7,
                   maxWidth: '440px',
@@ -772,12 +736,11 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                   border: '1px solid #bbf7d0',
                   padding: '8px 18px',
                   borderRadius: '999px',
-                  fontSize: '13px',
+                  fontSize: '14px',
                   color: '#166534',
                   fontWeight: 600,
                   marginBottom: '32px'
                 }}>
-                  <Phone size={14} />
                   Thời gian phản hồi: Trong vòng 30 phút
                 </div>
 

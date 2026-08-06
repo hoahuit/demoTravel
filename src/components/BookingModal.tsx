@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, ShieldCheck, Lock, Sparkles } from 'lucide-react';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import './BookingModal.css';
 
@@ -96,10 +95,8 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
         >
           <div className="bm-modal" style={{ maxWidth: '960px', width: '92vw', maxHeight: '90vh', overflowY: 'auto' }}>
             {/* Close Button */}
-            <button className="bm-close-btn" onClick={resetAndClose} aria-label="Đóng">
-              <svg viewBox="0 0 20 20" fill="none">
-                <path d="M4 4l12 12M16 4L4 16" />
-              </svg>
+            <button className="bm-close-btn" onClick={resetAndClose} aria-label="Đóng" style={{ fontWeight: 'bold', fontSize: '14px' }}>
+              X
             </button>
 
             {!submitted ? (
@@ -107,20 +104,19 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
                 {/* LEFT PANEL: PRODUCT SUMMARY & SUMMARY ORDER */}
                 <div className="bm-panel-left" style={{ background: '#1E4A3D', color: '#ffffff', padding: '36px 32px' }}>
                   <span className="bm-panel-eyebrow" style={{ color: '#4ade80', letterSpacing: '0.15em' }}>
-                    <Sparkles size={14} style={{ display: 'inline', marginRight: '6px' }} />
                     THANH TOÁN AN TOÀN
                   </span>
-                  <h3 style={{ fontSize: '24px', fontWeight: 800, color: '#ffffff', margin: '12px 0 16px 0', fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  <h3 style={{ fontSize: '30px', fontWeight: 800, color: '#ffffff', margin: '12px 0 16px 0' }}>
                     Xác Nhận Đặt Gói Retreat
                   </h3>
 
                   <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: '16px', padding: '20px', marginBottom: '24px', border: '1px solid rgba(255,255,255,0.15)' }}>
                     <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '6px' }}>Gói Đã Chọn</div>
-                    <div style={{ fontSize: '16px', fontWeight: 700, color: '#ffffff', marginBottom: '8px', lineHeight: 1.4 }}>
+                    <div style={{ fontSize: '17px', fontWeight: 700, color: '#ffffff', marginBottom: '8px', lineHeight: 1.4 }}>
                       {formData.tour}
                     </div>
                     {selectedTour?.city && (
-                      <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.85)' }}>📍 {selectedTour.city} • {selectedTour.duration || '3D2N'}</div>
+                      <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.85)' }}>{selectedTour.city} • {selectedTour.duration || '3D2N'}</div>
                     )}
                   </div>
 
@@ -148,16 +144,13 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
                   </div>
 
                   <ul className="bm-perk-list">
-                    <li style={{ color: 'rgba(255,255,255,0.9)', fontSize: '13px' }}>
-                      <span className="bm-check" style={{ background: '#4ade80', color: '#1E4A3D' }}>✓</span>
+                    <li style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px' }}>
                       Xác nhận giữ chỗ tức thì qua cổng PayPal
                     </li>
-                    <li style={{ color: 'rgba(255,255,255,0.9)', fontSize: '13px' }}>
-                      <span className="bm-check" style={{ background: '#4ade80', color: '#1E4A3D' }}>✓</span>
+                    <li style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px' }}>
                       Bảo mật SSL 256-bit mã hóa giao diện quốc tế
                     </li>
-                    <li style={{ color: 'rgba(255,255,255,0.9)', fontSize: '13px' }}>
-                      <span className="bm-check" style={{ background: '#4ade80', color: '#1E4A3D' }}>✓</span>
+                    <li style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px' }}>
                       Hỗ trợ đổi ngày & hoàn hủy linh hoạt 24/7
                     </li>
                   </ul>
@@ -165,7 +158,6 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
                   <div className="bm-hotline-box" style={{ marginTop: 'auto', background: 'rgba(0,0,0,0.25)' }}>
                     <span className="bm-mono" style={{ color: 'rgba(255,255,255,0.7)' }}>Hotline Hỗ Trợ Thanh Toán 24/7</span>
                     <a href="tel:0764886877" className="bm-number" style={{ color: '#ffffff' }}>
-                      <span className="bm-pulse-dot" />
                       0764.886.877
                     </a>
                   </div>
@@ -173,8 +165,8 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
 
                 <div className="bm-panel-right" style={{ padding: '36px' }}>
                   <div className="bm-form-head">
-                    <h2 style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a' }}>Thanh Toán & Đặt Tour</h2>
-                    <p style={{ fontSize: '14px', color: '#64748b' }}>Nhập thông tin cá nhân và thanh toán qua PayPal.</p>
+                    <h2 style={{ fontSize: '30px', fontWeight: 800, color: '#0f172a' }}>Thanh Toán & Đặt Tour</h2>
+                    <p style={{ fontSize: '17px', color: '#64748b' }}>Nhập thông tin cá nhân và thanh toán qua PayPal.</p>
                   </div>
 
                   <div>
@@ -244,8 +236,8 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
 
                     {/* PAYPAL PAYMENT BUTTONS */}
                     <div style={{ marginTop: '20px' }}>
-                      <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <Lock size={14} style={{ color: '#006d36' }} /> Thanh toán an toàn qua cổng PayPal (Chấp nhận Visa, Mastercard, AMEX):
+                      <div style={{ fontSize: '14px', color: '#64748b', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        Thanh toán an toàn qua cổng PayPal (Chấp nhận Visa, Mastercard, AMEX):
                       </div>
 
                       <PayPalScriptProvider options={{ clientId: 'test', currency: 'USD' }}>
@@ -303,17 +295,16 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
                           background: '#f8fafc',
                           border: '1px dashed #cbd5e1',
                           borderRadius: '10px',
-                          fontSize: '12px',
+                          fontSize: '14px',
                           color: '#475569',
                           cursor: 'pointer'
                         }}
                       >
-                        ⚡ Bấm vào đây để Test Thanh Toán PayPal Thành Công Tức Thì (Demo Sandbox)
+                        Bấm vào đây để Test Thanh Toán PayPal Thành Công Tức Thì (Demo Sandbox)
                       </button>
                     </div>
 
-                    <div className="bm-form-note" style={{ marginTop: '16px' }}>
-                      <ShieldCheck size={14} style={{ color: '#006d36' }} />
+                    <div className="bm-form-note" style={{ marginTop: '16px', fontSize: '14px' }}>
                       Thông tin của bạn được bảo mật tuyệt đối 100%
                     </div>
                   </div>
@@ -322,27 +313,9 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
             ) : (
               /* SUCCESS RECEIPT VIEW */
               <div style={{ padding: '60px 40px', textAlign: 'center', width: '100%' }}>
-                <div
-                  style={{
-                    width: '72px',
-                    height: '72px',
-                    borderRadius: '50%',
-                    background: '#f0fdf4',
-                    border: '2px solid #22c55e',
-                    color: '#166534',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 20px'
-                  }}
-                >
-                  <CheckCircle2 size={42} color="#166534" />
-                </div>
-
                 <h3
                   style={{
-                    fontFamily: "'Playfair Display', Georgia, serif",
-                    fontSize: '32px',
+                    fontSize: '30px',
                     color: '#0f172a',
                     marginBottom: '10px',
                     fontWeight: 800
@@ -350,7 +323,7 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
                 >
                   Thanh Toán Thành Công!
                 </h3>
-                <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6, maxWidth: '520px', margin: '0 auto 28px' }}>
+                <p style={{ fontSize: '17px', color: '#475569', lineHeight: 1.6, maxWidth: '520px', margin: '0 auto 28px' }}>
                   Cảm ơn <strong>{formData.name}</strong>. Giao dịch đặt gói <strong>{formData.tour}</strong> đã được ghi nhận an toàn trên hệ thống.
                 </p>
 

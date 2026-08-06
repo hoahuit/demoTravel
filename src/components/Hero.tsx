@@ -98,10 +98,10 @@ export default function Hero({ onOpenBooking }: HeroProps = {}) {
             Trở Về Với{' '}
             <span
               style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
                 fontStyle: 'italic',
-                fontWeight: 700,
-                background: 'linear-gradient(135deg, #ffffff 0%, #4ade80 50%, #22c55e 100%)',
+                fontWeight: 800,
+                color: '#facc15',
+                background: 'linear-gradient(135deg, #fff7ed 0%, #facc15 50%, #eab308 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 display: 'inline-block'

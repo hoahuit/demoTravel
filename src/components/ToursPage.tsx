@@ -22,82 +22,92 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
   const [activePhotoIndex, setActivePhotoIndex] = useState<number>(0);
 
   // Compute Page Header details dynamically based on active route path
-  // Compute Page Header details dynamically based on active route path
   const pageHeader = useMemo(() => {
     if (currentPath.includes('/series-retreat/chua-lanh') || currentPath.includes('/retreat-chua-lanh')) {
       return {
         badge: 'SERIES RETREAT · CHỮA LÀNH',
         title: 'Series Retreat Chữa Lành Thân · Tâm · Trí',
-        subtitle: 'Nhật ký các hành trình buông bỏ âu lo, nuôi dưỡng năng lượng bình an với thiền chuông xoay & âm thanh trị liệu'
+        subtitle: 'Nhật ký các hành trình buông bỏ âu lo, nuôi dưỡng năng lượng bình an với thiền chuông xoay & âm thanh trị liệu',
+        heroImage: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=85&w=2560&auto=format&fit=crop'
       };
     }
     if (currentPath.includes('/series-retreat/bao-ton') || currentPath.includes('/retreat-bao-ton')) {
       return {
         badge: 'SERIES RETREAT · BẢO TỒN',
         title: 'Series Retreat Bảo Tồn & Thiên Nhiên',
-        subtitle: 'Những câu chuyện thám hiểm hệ sinh thái rừng già ngàn năm và đóng góp bảo tồn thiên nhiên hoang dã'
+        subtitle: 'Những câu chuyện thám hiểm hệ sinh thái rừng già ngàn năm và đóng góp bảo tồn thiên nhiên hoang dã',
+        heroImage: 'https://images.unsplash.com/photo-1511497584788-876761c119ef?q=85&w=2560&auto=format&fit=crop'
       };
     }
     if (currentPath.includes('/series-retreat/thien-nhien') || currentPath.includes('/retreat-thien-nhien')) {
       return {
         badge: 'SERIES RETREAT · THIÊN NHIÊN',
         title: 'Series Retreat Thiên Nhiên Hoang Sơ',
-        subtitle: 'Tắm rừng Shinrin-Yoku, hòa mình giữa mây ngàn cao nguyên và biển hồ xanh ngọc'
+        subtitle: 'Tắm rừng Shinrin-Yoku, hòa mình giữa mây ngàn cao nguyên và biển hồ xanh ngọc',
+        heroImage: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=85&w=2560&auto=format&fit=crop'
       };
     }
     if (currentPath.includes('/series-retreat/thien-nguyen') || currentPath.includes('/retreat-thien-nguyen')) {
       return {
-        badge: 'SERIES RETREAT · THIỆN NGƯỆN',
+        badge: 'SERIES RETREAT · THỆN NGƯỆN',
         title: 'Series Retreat Thiện Nguyện & Kết Nối',
-        subtitle: 'Hành trình ý nghĩa lan tỏa yêu thương, gieo mầm tri thức và giao lưu văn hóa bản địa'
+        subtitle: 'Hành trình ý nghĩa lan tỏa yêu thương, gieo mầm tri thức và giao lưu văn hóa bản địa',
+        heroImage: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=85&w=2560&auto=format&fit=crop'
       };
     }
     if (currentPath.includes('/retreat/docquyen') || currentPath.includes('/retreats-doc-quyen')) {
       return {
         badge: 'RETREATS ĐỘC QUYỀN · EXCLUSIVE',
         title: 'Bộ Sưu Tập Retreat Độc Bản 4U Wellness',
-        subtitle: 'Hành trình tĩnh lặng, chăm sóc Thân - Tâm - Trí giữa đại ngàn Nam Cát Tiên & Hồ Lắk'
+        subtitle: 'Hành trình tĩnh lặng, chăm sóc Thân - Tâm - Trí giữa đại ngàn Nam Cát Tiên & Hồ Lắk',
+        heroImage: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=85&w=2560&auto=format&fit=crop'
       };
     }
     if (currentPath.includes('/retreat/retreathot') || currentPath.includes('/retreat-hot')) {
       return {
         badge: 'RETREAT HOT SHOWCASE',
         title: 'Bộ Sưu Tập Retreats Hot & Nổi Bật',
-        subtitle: 'Những hành trình đang được đông đảo du khách yêu thích và đặt nhiều nhất'
+        subtitle: 'Những hành trình đang được đông đảo du khách yêu thích và đặt nhiều nhất',
+        heroImage: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=85&w=2560&auto=format&fit=crop'
       };
     }
     if (currentPath.includes('/retreat/sapkhoihanh') || currentPath.includes('/sap-khoi-hanh')) {
       return {
         badge: 'LỊCH KHỞI HÀNH GẦN NHẤT',
         title: 'Các Gói Retreat Sắp Khởi Hành',
-        subtitle: 'Nhanh tay giữ chỗ cho những chuyến đi đã có lịch trình ấn định trong tháng'
+        subtitle: 'Nhanh tay giữ chỗ cho những chuyến đi đã có lịch trình ấn định trong tháng',
+        heroImage: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?q=85&w=2560&auto=format&fit=crop'
       };
     }
     if (currentPath.includes('/retreat/khongthebolo') || currentPath.includes('/khong-the-khong-co')) {
       return {
         badge: 'KHÔNG THỂ BỎ LỠ',
         title: 'Trải Nghiệm Retreat Không Thể Bỏ Lỡ',
-        subtitle: 'Tuyển tập những tour nghỉ dưỡng chữa lành được đánh giá tuyệt đối từ du khách'
+        subtitle: 'Tuyển tập những tour nghỉ dưỡng chữa lành được đánh giá tuyệt đối từ du khách',
+        heroImage: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=85&w=2560&auto=format&fit=crop'
       };
     }
     if (currentPath.includes('/retreat/uudaigiochot') || currentPath.includes('/uu-dai-gio-chot') || currentPath.includes('/uu-dai') || currentPath.includes('/promotions')) {
       return {
         badge: 'ƯU ĐÃI GIỜ CHÓT · PROMOTIONS',
         title: 'Ưu Đãi Giờ Chót — Gói Retreat Đặc Quyền',
-        subtitle: 'Cơ hội sở hữu chuyến nghỉ dưỡng 5 sao với mức giá ưu đãi tốt nhất'
+        subtitle: 'Cơ hội sở hữu chuyến nghỉ dưỡng 5 sao với mức giá ưu đãi tốt nhất',
+        heroImage: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=85&w=2560&auto=format&fit=crop'
       };
     }
     if (currentPath.includes('/kollection-4u')) {
       return {
         badge: 'KOLLECTION 4U · MAGAZINE SHOWCASE',
         title: 'Bộ Sưu Tập Kollection 4U Luxuries',
-        subtitle: 'Những trải nghiệm nghỉ dưỡng độc bản được tuyển chọn khắt khe nhất dành cho khách hàng cao cấp'
+        subtitle: 'Những trải nghiệm nghỉ dưỡng độc bản được tuyển chọn khắt khe nhất dành cho khách hàng cao cấp',
+        heroImage: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=85&w=2560&auto=format&fit=crop'
       };
     }
     return {
       badge: 'SERIES RETREAT · TRAVEL JOURNAL & PRODUCT SHOWCASE',
       title: 'Series Retreat — Tạp Chí Du Lịch & Hành Trình Độc Bản',
-      subtitle: 'Mỗi gói Retreat là một câu chuyện du lịch giàu cảm xúc — vừa giới thiệu sản phẩm cao cấp vừa truyền cảm hứng phục hồi Thân · Tâm · Trí.'
+      subtitle: 'Mỗi gói Retreat là một câu chuyện du lịch giàu cảm xúc — vừa giới thiệu sản phẩm cao cấp vừa truyền cảm hứng phục hồi Thân · Tâm · Trí.',
+      heroImage: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=85&w=2560&auto=format&fit=crop'
     };
   }, [currentPath]);
 
@@ -216,31 +226,45 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       {/* ── EDITORIAL FULL-WIDTH HERO BANNER ── */}
       <section style={{ position: 'relative', width: '100%', height: '100vh', minHeight: '100vh', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
         <img
-          src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=85&w=2560&auto=format&fit=crop"
-          alt="Series Retreat Scenic Landscape"
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.62)' }}
+          src={pageHeader.heroImage || featuredTour?.heroImage || "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=85&w=2560&auto=format&fit=crop"}
+          alt={pageHeader.title}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.62)', transition: 'src 0.5s ease' }}
         />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(15,12,9,0.25) 0%, rgba(15,12,9,0.88) 100%)' }} />
 
         <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', width: '100%', maxWidth: '1200px', padding: '80px 4vw 0' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'transparent', border: '1px solid rgba(255, 255, 255, 0.4)', borderRadius: '30px', padding: '6px 20px', color: '#ffffff', fontSize: '12px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '22px' }}>
-            <BookOpen size={14} style={{ color: '#4ade80' }} /> <span style={{ color: '#ffffff' }}>{pageHeader.badge}</span>
+          {/* Badge: PURE YELLOW TEXT WITHOUT DARK BACKGROUND BOX */}
+          <div style={{ display: 'inline-block', color: '#facc15', fontSize: '14px', fontWeight: 800, letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '22px', textShadow: '0 2px 10px rgba(0,0,0,0.9)' }}>
+            <span>{pageHeader.badge}</span>
           </div>
 
-          <h1 style={{ fontFamily: "'Playfair Display', 'Be Vietnam Pro', Georgia, serif", fontWeight: 800, fontSize: 'clamp(32px, 5.5vw, 76px)', letterSpacing: '-0.02em', lineHeight: 1.08, margin: '0 0 20px 0', color: '#ffffff', textShadow: '0 4px 30px rgba(0,0,0,0.6)', wordBreak: 'break-word' }}>
+          {/* Title: HIGH CONTRAST GOLDEN GRADIENT */}
+          <h1 style={{
+            fontWeight: 800,
+            fontSize: '40px',
+            letterSpacing: '-0.02em',
+            lineHeight: 1.15,
+            margin: '0 0 20px 0',
+            color: '#facc15',
+            background: 'linear-gradient(135deg, #ffffff 0%, #ffe066 40%, #facc15 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            filter: 'drop-shadow(0 4px 16px rgba(0,0,0,0.95))',
+            wordBreak: 'break-word'
+          }}>
             {pageHeader.title}
           </h1>
 
-          <p style={{ fontSize: 'clamp(14px, 1.8vw, 19px)', color: 'rgba(255,255,255,0.92)', margin: '0 auto 28px', fontWeight: 400, lineHeight: 1.7, maxWidth: '860px' }}>
+          <p style={{ fontSize: '17px', color: '#ffffff', margin: '0 auto 28px', fontWeight: 400, lineHeight: 1.7, maxWidth: '860px', textShadow: '0 2px 14px rgba(0,0,0,0.95)' }}>
             {pageHeader.subtitle}
           </p>
 
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', background: 'transparent', border: 'none', padding: 0, fontSize: '14px', color: '#ffffff', textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
-            <span>🏞️ <strong>{TOURS_DATA.length}</strong> Danh Lam Thắng Cảnh</span>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', background: 'transparent', border: 'none', padding: 0, fontSize: '17px', color: '#ffffff', textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
+            <span><strong>{TOURS_DATA.length}</strong> Danh Lam Thắng Cảnh</span>
             <span style={{ opacity: 0.5 }}>|</span>
-            <span>🌱 <strong>100%</strong> Lưu Trú Eco Resort 5★</span>
+            <span><strong>100%</strong> Lưu Trú Eco Resort 5★</span>
             <span style={{ opacity: 0.5 }}>|</span>
-            <span>⭐ <strong>4.98 / 5.0</strong> Trải Nghiệm Độc Bản</span>
+            <span><strong>4.98 / 5.0</strong> Trải Nghiệm Độc Bản</span>
           </div>
         </div>
       </section>
@@ -258,10 +282,10 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                 display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 22px', borderRadius: '10px', border: 'none',
                 background: viewMode === 'blog' ? '#1a1714' : 'transparent',
                 color: viewMode === 'blog' ? '#f7f5f0' : '#7a6f63',
-                fontSize: '13px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease', fontFamily: "'Be Vietnam Pro', sans-serif"
+                fontSize: '14px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease'
               }}
             >
-              <LayoutList size={16} /> 📰 Dạng Blog
+              Dạng Blog
             </button>
             <button
               onClick={() => setViewMode('grid')}
@@ -270,10 +294,10 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                 display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 22px', borderRadius: '10px', border: 'none',
                 background: viewMode === 'grid' ? '#1a1714' : 'transparent',
                 color: viewMode === 'grid' ? '#f7f5f0' : '#7a6f63',
-                fontSize: '13px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease', fontFamily: "'Be Vietnam Pro', sans-serif"
+                fontSize: '14px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease'
               }}
             >
-              <LayoutGrid size={16} /> 🎴 Dạng Thẻ
+              Dạng Thẻ
             </button>
           </div>
         </div>
@@ -301,16 +325,15 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
         {/* IF NO RESULTS */}
         {filteredTours.length === 0 && (
           <div style={{ textAlign: 'center', padding: '80px 24px', background: '#ffffff', borderRadius: '24px', border: '1px solid rgba(26,23,20,0.08)' }}>
-            <Compass size={48} style={{ color: '#c89d54', margin: '0 auto 16px' }} />
-            <h3 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '24px', color: '#1a1714', margin: '0 0 8px 0' }}>
+            <h3 style={{ fontSize: '30px', fontWeight: 700, color: '#1a1714', margin: '0 0 8px 0' }}>
               Không tìm thấy điểm đến phù hợp
             </h3>
-            <p style={{ fontSize: '14px', color: '#7a6f63', margin: '0 0 24px 0' }}>
+            <p style={{ fontSize: '17px', color: '#7a6f63', margin: '0 0 24px 0' }}>
               Rất tiếc, chưa có bài viết nào phù hợp với bộ lọc của bạn. Hãy thử chọn danh mục hoặc tìm kiếm khác.
             </p>
             <button
               onClick={() => { setSelectedSeries('All'); setSelectedCity('All'); setSearchQuery(''); }}
-              style={{ background: '#1a1714', color: '#f7f5f0', border: 'none', padding: '12px 28px', borderRadius: '24px', fontSize: '13px', cursor: 'pointer', fontFamily: "'Be Vietnam Pro', sans-serif" }}
+              style={{ background: '#1a1714', color: '#f7f5f0', border: 'none', padding: '12px 28px', borderRadius: '24px', fontSize: '14px', cursor: 'pointer' }}
             >
               Đặt Lại Bộ Lọc
             </button>
@@ -351,13 +374,13 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                   {/* 2-Column Details Grid */}
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px 36px', alignItems: 'start' }}>
                     <div>
-                      <div style={{ fontSize: '13px', fontWeight: 600, color: '#8c8275', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                        📍 {feat.city}, {feat.country} • ⏱️ {feat.duration} • ⭐ {feat.rating}
+                      <div style={{ fontSize: '14px', fontWeight: 600, color: '#8c8275', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                        {feat.city}, {feat.country} • {feat.duration} • Rating: {feat.rating}
                       </div>
                       <h2
                         onClick={() => onNavigate(`/sanpham/${feat.slug}`)}
                         style={{
-                          fontSize: 'clamp(26px, 4vw, 52px)',
+                          fontSize: '30px',
                           fontWeight: 800,
                           letterSpacing: '-0.04em',
                           lineHeight: 1.15,
@@ -369,13 +392,13 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                       >
                         {feat.title}
                       </h2>
-                      <div style={{ fontSize: '15px', color: '#7a6f63', marginBottom: '16px' }}>
+                      <div style={{ fontSize: '17px', color: '#7a6f63', marginBottom: '16px' }}>
                         Khởi hành gần nhất: <strong style={{ color: '#1a1714' }}>{feat.departureDates ? feat.departureDates[0] : 'Hàng tuần'}</strong>
                       </div>
                     </div>
 
                     <div>
-                      <p style={{ fontSize: '16px', lineHeight: 1.7, color: '#4a4238', marginBottom: '24px', fontWeight: 400 }}>
+                      <p style={{ fontSize: '17px', lineHeight: 1.7, color: '#4a4238', marginBottom: '24px', fontWeight: 400 }}>
                         {feat.blogStorySnippet || feat.subtitle}
                       </p>
 
@@ -387,8 +410,8 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                             style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover' }}
                           />
                           <div>
-                            <div style={{ fontSize: '15px', fontWeight: 700, color: '#1a1714' }}>{feat.blogAuthor || '4U Wellness Team'}</div>
-                            <div style={{ fontSize: '12px', color: '#8c8275' }}>{feat.blogReadTime || '5 phút đọc'} • Biên tập viên</div>
+                            <div style={{ fontSize: '17px', fontWeight: 700, color: '#1a1714' }}>{feat.blogAuthor || '4U Wellness Team'}</div>
+                            <div style={{ fontSize: '14px', color: '#8c8275' }}>{feat.blogReadTime || '5 phút đọc'} • Biên tập viên</div>
                           </div>
                         </div>
 
@@ -396,9 +419,9 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                           <span style={{ fontSize: '18px', fontWeight: 800, color: '#006d36' }}>{feat.price.toLocaleString('vi-VN')} VNĐ</span>
                           <button
                             onClick={() => onNavigate(`/sanpham/${feat.slug}`)}
-                            style={{ background: '#1a1714', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                            style={{ background: '#1a1714', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}
                           >
-                            Xem Chi Tiết <ArrowRight size={14} />
+                            Xem Chi Tiết
                           </button>
                         </div>
                       </div>
@@ -411,7 +434,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
             {/* MORE POSTS SECTION (GRID OF OTHER TOURS) */}
             {filteredTours.length > 1 && (
               <section>
-                <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800, color: '#1a1714', marginBottom: '32px' }}>
+                <h2 style={{ fontSize: '30px', fontWeight: 800, color: '#1a1714', marginBottom: '32px' }}>
                   Hành Trình Tiếp Theo (More Retreats)
                 </h2>
 
@@ -434,16 +457,16 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
                       <h3
                         onClick={() => onNavigate(`/sanpham/${tour.slug}`)}
-                        style={{ fontSize: 'clamp(20px, 2.2vw, 26px)', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.25, color: '#1a1714', margin: '0 0 12px 0', cursor: 'pointer', wordBreak: 'break-word' }}
+                        style={{ fontSize: '30px', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.25, color: '#1a1714', margin: '0 0 12px 0', cursor: 'pointer', wordBreak: 'break-word' }}
                       >
                         {tour.title}
                       </h3>
 
-                      <div style={{ fontSize: '13px', color: '#8c8275', marginBottom: '14px', fontWeight: 500 }}>
-                        📍 {tour.city} • ⏱️ {tour.duration} • ⭐ {tour.rating}
+                      <div style={{ fontSize: '14px', color: '#8c8275', marginBottom: '14px', fontWeight: 500 }}>
+                        {tour.city} • {tour.duration} • Rating: {tour.rating}
                       </div>
 
-                      <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#574e44', marginBottom: '20px', flex: 1, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      <p style={{ fontSize: '17px', lineHeight: 1.6, color: '#574e44', marginBottom: '20px', flex: 1, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {tour.blogStorySnippet || tour.subtitle}
                       </p>
 
@@ -455,20 +478,20 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                             alt={tour.blogAuthor || 'Guide'}
                             style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }}
                           />
-                          <div style={{ fontSize: '13px', fontWeight: 700, color: '#1a1714' }}>
+                          <div style={{ fontSize: '14px', fontWeight: 700, color: '#1a1714' }}>
                             {tour.blogAuthor || '4U Editorial'}
                           </div>
                         </div>
 
                         <div style={{ textAlign: 'right' }}>
-                          <span style={{ fontSize: '15px', fontWeight: 800, color: '#006d36', display: 'block' }}>
+                          <span style={{ fontSize: '17px', fontWeight: 800, color: '#006d36', display: 'block' }}>
                             {tour.price.toLocaleString('vi-VN')} VNĐ
                           </span>
                           <button
                             onClick={() => onNavigate(`/sanpham/${tour.slug}`)}
-                            style={{ background: 'transparent', color: '#1a1714', border: 'none', padding: 0, fontSize: '12px', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}
+                            style={{ background: 'transparent', color: '#1a1714', border: 'none', padding: 0, fontSize: '14px', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', marginTop: '2px' }}
                           >
-                            Khám Phá <ArrowRight size={12} />
+                            Khám Phá
                           </button>
                         </div>
                       </div>
@@ -491,29 +514,29 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                 {/* Photo Frame (Scenic Landscape) */}
                 <div style={{ position: 'relative', aspectRatio: '16 / 10', overflow: 'hidden', cursor: 'pointer' }} onClick={() => onNavigate(`/sanpham/${tour.slug}`)}>
                   <img src={tour.heroImage} alt={tour.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                  <div style={{ position: 'absolute', top: '14px', left: '14px', background: 'rgba(26,23,20,0.85)', color: '#f7f5f0', fontSize: '10px', fontWeight: 600, letterSpacing: '0.12em', padding: '5px 14px', borderRadius: '16px', textTransform: 'uppercase' }}>
+                  <div style={{ position: 'absolute', top: '14px', left: '14px', background: 'rgba(26,23,20,0.85)', color: '#f7f5f0', fontSize: '14px', fontWeight: 600, letterSpacing: '0.12em', padding: '5px 14px', borderRadius: '16px', textTransform: 'uppercase' }}>
                     {tour.city}
                   </div>
                   <button
                     onClick={e => { e.stopPropagation(); setActiveGalleryTour(tour); setActivePhotoIndex(0); }}
-                    style={{ position: 'absolute', bottom: '14px', right: '14px', background: 'rgba(255,255,255,0.9)', border: 'none', color: '#1a1714', padding: '6px 14px', borderRadius: '16px', fontSize: '11px', fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontFamily: "'Be Vietnam Pro', sans-serif" }}
+                    style={{ position: 'absolute', bottom: '14px', right: '14px', background: 'rgba(255,255,255,0.9)', border: 'none', color: '#1a1714', padding: '6px 14px', borderRadius: '16px', fontSize: '14px', fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                   >
-                    <Images size={12} /> Bộ Ảnh
+                    Bộ Ảnh
                   </button>
                 </div>
 
                 {/* Card Content */}
                 <div style={{ padding: '28px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', color: '#8c8275', marginBottom: '12px' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Clock size={13} /> {tour.duration}</span>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#c89d54', fontWeight: 600 }}><Star size={13} fill="currentColor" /> {tour.rating}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '14px', color: '#8c8275', marginBottom: '12px' }}>
+                      <span>{tour.duration}</span>
+                      <span style={{ color: '#c89d54', fontWeight: 600 }}>Rating: {tour.rating}</span>
                     </div>
 
                     <h3
                       onClick={() => onNavigate(`/sanpham/${tour.slug}`)}
                       style={{
-                        fontSize: 'clamp(20px, 2.2vw, 26px)',
+                        fontSize: '30px',
                         fontWeight: 800,
                         letterSpacing: '-0.03em',
                         lineHeight: 1.25,
@@ -525,7 +548,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                       {tour.title}
                     </h3>
 
-                    <p style={{ fontSize: '14px', color: '#6b5e52', margin: '0 0 18px 0', lineHeight: 1.6, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    <p style={{ fontSize: '17px', color: '#6b5e52', margin: '0 0 18px 0', lineHeight: 1.6, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                       {tour.subtitle}
                     </p>
                   </div>
@@ -537,9 +560,9 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
                     <button
                       onClick={() => onNavigate(`/sanpham/${tour.slug}`)}
-                      style={{ background: '#1a1714', color: '#f7f5f0', border: 'none', padding: '9px 18px', borderRadius: '20px', fontSize: '11px', fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontFamily: "'Be Vietnam Pro', sans-serif" }}
+                      style={{ background: '#1a1714', color: '#f7f5f0', border: 'none', padding: '9px 18px', borderRadius: '20px', fontSize: '14px', fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                     >
-                      Chi Tiết <ChevronRight size={13} />
+                      Chi Tiết
                     </button>
                   </div>
                 </div>
@@ -554,49 +577,40 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       {/* ── TRAVELER TIPS & EXPERT EDITORIAL NOTES FULL-WIDTH SECTION ── */}
       <section style={{ background: '#ffffff', padding: '88px 4vw', borderTop: '1px solid rgba(26,23,20,0.08)', width: '100%' }}>
         <div style={{ width: '100%', maxWidth: '1400px', margin: '0 auto', textAlign: 'center' }}>
-          <span style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#c89d54', marginBottom: '12px', display: 'block' }}>
+          <span style={{ fontSize: '14px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#c89d54', marginBottom: '12px', display: 'block' }}>
             EDITORIAL JOURNAL GUIDES
           </span>
-          <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', fontSize: 'clamp(30px, 3.2vw, 44px)', color: '#1a1714', margin: '0 0 16px 0' }}>
+          <h2 style={{ fontSize: '30px', fontWeight: 700, color: '#1a1714', margin: '0 0 16px 0' }}>
             Kinh Nghiệm & Lời Khuyên Cho Chuyến Đi Retreat Đầu Tiên
           </h2>
-          <p style={{ fontSize: '15px', color: '#6b5e52', maxWidth: '780px', margin: '0 auto 52px', fontWeight: 300, lineHeight: 1.65 }}>
+          <p style={{ fontSize: '17px', color: '#6b5e52', maxWidth: '780px', margin: '0 auto 52px', fontWeight: 300, lineHeight: 1.65 }}>
             Tổng hợp chia sẻ từ các chuyên gia chăm sóc sức khỏe & biên tập viên du lịch 4U giúp bạn có sự chuẩn bị trọn vẹn nhất khi về với thiên nhiên.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '36px', textAlign: 'left', width: '100%' }}>
             <div style={{ background: '#ffffff', borderRadius: '20px', padding: '36px', border: '1px solid rgba(26,23,20,0.08)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
-              <div style={{ width: '48px', height: '48px', background: '#ffffff', border: '1px solid rgba(200,157,84,0.3)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c89d54', marginBottom: '22px' }}>
-                <Heart size={22} />
-              </div>
-              <h3 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '22px', color: '#1a1714', margin: '0 0 12px 0' }}>
+              <h3 style={{ fontSize: '30px', fontWeight: 700, color: '#1a1714', margin: '0 0 12px 0' }}>
                 Thiền Chuông Xoay Tác Dụng Thế Nào?
               </h3>
-              <p style={{ fontSize: '14px', color: '#6b5e52', lineHeight: '1.7', margin: 0, fontWeight: 300 }}>
+              <p style={{ fontSize: '17px', color: '#6b5e52', lineHeight: '1.7', margin: 0, fontWeight: 300 }}>
                 Tần số âm thanh 432Hz từ chuông xoay Tây Tạng tác động trực tiếp lên hệ thần kinh, giúp đưa não bộ về trạng thái thư giãn sâu và giải tỏa căng thẳng sau vài phút.
               </p>
             </div>
 
             <div style={{ background: '#ffffff', borderRadius: '20px', padding: '36px', border: '1px solid rgba(26,23,20,0.08)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
-              <div style={{ width: '48px', height: '48px', background: '#ffffff', border: '1px solid rgba(200,157,84,0.3)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c89d54', marginBottom: '22px' }}>
-                <Leaf size={22} />
-              </div>
-              <h3 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '22px', color: '#1a1714', margin: '0 0 12px 0' }}>
+              <h3 style={{ fontSize: '30px', fontWeight: 700, color: '#1a1714', margin: '0 0 12px 0' }}>
                 Nghệ Thuật Tắm Rừng Shinrin-Yoku
               </h3>
-              <p style={{ fontSize: '14px', color: '#6b5e52', lineHeight: '1.7', margin: 0, fontWeight: 300 }}>
+              <p style={{ fontSize: '17px', color: '#6b5e52', lineHeight: '1.7', margin: 0, fontWeight: 300 }}>
                 Đi bộ chậm rãi giữa rừng đại ngàn, hít thở Phytoncides (hợp chất kháng sinh tự nhiên do thực vật tiết ra) giúp tăng cường sức đề kháng và thanh lọc lá phổi.
               </p>
             </div>
 
             <div style={{ background: '#ffffff', borderRadius: '20px', padding: '36px', border: '1px solid rgba(26,23,20,0.08)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
-              <div style={{ width: '48px', height: '48px', background: '#ffffff', border: '1px solid rgba(200,157,84,0.3)', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#c89d54', marginBottom: '22px' }}>
-                <Sparkles size={22} />
-              </div>
-              <h3 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '22px', color: '#1a1714', margin: '0 0 12px 0' }}>
+              <h3 style={{ fontSize: '30px', fontWeight: 700, color: '#1a1714', margin: '0 0 12px 0' }}>
                 Chuẩn Bị Tâm Lý Buông Bỏ Digital
               </h3>
-              <p style={{ fontSize: '14px', color: '#6b5e52', lineHeight: '1.7', margin: 0, fontWeight: 300 }}>
+              <p style={{ fontSize: '17px', color: '#6b5e52', lineHeight: '1.7', margin: 0, fontWeight: 300 }}>
                 Để đạt hiệu quả phục hồi cao nhất, hãy tạm gác các thông báo công việc, dành trọn 100% sự hiện diện cho thiên nhiên, bản thân và những người đồng hành.
               </p>
             </div>
