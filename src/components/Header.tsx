@@ -49,9 +49,10 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: Head
   }, []);
 
   const fixedBadges = [
-    { label: 'Retreats ĐỘC QUYỀN', href: '#retreats', color: '#ffffff' },
-    { label: 'Sắp Khởi hành', href: '#just-released', color: '#ffffff' },
-    { label: 'Ưu đãi GIỜ CHÓT', href: '#todays-deal', color: '#ffffff' },
+    { label: 'Retreats ĐỘC QUYỀN', href: '/retreat/docquyen', isHighlight: true },
+    { label: 'Sắp Khởi hành', href: '/retreat/sapkhoihanh', isHighlight: false },
+    { label: 'KHÔNG THỂ BỎ LỠ', href: '/retreat/khongthebolo', isHighlight: false },
+    { label: 'Ưu đãi GIỜ CHÓT', href: '/retreat/uudaigiochot', isHighlight: false },
   ];
 
   const menuData: MenuCategory[] = [
@@ -59,63 +60,63 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: Head
       id: 'series-retreat',
       title: 'Series Retreat',
       hasSubmenu: true,
-      href: '#series-retreat',
+      href: '/series-retreat',
       headerTitle: 'Series Retreat',
       items: [
-        { label: 'Retreat Chữa lành', href: '/sanpham/retreat-chua-lanh', icon: Heart, color: '#4ade80' },
-        { label: 'Retreat Bảo tồn', href: '/sanpham/retreat-bao-ton', icon: Shield, color: '#38bdf8' },
-        { label: 'Retreat Thiên nhiên', href: '/sanpham/retreat-thien-nhien', icon: Leaf, color: '#facc15' },
-        { label: 'Retreat Thiện nguyện', href: '/sanpham/retreat-thien-nguyen', icon: Sparkles, color: '#f472b6' },
+        { label: 'Retreat Chữa lành', href: '/series-retreat/chua-lanh', icon: Heart, color: '#4ade80' },
+        { label: 'Retreat Bảo tồn', href: '/series-retreat/bao-ton', icon: Shield, color: '#38bdf8' },
+        { label: 'Retreat Thiên nhiên', href: '/series-retreat/thien-nhien', icon: Leaf, color: '#facc15' },
+        { label: 'Retreat Thiện nguyện', href: '/series-retreat/thien-nguyen', icon: Sparkles, color: '#f472b6' },
       ]
     },
     {
       id: 'retreat-hot',
       title: 'Retreat HOT',
       hasSubmenu: true,
-      href: '#retreat-hot',
+      href: '/retreat',
       headerTitle: 'Retreat HOT',
       items: [
-        { label: '"Bình Yên trên Cao Nguyên"', href: '/sanpham/cao-nguyen', icon: Compass, color: '#f97316' },
-        { label: '"Tĩnh Lặng Giữa Đại Ngàn"', href: '/sanpham/dai-ngan', icon: Leaf, color: '#4ade80' },
-        { label: '"Tìm Lại Kết Nối"', href: '/sanpham/ket-noi', icon: Heart, color: '#fb7185' },
+        { label: '"Bình Yên trên Cao Nguyên"', href: '/retreat/hot/binh-yen-tren-cao-nguyen', icon: Compass, color: '#f97316' },
+        { label: '"Tĩnh Lặng Giữa Đại Ngàn"', href: '/retreat/hot/tinh-lang-giua-dai-ngan', icon: Leaf, color: '#4ade80' },
+        { label: '"Tìm Lại Kết Nối"', href: '/retreat/hot/tim-lai-ket-noi', icon: Heart, color: '#fb7185' },
       ]
     },
     {
       id: 'dieu-hay',
       title: '101 Điều HAY',
       hasSubmenu: true,
-      href: '#101-dieu-hay',
+      href: '/101-dieu-hay',
       headerTitle: '101 Điều HAY',
       items: [
-        { label: 'A Tip A Day', href: '/sanpham/tip-a-day', icon: Sparkles, color: '#e5c158' },
-        { label: 'Blog', href: '/sanpham/blog', icon: BookOpen, color: '#38bdf8' },
+        { label: 'A Tip A Day', href: '/101-dieu-hay/a-tip-a-day', icon: Sparkles, color: '#e5c158' },
+        { label: 'Blog Magazine', href: '/101-dieu-hay/blog', icon: BookOpen, color: '#38bdf8' },
       ]
     },
     {
       id: 'kollection-4u',
       title: 'Kollection 4U',
       hasSubmenu: true,
-      href: '#kollection-4u',
+      href: '/kollection-4u',
       headerTitle: 'Kollection 4U',
       items: [
-        { label: 'New Arrivals', href: '/sanpham/new-arrivals', icon: Sparkles, color: '#38bdf8' },
-        { label: 'A Must-Have', href: '/sanpham/must-have', icon: Flame, color: '#f97316' },
-        { label: 'EXCLUSIVE', href: '/sanpham/exclusive', icon: Crown, color: '#facc15' },
-        { label: 'Promotions', href: '/sanpham/promotions', icon: Zap, color: '#4ade80' },
+        { label: 'New Arrivals', href: '/kollection-4u/new-arrivals', icon: Sparkles, color: '#38bdf8' },
+        { label: 'A Must-Have', href: '/kollection-4u/must-have', icon: Flame, color: '#f97316' },
+        { label: 'EXCLUSIVE', href: '/kollection-4u/exclusive', icon: Crown, color: '#facc15' },
+        { label: 'Promotions', href: '/kollection-4u/promotions', icon: Zap, color: '#4ade80' },
       ]
     },
     {
       id: 'vi-sao-chon-4u',
       title: 'Vì sao chọn 4U?',
       hasSubmenu: true,
-      href: '#about',
+      href: '/vi-sao-chon-4u',
       headerTitle: 'Vì sao chọn 4U?',
       items: [
-        { label: 'Vì sao chọn 4U', href: '/sanpham/vi-sao-4u', icon: Star, color: '#e5c158' },
-        { label: 'Những Chuyến đi Ấn tượng', href: '/sanpham/chuyen-di-an-tuong', icon: Compass, color: '#4ade80' },
-        { label: 'Câu hỏi Thường gặp', href: '/sanpham/faq', icon: HelpCircle, color: '#38bdf8' },
-        { label: 'Cơ hội Nghề nghiệp', href: '/sanpham/careers', icon: Briefcase, color: '#a78bfa' },
-        { label: 'Lịch Khai giảng', href: '/sanpham/lich-khai-giang', icon: Calendar, color: '#f472b6' },
+        { label: 'Giới Thiệu 4U', href: '/vi-sao-chon-4u/gioi-thieu', icon: Star, color: '#e5c158' },
+        { label: 'Những Chuyến đi Ấn tượng', href: '/vi-sao-chon-4u/nhung-chuyen-di-an-tuong', icon: Compass, color: '#4ade80' },
+        { label: 'Câu hỏi Thường gặp', href: '/vi-sao-chon-4u/cau-hoi-thuong-gap', icon: HelpCircle, color: '#38bdf8' },
+        { label: 'Cơ hội Nghề nghiệp', href: '/vi-sao-chon-4u/co-hoi-nghe-nghiep', icon: Briefcase, color: '#a78bfa' },
+        { label: 'Lịch Khai giảng', href: '/vi-sao-chon-4u/lich-khai-giang', icon: Calendar, color: '#f472b6' },
       ]
     }
   ];
@@ -179,7 +180,10 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: Head
               cursor: 'pointer',
               transition: 'opacity 0.2s ease',
             }}
-            onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+            onMouseEnter={e => {
+              setActiveCategory(null);
+              e.currentTarget.style.opacity = '1';
+            }}
             onMouseLeave={e => e.currentTarget.style.opacity = '0.92'}
           >
             <img
@@ -207,6 +211,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: Head
           >
             <div
               className="hide-mobile"
+              onMouseEnter={() => setActiveCategory(null)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -221,21 +226,37 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: Head
                 <a
                   key={idx}
                   href={b.href}
+                  onClick={(e) => {
+                    if (b.href && b.href.startsWith('/')) {
+                      e.preventDefault();
+                      if (onNavigate) onNavigate(b.href);
+                    }
+                    setActiveCategory(null);
+                  }}
                   style={{
-                    color: b.color,
+                    color: (b.isHighlight && !activeCategory) ? '#4ade80' : '#ffffff',
+                    background: 'transparent',
+                    border: 'none',
+                    padding: '0',
                     textDecoration: 'none',
-                    transition: 'opacity 0.2s ease, transform 0.2s ease',
-                    opacity: 0.95,
+                    transition: 'all 0.25s ease',
+                    opacity: 1,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    fontWeight: b.isHighlight ? 800 : 700
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.opacity = '1';
+                    setActiveCategory(null);
                     e.currentTarget.style.transform = 'translateY(-1px)';
+                    e.currentTarget.style.color = '#4ade80';
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.opacity = '0.95';
                     e.currentTarget.style.transform = 'none';
+                    e.currentTarget.style.color = (b.isHighlight && !activeCategory) ? '#4ade80' : '#ffffff';
                   }}
                 >
+                  {b.isHighlight && <Crown size={15} style={{ color: '#facc15', fill: '#facc15', marginRight: '5px' }} />}
                   {b.label}
                 </a>
               ))}
@@ -267,12 +288,20 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: Head
                 {menuData.map(item => (
                   <div
                     key={item.id}
-                    onMouseEnter={() => item.hasSubmenu && setActiveCategory(item.id)}
+                    onMouseEnter={() => item.hasSubmenu ? setActiveCategory(item.id) : setActiveCategory(null)}
                     style={{ display: 'flex', alignItems: 'center', position: 'relative' }}
                   >
                     {item.hasSubmenu ? (
                       <button
-                        onClick={() => setActiveCategory(activeCategory === item.id ? null : item.id)}
+                        onClick={(e) => {
+                          if (item.href && item.href.startsWith('/')) {
+                            e.preventDefault();
+                            if (onNavigate) onNavigate(item.href);
+                            setActiveCategory(null);
+                          } else {
+                            setActiveCategory(activeCategory === item.id ? null : item.id);
+                          }
+                        }}
                         style={{
                           background: 'none',
                           border: 'none',
@@ -305,7 +334,13 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: Head
                     ) : (
                       <a
                         href={item.href}
-                        onClick={() => setActiveCategory(null)}
+                        onClick={(e) => {
+                          if (item.href && item.href.startsWith('/')) {
+                            e.preventDefault();
+                            if (onNavigate) onNavigate(item.href);
+                          }
+                          setActiveCategory(null);
+                        }}
                         style={{
                           color: '#ffffff',
                           fontSize: '1.02rem',
@@ -350,6 +385,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: Head
                 cursor: 'pointer'
               }}
               onMouseEnter={e => {
+                setActiveCategory(null);
                 e.currentTarget.style.transform = 'scale(1.05)';
                 e.currentTarget.style.boxShadow = '0 8px 26px rgba(74, 222, 128, 0.6)';
               }}
@@ -434,7 +470,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: Head
                       key={sIdx}
                       href={sub.href}
                       onClick={(e) => {
-                        if (sub.href.startsWith('/sanpham/')) {
+                        if (sub.href && sub.href.startsWith('/')) {
                           e.preventDefault();
                           if (onNavigate) onNavigate(sub.href);
                         }

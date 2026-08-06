@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Clock, Star, Compass, ChevronDown, CheckCircle, MapPin, ArrowRight, Navigation, ShieldCheck, Tag, Info, UserCheck, Heart, Sparkles } from 'lucide-react';
-import { productsData } from '../data/productsData';
+import { productsData, ProductItem } from '../data/productsData';
+import { TOURS_DATA } from '../data/toursData';
 import ScrollExpandMedia from './ui/scroll-expansion-hero';
 import ElegantCarousel, { SlideData } from './ui/elegant-carousel';
 
@@ -15,8 +16,43 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [guests, setGuests] = useState<string>('1 Khách');
 
-  // Load product dynamic mock data (Fallback to 'retreat-chua-lanh' if slug not found)
-  const product = productsData[productSlug] || productsData['retreat-chua-lanh'];
+  // Unified Data Lookup: Check productsData first, then TOURS_DATA by slug
+  const tourFound = TOURS_DATA.find(t => t.slug === productSlug);
+
+  const product: ProductItem = productsData[productSlug] || (tourFound ? {
+    slug: tourFound.slug,
+    badge1: tourFound.category.toUpperCase(),
+    badge2: tourFound.isExclusive ? 'ĐỘC QUYỀN' : (tourFound.isHot ? 'HOT SELECTION' : '5 STAR'),
+    title: tourFound.title,
+    subtitle: tourFound.subtitle,
+    location: `${tourFound.city}, ${tourFound.country}`,
+    heroImage: tourFound.heroImage,
+    duration: tourFound.duration,
+    rating: `${tourFound.rating} / 5.0 (${tourFound.reviewsCount} Đánh giá)`,
+    type: tourFound.category,
+    priceText: `${tourFound.price.toLocaleString('vi-VN')} VNĐ`,
+    priceAdult: tourFound.price,
+    priceChild: Math.round(tourFound.price * 0.5),
+    experienceTitle: 'Trải Nghiệm Độc Bản',
+    experiencePara1: tourFound.highlights.join('. '),
+    experiencePara2: `Hành trình du lịch nghỉ dưỡng tuyệt vời tại ${tourFound.city}, ${tourFound.country} được thiết kế tinh tế giúp tái tạo năng lượng Thân - Tâm - Trí.`,
+    galleryImages: tourFound.gallery.length > 0 ? tourFound.gallery : [tourFound.heroImage],
+    itinerary: tourFound.itinerary.map(item => ({
+      day: `NGÀY ${item.day}`,
+      title: item.title,
+      events: item.activities && item.activities.length > 0 ? item.activities : [item.description]
+    })),
+    inclusions: tourFound.included && tourFound.included.length > 0 ? tourFound.included : [
+      `Lưu trú cao cấp tại ${tourFound.city}`,
+      'Toàn bộ các bữa ăn thực dưỡng & xe đưa đón cao cấp',
+      'Hướng dẫn viên & Chuyên gia tư vấn 1:1'
+    ],
+    mapLocation: tourFound.city,
+    mapCoords: `${tourFound.city}, ${tourFound.country}`,
+    reviewScore: `${tourFound.rating} / 5.0`,
+    reviewCount: tourFound.reviewsCount,
+    reviewQuote: tourFound.reviews?.[0]?.comment || '"Chuyến đi mang lại cảm giác tĩnh lặng tuyệt vời giữa thiên nhiên hoang sơ."'
+  } : productsData['retreat-chua-lanh']);
 
   const tabs = [
     { id: 'Highlight', label: 'TRẢI NGHIỆM ĐỘC BẢN' },

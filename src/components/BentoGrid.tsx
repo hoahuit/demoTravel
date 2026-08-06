@@ -1,53 +1,25 @@
 import React from 'react';
 import ScrollReveal from './ScrollReveal';
+import { TOURS_DATA } from '../data/toursData';
 
 export interface BentoGridProps {
   onOpenBooking?: () => void;
+  onNavigate?: (path: string) => void;
 }
 
-export default function BentoGrid({ onOpenBooking }: BentoGridProps) {
-  const items = [
-    {
-      id: 1,
-      image: '/images/dest_danang.png',
-      location: 'Nam Cát Tiên, Đồng Nai',
-      category: 'Gói Chữa Lành 1:1',
-      title: 'Bình Yên Trên Cao Nguyên',
-      desc: 'Tận hưởng không khí trong lành giữa đại ngàn, xe luxury đưa đón riêng tư và lộ trình yoga, thiền định thực hành 1:1 cùng chuyên gia.',
-      price: '4.990.000 ₫',
-      action: 'Nhận tư vấn'
-    },
-    {
-      id: 2,
-      image: '/images/tour_2.png',
-      location: 'Bảo Lộc, Lâm Đồng',
-      category: 'Hành Trình Rừng Xanh',
-      title: 'Tĩnh Lặng Giữa Đại Ngàn',
-      desc: 'Hành trình kết nối sâu sắc cùng rừng già và suối khoáng tự nhiên, len lỏi qua tán cây cổ thụ trăm năm ngàn tuổi.',
-      price: '3.890.000 ₫',
-      action: 'Nhận tư vấn'
-    },
-    {
-      id: 3,
-      image: '/images/dest_dalat.png',
-      location: 'Đà Lạt, Lâm Đồng',
-      category: 'Gia Đình & Tái Tạo',
-      title: 'Tìm Lại Kết Nối',
-      desc: 'Chuyến đi tái tạo năng lượng cho gia đình — lối sống chậm cùng thực đơn hữu cơ từ nông trại và workshop nghệ thuật.',
-      price: '4.250.000 ₫',
-      action: 'Nhận tư vấn'
-    },
-    {
-      id: 4,
-      image: '/images/dest_halong.png',
-      location: 'Vườn Quốc Gia Cát Tiên',
-      category: 'Bảo Tồn & Sinh Thái',
-      title: 'Hành Trình Xanh Bảo Tồn',
-      desc: 'Tham gia hoạt động trồng cây, khám phá hệ sinh thái rừng nguyên sinh & dùng bữa tối lãng mạn giữa vườn tre tự nhiên.',
-      price: '5.100.000 ₫',
-      action: 'Nhận tư vấn'
-    }
-  ];
+export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps) {
+  // Map safely over TOURS_DATA directly
+  const items = TOURS_DATA.map((tour) => ({
+    id: tour.id,
+    slug: tour.slug,
+    image: tour.heroImage,
+    location: `${tour.city}, ${tour.country}`,
+    category: tour.category,
+    title: tour.title,
+    desc: tour.subtitle,
+    price: `${tour.price.toLocaleString('vi-VN')} ₫`,
+    action: 'Khám phá ngay'
+  }));
 
   return (
     <section
@@ -277,36 +249,40 @@ export default function BentoGrid({ onOpenBooking }: BentoGridProps) {
             <ScrollReveal key={item.id} delay={idx * 120}>
               <div
                 onClick={() => {
-                  if (onOpenBooking) onOpenBooking();
+                  if (onNavigate) {
+                    onNavigate(`/sanpham/${item.slug}`);
+                  } else if (onOpenBooking) {
+                    onOpenBooking();
+                  }
                 }}
                 className="editorial-card"
               >
-              {/* TOP: PURE PHOTO FRAME */}
-              <div className="editorial-image-wrapper">
-                <img src={item.image} alt={item.title} />
-              </div>
-
-              {/* BOTTOM: EDITORIAL TEXT CONTENT */}
-              <div className="editorial-content-box">
-                <div className="editorial-tag-row">
-                  <span className="editorial-location">{item.location}</span>
-                  <span className="editorial-dot">•</span>
-                  <span className="editorial-category">{item.category}</span>
+                {/* TOP: PURE PHOTO FRAME */}
+                <div className="editorial-image-wrapper">
+                  <img src={item.image} alt={item.title} />
                 </div>
-                <h3 className="editorial-title">{item.title}</h3>
-                <p className="editorial-desc">{item.desc}</p>
 
-                <div className="editorial-bottom">
-                  <div className="editorial-price-wrap">
-                    <span className="editorial-price-label">Giá trọn gói từ</span>
-                    <span className="editorial-price">{item.price}</span>
+                {/* BOTTOM: EDITORIAL TEXT CONTENT */}
+                <div className="editorial-content-box">
+                  <div className="editorial-tag-row">
+                    <span className="editorial-location">{item.location}</span>
+                    <span className="editorial-dot">•</span>
+                    <span className="editorial-category">{item.category}</span>
                   </div>
-                  <span className="editorial-cta-btn">{item.action}</span>
+                  <h3 className="editorial-title">{item.title}</h3>
+                  <p className="editorial-desc">{item.desc}</p>
+
+                  <div className="editorial-bottom">
+                    <div className="editorial-price-wrap">
+                      <span className="editorial-price-label">Giá trọn gói từ</span>
+                      <span className="editorial-price">{item.price}</span>
+                    </div>
+                    <span className="editorial-cta-btn">{item.action}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </ScrollReveal>
-        ))}
+            </ScrollReveal>
+          ))}
         </div>
 
       </div>

@@ -7,7 +7,11 @@ interface SeoLink {
   url: string;
 }
 
-export default function Footer() {
+export interface FooterProps {
+  onNavigate?: (path: string) => void;
+}
+
+export default function Footer({ onNavigate }: FooterProps = {}) {
   const [showPartners, setShowPartners] = useState<boolean>(false);
 
   const seoLinks: SeoLink[] = [

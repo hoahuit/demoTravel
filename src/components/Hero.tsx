@@ -1,10 +1,14 @@
 import React from 'react';
+import { TOURS_DATA } from '../data/toursData';
 
 export interface HeroProps {
   onOpenBooking?: () => void;
 }
 
 export default function Hero({ onOpenBooking }: HeroProps = {}) {
+  // Use the primary featured retreat package directly from TOURS_DATA
+  const heroTour = TOURS_DATA.find(t => t.slug === 'tinh-lang-giua-dai-ngan') || TOURS_DATA[0];
+
   return (
     <section style={{ padding: 0, margin: 0, width: '100%', position: 'relative', overflow: 'hidden' }}>
       {/* ── APPLE TV+ HERO TILE WRAPPER (theme-dark) ── */}
@@ -21,14 +25,11 @@ export default function Hero({ onOpenBooking }: HeroProps = {}) {
           paddingBottom: '88px'
         }}
       >
-        {/* ── 1. BACKGROUND MEDIA IMAGE (Original Vibrant Bright Colors) ── */}
+        {/* ── 1. BACKGROUND MEDIA IMAGE ── */}
         <div className="tile-image-wrapper" style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
           <img
-            src="https://images.unsplash.com/photo-1528127269322-539801943592?q=85&w=2560&auto=format&fit=crop"
-            onError={(e) => {
-              e.currentTarget.src = '/images/hero_halong.png';
-            }}
-            alt="Vịnh Hạ Long — Di Sản Thiên Nhiên Thế Giới"
+            src={heroTour.heroImage}
+            alt={heroTour.title}
             style={{
               width: '100%',
               height: '100%',
@@ -45,7 +46,7 @@ export default function Hero({ onOpenBooking }: HeroProps = {}) {
             position: 'absolute',
             inset: 0,
             zIndex: 1,
-            background: 'radial-gradient(ellipse at 25% 82%, rgba(0, 0, 0, 0.38) 0%, rgba(0, 0, 0, 0.16) 50%, transparent 80%)',
+            background: 'radial-gradient(ellipse at 25% 82%, rgba(0, 0, 0, 0.48) 0%, rgba(0, 0, 0, 0.22) 50%, transparent 80%)',
             pointerEvents: 'none'
           }}
         />
@@ -56,12 +57,31 @@ export default function Hero({ onOpenBooking }: HeroProps = {}) {
           style={{
             position: 'relative',
             zIndex: 2,
-            maxWidth: '820px',
+            maxWidth: '840px',
             margin: '0 0 40px 64px',
             padding: '0',
             background: 'transparent'
           }}
         >
+          <span
+            style={{
+              display: 'inline-block',
+              background: 'rgba(74, 222, 128, 0.18)',
+              border: '1px solid rgba(74, 222, 128, 0.4)',
+              backdropFilter: 'blur(10px)',
+              color: '#4ade80',
+              fontSize: '12px',
+              fontWeight: 700,
+              letterSpacing: '0.18em',
+              padding: '6px 18px',
+              borderRadius: '999px',
+              textTransform: 'uppercase',
+              marginBottom: '18px',
+              fontFamily: "'Plus Jakarta Sans', sans-serif"
+            }}
+          >
+            {heroTour.city}, {heroTour.country} • {heroTour.duration}
+          </span>
 
           {/* Main Headline */}
           <h1
@@ -103,7 +123,7 @@ export default function Hero({ onOpenBooking }: HeroProps = {}) {
               fontFamily: "'Plus Jakarta Sans', sans-serif"
             }}
           >
-            Phục hồi Thân · Tâm · Trí giữa đại ngàn Vườn Quốc Gia Cát Tiên — nơi bạn buông bỏ âu lo, tự do hít thở và lắng nghe câu trả lời từ chính tâm hồn mình.
+            “{heroTour.title}” — {heroTour.subtitle}. Phục hồi Thân · Tâm · Trí giữa đại ngàn nguyên sơ — nơi bạn buông bỏ âu lo và lắng nghe câu trả lời từ chính tâm hồn mình.
           </p>
         </div>
       </div>
