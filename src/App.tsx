@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import SearchModal from './components/SearchModal';
 import BookingModal from './components/BookingModal';
+import ConsultationModal from './components/ConsultationModal';
 import ProductDetail from './components/ProductDetail';
 import Hero from './components/Hero';
 import BentoGrid from './components/BentoGrid';
@@ -26,14 +27,25 @@ import RetreatHot from './pages/retreat/retreathot/RetreatHot';
 export default function App() {
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
   const [bookingState, setBookingState] = useState<{ open: boolean; tour: any }>({ open: false, tour: null });
+  const [consultationOpen, setConsultationOpen] = useState<boolean>(false);
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
 
+  // PayPal Booking Modal — triggered by "Đặt Ngay" buttons
   const handleOpenBooking = (tourData?: any) => {
     setBookingState({ open: true, tour: tourData || null });
   };
 
   const handleCloseBooking = () => {
     setBookingState({ open: false, tour: null });
+  };
+
+  // Consultation Modal — triggered by "Nhận tư vấn" button & floating button
+  const handleOpenConsultation = () => {
+    setConsultationOpen(true);
+  };
+
+  const handleCloseConsultation = () => {
+    setConsultationOpen(false);
   };
 
   useEffect(() => {
@@ -158,18 +170,24 @@ export default function App() {
       {/* Search Modal */}
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
-      {/* Booking Calendar & Scroll-to-Top Floating Modal with PayPal Payment */}
+      {/* PayPal Checkout Modal — only for "Đặt Ngay" */}
       <BookingModal
         externalOpen={bookingState.open}
         onExternalClose={handleCloseBooking}
         selectedTour={bookingState.tour}
       />
 
-      {/* Header */}
+      {/* Consultation Lead Form Modal — for "Nhận tư vấn" + Floating button */}
+      <ConsultationModal
+        externalOpen={consultationOpen}
+        onExternalClose={handleCloseConsultation}
+      />
+
+      {/* Header — "Nhận tư vấn" button opens Consultation Modal */}
       <Header
         onOpenSearch={() => setSearchOpen(true)}
         onNavigate={navigateTo}
-        onOpenBooking={handleOpenBooking}
+        onOpenBooking={handleOpenConsultation}
       />
 
       {/* Conditional Route Rendering */}

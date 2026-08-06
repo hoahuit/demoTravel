@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronUp, Calendar, CheckCircle2, CreditCard, ShieldCheck, DollarSign, Lock, Sparkles } from 'lucide-react';
+import { CheckCircle2, ShieldCheck, Lock, Sparkles } from 'lucide-react';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import './BookingModal.css';
 
@@ -22,11 +22,9 @@ interface FormDataState {
   tour: string;
   guests: number;
   date: string;
-  paymentMethod: 'paypal' | 'paylater';
 }
 
 export default function BookingModal({ externalOpen, onExternalClose, selectedTour }: BookingModalProps) {
-  const [showFloating, setShowFloating] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [paymentReceipt, setPaymentReceipt] = useState<any>(null);
@@ -52,7 +50,6 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
     tour: defaultTourTitle,
     guests: 1,
     date: new Date().toISOString().split('T')[0],
-    paymentMethod: 'paypal'
   });
 
   useEffect(() => {
@@ -61,33 +58,8 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
     }
   }, [selectedTour]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 200) {
-        setShowFloating(true);
-      } else {
-        setShowFloating(false);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   const totalPriceVND = tourPriceVND * formData.guests;
-  const totalPriceUSD = Math.round(totalPriceVND / 25000); // 1 USD ~ 25,000 VND
-
-  const handlePayLaterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name || !formData.phone) {
-      alert('Vui lòng nhập Họ tên và Số điện thoại!');
-      return;
-    }
-    setSubmitted(true);
-  };
+  const totalPriceUSD = Math.round(totalPriceVND / 25000);
 
   const handlePayPalSuccess = (details: any) => {
     setPaymentReceipt(details);
@@ -107,42 +79,14 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
       tour: defaultTourTitle,
       guests: 1,
       date: new Date().toISOString().split('T')[0],
-      paymentMethod: 'paypal'
     });
-  };
-
-  const openModal = () => {
-    setModalOpen(true);
-    document.body.style.overflow = 'hidden';
   };
 
   const isOpen = Boolean(externalOpen || modalOpen);
 
   return (
     <>
-      {/* FLOATING ACTION BUTTONS */}
-      {showFloating && (
-        <div className="fixed bottom-7 right-7 z-[9990] flex flex-col gap-3 items-center">
-          <button
-            onClick={openModal}
-            aria-label="Open Booking Modal"
-            className="w-13 h-13 rounded-full bg-[#1E4A3D] hover:bg-[#10201B] text-[#EAF0E7] border border-[#B7C9AE]/30 cursor-pointer flex items-center justify-center shadow-2xl hover:scale-110 transition-all relative"
-          >
-            <Calendar size={22} />
-            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-[#8CA366] border-2 border-[#10201B]" />
-          </button>
-
-          <button
-            onClick={scrollToTop}
-            aria-label="Scroll to Top"
-            className="w-12 h-12 rounded-full bg-[#0C2620] text-[#EAF0E7] border border-white/10 cursor-pointer flex items-center justify-center shadow-xl hover:scale-110 hover:bg-[#10201B] transition-all"
-          >
-            <ChevronUp size={22} />
-          </button>
-        </div>
-      )}
-
-      {/* BOOKING & PAYPAL CHECKOUT MODAL OVERLAY */}
+      {/* PAYPAL CHECKOUT MODAL OVERLAY */}
       {isOpen && (
         <div
           className="bm-overlay"
@@ -227,44 +171,13 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
                   </div>
                 </div>
 
-                {/* RIGHT PANEL: FORM & PAYPAL BUTTON */}
                 <div className="bm-panel-right" style={{ padding: '36px' }}>
                   <div className="bm-form-head">
-                    <h2 style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a' }}>Thông Tin Đặt Tour</h2>
-                    <p style={{ fontSize: '14px', color: '#64748b' }}>Nhập thông tin cá nhân và chọn phương thức thanh toán.</p>
+                    <h2 style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a' }}>Thanh Toán & Đặt Tour</h2>
+                    <p style={{ fontSize: '14px', color: '#64748b' }}>Nhập thông tin cá nhân và thanh toán qua PayPal.</p>
                   </div>
 
-                  {/* PAYMENT METHOD SWITCHER */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '24px' }}>
-                    <button
-                      type="button"
-                      onClick={() => setFormData({ ...formData, paymentMethod: 'paypal' })}
-                      style={{
-                        padding: '12px 14px', borderRadius: '12px', cursor: 'pointer',
-                        border: formData.paymentMethod === 'paypal' ? '2px solid #006d36' : '1px solid #e2e8f0',
-                        background: formData.paymentMethod === 'paypal' ? '#f0fdf4' : '#ffffff',
-                        color: formData.paymentMethod === 'paypal' ? '#006d36' : '#64748b',
-                        fontWeight: 700, fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
-                      }}
-                    >
-                      <CreditCard size={16} /> Thanh Toán PayPal
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setFormData({ ...formData, paymentMethod: 'paylater' })}
-                      style={{
-                        padding: '12px 14px', borderRadius: '12px', cursor: 'pointer',
-                        border: formData.paymentMethod === 'paylater' ? '2px solid #006d36' : '1px solid #e2e8f0',
-                        background: formData.paymentMethod === 'paylater' ? '#f0fdf4' : '#ffffff',
-                        color: formData.paymentMethod === 'paylater' ? '#006d36' : '#64748b',
-                        fontWeight: 700, fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
-                      }}
-                    >
-                      <ShieldCheck size={16} /> Đăng Ký Trả Sau
-                    </button>
-                  </div>
-
-                  <form onSubmit={handlePayLaterSubmit}>
+                  <div>
                     <div className="bm-field">
                       <label htmlFor="fullName">Họ & Tên Du Khách <span className="bm-req">*</span></label>
                       <input
@@ -329,90 +242,81 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
                       </div>
                     </div>
 
-                    {/* PAYPAL PAYMENT BUTTON CONTAINER */}
-                    {formData.paymentMethod === 'paypal' ? (
-                      <div style={{ marginTop: '20px' }}>
-                        <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <Lock size={14} style={{ color: '#006d36' }} /> Thanh toán an toàn qua cổng PayPal (Chấp nhận Visa, Mastercard, AMEX):
-                        </div>
+                    {/* PAYPAL PAYMENT BUTTONS */}
+                    <div style={{ marginTop: '20px' }}>
+                      <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <Lock size={14} style={{ color: '#006d36' }} /> Thanh toán an toàn qua cổng PayPal (Chấp nhận Visa, Mastercard, AMEX):
+                      </div>
 
-                        {/* Official PayPal SDK Provider & Button */}
-                        <PayPalScriptProvider options={{ clientId: 'test', currency: 'USD' }}>
-                          <PayPalButtons
-                            style={{ layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' }}
-                            createOrder={(data, actions) => {
-                              return actions.order.create({
-                                intent: 'CAPTURE',
-                                purchase_units: [
-                                  {
-                                    description: `Đặt tour ${formData.tour}`,
-                                    amount: {
-                                      currency_code: 'USD',
-                                      value: totalPriceUSD.toString()
-                                    }
+                      <PayPalScriptProvider options={{ clientId: 'test', currency: 'USD' }}>
+                        <PayPalButtons
+                          style={{ layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay' }}
+                          createOrder={(data, actions) => {
+                            return actions.order.create({
+                              intent: 'CAPTURE',
+                              purchase_units: [
+                                {
+                                  description: `Đặt tour ${formData.tour}`,
+                                  amount: {
+                                    currency_code: 'USD',
+                                    value: totalPriceUSD.toString()
                                   }
-                                ]
-                              });
-                            }}
-                            onApprove={async (data, actions) => {
-                              if (actions.order) {
-                                const details = await actions.order.capture();
-                                handlePayPalSuccess(details);
-                              }
-                            }}
-                            onError={(err) => {
-                              console.log('PayPal Sandbox error or test mode:', err);
-                              // Fallback simulation when sandbox credentials are test mode
-                              handlePayPalSuccess({
-                                id: 'PAYPAL-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
-                                payer: { name: { given_name: formData.name || 'Du Khách' } },
-                                status: 'COMPLETED'
-                              });
-                            }}
-                          />
-                        </PayPalScriptProvider>
-
-                        {/* Quick Test Demo Trigger Button */}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (!formData.name || !formData.phone) {
-                              alert('Vui lòng điền Họ tên và Số điện thoại trước khi bấm thanh toán!');
-                              return;
+                                }
+                              ]
+                            });
+                          }}
+                          onApprove={async (data, actions) => {
+                            if (actions.order) {
+                              const details = await actions.order.capture();
+                              handlePayPalSuccess(details);
                             }
+                          }}
+                          onError={(err) => {
+                            console.log('PayPal Sandbox error or test mode:', err);
                             handlePayPalSuccess({
-                              id: 'PP-DEMO-' + Math.floor(100000 + Math.random() * 900000),
-                              payer: { name: { given_name: formData.name } },
+                              id: 'PAYPAL-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                              payer: { name: { given_name: formData.name || 'Du Khách' } },
                               status: 'COMPLETED'
                             });
                           }}
-                          style={{
-                            width: '100%',
-                            marginTop: '10px',
-                            padding: '10px',
-                            background: '#f8fafc',
-                            border: '1px stroke #cbd5e1',
-                            borderStyle: 'dashed',
-                            borderRadius: '10px',
-                            fontSize: '12px',
-                            color: '#475569',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          ⚡ Bấm vào đây để Test Thanh Toán PayPal Thành Công Tức Thì (Demo Sandbox)
-                        </button>
-                      </div>
-                    ) : (
-                      <button type="submit" className="bm-submit-btn" style={{ marginTop: '20px' }}>
-                        Gửi Yêu Cầu Giữ Chỗ & Trả Sau
+                        />
+                      </PayPalScriptProvider>
+
+                      {/* Quick Test Demo Trigger Button */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (!formData.name || !formData.phone) {
+                            alert('Vui lòng điền Họ tên và Số điện thoại trước khi bấm thanh toán!');
+                            return;
+                          }
+                          handlePayPalSuccess({
+                            id: 'PP-DEMO-' + Math.floor(100000 + Math.random() * 900000),
+                            payer: { name: { given_name: formData.name } },
+                            status: 'COMPLETED'
+                          });
+                        }}
+                        style={{
+                          width: '100%',
+                          marginTop: '10px',
+                          padding: '10px',
+                          background: '#f8fafc',
+                          border: '1px dashed #cbd5e1',
+                          borderRadius: '10px',
+                          fontSize: '12px',
+                          color: '#475569',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        ⚡ Bấm vào đây để Test Thanh Toán PayPal Thành Công Tức Thì (Demo Sandbox)
                       </button>
-                    )}
+                    </div>
 
                     <div className="bm-form-note" style={{ marginTop: '16px' }}>
                       <ShieldCheck size={14} style={{ color: '#006d36' }} />
                       Thông tin của bạn được bảo mật tuyệt đối 100%
                     </div>
-                  </form>
+                  </div>
                 </div>
               </>
             ) : (

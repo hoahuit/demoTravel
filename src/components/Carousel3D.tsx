@@ -436,10 +436,10 @@ function ExpandedCard({
 
   const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
   const vh = typeof window !== "undefined" ? window.innerHeight : 800;
-  const targetWidth = Math.min(640, vw - 32);
-  const targetHeight = Math.min(620, vh - 48);
+  const targetWidth = Math.min(640, vw > 480 ? vw - 32 : vw - 16);
+  const targetHeight = Math.min(680, vh > 480 ? vh - 48 : vh - 24);
   const targetLeft = (vw - targetWidth) / 2;
-  const targetTop = Math.max(24, (vh - targetHeight) / 2);
+  const targetTop = Math.max(12, (vh - targetHeight) / 2);
 
   const rect =
     phase === "open"
@@ -456,7 +456,7 @@ function ExpandedCard({
           background: "rgba(10, 18, 14, 0.88)",
           backdropFilter: "blur(14px)",
           WebkitBackdropFilter: "blur(14px)",
-          zIndex: 99998,
+          zIndex: 10000,
           opacity: isOpenPhase ? 1 : 0,
           transition: `opacity ${durationMs}ms ease`,
         }}
@@ -467,7 +467,7 @@ function ExpandedCard({
       <div
         style={{
           position: "fixed",
-          zIndex: 99999,
+          zIndex: 10001,
           left: rect.left,
           top: rect.top,
           width: rect.width,
@@ -635,113 +635,115 @@ function ExpandedCard({
           }}
         >
           <div>
-            {/* Highlights Grid */}
+            {/* Highlights Grid - Auto responsive */}
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
+                gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
                 gap: 10,
-                marginBottom: 20,
+                marginBottom: 16,
               }}
             >
               <div
                 style={{
-                  background: "rgba(255,255,255,0.05)",
-                  padding: "10px 14px",
+                  background: "rgba(255,255,255,0.06)",
+                  padding: "10px 12px",
                   borderRadius: 8,
                   border: "1px solid rgba(255,255,255,0.08)",
-                  fontSize: 13,
+                  fontSize: 12.5,
                   color: "#d0d0d0",
                 }}
               >
-                <span>Địa điểm: <strong style={{ color: "#fff" }}>{card.location}</strong></span>
+                <span>Địa điểm: <strong style={{ color: "#fff", display: "block" }}>{card.location}</strong></span>
               </div>
 
               <div
                 style={{
-                  background: "rgba(255,255,255,0.05)",
-                  padding: "10px 14px",
+                  background: "rgba(255,255,255,0.06)",
+                  padding: "10px 12px",
                   borderRadius: 8,
                   border: "1px solid rgba(255,255,255,0.08)",
-                  fontSize: 13,
+                  fontSize: 12.5,
                   color: "#d0d0d0",
                 }}
               >
-                <span>Thời gian: <strong style={{ color: "#fff" }}>{card.duration}</strong></span>
+                <span>Thời gian: <strong style={{ color: "#fff", display: "block" }}>{card.duration}</strong></span>
               </div>
 
               <div
                 style={{
-                  background: "rgba(255,255,255,0.05)",
-                  padding: "10px 14px",
+                  background: "rgba(255,255,255,0.06)",
+                  padding: "10px 12px",
                   borderRadius: 8,
                   border: "1px solid rgba(255,255,255,0.08)",
-                  fontSize: 13,
+                  fontSize: 12.5,
                   color: "#d0d0d0",
                 }}
               >
-                <span>Phương tiện: <strong style={{ color: "#fff" }}>{card.transport}</strong></span>
+                <span>Phương tiện: <strong style={{ color: "#fff", display: "block" }}>{card.transport}</strong></span>
               </div>
 
               <div
                 style={{
-                  background: "rgba(255,255,255,0.05)",
-                  padding: "10px 14px",
+                  background: "rgba(255,255,255,0.06)",
+                  padding: "10px 12px",
                   borderRadius: 8,
                   border: "1px solid rgba(255,255,255,0.08)",
-                  fontSize: 13,
+                  fontSize: 12.5,
                   color: "#d0d0d0",
                 }}
               >
-                <span>Bộ sưu tập: <strong style={{ color: "#fff" }}>{card.footer}</strong></span>
+                <span>Bộ sưu tập: <strong style={{ color: "#fff", display: "block" }}>{card.footer}</strong></span>
               </div>
             </div>
 
             {/* Description Text */}
             <p
               style={{
-                fontSize: 14,
-                lineHeight: 1.7,
+                fontSize: 13.5,
+                lineHeight: 1.6,
                 color: "rgba(255,255,255,0.85)",
-                margin: "0 0 20px",
+                margin: "0 0 16px",
               }}
             >
               {card.description}
             </p>
           </div>
 
-          {/* Action Footer */}
+          {/* Action Footer - Mobile Responsive Wrap */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              gap: 14,
-              paddingTop: 16,
+              gap: 12,
+              flexWrap: "wrap",
+              paddingTop: 14,
               borderTop: "1px solid rgba(255,255,255,0.12)",
             }}
           >
             <div>
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", display: "block" }}>
+              <span style={{ fontSize: 11, color: "rgba(255,255,255,0.55)", display: "block" }}>
                 Giá trọn gói tham khảo
               </span>
-              <span style={{ fontSize: 19, fontWeight: 700, color: "#f2b632" }}>
-                Chỉ từ {card.price} <span style={{ fontSize: 12, fontWeight: 400, color: "rgba(255,255,255,0.7)" }}>/ khách</span>
+              <span style={{ fontSize: 18, fontWeight: 700, color: "#f2b632" }}>
+                Chỉ từ {card.price} <span style={{ fontSize: 11, fontWeight: 400, color: "rgba(255,255,255,0.7)" }}>/ khách</span>
               </span>
             </div>
 
-            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
               <button
                 onClick={onClose}
                 style={{
-                  padding: "10px 16px",
+                  padding: "8px 14px",
                   borderRadius: 8,
                   border: "1px solid rgba(255,255,255,0.2)",
                   background: "transparent",
                   color: "#fff",
-                  fontSize: 13,
+                  fontSize: 12.5,
                   fontWeight: 600,
                   cursor: "pointer",
+                  whiteSpace: "nowrap",
                   transition: "all 0.2s ease",
                 }}
                 onMouseEnter={(e) => {
@@ -763,14 +765,15 @@ function ExpandedCard({
                   }
                 }}
                 style={{
-                  padding: "10px 18px",
+                  padding: "8px 14px",
                   borderRadius: 8,
                   border: "1px solid rgba(255,255,255,0.3)",
                   background: "rgba(255,255,255,0.12)",
                   color: "#ffffff",
-                  fontSize: 13,
+                  fontSize: 12.5,
                   fontWeight: 700,
                   cursor: "pointer",
+                  whiteSpace: "nowrap",
                   transition: "all 0.2s ease",
                 }}
                 onMouseEnter={(e) => {
@@ -795,14 +798,15 @@ function ExpandedCard({
                   }
                 }}
                 style={{
-                  padding: "10px 22px",
+                  padding: "8px 16px",
                   borderRadius: 8,
                   border: "none",
                   background: "#2d5a36",
                   color: "#fff",
-                  fontSize: 13.5,
+                  fontSize: 12.5,
                   fontWeight: 700,
                   cursor: "pointer",
+                  whiteSpace: "nowrap",
                   transition: "all 0.2s ease",
                 }}
                 onMouseEnter={(e) => {

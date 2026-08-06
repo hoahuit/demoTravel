@@ -223,23 +223,23 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(15,12,9,0.25) 0%, rgba(15,12,9,0.88) 100%)' }} />
 
         <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', width: '100%', maxWidth: '1200px', padding: '80px 4vw 0' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#1E4A3D', backdropFilter: 'blur(12px)', border: '1px solid #2d5a36', borderRadius: '30px', padding: '8px 24px', color: '#ffffff', fontSize: '12px', fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '22px', boxShadow: '0 8px 24px rgba(30, 74, 61, 0.4)' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'transparent', border: '1px solid rgba(255, 255, 255, 0.4)', borderRadius: '30px', padding: '6px 20px', color: '#ffffff', fontSize: '12px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '22px' }}>
             <BookOpen size={14} style={{ color: '#4ade80' }} /> <span style={{ color: '#ffffff' }}>{pageHeader.badge}</span>
           </div>
 
-          <h1 style={{ fontFamily: "'Playfair Display', 'Be Vietnam Pro', Georgia, serif", fontWeight: 800, fontSize: 'clamp(38px, 6vw, 76px)', letterSpacing: '-0.02em', lineHeight: 1.08, margin: '0 0 20px 0', color: '#ffffff', textShadow: '0 4px 30px rgba(0,0,0,0.6)' }}>
+          <h1 style={{ fontFamily: "'Playfair Display', 'Be Vietnam Pro', Georgia, serif", fontWeight: 800, fontSize: 'clamp(32px, 5.5vw, 76px)', letterSpacing: '-0.02em', lineHeight: 1.08, margin: '0 0 20px 0', color: '#ffffff', textShadow: '0 4px 30px rgba(0,0,0,0.6)', wordBreak: 'break-word' }}>
             {pageHeader.title}
           </h1>
 
-          <p style={{ fontSize: 'clamp(15px, 1.8vw, 19px)', color: 'rgba(255,255,255,0.92)', margin: '0 auto 32px', fontWeight: 400, lineHeight: 1.7, maxWidth: '860px' }}>
+          <p style={{ fontSize: 'clamp(14px, 1.8vw, 19px)', color: 'rgba(255,255,255,0.92)', margin: '0 auto 28px', fontWeight: 400, lineHeight: 1.7, maxWidth: '860px' }}>
             {pageHeader.subtitle}
           </p>
 
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap', justifyContent: 'center', background: 'rgba(30, 74, 61, 0.88)', backdropFilter: 'blur(12px)', border: '1px solid rgba(74, 222, 128, 0.35)', padding: '14px 32px', borderRadius: '40px', fontSize: '13px', color: '#ffffff', boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', background: 'transparent', border: 'none', padding: 0, fontSize: '14px', color: '#ffffff', textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
             <span>🏞️ <strong>{TOURS_DATA.length}</strong> Danh Lam Thắng Cảnh</span>
-            <span style={{ opacity: 0.4 }}>|</span>
+            <span style={{ opacity: 0.5 }}>|</span>
             <span>🌱 <strong>100%</strong> Lưu Trú Eco Resort 5★</span>
-            <span style={{ opacity: 0.4 }}>|</span>
+            <span style={{ opacity: 0.5 }}>|</span>
             <span>⭐ <strong>4.98 / 5.0</strong> Trải Nghiệm Độc Bản</span>
           </div>
         </div>
@@ -349,7 +349,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                   </div>
 
                   {/* 2-Column Details Grid */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '32px 48px', alignItems: 'start' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px 36px', alignItems: 'start' }}>
                     <div>
                       <div style={{ fontSize: '13px', fontWeight: 600, color: '#8c8275', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                         📍 {feat.city}, {feat.country} • ⏱️ {feat.duration} • ⭐ {feat.rating}
@@ -357,13 +357,14 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                       <h2
                         onClick={() => onNavigate(`/sanpham/${feat.slug}`)}
                         style={{
-                          fontSize: 'clamp(32px, 4vw, 52px)',
+                          fontSize: 'clamp(26px, 4vw, 52px)',
                           fontWeight: 800,
                           letterSpacing: '-0.04em',
                           lineHeight: 1.15,
                           color: '#1E4A3D',
                           margin: '0 0 16px 0',
-                          cursor: 'pointer'
+                          cursor: 'pointer',
+                          wordBreak: 'break-word'
                         }}
                       >
                         {feat.title}
@@ -374,7 +375,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                     </div>
 
                     <div>
-                      <p style={{ fontSize: '18px', lineHeight: 1.7, color: '#4a4238', marginBottom: '24px', fontWeight: 400 }}>
+                      <p style={{ fontSize: '16px', lineHeight: 1.7, color: '#4a4238', marginBottom: '24px', fontWeight: 400 }}>
                         {feat.blogStorySnippet || feat.subtitle}
                       </p>
 
@@ -383,19 +384,19 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                           <img
                             src={feat.gallery && feat.gallery[0] ? feat.gallery[0] : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop'}
                             alt={feat.blogAuthor || 'Guide'}
-                            style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover' }}
+                            style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover' }}
                           />
                           <div>
-                            <div style={{ fontSize: '16px', fontWeight: 700, color: '#1a1714' }}>{feat.blogAuthor || '4U Wellness Team'}</div>
+                            <div style={{ fontSize: '15px', fontWeight: 700, color: '#1a1714' }}>{feat.blogAuthor || '4U Wellness Team'}</div>
                             <div style={{ fontSize: '12px', color: '#8c8275' }}>{feat.blogReadTime || '5 phút đọc'} • Biên tập viên</div>
                           </div>
                         </div>
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                          <span style={{ fontSize: '20px', fontWeight: 800, color: '#006d36' }}>{feat.price.toLocaleString('vi-VN')} VNĐ</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                          <span style={{ fontSize: '18px', fontWeight: 800, color: '#006d36' }}>{feat.price.toLocaleString('vi-VN')} VNĐ</span>
                           <button
                             onClick={() => onNavigate(`/sanpham/${feat.slug}`)}
-                            style={{ background: '#1a1714', color: '#fff', border: 'none', padding: '10px 22px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                            style={{ background: '#1a1714', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                           >
                             Xem Chi Tiết <ArrowRight size={14} />
                           </button>
@@ -410,11 +411,11 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
             {/* MORE POSTS SECTION (GRID OF OTHER TOURS) */}
             {filteredTours.length > 1 && (
               <section>
-                <h2 style={{ fontSize: 'clamp(36px, 4.5vw, 56px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1, color: '#1a1714', marginBottom: '48px', borderTop: '1px solid rgba(26,23,20,0.1)', paddingTop: '48px' }}>
+                <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800, color: '#1a1714', marginBottom: '32px' }}>
                   Hành Trình Tiếp Theo (More Retreats)
                 </h2>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '64px 48px', marginBottom: '80px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '48px 32px', marginBottom: '80px' }}>
                   {filteredTours.slice(1).map((tour) => (
                     <article key={tour.id} style={{ display: 'flex', flexDirection: 'column' }}>
                       {/* Image aspect-video */}
@@ -433,7 +434,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
                       <h3
                         onClick={() => onNavigate(`/sanpham/${tour.slug}`)}
-                        style={{ fontSize: '26px', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.25, color: '#1a1714', margin: '0 0 12px 0', cursor: 'pointer' }}
+                        style={{ fontSize: 'clamp(20px, 2.2vw, 26px)', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.25, color: '#1a1714', margin: '0 0 12px 0', cursor: 'pointer', wordBreak: 'break-word' }}
                       >
                         {tour.title}
                       </h3>
@@ -442,25 +443,25 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                         📍 {tour.city} • ⏱️ {tour.duration} • ⭐ {tour.rating}
                       </div>
 
-                      <p style={{ fontSize: '16px', lineHeight: 1.6, color: '#574e44', marginBottom: '20px', flex: 1, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      <p style={{ fontSize: '15px', lineHeight: 1.6, color: '#574e44', marginBottom: '20px', flex: 1, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                         {tour.blogStorySnippet || tour.subtitle}
                       </p>
 
                       {/* Author + CTA */}
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '16px', borderTop: '1px solid rgba(26,23,20,0.08)' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', paddingTop: '16px', borderTop: '1px solid rgba(26,23,20,0.08)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           <img
                             src={tour.gallery && tour.gallery[0] ? tour.gallery[0] : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop'}
                             alt={tour.blogAuthor || 'Guide'}
-                            style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }}
+                            style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }}
                           />
-                          <div style={{ fontSize: '14px', fontWeight: 700, color: '#1a1714' }}>
+                          <div style={{ fontSize: '13px', fontWeight: 700, color: '#1a1714' }}>
                             {tour.blogAuthor || '4U Editorial'}
                           </div>
                         </div>
 
                         <div style={{ textAlign: 'right' }}>
-                          <span style={{ fontSize: '16px', fontWeight: 800, color: '#006d36', display: 'block' }}>
+                          <span style={{ fontSize: '15px', fontWeight: 800, color: '#006d36', display: 'block' }}>
                             {tour.price.toLocaleString('vi-VN')} VNĐ
                           </span>
                           <button
@@ -483,7 +484,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
         {/* ── LAYOUT MODE B: DẠNG LƯỚI THẺ DU LỊCH (GRID VIEW FULL-WIDTH) ── */}
         {viewMode === 'grid' && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '36px', width: '100%' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '28px', width: '100%' }}>
             {filteredTours.map(tour => (
               <article key={tour.id} style={{ background: '#ffffff', borderRadius: '20px', overflow: 'hidden', boxShadow: '0 8px 30px rgba(26,23,20,0.06)', border: '1px solid rgba(26,23,20,0.08)', display: 'flex', flexDirection: 'column' }}>
 

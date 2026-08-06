@@ -1322,3 +1322,21 @@ body {
   margin-bottom: 0;
   padding-bottom: 0;
 }
+
+/* Mobile Responsiveness Rules */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
+
+  /* Grid columns shrink for mobile screens */
+  div[style*="gridTemplateColumns"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Text wrap & break */
+  h1, h2, h3, h4 {
+    word-break: break-word;
+  }
+}

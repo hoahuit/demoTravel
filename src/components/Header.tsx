@@ -4,7 +4,7 @@ import { Search, Menu, X, Phone, ChevronDown, Crown, Zap, Flame, Heart, Leaf, Sh
 export interface HeaderProps {
   onOpenSearch?: () => void;
   onNavigate?: (path: string) => void;
-  onOpenBooking?: () => void;
+  onOpenBooking?: (tourData?: any) => void;
 }
 
 interface MenuItem {

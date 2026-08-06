@@ -19,7 +19,7 @@
 .bm-overlay {
   position: fixed;
   inset: 0;
-  z-index: 10005;
+  z-index: 99999;
   background: rgba(10, 20, 17, 0.65);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
@@ -353,17 +353,58 @@
 
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 720px) {
+  .bm-overlay {
+    padding: 8px;
+    align-items: flex-end;
+  }
   .bm-modal {
-    grid-template-columns: 1fr;
-    max-height: 88vh;
+    grid-template-columns: 1fr !important;
+    max-height: 92vh !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    border-radius: 20px 20px 0 0 !important;
+    overflow-y: auto !important;
   }
   .bm-panel-left {
-    padding: 28px 24px 22px;
+    padding: 22px 18px 18px !important;
+  }
+  .bm-panel-left h3 {
+    font-size: 18px !important;
   }
   .bm-panel-right {
-    padding: 26px 22px 26px;
+    padding: 22px 18px 24px !important;
+  }
+  .bm-panel-right div[style*="gridTemplateColumns"] {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .bm-form-head h2 {
+    font-size: 20px !important;
+  }
+  .bm-form-head p {
+    font-size: 12.5px !important;
+  }
+  .bm-field input,
+  .bm-field select {
+    padding: 12px 14px !important;
+    font-size: 14px !important;
   }
   .bm-hotline-box {
-    margin-top: 22px;
+    margin-top: 16px;
+  }
+  .bm-perk-list {
+    gap: 10px !important;
+    margin-bottom: 16px !important;
+  }
+  .bm-perk-list li {
+    font-size: 12px !important;
+  }
+  .bm-submit-btn {
+    padding: 14px !important;
+    font-size: 12px !important;
+  }
+  .bm-close-btn {
+    top: 10px !important;
+    right: 10px !important;
   }
 }
