@@ -4,6 +4,7 @@ import { Search, Menu, X, Phone, ChevronDown, Crown, Zap, Flame, Heart, Leaf, Sh
 export interface HeaderProps {
   onOpenSearch?: () => void;
   onNavigate?: (path: string) => void;
+  onOpenBooking?: () => void;
 }
 
 interface MenuItem {
@@ -22,7 +23,7 @@ interface MenuCategory {
   items?: MenuItem[];
 }
 
-export default function Header({ onOpenSearch, onNavigate }: HeaderProps) {
+export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: HeaderProps) {
   const [scrolled, setScrolled] = useState<boolean>(false);
   const [row2Visible, setRow2Visible] = useState<boolean>(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
@@ -327,8 +328,10 @@ export default function Header({ onOpenSearch, onNavigate }: HeaderProps) {
 
           {/* Right CTA */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexShrink: 0 }}>
-            <a
-              href="tel:0764886877"
+            <button
+              onClick={() => {
+                if (onOpenBooking) onOpenBooking();
+              }}
               className="hide-mobile"
               style={{
                 display: 'inline-flex',
@@ -340,11 +343,11 @@ export default function Header({ onOpenSearch, onNavigate }: HeaderProps) {
                 color: '#09150c',
                 fontWeight: '800',
                 fontSize: '0.96rem',
-                textDecoration: 'none',
                 letterSpacing: '0.02em',
                 boxShadow: '0 6px 22px rgba(74, 222, 128, 0.45)',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 border: 'none',
+                cursor: 'pointer'
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.transform = 'scale(1.05)';
@@ -355,8 +358,8 @@ export default function Header({ onOpenSearch, onNavigate }: HeaderProps) {
                 e.currentTarget.style.boxShadow = '0 6px 22px rgba(74, 222, 128, 0.45)';
               }}
             >
-              Retreat NGAY
-            </a>
+              Nhận tư vấn
+            </button>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -420,9 +423,10 @@ export default function Header({ onOpenSearch, onNavigate }: HeaderProps) {
                 <div
                   style={{
                     display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: '32px',
-                    rowGap: '16px',
+                    flexDirection: 'column',
+                    gap: '12px',
+                    alignItems: 'flex-start',
+                    paddingLeft: '4px'
                   }}
                 >
                   {activeCategoryData.items?.map((sub, sIdx) => (
@@ -437,22 +441,24 @@ export default function Header({ onOpenSearch, onNavigate }: HeaderProps) {
                         setActiveCategory(null);
                       }}
                       style={{
-                        fontSize: '0.98rem',
+                        fontSize: '1.02rem',
                         fontWeight: '600',
                         color: '#ffffff',
                         textDecoration: 'none',
-                        transition: 'color 0.2s ease, transform 0.2s ease',
+                        transition: 'all 0.2s ease',
                         padding: '4px 0',
                         border: 'none',
                         background: 'none',
+                        display: 'inline-flex',
+                        alignItems: 'center'
                       }}
                       onMouseEnter={e => {
                         e.currentTarget.style.color = '#4ade80';
-                        e.currentTarget.style.transform = 'translateY(-1px)';
+                        e.currentTarget.style.transform = 'translateX(6px)';
                       }}
                       onMouseLeave={e => {
                         e.currentTarget.style.color = '#ffffff';
-                        e.currentTarget.style.transform = 'none';
+                        e.currentTarget.style.transform = 'translateX(0)';
                       }}
                     >
                       {sub.label}
@@ -567,8 +573,11 @@ export default function Header({ onOpenSearch, onNavigate }: HeaderProps) {
             </div>
           ))}
 
-          <a
-            href="tel:0764886877"
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              if (onOpenBooking) onOpenBooking();
+            }}
             style={{
               marginTop: '20px',
               display: 'flex',
@@ -577,15 +586,16 @@ export default function Header({ onOpenSearch, onNavigate }: HeaderProps) {
               gap: '8px',
               padding: '12px 24px',
               borderRadius: '999px',
-              background: 'linear-gradient(135deg, #ffc107 0%, #ffab00 100%)',
+              background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 100%)',
               color: '#09150c',
               fontWeight: '800',
               fontSize: '0.95rem',
-              textDecoration: 'none',
+              border: 'none',
+              cursor: 'pointer'
             }}
           >
-            Retreat NGAY
-          </a>
+            Nhận tư vấn
+          </button>
         </div>
       )}
     </>

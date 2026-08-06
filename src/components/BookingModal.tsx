@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronUp, Calendar, X, CheckCircle2, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
+import { ChevronUp, Calendar, CheckCircle2 } from 'lucide-react';
+import './BookingModal.css';
 
 export interface BookingModalProps {
   externalOpen?: boolean;
@@ -8,11 +9,8 @@ export interface BookingModalProps {
 
 interface FormDataState {
   name: string;
-  email: string;
   phone: string;
   tour: string;
-  date: string;
-  guests: string;
 }
 
 export default function BookingModal({ externalOpen, onExternalClose }: BookingModalProps) {
@@ -21,18 +19,20 @@ export default function BookingModal({ externalOpen, onExternalClose }: BookingM
   const [submitted, setSubmitted] = useState<boolean>(false);
 
   useEffect(() => {
-    if (externalOpen) {
-      setModalOpen(true);
+    if (externalOpen !== undefined) {
+      setModalOpen(externalOpen);
+      if (externalOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
     }
   }, [externalOpen]);
 
   const [formData, setFormData] = useState<FormDataState>({
     name: '',
-    email: '',
     phone: '',
-    tour: 'thantamtri',
-    date: '',
-    guests: '2'
+    tour: 'thantamtri'
   });
 
   useEffect(() => {
@@ -63,16 +63,21 @@ export default function BookingModal({ externalOpen, onExternalClose }: BookingM
   const resetAndClose = () => {
     setModalOpen(false);
     setSubmitted(false);
+    document.body.style.overflow = '';
     if (onExternalClose) onExternalClose();
     setFormData({
       name: '',
-      email: '',
       phone: '',
-      tour: 'thantamtri',
-      date: '',
-      guests: '2'
+      tour: 'thantamtri'
     });
   };
+
+  const openModal = () => {
+    setModalOpen(true);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const isOpen = Boolean(externalOpen || modalOpen);
 
   return (
     <>
@@ -80,284 +85,196 @@ export default function BookingModal({ externalOpen, onExternalClose }: BookingM
       {showFloating && (
         <div className="fixed bottom-7 right-7 z-[9990] flex flex-col gap-3 items-center">
           <button
-            onClick={() => setModalOpen(true)}
+            onClick={openModal}
             aria-label="Open Booking Modal"
-            className="w-13 h-13 rounded-full bg-[#193627] hover:bg-[#254f3a] text-[#adceb9] border border-[#adceb9]/30 cursor-pointer flex items-center justify-center shadow-2xl hover:scale-110 transition-all relative"
+            className="w-13 h-13 rounded-full bg-[#1E4A3D] hover:bg-[#10201B] text-[#EAF0E7] border border-[#B7C9AE]/30 cursor-pointer flex items-center justify-center shadow-2xl hover:scale-110 transition-all relative"
           >
             <Calendar size={22} />
-            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-[#4ae183] border-2 border-[#0a1610]" />
+            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-[#8CA366] border-2 border-[#10201B]" />
           </button>
 
           <button
             onClick={scrollToTop}
             aria-label="Scroll to Top"
-            className="w-12 h-12 rounded-full bg-[#0a1610] text-[#d8e6db] border border-white/10 cursor-pointer flex items-center justify-center shadow-xl hover:scale-110 hover:bg-[#16221c] transition-all"
+            className="w-12 h-12 rounded-full bg-[#0C2620] text-[#EAF0E7] border border-white/10 cursor-pointer flex items-center justify-center shadow-xl hover:scale-110 hover:bg-[#10201B] transition-all"
           >
             <ChevronUp size={22} />
           </button>
         </div>
       )}
 
-      {/* BOOKING MODAL */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-[10005] flex justify-center items-center p-3 sm:p-6 overflow-y-auto">
-          {/* Backdrop */}
-          <div
-            onClick={resetAndClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"
-          />
-
-          {/* Modal Container */}
-          <div
-            className="premium-modal relative w-full max-w-[1024px] rounded-lg overflow-hidden flex flex-col z-10 text-[#d8e6db] my-auto max-h-[92vh]"
-            style={{
-              backgroundColor: '#0d2317',
-              backgroundImage: 'linear-gradient(180deg, rgba(13, 35, 23, 1) 0%, rgba(8, 22, 14, 1) 100%)',
-              boxShadow: '0 30px 80px -20px rgba(0,0,0,0.85)',
-              border: '1px solid rgba(173, 206, 185, 0.15)'
-            }}
-          >
+      {/* BOOKING MODAL OVERLAY */}
+      {isOpen && (
+        <div
+          className="bm-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) resetAndClose();
+          }}
+        >
+          <div className="bm-modal">
             {/* Close Button */}
-            <button
-              onClick={resetAndClose}
-              className="absolute top-4 right-4 sm:top-5 sm:right-5 z-20 bg-white/5 hover:bg-white/15 text-[#adceb9] rounded-full w-8 h-8 flex items-center justify-center cursor-pointer transition-colors border border-[#adceb9]/20"
-            >
-              <X size={18} />
+            <button className="bm-close-btn" onClick={resetAndClose} aria-label="Đóng">
+              <svg viewBox="0 0 20 20" fill="none">
+                <path d="M4 4l12 12M16 4L4 16" />
+              </svg>
             </button>
 
             {!submitted ? (
-              <div className="overflow-y-auto w-full custom-scrollbar">
-                {/* Header Section */}
-                <div className="relative pt-10 sm:pt-14 px-6 sm:px-12 pb-8 sm:pb-10 text-center border-b border-white/10 mb-2">
-                  <h1 className="text-4xl sm:text-5xl font-serif text-[#adceb9] tracking-wider font-semibold" style={{ fontFamily: "'Playfair Display', 'Libre Caslon Text', Georgia, serif" }}>
-                    Booking
-                  </h1>
+              <>
+                {/* LEFT PANEL: BENEFITS */}
+                <div className="bm-panel-left">
+                  <span className="bm-panel-eyebrow">Quyền Lợi Tư Vấn 1:1</span>
+                  <h3>Đồng hành cùng bạn từ những bước đầu tiên</h3>
+                  <ul className="bm-perk-list">
+                    <li>
+                      <span className="bm-check">
+                        <svg viewBox="0 0 20 20" fill="none">
+                          <path d="M4 10l4 4 8-8" />
+                        </svg>
+                      </span>
+                      Tư vấn may đo lịch trình nghỉ dưỡng riêng biệt
+                    </li>
+                    <li>
+                      <span className="bm-check">
+                        <svg viewBox="0 0 20 20" fill="none">
+                          <path d="M4 10l4 4 8-8" />
+                        </svg>
+                      </span>
+                      Đưa đón VIP bằng xe Limousine tận nơi
+                    </li>
+                    <li>
+                      <span className="bm-check">
+                        <svg viewBox="0 0 20 20" fill="none">
+                          <path d="M4 10l4 4 8-8" />
+                        </svg>
+                      </span>
+                      Ưu đãi tốt nhất dành cho nhóm & gia đình
+                    </li>
+                    <li>
+                      <span className="bm-check">
+                        <svg viewBox="0 0 20 20" fill="none">
+                          <path d="M4 10l4 4 8-8" />
+                        </svg>
+                      </span>
+                      Hỗ trợ xếp chỗ & hoàn hủy linh hoạt 24/7
+                    </li>
+                  </ul>
+
+                  <div className="bm-hotline-box">
+                    <span className="bm-mono">Hotline tư vấn nhanh 24/7</span>
+                    <a href="tel:0764886877" className="bm-number">
+                      <span className="bm-pulse-dot" />
+                      0764.886.877
+                    </a>
+                  </div>
                 </div>
 
-                {/* Main Content Area */}
-                <div className="flex flex-col md:flex-row p-6 sm:p-10 gap-8 lg:gap-12">
-
-                  {/* Left Side */}
-                  <div className="w-full md:w-5/12 flex flex-col gap-6">
-                    <div className="flex flex-col gap-4">
-                      <p className="text-sm text-[#d8e6db] opacity-90 leading-relaxed">
-                        Nhận ngay tư vấn 1:1 trực tiếp từ chuyên gia hành trình 4U Tours để chọn gói Retreat chữa lành và tour độc bản phù hợp nhất:
-                      </p>
-                      <ul className="flex flex-col gap-2.5 text-xs sm:text-sm text-[#c2c8c2]">
-                        <li className="flex items-start">
-                          <span className="opacity-80">— Lên lịch tư vấn trực tiếp với chuyên gia hành trình 4U</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="opacity-80">— Thiết kế may đo lịch trình nghỉ dưỡng & trải nghiệm chữa lành độc bản</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="opacity-80">— Chính sách giữ chỗ an toàn & hoàn hủy linh hoạt</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="opacity-80">— Trải nghiệm xe riêng cao cấp đưa đón tận nơi</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="opacity-80">— Đội ngũ hỗ trợ 24/7 đồng hành suốt hành trình</span>
-                        </li>
-                        <li className="flex items-start">
-                          <span className="opacity-80">— Độc quyền ưu đãi gói Retreat dành cho nhóm & gia đình</span>
-                        </li>
-                      </ul>
-                    </div>
-
-                    <div className="mt-auto pt-4">
-                      <h3 className="text-xl sm:text-2xl font-serif text-[#adceb9] mb-3" style={{ fontFamily: "'Playfair Display', 'Libre Caslon Text', Georgia, serif" }}>
-                        Trải nghiệm độc bản hôm nay!
-                      </h3>
-                      <div className="relative w-full h-44 rounded overflow-hidden border border-white/10 opacity-90 group shadow-lg">
-                        <img
-                          alt="Forest Landscape"
-                          className="absolute inset-0 w-full h-full object-cover grayscale-[20%] group-hover:scale-105 transition-transform duration-700"
-                          src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1000&auto=format&fit=crop"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#08160e]/95 via-[#08160e]/40 to-transparent"></div>
-                        <div className="absolute bottom-3 left-4 right-4 flex items-center gap-2">
-                          <span className="text-[11px] sm:text-xs font-bold text-[#d8e6db] uppercase tracking-wider">
-                            4U HEALING RETREAT - BÌNH YÊN TRÊN CAO NGUYÊN
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                {/* RIGHT PANEL: FORM */}
+                <div className="bm-panel-right">
+                  <div className="bm-form-head">
+                    <h2>Đăng Ký Tư Vấn Tour</h2>
+                    <p>Để lại thông tin để chuyên gia 4U Tours hỗ trợ xếp lịch trình nghỉ dưỡng riêng cho bạn.</p>
                   </div>
 
-                  {/* Right Side */}
-                  <div className="w-full md:w-7/12 flex flex-col">
-                    <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-full pl-0 md:pl-6">
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-[11px] font-bold text-[#adceb9]/80 uppercase tracking-widest" htmlFor="fullName">
-                          Họ & Tên đầy đủ *
-                        </label>
-                        <input
-                          id="fullName"
-                          type="text"
-                          required
-                          value={formData.name}
-                          onChange={e => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="Ví dụ: Nguyễn Văn A"
-                          className="glass-input w-full rounded px-4 py-3 text-[#d8e6db] text-sm"
-                          style={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                            border: '1px solid rgba(173, 206, 185, 0.2)',
-                            color: '#d8e6db',
-                            borderRadius: '4px',
-                            padding: '12px 16px'
-                          }}
-                        />
-                      </div>
+                  <form onSubmit={handleSubmit}>
+                    <div className="bm-field">
+                      <label htmlFor="fullName">
+                        Họ & Tên <span className="bm-req">*</span>
+                      </label>
+                      <input
+                        id="fullName"
+                        type="text"
+                        placeholder="Ví dụ: Nguyễn Văn A"
+                        required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      />
+                    </div>
 
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-[11px] font-bold text-[#adceb9]/80 uppercase tracking-widest" htmlFor="email">
-                          Email liên hệ
-                        </label>
-                        <input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={e => setFormData({ ...formData, email: e.target.value })}
-                          placeholder="contact@example.com"
-                          className="glass-input w-full rounded px-4 py-3 text-[#d8e6db] text-sm"
-                          style={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                            border: '1px solid rgba(173, 206, 185, 0.2)',
-                            color: '#d8e6db',
-                            borderRadius: '4px',
-                            padding: '12px 16px'
-                          }}
-                        />
-                      </div>
+                    <div className="bm-field">
+                      <label htmlFor="phone">
+                        Số Điện Thoại / Zalo <span className="bm-req">*</span>
+                      </label>
+                      <input
+                        id="phone"
+                        type="tel"
+                        placeholder="Ví dụ: 0901 234 567"
+                        required
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      />
+                    </div>
 
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-[11px] font-bold text-[#adceb9]/80 uppercase tracking-widest" htmlFor="phone">
-                          Số điện thoại / Zalo *
-                        </label>
-                        <input
-                          id="phone"
-                          type="tel"
-                          required
-                          value={formData.phone}
-                          onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="+84 901 234 567"
-                          className="glass-input w-full rounded px-4 py-3 text-[#d8e6db] text-sm"
-                          style={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                            border: '1px solid rgba(173, 206, 185, 0.2)',
-                            color: '#d8e6db',
-                            borderRadius: '4px',
-                            padding: '12px 16px'
-                          }}
-                        />
-                      </div>
+                    <div className="bm-field">
+                      <label htmlFor="tourSelect">
+                        Tour / Gói Retreat Cần Tư Vấn <span className="bm-req">*</span>
+                      </label>
+                      <select
+                        id="tourSelect"
+                        required
+                        value={formData.tour}
+                        onChange={(e) => setFormData({ ...formData, tour: e.target.value })}
+                      >
+                        <option value="thantamtri">Retreat Chữa Lành Thân Tâm Trí (Nam Cát Tiên)</option>
+                        <option value="phuquoc">Retreat Hoàng Hôn Phú Quốc</option>
+                        <option value="dalat">Retreat Sương Sớm Đà Lạt</option>
+                        <option value="custom">Tôi chưa chắc — cần tư vấn thêm</option>
+                      </select>
+                    </div>
 
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-[11px] font-bold text-[#adceb9]/80 uppercase tracking-widest" htmlFor="package">
-                          Chọn gói Retreat / Tour
-                        </label>
-                        <div className="relative">
-                          <select
-                            id="package"
-                            value={formData.tour}
-                            onChange={e => setFormData({ ...formData, tour: e.target.value })}
-                            className="glass-input w-full rounded px-4 py-3 text-[#d8e6db] text-sm cursor-pointer"
-                            style={{
-                              backgroundColor: '#0a1610',
-                              border: '1px solid rgba(173, 206, 185, 0.2)',
-                              color: '#d8e6db',
-                              borderRadius: '4px',
-                              padding: '12px 16px'
-                            }}
-                          >
-                            <option value="thantamtri">Retreat Chữa lành Thân Tâm Trí</option>
-                            <option value="thiennhien">Khám Phá Thiên Nhiên Nguyên Bản</option>
-                            <option value="giadinh">Nghỉ Dưỡng Gia Đình Gắn Kết</option>
-                            <option value="caonguyen">Bình Yên Trên Cao Nguyên</option>
-                          </select>
-                        </div>
-                      </div>
+                    <button type="submit" className="bm-submit-btn">
+                      Gửi Yêu Cầu Tư Vấn Ngay
+                      <svg viewBox="0 0 20 20" fill="none">
+                        <path d="M4 10h12M11 5l5 5-5 5" />
+                      </svg>
+                    </button>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="flex flex-col gap-1.5">
-                          <label className="text-[11px] font-bold text-[#adceb9]/80 uppercase tracking-widest" htmlFor="date">
-                            Dự kiến ngày đi
-                          </label>
-                          <input
-                            id="date"
-                            type="date"
-                            value={formData.date}
-                            onChange={e => setFormData({ ...formData, date: e.target.value })}
-                            className="glass-input w-full rounded px-4 py-3 text-[#d8e6db] text-sm cursor-pointer"
-                            style={{
-                              backgroundColor: '#0a1610',
-                              border: '1px solid rgba(173, 206, 185, 0.2)',
-                              color: '#d8e6db',
-                              borderRadius: '4px',
-                              padding: '12px 16px'
-                            }}
-                          />
-                        </div>
-
-                        <div className="flex flex-col gap-1.5">
-                          <label className="text-[11px] font-bold text-[#adceb9]/80 uppercase tracking-widest" htmlFor="guests">
-                            Số lượng khách
-                          </label>
-                          <select
-                            id="guests"
-                            value={formData.guests}
-                            onChange={e => setFormData({ ...formData, guests: e.target.value })}
-                            className="glass-input w-full rounded px-4 py-3 text-[#d8e6db] text-sm cursor-pointer"
-                            style={{
-                              backgroundColor: '#0a1610',
-                              border: '1px solid rgba(173, 206, 185, 0.2)',
-                              color: '#d8e6db',
-                              borderRadius: '4px',
-                              padding: '12px 16px'
-                            }}
-                          >
-                            <option value="1">1 Khách</option>
-                            <option value="2">2 Khách (Đôi)</option>
-                            <option value="3-5">3 - 5 Khách</option>
-                            <option value="group">Nhóm / Gia đình (&gt;5)</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="mt-auto pt-6 flex flex-col items-center gap-4 border-t border-white/10 w-full">
-                        <p className="text-[11px] text-[#adceb9]/80 leading-relaxed text-center w-full">
-                          Bằng việc gửi thông tin, tôi xác nhận đã đọc chính sách bảo mật của 4U Tours và đồng ý để chuyên gia tư vấn liên hệ qua SĐT/Email để hỗ trợ xếp lịch trình.
-                        </p>
-
-                        <button
-                          type="submit"
-                          className="w-full max-w-sm self-center min-h-[56px] font-extrabold py-5 px-8 rounded-xl flex items-center justify-center transition-all duration-300 uppercase tracking-widest text-xs sm:text-sm cursor-pointer shadow-[0_10px_30px_rgba(74,222,128,0.35)] hover:shadow-[0_15px_40px_rgba(74,222,128,0.5)] hover:scale-[1.02] active:scale-[0.98] mt-1 bg-gradient-to-r from-[#4ade80] via-[#34d399] to-[#22c55e] text-[#06160d]"
-                        >
-                          BOOK DEMO TOUR NGAY
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-
+                    <div className="bm-form-note">
+                      <svg viewBox="0 0 20 20" fill="none">
+                        <path d="M10 2l7 3v5c0 4.5-3 7.5-7 8-4-.5-7-3.5-7-8V5l7-3z" />
+                      </svg>
+                      Thông tin của bạn được bảo mật tuyệt đối
+                    </div>
+                  </form>
                 </div>
-              </div>
+              </>
             ) : (
-              <div className="text-center p-8 sm:p-14 my-auto flex flex-col items-center justify-center">
-                <div className="w-16 h-16 rounded-full bg-[#4ade80]/20 border-2 border-[#4ade80] text-[#4ade80] flex items-center justify-center mx-auto mb-4 shadow-xl shadow-[#4ade80]/20 animate-bounce">
-                  <CheckCircle2 size={36} />
+              <div style={{ padding: '60px 40px', textAlign: 'center', gridColumn: 'span 2' }}>
+                <div
+                  style={{
+                    width: '64px',
+                    height: '64px',
+                    borderRadius: '50%',
+                    background: 'rgba(140, 163, 102, 0.2)',
+                    border: '2px solid #8CA366',
+                    color: '#1E4A3D',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 20px'
+                  }}
+                >
+                  <CheckCircle2 size={36} color="#1E4A3D" />
                 </div>
 
-                <h3 className="text-2xl sm:text-3xl font-serif text-white mb-2" style={{ fontFamily: "'Playfair Display', 'Libre Caslon Text', Georgia, serif" }}>
-                  Đã Gửi Yêu Cầu Booking!
+                <h3
+                  style={{
+                    fontFamily: "'Fraunces', Georgia, serif",
+                    fontSize: '28px',
+                    color: '#10201B',
+                    marginBottom: '10px'
+                  }}
+                >
+                  Đã Gửi Yêu Cầu Tư Vấn!
                 </h3>
-                <p className="text-[#adceb9] text-sm leading-relaxed max-w-md mx-auto mb-6">
+                <p style={{ fontSize: '15px', color: 'rgba(16, 32, 27, 0.7)', lineHeight: 1.6, maxWidth: '440px', margin: '0 auto 28px' }}>
                   Cảm ơn <strong>{formData.name}</strong>. Chuyên gia 4U Tours sẽ liên hệ qua SĐT <strong>{formData.phone}</strong> trong ít phút để xếp lịch trình demo cho bạn.
                 </p>
 
                 <button
                   onClick={resetAndClose}
-                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#4ade80] to-[#22c55e] text-[#06160d] font-extrabold text-xs uppercase tracking-widest hover:scale-105 transition-all cursor-pointer shadow-lg shadow-[#4ade80]/30"
+                  className="bm-submit-btn"
+                  style={{ maxWidth: '280px', margin: '0 auto' }}
                 >
                   Hoàn Tất & Đóng Cửa Sổ
                 </button>

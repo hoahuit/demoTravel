@@ -22,6 +22,8 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+
+
   const navigateTo = (path: string) => {
     window.history.pushState({}, '', path);
     setCurrentPath(path);
@@ -40,7 +42,11 @@ export default function App() {
       <BookingModal externalOpen={bookingOpen} onExternalClose={() => setBookingOpen(false)} />
 
       {/* Header */}
-      <Header onOpenSearch={() => setSearchOpen(true)} onNavigate={navigateTo} />
+      <Header
+        onOpenSearch={() => setSearchOpen(true)}
+        onNavigate={navigateTo}
+        onOpenBooking={() => setBookingOpen(true)}
+      />
 
       {/* Conditional Route Rendering */}
       {isProductRoute ? (
@@ -52,13 +58,13 @@ export default function App() {
       ) : (
         <main>
           {/* Section 1: Apple Product Feature Hero */}
-          <Hero />
+          <Hero onOpenBooking={() => setBookingOpen(true)} />
 
-          {/* Section 2: 4U Bento Grid Signature Combos & Deals */}
-          <BentoGrid />
-
-          {/* Section 3: Target Audience Bento Grid & Trusted By Marquee ("Whom are 4U for?") */}
+          {/* Section 2: Target Audience 3D Carousel ("Dành Riêng Cho Ai Tìm Về 4U Retreat?") */}
           <AudienceBento />
+
+          {/* Section 3: 4U Signature Retreats Bento Showcase ("Tìm về những khoảng lặng giữa thiên nhiên") */}
+          <BentoGrid onOpenBooking={() => setBookingOpen(true)} />
 
           {/* Section 4: Testimonials Editorial Section */}
           <Testimonials />
