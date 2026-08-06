@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 interface CardItem {
@@ -378,14 +379,15 @@ export default function Carousel3D() {
         })}
       </div>
 
-      {expandedCard && (
+      {expandedCard && createPortal(
         <ExpandedCard
           card={expandedCard}
           phase={expandPhase}
           startRect={startRect}
           onClose={closeExpanded}
           durationMs={EXPAND_MS}
-        />
+        />,
+        document.body
       )}
     </div>
   );
@@ -425,7 +427,7 @@ function ExpandedCard({
   const rect =
     phase === "open"
       ? { left: targetLeft, top: targetTop, width: targetWidth, height: targetHeight }
-      : startRect || { left: 0, top: 0, width: 340, height: 420 };
+      : startRect || { left: targetLeft, top: targetTop, width: targetWidth, height: targetHeight };
 
   return (
     <>
@@ -434,10 +436,10 @@ function ExpandedCard({
         style={{
           position: "fixed",
           inset: 0,
-          background: "rgba(10, 18, 14, 0.85)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          zIndex: 999,
+          background: "rgba(10, 18, 14, 0.88)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+          zIndex: 99998,
           opacity: isOpenPhase ? 1 : 0,
           transition: `opacity ${durationMs}ms ease`,
         }}
@@ -448,7 +450,7 @@ function ExpandedCard({
       <div
         style={{
           position: "fixed",
-          zIndex: 1000,
+          zIndex: 99999,
           left: rect.left,
           top: rect.top,
           width: rect.width,
@@ -457,8 +459,8 @@ function ExpandedCard({
           borderRadius: isOpenPhase ? 22 : 18,
           overflow: "hidden",
           background: "#142619",
-          boxShadow: "0 30px 80px rgba(0,0,0,0.5)",
-          border: "1px solid rgba(255,255,255,0.15)",
+          boxShadow: "0 30px 90px rgba(0,0,0,0.7)",
+          border: "1px solid rgba(255,255,255,0.2)",
           display: "flex",
           flexDirection: "column",
           fontFamily: `-apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans", "Inter", sans-serif`,
@@ -568,11 +570,9 @@ function ExpandedCard({
               right: 24,
               opacity: isOpenPhase ? 1 : 0,
               transform: isOpenPhase ? "translateY(0)" : "translateY(12px)",
-              transition: `opacity ${durationMs * 0.55}ms ease ${
-                isOpenPhase ? durationMs * 0.35 : 0
-              }ms, transform ${durationMs * 0.55}ms ease ${
-                isOpenPhase ? durationMs * 0.35 : 0
-              }ms`,
+              transition: `opacity ${durationMs * 0.55}ms ease ${isOpenPhase ? durationMs * 0.35 : 0
+                }ms, transform ${durationMs * 0.55}ms ease ${isOpenPhase ? durationMs * 0.35 : 0
+                }ms`,
             }}
           >
             <h2
@@ -612,11 +612,9 @@ function ExpandedCard({
             justifyContent: "space-between",
             opacity: isOpenPhase ? 1 : 0,
             transform: isOpenPhase ? "translateY(0)" : "translateY(16px)",
-            transition: `opacity ${durationMs * 0.55}ms ease ${
-              isOpenPhase ? durationMs * 0.42 : 0
-            }ms, transform ${durationMs * 0.55}ms ease ${
-              isOpenPhase ? durationMs * 0.42 : 0
-            }ms`,
+            transition: `opacity ${durationMs * 0.55}ms ease ${isOpenPhase ? durationMs * 0.42 : 0
+              }ms, transform ${durationMs * 0.55}ms ease ${isOpenPhase ? durationMs * 0.42 : 0
+              }ms`,
           }}
         >
           <div>

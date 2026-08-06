@@ -102,7 +102,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
   const bgImageSrc = product.heroImage || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&auto=format&fit=crop';
 
   return (
-    <div style={{ background: '#f8faf9', color: '#191c1c', minHeight: '100vh', fontFamily: '"Plus Jakarta Sans", "Inter", -apple-system, sans-serif' }}>
+    <div style={{ background: '#ffffff', color: '#191c1c', minHeight: '100vh', fontFamily: '"Be Vietnam Pro", "Plus Jakarta Sans", -apple-system, sans-serif' }}>
 
       {/* ── 1. HERO SECTION WITH SCROLL EXPANSION ANIMATION ── */}
       <ScrollExpandMedia

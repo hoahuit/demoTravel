@@ -41,7 +41,7 @@ export const productsData: Record<string, ProductItem> = {
     title: 'Bình Yên Trên Cao Nguyên',
     subtitle: 'Tìm Lại Sự Tĩnh Lặng Giữa Cao Nguyên Mờ Sương',
     location: 'Hồ Lắk, Việt Nam',
-    heroImage: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=2000&q=80',
+    heroImage: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=80',
     duration: '3 Ngày 2 Đêm',
     rating: '4.98 / 5.0 (184 Đánh giá)',
     type: 'Nghỉ Dưỡng & Chữa Lành',
@@ -52,8 +52,9 @@ export const productsData: Record<string, ProductItem> = {
     experiencePara1: 'Rời xa nhịp sống hối hả nơi đô thị để hòa mình vào không gian tĩnh lặng nguyên sơ của vùng Cao Nguyên. Hành trình được thiết kế tỉ mỉ dành cho những ai đang tìm kiếm sự phục hồi sâu sắc từ bên trong.',
     experiencePara2: 'Hành trình đưa bạn đi qua những rừng thông cổ thụ mờ sương và những hồ nước tĩnh lặng, cùng sự đồng hành của đội ngũ chuyên gia am hiểu về nghệ thuật chăm sóc thân tâm.',
     galleryImages: [
-      'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1920&q=85',
-      'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1920&q=85'
+      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=85',
+      'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&q=85',
+      'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1920&q=85'
     ],
     itinerary: [
       {
@@ -103,7 +104,7 @@ export const productsData: Record<string, ProductItem> = {
     title: 'Tĩnh Lặng Giữa Đại Ngàn',
     subtitle: 'Lắng Nghe Nhịp Thở Của Rừng Già Nam Cát Tiên',
     location: 'Nam Cát Tiên, Việt Nam',
-    heroImage: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=2000&q=80',
+    heroImage: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=2000&q=80',
     duration: '2 Ngày 1 Đêm',
     rating: '4.99 / 5.0 (240 Đánh giá)',
     type: 'Bảo Tồn & Sinh Thái',
@@ -114,8 +115,9 @@ export const productsData: Record<string, ProductItem> = {
     experiencePara1: 'Đến với Nam Cát Tiên Retreat, bạn không chỉ nghỉ dưỡng mà còn trực tiếp hòa mình vào thiên nhiên, thiền định và tắm rừng giải tỏa căng thẳng.',
     experiencePara2: 'Đêm đến, bạn sẽ trải nghiệm chuyến đi ngắm thú đêm hoang dã duy nhất tại Việt Nam và thức giấc trong tiếng chim hót bên sông Đồng Nai.',
     galleryImages: [
-      'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1920&q=85',
-      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1920&q=85'
+      'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=85',
+      'https://images.unsplash.com/photo-1511497584788-8767611136f6?auto=format&fit=crop&w=1920&q=85',
+      'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=1920&q=85'
     ],
     itinerary: [
       {
@@ -168,7 +170,9 @@ export const productsData: Record<string, ProductItem> = {
     experiencePara1: 'Thưởng thức trà đạo ngắm hoàng hôn giữa kỳ quan thiên nhiên thế giới. Phục hồi năng lượng trong không gian du thuyền 5 sao đẳng cấp.',
     experiencePara2: 'Tận hưởng chuyến chèo thuyền Kayak xuyên hang động nguyên sơ và tham gia lớp tập Tai Chi đón bình minh.',
     galleryImages: [
-      'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1920&q=85'
+      'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1920&q=85',
+      'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=1920&q=85',
+      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=85'
     ],
     itinerary: [
       {
@@ -206,5 +210,137 @@ export const productsData: Record<string, ProductItem> = {
     reviewScore: '4.97 / 5.0',
     reviewCount: 210,
     reviewQuote: '"Kỳ nghỉ du thuyền 5 sao vô cùng ấn tượng. Cảnh hoàng hôn trên vịnh tuyệt đẹp."'
+  },
+
+  // 4. HƠI THỞ YÊN TỬ
+  'hoi-tho-yen-tu': {
+    slug: 'hoi-tho-yen-tu',
+    badge1: 'RETREAT CHỮA LÀNH',
+    badge2: 'TÂM LINH 5 STAR',
+    title: 'Hơi Thở Yên Tử',
+    subtitle: 'Tái Tạo Thần Khí & Thiền Định Nơi Danh Sơn Trúc Lâm',
+    location: 'Yên Tử, Quảng Ninh, Việt Nam',
+    heroImage: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2000&q=80',
+    duration: '2 Ngày 1 Đêm',
+    rating: '4.96 / 5.0 (156 Đánh giá)',
+    type: 'Chữa Lành & Thần Khí',
+    priceText: '4.200.000 VNĐ',
+    priceAdult: 4200000,
+    priceChild: 2100000,
+    experienceTitle: 'Tái Tạo Tâm Khí Giữa Cổ Tự',
+    experiencePara1: 'Rời xa chốn phồn hoa, bước chân vào Legacy Yên Tử MGallery mang kiến trúc triều Trần độc bản. Trải nghiệm không gian thanh tịnh và nghệ thuật thiền trầm.',
+    experiencePara2: 'Tận hưởng khoảnh khắc tắm khoáng nóng Onsen thảo dược và thực dưỡng chay thuần thanh lọc cơ thể.',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=85',
+      'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=85'
+    ],
+    itinerary: [
+      {
+        day: 'NGÀY 1',
+        title: 'Hành Hương Legacy & Thiền Trầm',
+        events: ['Nhận phòng Legacy Yên Tử 5*', 'Trà thiền Trúc Lâm & Thiền trầm hương đêm.']
+      },
+      {
+        day: 'NGÀY 2',
+        title: 'Khí Công Đón Bình Minh & Onsen',
+        events: ['Tập khí công đón hừng đông', 'Tắm Onsen khoáng nóng thảo mộc']
+      }
+    ],
+    inclusions: ['Lưu trú Legacy Yên Tử 5*', 'Suất tắm Onsen khoáng nóng', 'Ăn sáng thực dưỡng'],
+    mapLocation: 'Legacy Yên Tử', mapCoords: 'Yên Tử, Quảng Ninh', reviewScore: '4.96 / 5.0', reviewCount: 156,
+    reviewQuote: '"Không gian linh thiêng tĩnh mịch giúp tôi hoàn toàn cân bằng tâm trí."'
+  },
+
+  // 5. CHỐN BỒNG LAI SAPA
+  'chon-bong-lai-sapa': {
+    slug: 'chon-bong-lai-sapa',
+    badge1: 'RETREAT THIÊN NHIÊN',
+    badge2: 'ECOLODGE 5 STAR',
+    title: 'Chốn Bồng Lai Mờ Sương',
+    subtitle: 'Sapa Eco Valley Retreat & Ngắm Ruộng Bậc Thang',
+    location: 'Sapa, Lao Cai, Việt Nam',
+    heroImage: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=2000&q=80',
+    duration: '3 Ngày 2 Đêm',
+    rating: '4.99 / 5.0 (310 Đánh giá)',
+    type: 'Thiên Nhiên & Nghỉ Dưỡng',
+    priceText: '7.200.000 VNĐ',
+    priceAdult: 7200000,
+    priceChild: 3600000,
+    experienceTitle: 'Thiên Đường Nghỉ Dưỡng Mây Ngàn',
+    experiencePara1: 'Đến Topas Ecolodge - resort nằm trong top đẹp nhất thế giới do National Geographic bình chọn. Ngâm mình tại hồ bơi vô cực ngắm mây vờn đỉnh thung lũng.',
+    experiencePara2: 'Trải nghiệm ngâm tắm lá thuốc truyền thống của người Dao Đỏ và thưởng thức ẩm thực Tây Bắc hữu cơ cao cấp.',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1920&q=85',
+      'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1920&q=85'
+    ],
+    itinerary: [
+      {
+        day: 'NGÀY 1',
+        title: 'Check-in Topas Ecolodge & Tắm Lá Thuốc',
+        events: ['Limousine VIP đón quý khách lên Sapa', 'Thưởng trà mây & tắm lá thuốc Dao Đỏ']
+      },
+      {
+        day: 'NGÀY 2',
+        title: 'Trek Bản Lao Chải & Yoga Vô Cực',
+        events: ['Trek qua các bản làng nguyên sơ', 'Yoga đón hoàng hôn tại hồ bơi vô cực']
+      },
+      {
+        day: 'NGÀY 3',
+        title: 'Bữa Sáng Thực Dưỡng & Trở Về',
+        events: ['Thưởng thức bữa sáng hữu cơ', 'Xe tiễn đoàn trở về Hà Nội']
+      }
+    ],
+    inclusions: ['Lưu trú Topas Ecolodge 5*', 'Xe Limousine VIP đưa đón', 'Tắm lá thuốc người Dao Đỏ'],
+    mapLocation: 'Topas Ecolodge Sapa', mapCoords: 'Sapa, Việt Nam', reviewScore: '4.99 / 5.0', reviewCount: 310,
+    reviewQuote: '"Hồ bơi vô cực ngắm thung lũng Mường Hoa tuyệt vời nhất tôi từng đến."'
+  },
+
+  // 6. MÙA HOA TRÊN ĐÁ HÀ GIANG
+  'mua-hoa-tren-da-ha-giang': {
+    slug: 'mua-hoa-tren-da-ha-giang',
+    badge1: 'RETREAT THIỆN NGƯỆN',
+    badge2: 'KẾT NỐI CỘNG ĐỒNG',
+    title: 'Mùa Hoa Trên Đá',
+    subtitle: 'Retreat Thiện Nguyện & Khám Phá Cao Nguyên Đá Hà Giang',
+    location: 'Đồng Văn, Hà Giang, Việt Nam',
+    heroImage: 'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?auto=format&fit=crop&w=2000&q=80',
+    duration: '4 Ngày 3 Đêm',
+    rating: '4.95 / 5.0 (142 Đánh giá)',
+    type: 'Thiện Nguyện & Văn Hóa',
+    priceText: '5.200.000 VNĐ',
+    priceAdult: 5200000,
+    priceChild: 2600000,
+    experienceTitle: 'Hành Trình Kết Nối & Lan Tỏa Yêu Thương',
+    experiencePara1: 'Kết hợp nghỉ dưỡng tại H’Mong Village Resort độc đáo và trực tiếp tham gia hoạt động trao tặng tủ sách, áo ấm cho các em nhỏ bản cao.',
+    experiencePara2: 'Chinh phục đèo Mã Pí Lèng hùng vĩ và chèo thuyền Kayak xanh biếc trên dòng sông Nho Quế.',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?auto=format&fit=crop&w=1920&q=85',
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1920&q=85'
+    ],
+    itinerary: [
+      {
+        day: 'NGÀY 1',
+        title: 'Hà Nội — Quản Bạ — H’Mong Village',
+        events: ['Di chuyển Limousine VIP', 'Check-in H’Mong Village Resort & giao lưu văn hóa']
+      },
+      {
+        day: 'NGÀY 2',
+        title: 'Chương Trình Thiện Nguyện Bản Cao',
+        events: ['Trao học bổng & áo ấm cho học sinh vùng cao', 'Tổ chức ngày hội đọc sách']
+      },
+      {
+        day: 'NGÀY 3',
+        title: 'Đèo Mã Pí Lèng & Kayak Nho Quế',
+        events: ['Đi thuyền ngắm Hẻm Tu Sản', 'Chèo kayak sông Nho Quế']
+      },
+      {
+        day: 'NGÀY 4',
+        title: 'Trở Về Hà Nội',
+        events: ['Bữa sáng biệt lập', 'Tiễn đoàn về lại Hà Nội']
+      }
+    ],
+    inclusions: ['Lưu trú H’Mong Village Resort', 'Toàn bộ kinh phí quà tặng thiện nguyện', 'Xe Limousine VIP trọn gói'],
+    mapLocation: 'Đồng Văn, Hà Giang', mapCoords: 'Hà Giang, Việt Nam', reviewScore: '4.95 / 5.0', reviewCount: 142,
+    reviewQuote: '"Một hành trình vừa giàu cảm xúc vừa ý nghĩa nhân văn sâu sắc."'
   }
 };

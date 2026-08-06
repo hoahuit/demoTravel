@@ -221,17 +221,7 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
               </h2>
             </div>
 
-            <p
-              style={{
-                maxWidth: '420px',
-                margin: 0,
-                fontSize: '15px',
-                lineHeight: 1.6,
-                color: '#527059'
-              }}
-            >
-              Bốn hành trình chữa lành độc bản được tuyển chọn riêng cho mùa này — trình bày tinh tế bên dưới ảnh theo phong cách nghệ thuật Zannier.
-            </p>
+
           </div>
         </ScrollReveal>
 

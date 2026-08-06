@@ -12,7 +12,7 @@ export default function FAQPage() {
   );
 
   return (
-    <div style={{ background: '#f8fafc', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px' }}>
+    <div style={{ background: '#ffffff', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px' }}>
       {/* Hero */}
       <section style={{ position: 'relative', width: '100%', height: '320px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
         <img
@@ -70,7 +70,6 @@ export default function FAQPage() {
                     border: 'none',
                     display: 'flex',
                     alignItems: 'center',
-                    justify: 'space-between',
                     textAlign: 'left',
                     cursor: 'pointer',
                     fontSize: '17px',

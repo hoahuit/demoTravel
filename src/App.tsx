@@ -55,7 +55,7 @@ export default function App() {
     currentPath.startsWith('/promotions') ||
     currentPath.startsWith('/uu-dai');
 
-  const isRetreatHotRoute = currentPath.startsWith('/retreat/hot') || currentPath.startsWith('/retreat-hot') || currentPath === '/retreat';
+  const isRetreatHotRoute = currentPath.startsWith('/retreat/retreathot') || currentPath.startsWith('/retreat/hot') || currentPath.startsWith('/retreat-hot') || currentPath === '/retreat';
 
   const isToursRoute =
     currentPath.startsWith('/tours') ||

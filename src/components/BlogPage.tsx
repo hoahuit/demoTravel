@@ -93,80 +93,170 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
     );
   }
 
-  return (
-    <div style={{ background: '#f8fafc', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px' }}>
-      {/* Hero */}
-      <section style={{ position: 'relative', width: '100%', height: '360px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
-        <img
-          src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=85&w=2560&auto=format&fit=crop"
-          alt="Blog"
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-        />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%)' }} />
-        <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: '800px', padding: '0 20px' }}>
-          <span style={{ display: 'inline-block', background: 'rgba(52, 211, 153, 0.2)', border: '1px solid rgba(52, 211, 153, 0.4)', backdropFilter: 'blur(8px)', color: '#4ade80', fontSize: '12px', fontWeight: 800, letterSpacing: '0.15em', padding: '6px 18px', borderRadius: '999px', textTransform: 'uppercase', marginBottom: '16px' }}>
-            4U TRAVEL MAGAZINE • CẨM NANG DÀNH CHO BẠN
-          </span>
-          <h1 style={{ fontSize: 'clamp(32px, 4.5vw, 56px)', fontWeight: 800, margin: '0 0 16px 0', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-            Tạp Chí Du Lịch & Nghệ Thuật Sống
-          </h1>
-          <p style={{ fontSize: 'clamp(16px, 1.8vw, 20px)', opacity: 0.92, margin: 0 }}>
-            Những góc nhìn độc bản, kinh nghiệm lữ hành thượng lưu & phương pháp phục hồi Thân Tâm Trí
-          </p>
-        </div>
-      </section>
+  const featArticle = BLOGS_DATA[0];
+  const moreArticles = BLOGS_DATA.slice(1);
 
-      {/* Articles Grid */}
-      <div style={{ maxWidth: '1280px', margin: '48px auto 0', padding: '0 24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: '32px' }}>
-          {BLOGS_DATA.map(article => (
-            <div
-              key={article.id}
-              onClick={() => setSelectedSlug(article.slug)}
-              style={{
-                background: '#ffffff',
-                borderRadius: '24px',
-                overflow: 'hidden',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                border: '1px solid rgba(0,0,0,0.06)',
-                cursor: 'pointer',
-                transition: 'transform 0.3s ease, boxShadow 0.3s ease'
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-6px)';
-                e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.1)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.05)';
-              }}
-            >
-              <div style={{ position: 'relative', width: '100%', height: '240px', overflow: 'hidden' }}>
-                <img src={article.heroImage} alt={article.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                <span style={{ position: 'absolute', top: '16px', left: '16px', background: '#006d36', color: '#fff', fontSize: '11px', fontWeight: 800, padding: '5px 14px', borderRadius: '999px' }}>
-                  {article.category}
-                </span>
+  return (
+    <div style={{ background: '#ffffff', color: '#09090b', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px', fontFamily: "'Be Vietnam Pro', 'Plus Jakarta Sans', sans-serif", width: '100%' }}>
+      <main style={{ width: '90%', maxWidth: '90vw', margin: '0 auto', padding: '0' }}>
+        {/* SECTION 1: HEADER */}
+        <section style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '32px', marginBottom: '48px', width: '100%' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '16px', width: '100%' }}>
+            <h1 style={{ fontSize: 'clamp(56px, 8vw, 104px)', fontWeight: 800, letterSpacing: '-0.05em', lineHeight: 1, margin: 0 }}>
+              Blog.
+            </h1>
+            <p style={{ fontSize: '20px', color: '#525252', margin: 0, maxWidth: '520px', lineHeight: 1.5 }}>
+              Tạp chí trải nghiệm 4U Retreats • Góc nhìn độc bản & cẩm nang phục hồi Thân Tâm Trí.
+            </p>
+          </div>
+        </section>
+
+        {/* SECTION 2: FEATURED POST */}
+        {featArticle && (
+          <section style={{ marginBottom: '80px', width: '100%' }}>
+            <div style={{ marginBottom: '32px', width: '100%' }}>
+              <div
+                onClick={() => setSelectedSlug(featArticle.slug)}
+                style={{ cursor: 'pointer', overflow: 'hidden', borderRadius: '20px', boxShadow: '0 8px 30px rgba(0,0,0,0.08)', width: '100%' }}
+              >
+                <img
+                  src={featArticle.heroImage}
+                  alt={featArticle.title}
+                  style={{
+                    width: '100%',
+                    maxHeight: '68vh',
+                    minHeight: '380px',
+                    objectFit: 'cover',
+                    display: 'block',
+                    transition: 'box-shadow 0.2s ease, transform 0.3s ease'
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.01)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                />
               </div>
-              <div style={{ padding: '24px' }}>
-                <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '8px', display: 'flex', gap: '12px' }}>
-                  <span>📅 {article.publishedDate}</span>
-                  <span>⏱️ {article.readTime}</span>
-                </div>
-                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', margin: '0 0 10px 0', lineHeight: 1.4 }}>
-                  {article.title}
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '32px 48px', marginBottom: '64px' }}>
+              <div>
+                <h3
+                  onClick={() => setSelectedSlug(featArticle.slug)}
+                  style={{ fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.15, margin: '0 0 16px 0', cursor: 'pointer', color: '#1E4A3D' }}
+                >
+                  <span style={{ textDecoration: 'none' }} onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'} onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}>
+                    {featArticle.title}
+                  </span>
                 </h3>
-                <p style={{ fontSize: '14px', color: '#64748b', lineHeight: 1.5, margin: '0 0 16px 0', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                  {article.subtitle}
+                <div style={{ fontSize: '16px', color: '#737373', marginBottom: '16px' }}>
+                  <time>{featArticle.publishedDate}</time> • {featArticle.category}
+                </div>
+              </div>
+
+              <div>
+                <p style={{ fontSize: '18px', lineHeight: 1.625, color: '#404040', marginBottom: '24px' }}>
+                  {featArticle.subtitle}
                 </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingTop: '16px', borderTop: '1px solid #f1f5f9' }}>
-                  <img src={article.author.avatar} alt={article.author.name} style={{ width: '32px', height: '32px', borderRadius: '50%' }} />
-                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#334155' }}>{article.author.name}</span>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div style={{ marginRight: '16px', width: '48px', height: '48px' }}>
+                    <img
+                      src={featArticle.author.avatar}
+                      alt={featArticle.author.name}
+                      style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div style={{ fontSize: '20px', fontWeight: 700, color: '#0a0a0a' }}>
+                    {featArticle.author.name}
+                  </div>
                 </div>
               </div>
             </div>
-          ))}
+          </section>
+        )}
+
+        {/* SECTION 3: MORE POSTS */}
+        {moreArticles.length > 0 && (
+          <section>
+            <h2 style={{ fontSize: 'clamp(40px, 6vw, 72px)', fontWeight: 800, letterSpacing: '-0.05em', lineHeight: 1, marginBottom: '48px', color: '#1E4A3D' }}>
+              More Posts
+            </h2>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '56px 40px', width: '100%' }}>
+              {moreArticles.map(article => (
+                <article key={article.id} style={{ display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', borderRadius: '16px', overflow: 'hidden', marginBottom: '20px' }}>
+                    <img
+                      src={article.heroImage}
+                      alt={article.title}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' }}
+                      onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
+                      onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                    />
+                  </div>
+
+                  <h3
+                    onClick={() => setSelectedSlug(article.slug)}
+                    style={{ fontSize: 'clamp(22px, 2.5vw, 30px)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.25, margin: '0 0 12px 0', cursor: 'pointer', color: '#1E4A3D' }}
+                  >
+                    <span style={{ textDecoration: 'none' }} onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'} onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}>
+                      {article.title}
+                    </span>
+                  </h3>
+
+                  <div style={{ fontSize: '16px', color: '#737373', marginBottom: '16px' }}>
+                    <time>{article.publishedDate}</time> • {article.readTime}
+                  </div>
+
+                  <p style={{ fontSize: '18px', lineHeight: 1.625, color: '#404040', marginBottom: '24px', flex: 1 }}>
+                    {article.subtitle}
+                  </p>
+
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ marginRight: '16px', width: '48px', height: '48px' }}>
+                      <img
+                        src={article.author.avatar}
+                        alt={article.author.name}
+                        style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                      />
+                    </div>
+                    <div style={{ fontSize: '20px', fontWeight: 700, color: '#0a0a0a' }}>
+                      {article.author.name}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+      </main>
+
+      {/* SECTION 4: STAY UPDATED NEWSLETTER */}
+      <section style={{ borderTop: '1px solid #e5e5e5', backgroundColor: '#ffffff', padding: '64px 24px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '672px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 36px)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.25, marginBottom: '16px' }}>
+            Stay Updated
+          </h2>
+          <p style={{ fontSize: '18px', color: '#525252', marginBottom: '32px' }}>
+            Subscribe to our newsletter to get the latest posts delivered straight to your inbox.
+          </p>
+
+          <form onSubmit={e => { e.preventDefault(); alert('Cảm ơn bạn đã đăng ký!'); }} style={{ maxWidth: '448px', margin: '0 auto' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <input
+                type="email"
+                required
+                placeholder="Enter your email"
+                style={{ flex: 1, height: '40px', borderRadius: '6px', border: '1px solid #d4d4d4', padding: '0 12px', fontSize: '14px', outline: 'none' }}
+              />
+              <button
+                type="submit"
+                style={{ height: '40px', padding: '0 24px', borderRadius: '6px', background: '#09090b', color: '#ffffff', fontWeight: 500, fontSize: '14px', border: 'none', cursor: 'pointer' }}
+              >
+                Subscribe
+              </button>
+            </div>
+          </form>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
+

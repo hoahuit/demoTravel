@@ -8,7 +8,7 @@ interface ServicesPageProps {
 
 export default function ServicesPage({ onOpenBooking }: ServicesPageProps) {
   return (
-    <div style={{ background: '#f8fafc', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px' }}>
+    <div style={{ background: '#ffffff', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px' }}>
       {/* Hero */}
       <section style={{ position: 'relative', width: '100%', height: '360px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
         <img
