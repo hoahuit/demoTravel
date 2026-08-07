@@ -40,7 +40,18 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
   }, [externalOpen]);
 
   const defaultTourTitle = selectedTour?.title || 'Retreat Chữa Lành Thân Tâm Trí (Nam Cát Tiên)';
-  const tourPriceVND = selectedTour?.price || 6500000;
+  
+  const parsePrice = (priceVal: any): number => {
+    if (typeof priceVal === 'number' && !isNaN(priceVal)) return priceVal;
+    if (typeof priceVal === 'string') {
+      const cleaned = priceVal.replace(/\D/g, '');
+      const parsed = parseInt(cleaned, 10);
+      if (!isNaN(parsed) && parsed > 0) return parsed;
+    }
+    return 3450000;
+  };
+
+  const tourPriceVND = parsePrice(selectedTour?.price);
 
   const [formData, setFormData] = useState<FormDataState>({
     name: '',
@@ -58,7 +69,7 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
   }, [selectedTour]);
 
   const totalPriceVND = tourPriceVND * formData.guests;
-  const totalPriceUSD = Math.round(totalPriceVND / 25000);
+  const totalPriceUSD = Math.max(1, Math.round(totalPriceVND / 25000));
 
   const handlePayPalSuccess = (details: any) => {
     setPaymentReceipt(details);

@@ -557,9 +557,9 @@ function ExpandedCard({
                 width: 36,
                 height: 36,
                 borderRadius: "50%",
-                border: "1px solid rgba(255,255,255,0.2)",
-                background: "rgba(0,0,0,0.4)",
-                backdropFilter: "blur(8px)",
+                border: "2px solid rgba(255,255,255,0.8)",
+                background: "#ef4444",
+                boxShadow: "0 4px 14px rgba(239, 68, 68, 0.45)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -568,13 +568,15 @@ function ExpandedCard({
                 transition: "all 0.2s ease",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(0,0,0,0.7)";
+                e.currentTarget.style.transform = "scale(1.12)";
+                e.currentTarget.style.background = "#dc2626";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = "rgba(0,0,0,0.4)";
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.background = "#ef4444";
               }}
             >
-              <X size={18} color="#fff" />
+              <X size={18} color="#fff" strokeWidth={2.5} />
             </button>
           </div>
 

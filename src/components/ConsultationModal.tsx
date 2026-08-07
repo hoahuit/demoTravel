@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MessageCircle, ChevronUp } from 'lucide-react';
+import { MessageCircle, ChevronUp, X } from 'lucide-react';
 
 export interface ConsultationModalProps {
   externalOpen?: boolean;
@@ -220,7 +220,7 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
               animation: 'cmSlide 0.4s cubic-bezier(.22,.61,.36,1) forwards'
             }}
           >
-            {/* Close Button */}
+            {/* Close Button (Vibrant Red) */}
             <button
               onClick={resetAndClose}
               aria-label="Đóng"
@@ -228,29 +228,30 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                 position: 'absolute',
                 top: '16px',
                 right: '16px',
-                zIndex: 5,
+                zIndex: 10,
                 width: '36px',
                 height: '36px',
                 borderRadius: '50%',
-                background: 'rgba(0,0,0,0.06)',
-                border: '1px solid rgba(0,0,0,0.08)',
+                background: '#ef4444',
+                color: '#ffffff',
+                border: '2px solid rgba(255,255,255,0.8)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.2s ease',
-                color: '#374151',
-                fontWeight: 'bold',
-                fontSize: '14px'
+                boxShadow: '0 4px 14px rgba(239, 68, 68, 0.45)'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(0,0,0,0.12)';
+                e.currentTarget.style.transform = 'scale(1.12)';
+                e.currentTarget.style.background = '#dc2626';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(0,0,0,0.06)';
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.background = '#ef4444';
               }}
             >
-              X
+              <X size={18} strokeWidth={2.5} />
             </button>
 
             {!submitted ? (
@@ -382,8 +383,8 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                       />
                     </div>
 
-                    {/* Phone & Email */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+                    {/* Phone & Preferred Time Grid */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
                       <div>
                         <label htmlFor="cm-phone" style={{
                           fontSize: '11px',
@@ -429,99 +430,7 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                           }}
                         />
                       </div>
-                      <div>
-                        <label htmlFor="cm-email" style={{
-                          fontSize: '11px',
-                          fontWeight: 700,
-                          letterSpacing: '0.12em',
-                          textTransform: 'uppercase' as const,
-                          color: '#1E4A3D',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          marginBottom: '8px'
-                        }}>
-                          Email
-                        </label>
-                        <input
-                          id="cm-email"
-                          type="email"
-                          placeholder="email@gmail.com"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          style={{
-                            width: '100%',
-                            padding: '14px 16px',
-                            background: '#f8faf9',
-                            border: '1px solid rgba(30,74,61,0.15)',
-                            borderRadius: '12px',
-                            fontSize: '14px',
-                            color: '#0f172a',
-                            outline: 'none',
-                            transition: 'all 0.2s ease',
-                            boxSizing: 'border-box' as const
-                          }}
-                          onFocus={(e) => {
-                            e.currentTarget.style.borderColor = '#22c55e';
-                            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(34,197,94,0.12)';
-                            e.currentTarget.style.background = '#ffffff';
-                          }}
-                          onBlur={(e) => {
-                            e.currentTarget.style.borderColor = 'rgba(30,74,61,0.15)';
-                            e.currentTarget.style.boxShadow = 'none';
-                            e.currentTarget.style.background = '#f8faf9';
-                          }}
-                        />
-                      </div>
-                    </div>
 
-                    {/* Tour Selection & Preferred Time */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
-                      <div>
-                        <label htmlFor="cm-tour" style={{
-                          fontSize: '11px',
-                          fontWeight: 700,
-                          letterSpacing: '0.12em',
-                          textTransform: 'uppercase' as const,
-                          color: '#1E4A3D',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          marginBottom: '8px'
-                        }}>
-                          Gói Retreat Quan Tâm
-                        </label>
-                        <select
-                          id="cm-tour"
-                          value={formData.tour}
-                          onChange={(e) => setFormData({ ...formData, tour: e.target.value })}
-                          style={{
-                            width: '100%',
-                            padding: '14px 16px',
-                            background: '#f8faf9',
-                            border: '1px solid rgba(30,74,61,0.15)',
-                            borderRadius: '12px',
-                            fontSize: '14px',
-                            color: '#0f172a',
-                            outline: 'none',
-                            appearance: 'none' as const,
-                            cursor: 'pointer',
-                            boxSizing: 'border-box' as const,
-                            backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%231E4A3D' stroke-width='1.6'><path d='M5 8l5 5 5-5'/></svg>\")",
-                            backgroundRepeat: 'no-repeat',
-                            backgroundPosition: 'right 14px center',
-                            backgroundSize: '16px',
-                            paddingRight: '38px'
-                          }}
-                        >
-                          <option value="">— Chọn gói —</option>
-                          <option value="Retreat Chữa Lành Thân Tâm Trí">Retreat Chữa Lành Thân Tâm Trí</option>
-                          <option value="Retreat Tĩnh Lặng Giữa Đại Ngàn">Retreat Tĩnh Lặng Giữa Đại Ngàn</option>
-                          <option value="Retreat Detox & Thanh Lọc Cơ Thể">Retreat Detox & Thanh Lọc Cơ Thể</option>
-                          <option value="Retreat Yoga & Thiền Định">Retreat Yoga & Thiền Định</option>
-                          <option value="Chưa biết, cần tư vấn">Chưa biết, cần tư vấn</option>
-                        </select>
-                      </div>
                       <div>
                         <label htmlFor="cm-time" style={{
                           fontSize: '11px',
@@ -565,55 +474,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                           <option value="anytime">Bất kỳ lúc nào</option>
                         </select>
                       </div>
-                    </div>
-
-                    {/* Message */}
-                    <div style={{ marginBottom: '24px' }}>
-                      <label htmlFor="cm-message" style={{
-                        fontSize: '11px',
-                        fontWeight: 700,
-                        letterSpacing: '0.12em',
-                        textTransform: 'uppercase' as const,
-                        color: '#1E4A3D',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        marginBottom: '8px'
-                      }}>
-                        Lời Nhắn Thêm
-                      </label>
-                      <textarea
-                        id="cm-message"
-                        placeholder="Ví dụ: Tôi muốn đi nhóm 5 người vào tháng 9..."
-                        rows={3}
-                        value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        style={{
-                          width: '100%',
-                          padding: '14px 16px',
-                          background: '#f8faf9',
-                          border: '1px solid rgba(30,74,61,0.15)',
-                          borderRadius: '12px',
-                          fontSize: '14px',
-                          color: '#0f172a',
-                          outline: 'none',
-                          resize: 'vertical' as const,
-                          lineHeight: 1.6,
-                          minHeight: '80px',
-                          boxSizing: 'border-box' as const,
-                          transition: 'all 0.2s ease'
-                        }}
-                        onFocus={(e) => {
-                          e.currentTarget.style.borderColor = '#22c55e';
-                          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(34,197,94,0.12)';
-                          e.currentTarget.style.background = '#ffffff';
-                        }}
-                        onBlur={(e) => {
-                          e.currentTarget.style.borderColor = 'rgba(30,74,61,0.15)';
-                          e.currentTarget.style.boxShadow = 'none';
-                          e.currentTarget.style.background = '#f8faf9';
-                        }}
-                      />
                     </div>
 
                     {/* Submit Button */}

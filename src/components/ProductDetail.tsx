@@ -15,6 +15,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
   const [activeTab, setActiveTab] = useState<string>('Highlight');
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [guests, setGuests] = useState<string>('1 Khách');
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number>(0);
 
   // Unified Data Lookup: Check productsData first, then TOURS_DATA by slug
   const tourFound = TOURS_DATA.find(t => t.slug === productSlug);
@@ -224,8 +225,8 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
           </div>
         </div>
 
-        {/* ── 3. MAIN CONTENT BODY (FULL SCREEN FOR NON-PRICE TABS, SIDEBAR ONLY ON PRICE TAB) ── */}
-        <section style={{ padding: activeTab === 'Highlight' ? '40px 16px 80px' : '40px 32px 80px', width: '100%' }}>
+        {/* ── 3. MAIN CONTENT BODY (FULL SCREEN FOR ALL TABS) ── */}
+        <section style={{ padding: '40px 48px 80px', width: '100%', boxSizing: 'border-box' }}>
           <div
             style={
               activeTab === 'PriceDescription'
@@ -233,20 +234,14 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                     display: 'grid',
                     gridTemplateColumns: '1fr 360px',
                     gap: '36px',
-                    maxWidth: '1380px',
-                    margin: '0 auto',
-                    width: '100%'
-                  }
-                : activeTab === 'Highlight'
-                ? {
-                    width: '100%',
                     maxWidth: '100%',
-                    margin: '0 auto'
+                    margin: '0',
+                    width: '100%'
                   }
                 : {
                     width: '100%',
-                    maxWidth: '1280px',
-                    margin: '0 auto'
+                    maxWidth: '100%',
+                    margin: '0'
                   }
             }
           >
@@ -317,41 +312,228 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
               )}
 
 
-              {/* TAB 2: LỊCH TRÌNH CHUYÊN SÂU */}
+              {/* TAB 2: LỊCH TRÌNH TRẢI NGHIỆM CHUYÊN SÂU (ROVER PLAN CONCEPT) */}
               {activeTab === 'Itinerary' && (
-                <div style={{ width: '100%' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '36px', flexWrap: 'wrap', gap: '16px' }}>
-                    <h3 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#191c1c', margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <Clock size={28} style={{ color: '#006d36' }} />
-                      Lịch Trình Trải Nghiệm Chi Tiết ({product.duration})
-                    </h3>
-                    <span style={{ background: 'rgba(0, 109, 54, 0.08)', color: '#006d36', padding: '6px 16px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '700' }}>
-                      Lịch trình có thể linh hoạt theo nguyện vọng
-                    </span>
+                <div style={{ width: '100%', maxWidth: '100%', margin: '0' }}>
+                  
+                  {/* Top Cover & Summary Card (Rover Plan Style) */}
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'minmax(280px, 340px) 1fr',
+                    gap: '32px',
+                    background: '#ffffff',
+                    borderRadius: '24px',
+                    padding: '24px',
+                    border: '1px solid #e2e8f0',
+                    boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
+                    marginBottom: '40px',
+                    alignItems: 'center'
+                  }}>
+                    {/* Left Cover Image */}
+                    <div style={{ width: '100%', height: '220px', borderRadius: '18px', overflow: 'hidden' }}>
+                      <img
+                        src={product.heroImage}
+                        alt={product.title}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    </div>
+
+                    {/* Right Summary Info */}
+                    <div>
+                      <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', flexWrap: 'wrap' }}>
+                        <span style={{ background: '#fff7ed', color: '#ea580c', fontWeight: 800, fontSize: '0.78rem', padding: '4px 14px', borderRadius: '20px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          🌙 {product.duration}
+                        </span>
+                        <span style={{ background: '#eff6ff', color: '#2563eb', fontWeight: 800, fontSize: '0.78rem', padding: '4px 14px', borderRadius: '20px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                          🎯 {product.location}
+                        </span>
+                      </div>
+
+                      <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0f172a', margin: '0 0 10px 0', lineHeight: 1.3 }}>
+                        {product.title}
+                      </h2>
+
+                      <p style={{ fontSize: '0.88rem', color: '#64748b', margin: '0 0 16px 0', fontWeight: 500 }}>
+                        <strong style={{ color: '#334155' }}>Lộ trình:</strong> {product.location} — Trải nghiệm Chữa lành & Kết nối
+                      </p>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '14px', borderTop: '1px solid #f1f5f9' }}>
+                        <img
+                          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=120&auto=format&fit=crop"
+                          alt="Planner"
+                          style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover' }}
+                        />
+                        <div>
+                          <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0f172a' }}>Chuyên Gia 4U Retreat</div>
+                          <div style={{ fontSize: '0.78rem', color: '#64748b' }}>Đã đồng hành 180+ chuyến đi thành công</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="pd-timeline-container">
-                    {product.itinerary?.map((item: any, idx: number) => (
-                      <div key={idx} className="pd-timeline-card">
-                        <div className="pd-timeline-dot">
-                          {idx + 1}
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '18px' }}>
-                          <span style={{ background: '#006d36', color: '#ffffff', fontWeight: '800', fontSize: '0.85rem', padding: '6px 16px', borderRadius: '12px', letterSpacing: '0.05em' }}>
-                            {item.day}
-                          </span>
-                          <h4 style={{ fontSize: '1.3rem', fontWeight: '800', color: '#191c1c', margin: 0 }}>
-                            {item.title}
-                          </h4>
-                        </div>
-                        <ul style={{ paddingLeft: '20px', margin: 0, color: '#333e38', fontSize: '1.05rem', lineHeight: '1.85' }}>
-                          {item.events?.map((evt: string, eIdx: number) => (
-                            <li key={eIdx} style={{ marginBottom: '10px' }}>{evt}</li>
-                          ))}
-                        </ul>
+                  {/* Main Two-Column Days Navigation & Content Panel */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '48px', alignItems: 'start' }}>
+                    
+                    {/* Left Days Sidebar */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px', paddingLeft: '8px' }}>
+                        Days
                       </div>
-                    ))}
+
+                      {product.itinerary?.map((item: any, idx: number) => {
+                        const isActive = selectedDayIndex === idx;
+                        return (
+                          <button
+                            key={idx}
+                            onClick={() => setSelectedDayIndex(idx)}
+                            style={{
+                              width: '100%',
+                              padding: '12px 20px',
+                              borderRadius: '24px',
+                              border: 'none',
+                              fontSize: '0.92rem',
+                              fontWeight: isActive ? 800 : 600,
+                              textAlign: 'left',
+                              cursor: 'pointer',
+                              background: isActive ? '#f97316' : '#f1f5f9',
+                              color: isActive ? '#ffffff' : '#475569',
+                              boxShadow: isActive ? '0 8px 20px rgba(249, 115, 22, 0.35)' : 'none',
+                              transition: 'all 0.2s ease',
+                            }}
+                          >
+                            Day {idx + 1}
+                          </button>
+                        );
+                      })}
+
+                      {/* Tips Tab */}
+                      <button
+                        onClick={() => setSelectedDayIndex(product.itinerary ? product.itinerary.length : 99)}
+                        style={{
+                          width: '100%',
+                          padding: '12px 20px',
+                          borderRadius: '24px',
+                          border: 'none',
+                          fontSize: '0.92rem',
+                          fontWeight: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? 800 : 600,
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          background: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? '#f97316' : '#f1f5f9',
+                          color: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? '#ffffff' : '#475569',
+                          boxShadow: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? '0 8px 20px rgba(249, 115, 22, 0.35)' : 'none',
+                          transition: 'all 0.2s ease',
+                        }}
+                      >
+                        Tips
+                      </button>
+                    </div>
+
+                    {/* Right Content Panel for Selected Day */}
+                    <div style={{ background: '#ffffff', borderRadius: '24px', padding: '36px', border: '1px solid #e2e8f0', minHeight: '480px' }}>
+                      {selectedDayIndex < (product.itinerary ? product.itinerary.length : 0) ? (
+                        (() => {
+                          const currentDay = product.itinerary[selectedDayIndex];
+                          const dayMoments = product.galleryImages && product.galleryImages.length > 0 
+                            ? product.galleryImages 
+                            : [
+                                product.heroImage,
+                                'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop',
+                                'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=600&auto=format&fit=crop',
+                                'https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=600&auto=format&fit=crop',
+                                'https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=600&auto=format&fit=crop',
+                                'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?q=80&w=600&auto=format&fit=crop',
+                              ];
+                          return (
+                            <div>
+                              {/* Day Title */}
+                              <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: '0 0 18px 0' }}>
+                                {currentDay.title}
+                              </h3>
+
+                              {/* Day Overview Paragraph */}
+                              <div style={{ fontSize: '0.98rem', color: '#475569', lineHeight: 1.85, marginBottom: '36px' }}>
+                                {currentDay.events?.map((evt: string, evtIdx: number) => (
+                                  <p key={evtIdx} style={{ margin: '0 0 12px 0' }}>
+                                    {evt}
+                                  </p>
+                                ))}
+                              </div>
+
+                              {/* Moments Section */}
+                              <div style={{ marginBottom: '36px' }}>
+                                <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 16px 0' }}>
+                                  Moments
+                                </h4>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
+                                  {dayMoments.slice(0, 6).map((imgUrl: string, imgIdx: number) => (
+                                    <div key={imgIdx} style={{ width: '100%', height: '88px', borderRadius: '14px', overflow: 'hidden', background: '#f1f5f9' }}>
+                                      <img
+                                        src={imgUrl}
+                                        alt={`Moment ${imgIdx + 1}`}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                      />
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Transport Section */}
+                              <div style={{ marginBottom: '28px' }}>
+                                <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 12px 0' }}>
+                                  Transport & Culinary
+                                </h4>
+                                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                  <span style={{ background: '#f1f5f9', color: '#334155', fontSize: '0.82rem', fontWeight: 600, padding: '8px 16px', borderRadius: '12px' }}>
+                                    🚌 Xe Limousine VIP 4U
+                                  </span>
+                                  <span style={{ background: '#f1f5f9', color: '#334155', fontSize: '0.82rem', fontWeight: 600, padding: '8px 16px', borderRadius: '12px' }}>
+                                    🥗 Thực dưỡng 100% hữu cơ
+                                  </span>
+                                  <span style={{ background: '#f1f5f9', color: '#334155', fontSize: '0.82rem', fontWeight: 600, padding: '8px 16px', borderRadius: '12px' }}>
+                                    🍵 Trà thảo mộc bản địa
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* Attractions Section */}
+                              <div>
+                                <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 12px 0' }}>
+                                  Attractions
+                                </h4>
+                                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                  <span style={{ background: '#f1f5f9', color: '#334155', fontSize: '0.82rem', fontWeight: 600, padding: '8px 16px', borderRadius: '12px' }}>
+                                    📍 {product.location}
+                                  </span>
+                                  <span style={{ background: '#f1f5f9', color: '#334155', fontSize: '0.82rem', fontWeight: 600, padding: '8px 16px', borderRadius: '12px' }}>
+                                    🧘 Khung cảnh an yên tĩnh lặng
+                                  </span>
+                                  <span style={{ background: '#f1f5f9', color: '#334155', fontSize: '0.82rem', fontWeight: 600, padding: '8px 16px', borderRadius: '12px' }}>
+                                    🌲 Thiên nhiên nguyên sơ
+                                  </span>
+                                </div>
+                              </div>
+
+                            </div>
+                          );
+                        })()
+                      ) : (
+                        /* Tips Panel */
+                        <div>
+                          <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: '0 0 18px 0' }}>
+                            Tips & Lưu Ý Cho Chuyến Đi
+                          </h3>
+                          <div style={{ fontSize: '0.98rem', color: '#475569', lineHeight: 1.85, marginBottom: '24px' }}>
+                            <p style={{ marginBottom: '12px' }}>• <strong>Trang phục:</strong> Quý khách nên chuẩn bị quần áo rộng rãi, thoáng mát (vải lanh hoặc cotton) thích hợp cho các buổi tập thiền định & yoga.</p>
+                            <p style={{ marginBottom: '12px' }}>• <strong>Giày đi bộ:</strong> Mang theo 01 đôi giày đi bộ êm chân để tham gia hành trình tắm rừng Shinrin-Yoku.</p>
+                            <p style={{ marginBottom: '12px' }}>• <strong>Thiết bị điện tử:</strong> Khuyến khích hạn chế sử dụng điện thoại thông minh để tận hưởng sự thanh tĩnh trọn vẹn.</p>
+                            <p style={{ marginBottom: '12px' }}>• <strong>Sức khỏe:</strong> Đội ngũ 4U Retreat luôn trang bị đầy đủ dụng cụ sơ cứu y tế và nhân sự đồng hành 1:1.</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
                   </div>
+
                 </div>
               )}
 

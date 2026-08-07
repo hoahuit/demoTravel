@@ -259,18 +259,11 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
             {pageHeader.subtitle}
           </p>
 
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', background: 'transparent', border: 'none', padding: 0, fontSize: '17px', color: '#ffffff', textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}>
-            <span><strong>{TOURS_DATA.length}</strong> Danh Lam Thắng Cảnh</span>
-            <span style={{ opacity: 0.5 }}>|</span>
-            <span><strong>100%</strong> Lưu Trú Eco Resort 5★</span>
-            <span style={{ opacity: 0.5 }}>|</span>
-            <span><strong>4.98 / 5.0</strong> Trải Nghiệm Độc Bản</span>
-          </div>
         </div>
       </section>
 
-      {/* ── 90% FULL-WIDTH FILTER & NAVIGATION BAR ── */}
-      <div style={{ width: '90%', maxWidth: '90vw', margin: '0 auto', padding: '40px 0 0' }}>
+      {/* ── 100% FULL-WIDTH FILTER & NAVIGATION BAR ── */}
+      <div style={{ width: '100%', margin: '0', padding: '40px 48px 0', boxSizing: 'border-box' }}>
 
         {/* Control Bar: ONLY Layout View Switcher (Dạng Blog & Dạng Thẻ) */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '24px', width: '100%' }}>
@@ -303,12 +296,10 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
         </div>
       </div>
 
+      {/* ── MAIN 100% TRUE EDGE-TO-EDGE SERIES RETREAT BLOG FEED ── */}
+      <main style={{ width: '100%', margin: '0', padding: '20px 0 100px', boxSizing: 'border-box' }}>
 
-
-      {/* ── MAIN 90% FULL-WIDTH SERIES RETREAT BLOG FEED ── */}
-      <main style={{ width: '90%', maxWidth: '90vw', margin: '0 auto', padding: '40px 0 100px' }}>
-
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '44px', paddingBottom: '18px', borderBottom: '1px solid rgba(26,23,20,0.1)' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '44px', padding: '0 48px 18px 48px', borderBottom: '1px solid rgba(26,23,20,0.1)' }}>
           <div>
             <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 400, fontSize: 'clamp(30px, 3.2vw, 44px)', color: '#1a1714', margin: 0, letterSpacing: '-0.01em' }}>
               {selectedSeries === 'All' ? 'Tất Cả Bài Viết Danh Lam Series Retreat' : `Danh Sách — ${seriesCategories.find(s => s.id === selectedSeries)?.label}`}
@@ -324,7 +315,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
         {/* IF NO RESULTS */}
         {filteredTours.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '80px 24px', background: '#ffffff', borderRadius: '24px', border: '1px solid rgba(26,23,20,0.08)' }}>
+          <div style={{ textAlign: 'center', margin: '0 48px', padding: '80px 24px', background: '#ffffff', borderRadius: '24px', border: '1px solid rgba(26,23,20,0.08)' }}>
             <h3 style={{ fontSize: '30px', fontWeight: 700, color: '#1a1714', margin: '0 0 8px 0' }}>
               Không tìm thấy điểm đến phù hợp
             </h3>
@@ -342,37 +333,37 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
         {/* ── LAYOUT MODE A: DẠNG BLOG V0 / BASEHUB EDITORIAL (FEATURED + MORE POSTS GRID + NEWSLETTER) ── */}
         {viewMode === 'blog' && (
-          <div style={{ width: '100%', maxWidth: '100%', margin: '0 auto', padding: '0 2vw' }}>
-            {/* FEATURED POST (FIRST TOUR) */}
+          <div style={{ width: '100%', margin: '0' }}>
+            {/* FEATURED POST (FIRST TOUR) - TRUE 100% EDGE TO EDGE COVER */}
             {filteredTours.length > 0 && (() => {
               const feat = filteredTours[0];
               return (
                 <section style={{ marginBottom: '80px', width: '100%' }}>
-                  {/* Hero Cover Image */}
+                  {/* Hero Cover Image (100% Edge-to-Edge) */}
                   <div style={{ marginBottom: '32px', width: '100%' }}>
                     <div
                       onClick={() => onNavigate(`/sanpham/${feat.slug}`)}
-                      style={{ cursor: 'pointer', overflow: 'hidden', borderRadius: '20px', boxShadow: '0 8px 30px rgba(0,0,0,0.08)', width: '100%' }}
+                      style={{ cursor: 'pointer', overflow: 'hidden', borderRadius: '0px', width: '100%' }}
                     >
                       <img
                         src={feat.heroImage}
                         alt={feat.title}
                         style={{
                           width: '100%',
-                          maxHeight: '68vh',
-                          minHeight: '380px',
+                          maxHeight: '75vh',
+                          minHeight: '420px',
                           objectFit: 'cover',
                           display: 'block',
                           transition: 'transform 0.5s ease'
                         }}
-                        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
+                        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.01)'}
                         onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                       />
                     </div>
                   </div>
 
-                  {/* 2-Column Details Grid */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px 36px', alignItems: 'start' }}>
+                  {/* 2-Column Details Grid (Padding 48px) */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px 36px', alignItems: 'start', padding: '0 48px' }}>
                     <div>
                       <div style={{ fontSize: '14px', fontWeight: 600, color: '#8c8275', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                         {feat.city}, {feat.country} • {feat.duration} • Rating: {feat.rating}
