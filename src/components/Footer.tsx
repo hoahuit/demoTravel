@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Footer.css';
 
 interface SeoLink {
   title: string;
@@ -33,65 +34,44 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
   ];
 
   return (
-    <footer style={{ padding: 0, margin: 0, width: '100%', position: 'relative', overflow: 'hidden' }} id="about">
-      {/* 100% Full-Width Edge-to-Edge Glassmorphic Container */}
-      <div
-        className="footer-inner-card"
-        style={{
-          background: 'linear-gradient(180deg, #142619 0%, #0d1a11 100%)',
-          borderRadius: '0',
-          padding: '64px 5vw 40px',
-          borderTop: '1px solid rgba(74, 124, 89, 0.2)',
-          color: '#e5ebe6'
-        }}
-      >
-        {/* Main Footer Content Grid */}
-        <div style={{ position: 'relative', zIndex: 10, maxWidth: '1400px', margin: '0 auto' }}>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '48px',
-            paddingBottom: '48px'
-          }}>
+    <footer className="footer-root" id="about">
+      <div className="footer-inner-card footer-card">
+        <div className="footer-container">
+          <div className="footer-grid">
 
             {/* Col 1: Brand & Bio */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div className="footer-brand-col">
+              <div className="footer-logo-wrap">
                 <img
                   src="/images/logo.png"
                   alt="4U Tours Logo"
-                  style={{ height: '48px', width: 'auto', objectFit: 'contain' }}
+                  className="footer-logo-img"
                 />
               </div>
 
-              <p style={{ fontSize: '17px', color: '#a3b899', lineHeight: '1.65', margin: 0 }}>
+              <p className="footer-bio-text">
                 Chuỗi sản phẩm Series Retreat độc quyền, chữa lành & hành trình tĩnh lặng tại Việt Nam. Mang lại trải nghiệm thư thái tuyệt đối cho du khách.
               </p>
 
-              <div style={{ fontSize: '14px', color: 'rgba(235, 245, 237, 0.85)', display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '6px' }}>
-                <div style={{ whiteSpace: 'nowrap' }}>
-                  Giấy phép: <strong style={{ color: '#ffffff' }}>79-367 / 2012</strong> (Lữ hành quốc tế)
+              <div className="footer-license-info">
+                <div className="footer-nowrap">
+                  Giấy phép: <strong className="footer-white-bold">79-367 / 2012</strong> (Lữ hành quốc tế)
                 </div>
-                <div style={{ whiteSpace: 'nowrap' }}>
-                  Mã số thuế: <strong style={{ color: '#ffffff' }}>030 807 8390</strong>
+                <div className="footer-nowrap">
+                  Mã số thuế: <strong className="footer-white-bold">030 807 8390</strong>
                 </div>
               </div>
             </div>
 
             {/* Col 2: About Us */}
             <div>
-              <h4 style={{ fontSize: '30px', fontWeight: '700', color: '#ffffff', marginBottom: '22px' }}>
+              <h4 className="footer-col-title">
                 Về 4U Retreat
               </h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                {['Lịch Sử Phát Triển', 'Đội Ngũ Chuyên Gia', 'Giấy Phép Quốc Tế', 'Đội Xe Luxury', 'Cơ Hội Nghề Nghiệp'].map((item, i) => (
+              <ul className="footer-links-list">
+                {['Lịch Sử Phát Triển', 'Đội Ngũ Chuyên Gia', 'Giấy Phép Quốc Tế', 'Khách hàng nói gì về chúng tôi', 'Cơ Hội Nghề Nghiệp'].map((item, i) => (
                   <li key={i}>
-                    <a
-                      href="#"
-                      style={{ color: '#a3b899', textDecoration: 'none', fontSize: '17px', transition: 'color 0.2s ease' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = '#a3b899')}
-                    >
+                    <a href="#" className="footer-link-item">
                       {item}
                     </a>
                   </li>
@@ -101,53 +81,46 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
 
             {/* Col 3: Helpful Links */}
             <div>
-              <h4 style={{ fontSize: '30px', fontWeight: '700', color: '#ffffff', marginBottom: '22px' }}>
+              <h4 className="footer-col-title">
                 Liên Kết Hữu Ích
               </h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <ul className="footer-links-list">
                 <li>
-                  <a href="#" style={{ color: '#a3b899', textDecoration: 'none', fontSize: '17px' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')} onMouseLeave={(e) => (e.currentTarget.style.color = '#a3b899')}>Câu Hỏi Thường Gặp</a>
+                  <a href="#" className="footer-link-item">Câu Hỏi Thường Gặp</a>
                 </li>
                 <li>
-                  <a href="#" style={{ color: '#a3b899', textDecoration: 'none', fontSize: '17px' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')} onMouseLeave={(e) => (e.currentTarget.style.color = '#a3b899')}>Series & Deal Mới</a>
+                  <a href="#" className="footer-link-item">Series & Deal Mới</a>
                 </li>
                 <li>
-                  <a href="#" style={{ color: '#a3b899', textDecoration: 'none', fontSize: '17px' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')} onMouseLeave={(e) => (e.currentTarget.style.color = '#a3b899')}>Tư Vấn Thiết Kế 1:1</a>
+                  <a href="#" className="footer-link-item">Tư Vấn Thiết Kế 1:1</a>
                 </li>
-                <li style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                  <a href="#" style={{ color: '#a3b899', textDecoration: 'none', fontSize: '17px' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')} onMouseLeave={(e) => (e.currentTarget.style.color = '#a3b899')}>Hỗ Trợ Trực Tuyến 24/7</a>
-                  <span style={{
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    background: '#4ade80',
-                    boxShadow: '0 0 12px #4ade80',
-                    display: 'inline-block'
-                  }}></span>
+                <li className="footer-status-pill">
+                  <a href="#" className="footer-link-item">Hỗ Trợ Trực Tuyến 24/7</a>
+                  <span className="footer-online-dot"></span>
                 </li>
               </ul>
             </div>
 
             {/* Col 4: Contact Us */}
             <div>
-              <h4 style={{ fontSize: '30px', fontWeight: '700', color: '#ffffff', marginBottom: '22px' }}>
+              <h4 className="footer-col-title">
                 Liên Hệ Với 4U
               </h4>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '18px' }}>
-                <li style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '17px' }}>
-                  <a href="mailto:customercare@4utours.com" style={{ color: '#ffffff', textDecoration: 'none' }} onMouseEnter={(e) => (e.currentTarget.style.color = '#4ade80')} onMouseLeave={(e) => (e.currentTarget.style.color = '#ffffff')}>
+              <ul className="footer-contact-list">
+                <li className="footer-contact-row">
+                  <a href="mailto:customercare@4utours.com" className="footer-link-white">
                     customercare@4utours.com
                   </a>
                 </li>
 
-                <li style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '17px' }}>
+                <li className="footer-contact-row">
                   <div>
-                    <div><a href="tel:0764886877" style={{ color: '#ffffff', textDecoration: 'none', fontWeight: '600' }}>076 488 6877</a></div>
-                    <div><a href="tel:+842871028048" style={{ color: '#ffffff', textDecoration: 'none', fontWeight: '600' }}>(+84.28) 7102 8048</a> (Ext: 1)</div>
+                    <div><a href="tel:0764886877" className="footer-link-white" style={{ fontWeight: '600' }}>076 488 6877</a></div>
+                    <div><a href="tel:+842871028048" className="footer-link-white" style={{ fontWeight: '600' }}>(+84.28) 7102 8048</a> (Ext: 1)</div>
                   </div>
                 </li>
 
-                <li style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '17px', color: '#a3b899' }}>
+                <li className="footer-contact-row">
                   <span>07 Đặng Dung, P. Tân Định, TP. HCM, Việt Nam</span>
                 </li>
               </ul>
@@ -156,29 +129,19 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
           </div>
 
           {/* Accordion Partner Directory */}
-          <div style={{ borderTop: '1px solid rgba(74, 124, 89, 0.2)', paddingTop: '24px', paddingBottom: '24px' }}>
+          <div className="footer-directory-section">
             <button
               onClick={() => setShowPartners(!showPartners)}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: '#a3b899',
-                fontSize: '17px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '100%'
-              }}
+              className="footer-accordion-btn"
             >
               <span>Đối Tác & Mạng Lưới Điểm Đến Retreat</span>
               <span style={{ fontWeight: 'bold' }}>{showPartners ? '[-]' : '[+]'}</span>
             </button>
 
             {showPartners && (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '12px', marginTop: '16px' }}>
+              <div className="footer-directory-grid">
                 {seoLinks.map((item, idx) => (
-                  <div key={idx} style={{ background: 'rgba(74, 124, 89, 0.12)', padding: '10px 14px', borderRadius: '12px' }}>
+                  <div key={idx} className="footer-directory-card">
                     <div style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>{item.title}</div>
                     <div style={{ fontSize: '14px', color: '#a3b899' }}>{item.desc}</div>
                   </div>
@@ -188,19 +151,10 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
           </div>
 
           {/* Divider Line */}
-          <div style={{ borderTop: '1px solid rgba(74, 124, 89, 0.2)', margin: '16px 0 28px' }}></div>
+          <div className="footer-divider"></div>
 
           {/* Bottom Bar */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '20px',
-            fontSize: '14px',
-            color: '#a3b899'
-          }}>
+          <div className="footer-bottom-bar">
             <div>© 2026 4U Tours. All rights reserved.</div>
           </div>
         </div>

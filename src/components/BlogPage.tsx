@@ -94,7 +94,7 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
 
             {/* Conclusion */}
             <div style={{ background: 'rgba(0,109,54,0.05)', borderRadius: '24px', padding: '32px 36px', borderLeft: '5px solid #006d36', marginTop: '48px' }}>
-              <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#006d36', margin: '0 0 10px 0' }}>💡 Lời Kết</h3>
+              <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#006d36', margin: '0 0 10px 0' }}>💡 Lời kết</h3>
               <p style={{ margin: 0, fontSize: '17px', color: '#1e293b', lineHeight: 1.7 }}>{selectedArticle.conclusion}</p>
             </div>
           </div>

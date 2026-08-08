@@ -1,4 +1,4 @@
-export interface ItineraryItem {
+export interface ProductItineraryDay {
   day: string;
   title: string;
   events: string[];
@@ -23,7 +23,7 @@ export interface ProductItem {
   experiencePara1: string;
   experiencePara2: string;
   galleryImages: string[];
-  itinerary: ItineraryItem[];
+  itinerary: ProductItineraryDay[];
   inclusions: string[];
   mapLocation: string;
   mapCoords: string;
@@ -40,8 +40,9 @@ export const productsData: Record<string, ProductItem> = {
     badge2: 'ĐỘC QUYỀN',
     title: 'Bình Yên Trên Cao Nguyên',
     subtitle: 'Tìm Lại Sự Tĩnh Lặng Giữa Cao Nguyên Mờ Sương',
-    location: 'Hồ Lắk, Việt Nam',
+    location: 'Hồ Lắk, Đắk Lắk',
     heroImage: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=80',
+    heroVideo: 'https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-sunlight-529-large.mp4',
     duration: '3 Ngày 2 Đêm',
     rating: '4.98 / 5.0 (184 Đánh giá)',
     type: 'Nghỉ Dưỡng & Chữa Lành',
@@ -90,7 +91,7 @@ export const productsData: Record<string, ProductItem> = {
       'Xe Limousine VIP đưa đón trọn gói'
     ],
     mapLocation: 'Lak Tented Camp',
-    mapCoords: 'Hồ Lắk, Việt Nam',
+    mapCoords: 'Hồ Lắk, Đắk Lắk',
     reviewScore: '4.98 / 5.0',
     reviewCount: 184,
     reviewQuote: '"Chuyến đi mang lại cảm giác tĩnh lặng thật sự giữa thiên nhiên hoang sơ. Dịch vụ tận tâm chuẩn 5 sao."'
@@ -103,8 +104,9 @@ export const productsData: Record<string, ProductItem> = {
     badge2: 'SINH THÁI 5 STAR',
     title: 'Tĩnh Lặng Giữa Đại Ngàn',
     subtitle: 'Lắng Nghe Nhịp Thở Của Rừng Già Nam Cát Tiên',
-    location: 'Nam Cát Tiên, Việt Nam',
+    location: 'Nam Cát Tiên, Đồng Nai',
     heroImage: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=2000&q=80',
+    heroVideo: 'https://assets.mixkit.co/videos/preview/mixkit-bamboo-forest-in-japan-41544-large.mp4',
     duration: '2 Ngày 1 Đêm',
     rating: '4.99 / 5.0 (240 Đánh giá)',
     type: 'Bảo Tồn & Sinh Thái',
@@ -113,7 +115,7 @@ export const productsData: Record<string, ProductItem> = {
     priceChild: 1725000,
     experienceTitle: 'Bảo Tồn & Kết Nối Rừng Già',
     experiencePara1: 'Đến với Nam Cát Tiên Retreat, bạn không chỉ nghỉ dưỡng mà còn trực tiếp hòa mình vào thiên nhiên, thiền định và tắm rừng giải tỏa căng thẳng.',
-    experiencePara2: 'Đêm đến, bạn sẽ trải nghiệm chuyến đi ngắm thú đêm hoang dã duy nhất tại Việt Nam và thức giấc trong tiếng chim hót bên sông Đồng Nai.',
+    experiencePara2: 'Đêm đến, bạn sẽ trải nghiệm chuyến đi ngắm thú đêm hoang dã duy nhất tại Nam Cát Tiên và thức giấc trong tiếng chim hót bên sông Đồng Nai.',
     galleryImages: [
       'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=85',
       'https://images.unsplash.com/photo-1511497584788-8767611136f6?auto=format&fit=crop&w=1920&q=85',
@@ -145,7 +147,7 @@ export const productsData: Record<string, ProductItem> = {
       'Toàn bộ bữa ăn thực dưỡng hữu cơ'
     ],
     mapLocation: 'Vườn Quốc Gia Nam Cát Tiên',
-    mapCoords: 'Nam Cát Tiên, Việt Nam',
+    mapCoords: 'Nam Cát Tiên, Đồng Nai',
     reviewScore: '4.99 / 5.0',
     reviewCount: 240,
     reviewQuote: '"Trải nghiệm ngắm thú đêm và tắm rừng ngàn năm khiến tôi thực sự thư thái."'
@@ -158,8 +160,9 @@ export const productsData: Record<string, ProductItem> = {
     badge2: 'DU THUYỀN 5 STAR',
     title: 'Di Sản Vịnh Hạ Long',
     subtitle: 'Du Thuyền VIP 5 Sao Ngắm Hoàng Hôn & Thưởng Trà',
-    location: 'Vịnh Hạ Long, Việt Nam',
+    location: 'Vịnh Hạ Long, Quảng Ninh',
     heroImage: 'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=2000&q=80',
+    heroVideo: 'https://assets.mixkit.co/videos/preview/mixkit-aerial-shot-of-ocean-waves-clearing-41537-large.mp4',
     duration: '3 Ngày 2 Đêm',
     rating: '4.97 / 5.0 (210 Đánh giá)',
     type: 'Nghỉ Dưỡng Thượng Lưu',
@@ -206,7 +209,7 @@ export const productsData: Record<string, ProductItem> = {
       'Vé tham quan & chèo thuyền Kayak'
     ],
     mapLocation: 'Vịnh Hạ Long',
-    mapCoords: 'Vịnh Hạ Long, Việt Nam',
+    mapCoords: 'Vịnh Hạ Long, Quảng Ninh',
     reviewScore: '4.97 / 5.0',
     reviewCount: 210,
     reviewQuote: '"Kỳ nghỉ du thuyền 5 sao vô cùng ấn tượng. Cảnh hoàng hôn trên vịnh tuyệt đẹp."'
@@ -219,8 +222,9 @@ export const productsData: Record<string, ProductItem> = {
     badge2: 'TÂM LINH 5 STAR',
     title: 'Hơi Thở Yên Tử',
     subtitle: 'Tái Tạo Thần Khí & Thiền Định Nơi Danh Sơn Trúc Lâm',
-    location: 'Yên Tử, Quảng Ninh, Việt Nam',
+    location: 'Yên Tử, Quảng Ninh',
     heroImage: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2000&q=80',
+    heroVideo: 'https://assets.mixkit.co/videos/preview/mixkit-fog-over-the-mountains-in-a-valley-41541-large.mp4',
     duration: '2 Ngày 1 Đêm',
     rating: '4.96 / 5.0 (156 Đánh giá)',
     type: 'Chữa Lành & Thần Khí',
@@ -258,8 +262,9 @@ export const productsData: Record<string, ProductItem> = {
     badge2: 'ECOLODGE 5 STAR',
     title: 'Chốn Bồng Lai Mờ Sương',
     subtitle: 'Sapa Eco Valley Retreat & Ngắm Ruộng Bậc Thang',
-    location: 'Sapa, Lao Cai, Việt Nam',
+    location: 'Sapa, Lào Cai',
     heroImage: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=2000&q=80',
+    heroVideo: 'https://assets.mixkit.co/videos/preview/mixkit-sun-shining-through-the-trees-in-a-forest-41484-large.mp4',
     duration: '3 Ngày 2 Đêm',
     rating: '4.99 / 5.0 (310 Đánh giá)',
     type: 'Thiên Nhiên & Nghỉ Dưỡng',
@@ -291,7 +296,7 @@ export const productsData: Record<string, ProductItem> = {
       }
     ],
     inclusions: ['Lưu trú Topas Ecolodge 5*', 'Xe Limousine VIP đưa đón', 'Tắm lá thuốc người Dao Đỏ'],
-    mapLocation: 'Topas Ecolodge Sapa', mapCoords: 'Sapa, Việt Nam', reviewScore: '4.99 / 5.0', reviewCount: 310,
+    mapLocation: 'Topas Ecolodge Sapa', mapCoords: 'Sapa, Lào Cai', reviewScore: '4.99 / 5.0', reviewCount: 310,
     reviewQuote: '"Hồ bơi vô cực ngắm thung lũng Mường Hoa tuyệt vời nhất tôi từng đến."'
   },
 
@@ -302,8 +307,9 @@ export const productsData: Record<string, ProductItem> = {
     badge2: 'KẾT NỐI CỘNG ĐỒNG',
     title: 'Mùa Hoa Trên Đá',
     subtitle: 'Retreat Thiện Nguyện & Khám Phá Cao Nguyên Đá Hà Giang',
-    location: 'Đồng Văn, Hà Giang, Việt Nam',
+    location: 'Đồng Văn, Hà Giang',
     heroImage: 'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?auto=format&fit=crop&w=2000&q=80',
+    heroVideo: 'https://assets.mixkit.co/videos/preview/mixkit-waterfalls-in-forest-2213-large.mp4',
     duration: '4 Ngày 3 Đêm',
     rating: '4.95 / 5.0 (142 Đánh giá)',
     type: 'Thiện Nguyện & Văn Hóa',
@@ -340,7 +346,7 @@ export const productsData: Record<string, ProductItem> = {
       }
     ],
     inclusions: ['Lưu trú H’Mong Village Resort', 'Toàn bộ kinh phí quà tặng thiện nguyện', 'Xe Limousine VIP trọn gói'],
-    mapLocation: 'Đồng Văn, Hà Giang', mapCoords: 'Hà Giang, Việt Nam', reviewScore: '4.95 / 5.0', reviewCount: 142,
+    mapLocation: 'Đồng Văn, Hà Giang', mapCoords: 'Đồng Văn, Hà Giang', reviewScore: '4.95 / 5.0', reviewCount: 142,
     reviewQuote: '"Một hành trình vừa giàu cảm xúc vừa ý nghĩa nhân văn sâu sắc."'
   }
 };

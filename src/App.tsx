@@ -8,6 +8,7 @@ import Hero from './components/Hero';
 import BentoGrid from './components/BentoGrid';
 import AudienceBento from './components/AudienceBento';
 import Testimonials from './components/Testimonials';
+import PartnerLogos from './components/PartnerLogos';
 import Footer from './components/Footer';
 
 import ToursPage from './components/ToursPage';
@@ -23,9 +24,13 @@ import SapKhoiHanh from './pages/retreat/sapkhoihanh/SapKhoiHanh';
 import KhongTheBoLo from './pages/retreat/khongthebolo/KhongTheBoLo';
 import UuDaiGioChot from './pages/retreat/uudaigiochot/UuDaiGioChot';
 import RetreatHot from './pages/retreat/retreathot/RetreatHot';
+import KhongTheBoLoSection from './components/KhongTheBoLoSection';
+import UuDaiGioChotSection from './components/UuDaiGioChotSection';
+import DepartureCalendarModal from './components/DepartureCalendarModal';
 
 export default function App() {
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
+  const [calendarOpen, setCalendarOpen] = useState<boolean>(false);
   const [bookingState, setBookingState] = useState<{ open: boolean; tour: any }>({ open: false, tour: null });
   const [consultationOpen, setConsultationOpen] = useState<boolean>(false);
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
@@ -150,17 +155,23 @@ export default function App() {
 
     return (
       <main>
-        {/* Section 1: Apple Product Feature Hero */}
+        {/* Section 1: Hero */}
         <Hero onOpenBooking={handleOpenBooking} />
 
-        {/* Section 2: Target Audience 3D Carousel */}
+        {/* Section 2: Sản Phẩm Retreat Độc Quyền (3D Carousel) */}
         <AudienceBento onOpenBooking={handleOpenBooking} onNavigate={navigateTo} />
 
-        {/* Section 3: 4U Signature Retreats Bento Showcase */}
+        {/* Section 3: Sản Phẩm Sắp Khởi Hành (Bento Grid) */}
         <BentoGrid onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />
 
-        {/* Section 4: Testimonials Editorial Section */}
-        <Testimonials />
+        {/* Section 4: Trải Nghiệm Không Thể Bỏ Lỡ */}
+        <KhongTheBoLoSection onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />
+
+        {/* Section 5: Ưu Đãi Giờ Chót */}
+        <UuDaiGioChotSection onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />
+
+        {/* Section 6: Đối Tác Doanh Nghiệp & Thương Hiệu Đồng Hành */}
+        <PartnerLogos />
       </main>
     );
   };
@@ -183,11 +194,20 @@ export default function App() {
         onExternalClose={handleCloseConsultation}
       />
 
-      {/* Header — "Nhận tư vấn" button opens Consultation Modal */}
+      {/* Interactive Departure Calendar Modal — opened by "Lịch khởi hành" button */}
+      <DepartureCalendarModal
+        isOpen={calendarOpen}
+        onClose={() => setCalendarOpen(false)}
+        onOpenBooking={handleOpenBooking}
+        onNavigate={navigateTo}
+      />
+
+      {/* Header — "Nhận tư vấn" opens Consultation Modal, "Lịch khởi hành" opens Departure Calendar */}
       <Header
         onOpenSearch={() => setSearchOpen(true)}
         onNavigate={navigateTo}
         onOpenBooking={handleOpenConsultation}
+        onOpenCalendar={() => setCalendarOpen(true)}
       />
 
       {/* Conditional Route Rendering */}

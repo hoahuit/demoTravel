@@ -5,6 +5,7 @@ export interface HeaderProps {
   onOpenSearch?: () => void;
   onNavigate?: (path: string) => void;
   onOpenBooking?: (tourData?: any) => void;
+  onOpenCalendar?: () => void;
 }
 
 interface MenuItem {
@@ -23,7 +24,7 @@ interface MenuCategory {
   items?: MenuItem[];
 }
 
-export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: HeaderProps) {
+export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpenCalendar }: HeaderProps) {
   const [scrolled, setScrolled] = useState<boolean>(false);
   const [row2Visible, setRow2Visible] = useState<boolean>(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
@@ -362,7 +363,54 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: Head
           </div>
 
           {/* Right CTA */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+            {/* Lịch khởi hành Button with Calendar Icon */}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                if (onOpenCalendar) {
+                  onOpenCalendar();
+                } else if (onNavigate) {
+                  onNavigate('/retreat/sapkhoihanh');
+                }
+              }}
+              className="hide-mobile"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '7px',
+                padding: '11px 22px',
+                borderRadius: '999px',
+                background: 'rgba(255, 255, 255, 0.12)',
+                color: '#ffffff',
+                fontWeight: '700',
+                fontSize: '0.92rem',
+                letterSpacing: '0.01em',
+                border: '1px solid rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(10px)',
+                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={e => {
+                setActiveCategory(null);
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)';
+                e.currentTarget.style.borderColor = '#4ade80';
+                e.currentTarget.style.color = '#4ade80';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.transform = 'none';
+              }}
+            >
+              <Calendar size={17} style={{ color: '#4ade80' }} />
+              <span>Lịch khởi hành</span>
+            </button>
+
+            {/* Nhận tư vấn Button */}
             <button
               onClick={() => {
                 if (onOpenBooking) onOpenBooking();
@@ -372,12 +420,12 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: Head
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '12px 28px',
+                padding: '12px 26px',
                 borderRadius: '999px',
                 background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 100%)',
                 color: '#09150c',
                 fontWeight: '800',
-                fontSize: '0.96rem',
+                fontSize: '0.94rem',
                 letterSpacing: '0.02em',
                 boxShadow: '0 6px 22px rgba(74, 222, 128, 0.45)',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -386,7 +434,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: Head
               }}
               onMouseEnter={e => {
                 setActiveCategory(null);
-                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.transform = 'scale(1.04)';
                 e.currentTarget.style.boxShadow = '0 8px 26px rgba(74, 222, 128, 0.6)';
               }}
               onMouseLeave={e => {
@@ -609,29 +657,60 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking }: Head
             </div>
           ))}
 
-          <button
-            onClick={() => {
-              setMobileMenuOpen(false);
-              if (onOpenBooking) onOpenBooking();
-            }}
-            style={{
-              marginTop: '20px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              padding: '12px 24px',
-              borderRadius: '999px',
-              background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 100%)',
-              color: '#09150c',
-              fontWeight: '800',
-              fontSize: '0.95rem',
-              border: 'none',
-              cursor: 'pointer'
-            }}
-          >
-            Nhận tư vấn
-          </button>
+          <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                if (onOpenCalendar) {
+                  onOpenCalendar();
+                } else if (onNavigate) {
+                  onNavigate('/retreat/sapkhoihanh');
+                }
+              }}
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                padding: '12px 16px',
+                borderRadius: '999px',
+                background: 'rgba(255, 255, 255, 0.12)',
+                color: '#ffffff',
+                fontWeight: '700',
+                fontSize: '0.88rem',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                cursor: 'pointer'
+              }}
+            >
+              <Calendar size={16} style={{ color: '#4ade80' }} />
+              <span>Lịch khởi hành</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                if (onOpenBooking) onOpenBooking();
+              }}
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                padding: '12px 16px',
+                borderRadius: '999px',
+                background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 100%)',
+                color: '#09150c',
+                fontWeight: '800',
+                fontSize: '0.88rem',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              Nhận tư vấn
+            </button>
+          </div>
         </div>
       )}
     </>

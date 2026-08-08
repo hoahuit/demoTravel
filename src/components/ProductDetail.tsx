@@ -4,6 +4,9 @@ import { productsData, ProductItem } from '../data/productsData';
 import { TOURS_DATA } from '../data/toursData';
 import ScrollExpandMedia from './ui/scroll-expansion-hero';
 import ElegantCarousel, { SlideData } from './ui/elegant-carousel';
+import Testimonials from './Testimonials';
+import PartnerLogos from './PartnerLogos';
+import './ProductDetail.css';
 
 export interface ProductDetailProps {
   productSlug?: string;
@@ -26,7 +29,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
     badge2: tourFound.isExclusive ? 'ĐỘC QUYỀN' : (tourFound.isHot ? 'HOT SELECTION' : '5 STAR'),
     title: tourFound.title,
     subtitle: tourFound.subtitle,
-    location: `${tourFound.city}, ${tourFound.country}`,
+    location: tourFound.city,
     heroImage: tourFound.heroImage,
     duration: tourFound.duration,
     rating: `${tourFound.rating} / 5.0 (${tourFound.reviewsCount} Đánh giá)`,
@@ -36,7 +39,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
     priceChild: Math.round(tourFound.price * 0.5),
     experienceTitle: 'Trải Nghiệm Độc Bản',
     experiencePara1: tourFound.highlights.join('. '),
-    experiencePara2: `Hành trình du lịch nghỉ dưỡng tuyệt vời tại ${tourFound.city}, ${tourFound.country} được thiết kế tinh tế giúp tái tạo năng lượng Thân - Tâm - Trí.`,
+    experiencePara2: `Hành trình du lịch nghỉ dưỡng tuyệt vời tại ${tourFound.city} được thiết kế tinh tế giúp tái tạo năng lượng Thân - Tâm - Trí.`,
     galleryImages: tourFound.gallery.length > 0 ? tourFound.gallery : [tourFound.heroImage],
     itinerary: tourFound.itinerary.map(item => ({
       day: `NGÀY ${item.day}`,
@@ -49,7 +52,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
       'Hướng dẫn viên & Chuyên gia tư vấn 1:1'
     ],
     mapLocation: tourFound.city,
-    mapCoords: `${tourFound.city}, ${tourFound.country}`,
+    mapCoords: tourFound.city,
     reviewScore: `${tourFound.rating} / 5.0`,
     reviewCount: tourFound.reviewsCount,
     reviewQuote: tourFound.reviews?.[0]?.comment || '"Chuyến đi mang lại cảm giác tĩnh lặng tuyệt vời giữa thiên nhiên hoang sơ."'
@@ -60,7 +63,6 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
     { id: 'Itinerary', label: 'LỊCH TRÌNH' },
     { id: 'PriceDescription', label: 'CHI TIẾT BẢNG GIÁ' },
     { id: 'MapsArea', label: 'BẢN ĐỒ & KHU VỰC' },
-    { id: 'Reviews', label: 'ĐÁNH GIÁ THỰC TẾ' },
   ];
 
   const experienceSlides: SlideData[] = [
@@ -99,11 +101,21 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
   };
 
   // Video or image media sources for hero scroll expansion animation
-  const mediaSrc = product.heroVideo || 'https://me7aitdbxq.ufs.sh/f/2wsMIGDMQRdYuZ5R8ahEEZ4aQK56LizRdfBSqeDMsmUIrJN1';
+  const defaultVideos = [
+    'https://assets.mixkit.co/videos/preview/mixkit-forest-stream-in-the-sunlight-529-large.mp4',
+    'https://assets.mixkit.co/videos/preview/mixkit-bamboo-forest-in-japan-41544-large.mp4',
+    'https://assets.mixkit.co/videos/preview/mixkit-aerial-shot-of-ocean-waves-clearing-41537-large.mp4',
+    'https://assets.mixkit.co/videos/preview/mixkit-fog-over-the-mountains-in-a-valley-41541-large.mp4',
+    'https://assets.mixkit.co/videos/preview/mixkit-sun-shining-through-the-trees-in-a-forest-41484-large.mp4',
+    'https://assets.mixkit.co/videos/preview/mixkit-waterfalls-in-forest-2213-large.mp4',
+    'https://assets.mixkit.co/videos/preview/mixkit-view-of-the-sea-from-the-beach-41434-large.mp4'
+  ];
+  const videoFallback = defaultVideos[Math.abs(productSlug.length) % defaultVideos.length];
+  const mediaSrc = product.heroVideo || videoFallback;
   const bgImageSrc = product.heroImage || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&auto=format&fit=crop';
 
   return (
-    <div style={{ background: '#ffffff', color: '#191c1c', minHeight: '100vh', fontFamily: '"Be Vietnam Pro", "Plus Jakarta Sans", -apple-system, sans-serif' }}>
+    <div style={{ background: '#e5efe8', color: '#191c1c', minHeight: '100vh', fontFamily: '"Be Vietnam Pro", "Plus Jakarta Sans", -apple-system, sans-serif' }}>
 
       {/* ── 1. HERO SECTION WITH SCROLL EXPANSION ANIMATION ── */}
       <ScrollExpandMedia
@@ -231,18 +243,18 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
             style={
               activeTab === 'PriceDescription'
                 ? {
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 360px',
-                    gap: '36px',
-                    maxWidth: '100%',
-                    margin: '0',
-                    width: '100%'
-                  }
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 360px',
+                  gap: '36px',
+                  maxWidth: '100%',
+                  margin: '0',
+                  width: '100%'
+                }
                 : {
-                    width: '100%',
-                    maxWidth: '100%',
-                    margin: '0'
-                  }
+                  width: '100%',
+                  maxWidth: '100%',
+                  margin: '0'
+                }
             }
           >
 
@@ -253,7 +265,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '40px', width: '100%' }}>
                   {/* Elegant Carousel component (Transparent Background) */}
                   <ElegantCarousel slides={experienceSlides} />
-                  
+
                   {/* Editorial Text Section (No white card background, pure typography & clean accents) */}
                   <div className="pd-editorial-wrapper">
                     <div className="pd-editorial-header">
@@ -279,7 +291,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                         <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(0, 109, 54, 0.08)', color: '#006d36', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
                           <Heart size={20} />
                         </div>
-                        <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#191c1c', margin: '0 0 6px' }}>Phục Hồi Thân Tâm</h4>
+                        <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#191c1c', margin: '0 0 6px' }}>Phục hồi thân tâm</h4>
                         <p style={{ fontSize: '0.88rem', color: '#5b6561', margin: 0, lineHeight: 1.6 }}>Liệu trình thiền định & yoga chữa lành chuyên sâu.</p>
                       </div>
 
@@ -287,7 +299,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                         <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(176, 138, 70, 0.1)', color: '#B08A46', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
                           <ShieldCheck size={20} />
                         </div>
-                        <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#191c1c', margin: '0 0 6px' }}>Không Gian Biệt Lập</h4>
+                        <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#191c1c', margin: '0 0 6px' }}>Không gian biệt lập</h4>
                         <p style={{ fontSize: '0.88rem', color: '#5b6561', margin: 0, lineHeight: 1.6 }}>Khu nghỉ dưỡng khép kín giữa thiên nhiên nguyên sơ.</p>
                       </div>
 
@@ -295,7 +307,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                         <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(46, 134, 171, 0.1)', color: '#2E86AB', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
                           <UserCheck size={20} />
                         </div>
-                        <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#191c1c', margin: '0 0 6px' }}>Hướng Dẫn Viên 1:1</h4>
+                        <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#191c1c', margin: '0 0 6px' }}>Hướng dẫn viên 1:1</h4>
                         <p style={{ fontSize: '0.88rem', color: '#5b6561', margin: 0, lineHeight: 1.6 }}>Đội ngũ chuyên gia am hiểu bản địa đồng hành.</p>
                       </div>
 
@@ -303,7 +315,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                         <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(0, 109, 54, 0.08)', color: '#006d36', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
                           <Tag size={20} />
                         </div>
-                        <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#191c1c', margin: '0 0 6px' }}>Thực Dưỡng Bản Địa</h4>
+                        <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#191c1c', margin: '0 0 6px' }}>Thực dưỡng bản địa</h4>
                         <p style={{ fontSize: '0.88rem', color: '#5b6561', margin: 0, lineHeight: 1.6 }}>Ẩm thực Farm-to-Table tươi ngon ngập năng lượng.</p>
                       </div>
                     </div>
@@ -315,16 +327,16 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
               {/* TAB 2: LỊCH TRÌNH TRẢI NGHIỆM CHUYÊN SÂU (ROVER PLAN CONCEPT) */}
               {activeTab === 'Itinerary' && (
                 <div style={{ width: '100%', maxWidth: '100%', margin: '0' }}>
-                  
+
                   {/* Top Cover & Summary Card (Rover Plan Style) */}
                   <div style={{
                     display: 'grid',
                     gridTemplateColumns: 'minmax(280px, 340px) 1fr',
                     gap: '32px',
-                    background: '#ffffff',
+                    background: '#dce7df',
                     borderRadius: '24px',
                     padding: '24px',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid rgba(45, 90, 54, 0.18)',
                     boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
                     marginBottom: '40px',
                     alignItems: 'center'
@@ -341,31 +353,31 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                     {/* Right Summary Info */}
                     <div>
                       <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', flexWrap: 'wrap' }}>
-                        <span style={{ background: '#fff7ed', color: '#ea580c', fontWeight: 800, fontSize: '0.78rem', padding: '4px 14px', borderRadius: '20px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontWeight: 800, fontSize: '0.78rem', padding: '4px 14px', borderRadius: '20px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                           🌙 {product.duration}
                         </span>
-                        <span style={{ background: '#eff6ff', color: '#2563eb', fontWeight: 800, fontSize: '0.78rem', padding: '4px 14px', borderRadius: '20px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontWeight: 800, fontSize: '0.78rem', padding: '4px 14px', borderRadius: '20px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                           🎯 {product.location}
                         </span>
                       </div>
 
-                      <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0f172a', margin: '0 0 10px 0', lineHeight: 1.3 }}>
+                      <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#10201B', margin: '0 0 10px 0', lineHeight: 1.3 }}>
                         {product.title}
                       </h2>
 
-                      <p style={{ fontSize: '0.88rem', color: '#64748b', margin: '0 0 16px 0', fontWeight: 500 }}>
-                        <strong style={{ color: '#334155' }}>Lộ trình:</strong> {product.location} — Trải nghiệm Chữa lành & Kết nối
+                      <p style={{ fontSize: '0.88rem', color: '#415a47', margin: '0 0 16px 0', fontWeight: 500 }}>
+                        <strong style={{ color: '#10201B' }}>Lộ trình:</strong> {product.location} — Trải nghiệm Chữa lành & Kết nối
                       </p>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '14px', borderTop: '1px solid #f1f5f9' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '14px', borderTop: '1px solid rgba(45, 90, 54, 0.18)' }}>
                         <img
                           src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=120&auto=format&fit=crop"
                           alt="Planner"
                           style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover' }}
                         />
                         <div>
-                          <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0f172a' }}>Chuyên Gia 4U Retreat</div>
-                          <div style={{ fontSize: '0.78rem', color: '#64748b' }}>Đã đồng hành 180+ chuyến đi thành công</div>
+                          <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#10201B' }}>Chuyên Gia 4U Retreat</div>
+                          <div style={{ fontSize: '0.78rem', color: '#527059' }}>Đã đồng hành 180+ chuyến đi thành công</div>
                         </div>
                       </div>
                     </div>
@@ -373,10 +385,10 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
 
                   {/* Main Two-Column Days Navigation & Content Panel */}
                   <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '48px', alignItems: 'start' }}>
-                    
+
                     {/* Left Days Sidebar */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px', paddingLeft: '8px' }}>
+                      <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#10201B', marginBottom: '8px', paddingLeft: '8px' }}>
                         Days
                       </div>
 
@@ -390,14 +402,14 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                               width: '100%',
                               padding: '12px 20px',
                               borderRadius: '24px',
-                              border: 'none',
+                              border: isActive ? 'none' : '1px solid rgba(45, 90, 54, 0.18)',
                               fontSize: '0.92rem',
                               fontWeight: isActive ? 800 : 600,
                               textAlign: 'left',
                               cursor: 'pointer',
-                              background: isActive ? '#f97316' : '#f1f5f9',
-                              color: isActive ? '#ffffff' : '#475569',
-                              boxShadow: isActive ? '0 8px 20px rgba(249, 115, 22, 0.35)' : 'none',
+                              background: isActive ? '#1e4a3d' : '#dce7df',
+                              color: isActive ? '#ffffff' : '#10201B',
+                              boxShadow: isActive ? '0 8px 20px rgba(30, 74, 61, 0.25)' : 'none',
                               transition: 'all 0.2s ease',
                             }}
                           >
@@ -413,14 +425,14 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                           width: '100%',
                           padding: '12px 20px',
                           borderRadius: '24px',
-                          border: 'none',
+                          border: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? 'none' : '1px solid rgba(45, 90, 54, 0.18)',
                           fontSize: '0.92rem',
                           fontWeight: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? 800 : 600,
                           textAlign: 'left',
                           cursor: 'pointer',
-                          background: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? '#f97316' : '#f1f5f9',
-                          color: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? '#ffffff' : '#475569',
-                          boxShadow: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? '0 8px 20px rgba(249, 115, 22, 0.35)' : 'none',
+                          background: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? '#1e4a3d' : '#dce7df',
+                          color: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? '#ffffff' : '#10201B',
+                          boxShadow: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? '0 8px 20px rgba(30, 74, 61, 0.25)' : 'none',
                           transition: 'all 0.2s ease',
                         }}
                       >
@@ -429,20 +441,20 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                     </div>
 
                     {/* Right Content Panel for Selected Day */}
-                    <div style={{ background: '#ffffff', borderRadius: '24px', padding: '36px', border: '1px solid #e2e8f0', minHeight: '480px' }}>
+                    <div style={{ background: '#dce7df', borderRadius: '24px', padding: '36px', border: '1px solid rgba(45,90,54,0.18)', minHeight: '480px' }}>
                       {selectedDayIndex < (product.itinerary ? product.itinerary.length : 0) ? (
                         (() => {
                           const currentDay = product.itinerary[selectedDayIndex];
-                          const dayMoments = product.galleryImages && product.galleryImages.length > 0 
-                            ? product.galleryImages 
+                          const dayMoments = product.galleryImages && product.galleryImages.length > 0
+                            ? product.galleryImages
                             : [
-                                product.heroImage,
-                                'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop',
-                                'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=600&auto=format&fit=crop',
-                                'https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=600&auto=format&fit=crop',
-                                'https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=600&auto=format&fit=crop',
-                                'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?q=80&w=600&auto=format&fit=crop',
-                              ];
+                              product.heroImage,
+                              'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop',
+                              'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=600&auto=format&fit=crop',
+                              'https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=600&auto=format&fit=crop',
+                              'https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=600&auto=format&fit=crop',
+                              'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?q=80&w=600&auto=format&fit=crop',
+                            ];
                           return (
                             <div>
                               {/* Day Title */}
@@ -479,17 +491,17 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
 
                               {/* Transport Section */}
                               <div style={{ marginBottom: '28px' }}>
-                                <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 12px 0' }}>
+                                <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#10201B', margin: '0 0 12px 0' }}>
                                   Transport & Culinary
                                 </h4>
                                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                  <span style={{ background: '#f1f5f9', color: '#334155', fontSize: '0.82rem', fontWeight: 600, padding: '8px 16px', borderRadius: '12px' }}>
+                                  <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
                                     🚌 Xe Limousine VIP 4U
                                   </span>
-                                  <span style={{ background: '#f1f5f9', color: '#334155', fontSize: '0.82rem', fontWeight: 600, padding: '8px 16px', borderRadius: '12px' }}>
+                                  <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
                                     🥗 Thực dưỡng 100% hữu cơ
                                   </span>
-                                  <span style={{ background: '#f1f5f9', color: '#334155', fontSize: '0.82rem', fontWeight: 600, padding: '8px 16px', borderRadius: '12px' }}>
+                                  <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
                                     🍵 Trà thảo mộc bản địa
                                   </span>
                                 </div>
@@ -497,17 +509,17 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
 
                               {/* Attractions Section */}
                               <div>
-                                <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 12px 0' }}>
+                                <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#10201B', margin: '0 0 12px 0' }}>
                                   Attractions
                                 </h4>
                                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                  <span style={{ background: '#f1f5f9', color: '#334155', fontSize: '0.82rem', fontWeight: 600, padding: '8px 16px', borderRadius: '12px' }}>
+                                  <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
                                     📍 {product.location}
                                   </span>
-                                  <span style={{ background: '#f1f5f9', color: '#334155', fontSize: '0.82rem', fontWeight: 600, padding: '8px 16px', borderRadius: '12px' }}>
+                                  <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
                                     🧘 Khung cảnh an yên tĩnh lặng
                                   </span>
-                                  <span style={{ background: '#f1f5f9', color: '#334155', fontSize: '0.82rem', fontWeight: 600, padding: '8px 16px', borderRadius: '12px' }}>
+                                  <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
                                     🌲 Thiên nhiên nguyên sơ
                                   </span>
                                 </div>
@@ -542,7 +554,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                 <div className="pd-price-table-wrapper">
                   <h3 style={{ fontSize: '1.6rem', fontWeight: '800', color: '#191c1c', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <Tag size={24} style={{ color: '#006d36' }} />
-                    Chi Tiết Bảng Giá & Quyền Lợi Chuyến Đi
+                    Chi tiết bảng giá & quyền lợi chuyến đi
                   </h3>
 
                   {/* Enhanced Price Table */}
@@ -576,13 +588,13 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                   </div>
 
                   <h4 style={{ fontSize: '1.2rem', fontWeight: '800', color: '#191c1c', marginBottom: '20px' }}>
-                    Dịch Vụ Bao Gồm Nổi Bật
+                    Dịch vụ bao gồm nổi bật
                   </h4>
                   <div className="pd-inclusions-grid" style={{ marginBottom: '32px' }}>
                     {product.inclusions?.map((inc: string, idx: number) => (
-                      <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '0.98rem', color: '#333e38', background: '#f8faf9', padding: '12px 16px', borderRadius: '14px', border: '1px solid #eef2ef' }}>
+                      <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '0.98rem', color: '#1e4a3d', background: '#cbe0d0', padding: '12px 16px', borderRadius: '14px', border: '1px solid rgba(45, 90, 54, 0.18)' }}>
                         <CheckCircle size={20} style={{ color: '#006d36', flexShrink: 0, marginTop: '2px' }} />
-                        <span style={{ fontWeight: '600' }}>{inc}</span>
+                        <span style={{ fontWeight: '700' }}>{inc}</span>
                       </div>
                     ))}
                   </div>
@@ -598,7 +610,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                 <div className="pd-map-card">
                   <h3 style={{ fontSize: '1.7rem', fontWeight: '800', color: '#191c1c', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <MapPin size={28} style={{ color: '#006d36' }} />
-                    Bản Đồ & Vị Trí Khu Vực Nghỉ Dưỡng
+                    Bản đồ & vị trí khu vực nghỉ dưỡng
                   </h3>
                   <p style={{ fontSize: '1.08rem', color: '#5b6561', marginBottom: '32px', lineHeight: '1.7' }}>
                     {product.location} — Tọa độ biệt lập giữa thiên nhiên nguyên sơ, cách trung tâm thành phố khoảng 45 phút di chuyển bằng xe VIP Limousine.
@@ -610,65 +622,6 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                       <Navigation size={40} style={{ margin: '0 auto 14px', color: '#4ade80' }} />
                       <div style={{ fontWeight: '800', fontSize: '1.35rem', marginBottom: '8px' }}>{product.location}</div>
                       <div style={{ fontSize: '0.95rem', opacity: 0.9, lineHeight: '1.6' }}>Tọa độ tĩnh lặng riêng tư dành riêng cho khách hàng 4U Retreat</div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 5: ĐÁNH GIÁ THỰC TẾ TỪ KHÁCH HÀNG */}
-              {activeTab === 'Reviews' && (
-                <div className="pd-reviews-wrapper">
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '36px', flexWrap: 'wrap', gap: '20px' }}>
-                    <div>
-                      <h3 style={{ fontSize: '1.7rem', fontWeight: '800', color: '#191c1c', margin: '0 0 8px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <Star size={28} style={{ color: '#e5a100', fill: '#e5a100' }} />
-                        Đánh Giá Thực Tế Từ Khách Hàng
-                      </h3>
-                      <div style={{ fontSize: '1rem', color: '#5b6561' }}>Xác thực 100% bởi các du khách đã trực tiếp tham gia hành trình</div>
-                    </div>
-
-                    <div style={{ background: '#f3f7f4', border: '1.5px solid #006d36', borderRadius: '20px', padding: '16px 28px', textAlign: 'center' }}>
-                      <div style={{ fontSize: '2.2rem', fontWeight: '800', color: '#006d36', lineHeight: 1 }}>4.9 / 5.0</div>
-                      <div style={{ fontSize: '0.82rem', fontWeight: '700', color: '#5b6561', marginTop: '6px', letterSpacing: '0.05em' }}>24 ĐÁNH GIÁ XÁC THỰC</div>
-                    </div>
-                  </div>
-
-                  {/* Customer Review Items */}
-                  <div>
-                    <div className="pd-review-item">
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                          <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#006d36', color: '#fff', fontWeight: '800', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.05rem' }}>
-                            TB
-                          </div>
-                          <div>
-                            <strong style={{ fontSize: '1.1rem', color: '#191c1c', display: 'block' }}>Trần Bích Ngọc</strong>
-                            <span style={{ fontSize: '0.85rem', color: '#666' }}>Gia đình 3 thế hệ • Trải nghiệm Tháng 7/2026</span>
-                          </div>
-                        </div>
-                        <div style={{ color: '#e5a100', fontSize: '1.1rem' }}>★★★★★</div>
-                      </div>
-                      <p style={{ fontSize: '1.08rem', color: '#333e38', lineHeight: '1.75', margin: 0 }}>
-                        "Chuyến đi trọn vẹn niềm vui cho cả 3 thế hệ gia đình tôi. Resort có không gian tĩnh lặng, đồ ăn hữu cơ tươi ngon và xe limousine đón tận nhà cực kỳ chu đáo."
-                      </p>
-                    </div>
-
-                    <div className="pd-review-item">
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                          <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#2d5a36', color: '#fff', fontWeight: '800', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.05rem' }}>
-                            LH
-                          </div>
-                          <div>
-                            <strong style={{ fontSize: '1.1rem', color: '#191c1c', display: 'block' }}>Lê Hoàng Anh</strong>
-                            <span style={{ fontSize: '0.85rem', color: '#666' }}>Solo Traveler • Trải nghiệm Tháng 6/2026</span>
-                          </div>
-                        </div>
-                        <div style={{ color: '#e5a100', fontSize: '1.1rem' }}>★★★★★</div>
-                      </div>
-                      <p style={{ fontSize: '1.08rem', color: '#333e38', lineHeight: '1.75', margin: 0 }}>
-                        "Hành trình thiền đi bộ trong rừng thông thực sự giúp mình chữa lành và tái tạo năng lượng sau chuỗi ngày áp lực công việc. Rất tiến cử 4U Retreat!"
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -799,6 +752,9 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
 
           </div>
         </section>
+
+        {/* Khách Hàng Nói Gì Về Trải Nghiệm 4U Retreat */}
+        <Testimonials />
       </ScrollExpandMedia>
 
     </div>

@@ -70,7 +70,7 @@ export const TOURS_DATA: TourPackage[] = [
     category: 'Wellness',
     seriesType: 'chua-lanh',
     country: 'Việt Nam',
-    city: 'Hồ Lắk',
+    city: 'Hồ Lắk, Đắk Lắk',
     duration: '3 Ngày 2 Đêm',
     durationDays: 3,
     departureDates: ['10/09/2026', '25/09/2026'],
@@ -96,7 +96,7 @@ export const TOURS_DATA: TourPackage[] = [
       'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=85&w=1920&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=85&w=1920&auto=format&fit=crop'
     ],
-    destinationMap: 'Hồ Lắk, Việt Nam', travelTips: [], faq: [], reviews: []
+    destinationMap: 'Hồ Lắk, Đắk Lắk', travelTips: [], faq: [], reviews: []
   },
   // 2. “Tĩnh Lặng Giữa Đại Ngàn” — Nam Cát Tiên
   {
@@ -107,7 +107,7 @@ export const TOURS_DATA: TourPackage[] = [
     category: 'Wellness',
     seriesType: 'bao-ton',
     country: 'Việt Nam',
-    city: 'Nam Cát Tiên',
+    city: 'Nam Cát Tiên, Đồng Nai',
     duration: '2 Ngày 1 Đêm',
     durationDays: 2,
     departureDates: ['10/08/2026', '24/08/2026'],
@@ -132,7 +132,7 @@ export const TOURS_DATA: TourPackage[] = [
       'https://images.unsplash.com/photo-1511497584788-8767611136f6?q=85&w=1920&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=85&w=1920&auto=format&fit=crop'
     ],
-    destinationMap: 'Nam Cát Tiên, Việt Nam', travelTips: [], faq: [], reviews: []
+    destinationMap: 'Nam Cát Tiên, Đồng Nai', travelTips: [], faq: [], reviews: []
   },
   // 3. “Di Sản Vịnh Hạ Long”
   {
@@ -143,7 +143,7 @@ export const TOURS_DATA: TourPackage[] = [
     category: 'Luxury',
     seriesType: 'thien-nhien',
     country: 'Việt Nam',
-    city: 'Vịnh Hạ Long',
+    city: 'Vịnh Hạ Long, Quảng Ninh',
     duration: '3 Ngày 2 Đêm',
     durationDays: 3,
     departureDates: ['12/08/2026', '28/08/2026'],
@@ -169,7 +169,7 @@ export const TOURS_DATA: TourPackage[] = [
       'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?q=85&w=1920&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=85&w=1920&auto=format&fit=crop'
     ],
-    destinationMap: 'Vịnh Hạ Long, Việt Nam', travelTips: [], faq: [], reviews: []
+    destinationMap: 'Vịnh Hạ Long, Quảng Ninh', travelTips: [], faq: [], reviews: []
   },
   // 4. “Hơi Thở Yên Tử”
   {
@@ -205,7 +205,7 @@ export const TOURS_DATA: TourPackage[] = [
       'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=85&w=1920&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?q=85&w=1920&auto=format&fit=crop'
     ],
-    destinationMap: 'Yên Tử, Việt Nam', travelTips: [], faq: [], reviews: []
+    destinationMap: 'Yên Tử, Quảng Ninh', travelTips: [], faq: [], reviews: []
   },
   // 5. “Chốn Bồng Lai Mờ Sương” — Sapa
   {
@@ -216,7 +216,7 @@ export const TOURS_DATA: TourPackage[] = [
     category: 'Wellness',
     seriesType: 'thien-nhien',
     country: 'Việt Nam',
-    city: 'Sapa, Lao Cai',
+    city: 'Sapa, Lào Cai',
     duration: '3 Ngày 2 Đêm',
     durationDays: 3,
     departureDates: ['05/09/2026', '20/09/2026'],
@@ -242,7 +242,7 @@ export const TOURS_DATA: TourPackage[] = [
       'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=85&w=1920&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=85&w=1920&auto=format&fit=crop'
     ],
-    destinationMap: 'Sapa, Việt Nam', travelTips: [], faq: [], reviews: []
+    destinationMap: 'Sapa, Lào Cai', travelTips: [], faq: [], reviews: []
   },
   // 6. “Mùa Hoa Trên Đá” — Hà Giang
   {
@@ -253,7 +253,7 @@ export const TOURS_DATA: TourPackage[] = [
     category: 'Wellness',
     seriesType: 'thien-nguyen',
     country: 'Việt Nam',
-    city: 'Hà Giang',
+    city: 'Đồng Văn, Hà Giang',
     duration: '4 Ngày 3 Đêm',
     durationDays: 4,
     departureDates: ['18/09/2026', '02/10/2026'],
@@ -280,6 +280,75 @@ export const TOURS_DATA: TourPackage[] = [
       'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=85&w=1920&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=85&w=1920&auto=format&fit=crop'
     ],
-    destinationMap: 'Hà Giang, Việt Nam', travelTips: [], faq: [], reviews: []
+    destinationMap: 'Đồng Văn, Hà Giang', travelTips: [], faq: [], reviews: []
+  },
+  // 7. “Hoàng Hôn Đảo Ngọc” — Phú Quốc
+  {
+    id: 'tour-7',
+    slug: 'hoang-hon-dao-ngoc-phu-quoc',
+    title: '“Hoàng Hôn Đảo Ngọc” — Phú Quốc Coastal Wellness Retreat',
+    subtitle: 'Hòa mình cùng tiếng sóng biển đêm & thực hành yoga bãi biển đón bình minh',
+    category: 'Wellness',
+    seriesType: 'thien-nhien',
+    country: 'Việt Nam',
+    city: 'Phú Quốc, Kiên Giang',
+    duration: '3 Ngày 2 Đêm',
+    durationDays: 3,
+    departureDates: ['08/09/2026', '22/09/2026'],
+    airline: 'Xe Limousine & Canô VIP',
+    hotel: 'JW Marriott Phu Quoc Emerald Bay (5 Stars)',
+    transportation: 'Limousine & Canô Riêng',
+    price: 6200000, originalPrice: 7500000, discountPercentage: 17,
+    rating: 4.98, reviewsCount: 198, isHot: true, isFeatured: true, isExclusive: true, isPromotion: true,
+    highlights: ['Yoga bình minh trên cát trắng', 'Thiền sóng biển ban đêm', 'Tiệc tối thực dưỡng hải sản tươi'],
+    blogReadTime: '5 phút đọc',
+    blogAuthor: 'Lê Ngọc Minh',
+    blogAuthorRole: 'Senior Travel Editor',
+    blogStorySnippet: 'Đón làn gió biển trong lành của bãi Kem, trải thảm tập yoga khi hừng đông vừa chớm nở. Tiếng sóng biển thì sầm dịu nhẹ đưa tâm trí trở về trạng thái thư giãn tuyệt đối...',
+    itinerary: [
+      { day: 1, title: 'Đón Sân Bay & Trà Chiều Biển', description: 'Đón đoàn về resort, thưởng trà ngắm hoàng hôn.', image: '', activities: ['Thưởng trà hoàng hôn', 'Thiền sóng biển'] },
+      { day: 2, title: 'Yoga Bình Minh & Khai Thấu Năng Lượng', description: 'Tập yoga biển & đi canô riêng ngắm san hô.', image: '', activities: ['Yoga bình minh', 'Lặn ngắm san hô'] },
+      { day: 3, title: 'Bữa Sáng Thực Dưỡng & Tiễn Đoàn', description: 'Tiễn đoàn ra sân bay Phú Quốc.', image: '', activities: ['Bữa sáng thực dưỡng'] }
+    ],
+    included: ['Lưu trú resort 5*', 'Toàn bộ bữa ăn thực dưỡng', 'Hoạt động Canô & Yoga'], excluded: [], notes: [],
+    heroImage: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=85&w=1920&auto=format&fit=crop',
+    gallery: [
+      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=85&w=1920&auto=format&fit=crop'
+    ],
+    destinationMap: 'Phú Quốc, Kiên Giang', travelTips: [], faq: [], reviews: []
+  },
+  // 8. “Tĩnh Lặng Tràng An” — Ninh Bình
+  {
+    id: 'tour-8',
+    slug: 'tinh-lang-trang-an-ninh-binh',
+    title: '“Tĩnh Lặng Tràng An” — Ninh Bình Eco Legacy Retreat',
+    subtitle: 'Chèo thuyền ngoạn cảnh di sản & thiền định giữa thung lũng đá vôi',
+    category: 'Wellness',
+    seriesType: 'chua-lanh',
+    country: 'Việt Nam',
+    city: 'Tràng An, Ninh Bình',
+    duration: '2 Ngày 1 Đêm',
+    durationDays: 2,
+    departureDates: ['14/09/2026', '28/09/2026'],
+    airline: 'Xe Limousine VIP 4U',
+    hotel: 'Emeralda Resort Ninh Bình (5 Stars)',
+    transportation: 'Limousine VIP 9 Chỗ',
+    price: 3950000, originalPrice: 4800000, discountPercentage: 18,
+    rating: 4.97, reviewsCount: 165, isHot: true, isFeatured: true, isExclusive: true, isPromotion: true,
+    highlights: ['Chèo thuyền Tràng An riêng tư', 'Thiền chuông xoay Tây Tạng', 'Tắm ngâm khoáng bồn gỗ cổ truyền'],
+    blogReadTime: '4 phút đọc',
+    blogAuthor: 'Trần Hoài Anh',
+    blogAuthorRole: 'Eco-Tourism Blogger',
+    blogStorySnippet: 'Thuyền nhẹ trôi trên dòng sông sào Tràng An, phản chiếu những vách núi đá vôi phủ rêu xanh ngàn năm. Không gian tĩnh lặng chỉ còn tiếng mái chèo khua nước...',
+    itinerary: [
+      { day: 1, title: 'Hà Nội — Tràng An & Trà Thiền', description: 'Đón đoàn di chuyển Ninh Bình, thưởng trà thiền.', image: '', activities: ['Thuyền Tràng An', 'Trà thiền chiều'] },
+      { day: 2, title: 'Tập Khí Công & Ngâm Khoáng', description: 'Khí công bình minh & ngâm tắm bồn gỗ thảo mộc.', image: '', activities: ['Khí công bình minh', 'Trở về Hà Nội'] }
+    ],
+    included: ['Lưu trú Emeralda Resort 5*', 'Vé tham quan di sản Tràng An', 'Xe Limousine VIP'], excluded: [], notes: [],
+    heroImage: 'https://images.unsplash.com/photo-1528127269322-539801943592?q=85&w=1920&auto=format&fit=crop',
+    gallery: [
+      'https://images.unsplash.com/photo-1528127269322-539801943592?q=85&w=1920&auto=format&fit=crop'
+    ],
+    destinationMap: 'Tràng An, Ninh Bình', travelTips: [], faq: [], reviews: []
   }
 ];
