@@ -1,10 +1,30 @@
-import React from 'react';
-import { ABOUT_DATA } from '../data/aboutData';
-import { TEAM_DATA } from '../data/teamData';
-import { PARTNERS_DATA } from '../data/partnersData';
+import React, { useEffect, useState } from 'react';
+import { ABOUT_DATA, syncAboutDataFromApi } from '../data/aboutData';
+import { TEAM_DATA, syncTeamDataFromApi, TeamMember } from '../data/teamData';
+import { fetchSectionItemsApi, getImageUrl } from '../services/apiService';
 import { ShieldCheck, Award, Globe, Users, Heart } from 'lucide-react';
 
+
 export default function AboutPage() {
+  const [aboutInfo, setAboutInfo] = useState<any>(ABOUT_DATA);
+  const [teamList, setTeamList] = useState<TeamMember[]>(TEAM_DATA);
+
+  useEffect(() => {
+    fetchSectionItemsApi('about').then((data) => {
+      if (data && typeof data === 'object' && !Array.isArray(data)) {
+        syncAboutDataFromApi(data);
+        setAboutInfo({ ...data });
+      }
+    });
+
+    fetchSectionItemsApi('team').then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        syncTeamDataFromApi(data);
+        setTeamList([...data]);
+      }
+    });
+  }, []);
+
   return (
     <div style={{ background: '#ffffff', minHeight: '100vh', paddingTop: '80px', paddingBottom: '80px', width: '100%', overflowX: 'hidden' }}>
       {/* Hero Full Width */}
@@ -20,10 +40,10 @@ export default function AboutPage() {
             ABOUT 4U TOURS • HÀNH TRÌNH 14 NĂM
           </span>
           <h1 style={{ fontSize: 'clamp(36px, 5vw, 68px)', fontWeight: 800, margin: '0 0 16px 0', fontFamily: "'Be Vietnam Pro', 'Plus Jakarta Sans', sans-serif", letterSpacing: '-0.03em' }}>
-            {ABOUT_DATA.companyName}
+            {aboutInfo?.companyName || ABOUT_DATA.companyName}
           </h1>
           <p style={{ fontSize: 'clamp(17px, 2vw, 22px)', opacity: 0.92, margin: 0, lineHeight: 1.6 }}>
-            {ABOUT_DATA.tagline}
+            {aboutInfo?.tagline || ABOUT_DATA.tagline}
           </p>
         </div>
       </section>
@@ -31,7 +51,7 @@ export default function AboutPage() {
       {/* Stats Bar 90% Full Width */}
       <div style={{ width: '90%', maxWidth: '90vw', margin: '-40px auto 0', position: 'relative', zIndex: 10 }}>
         <div style={{ background: '#ffffff', borderRadius: '24px', padding: '36px 48px', boxShadow: '0 20px 50px rgba(0,0,0,0.08)', border: '1px solid rgba(0,0,0,0.08)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '32px', textAlign: 'center' }}>
-          {ABOUT_DATA.stats.map((stat, idx) => (
+          {(aboutInfo?.stats || ABOUT_DATA.stats).map((stat: any, idx: number) => (
             <div key={idx}>
               <div style={{ fontSize: 'clamp(36px, 3.5vw, 48px)', fontWeight: 800, color: '#006d36', marginBottom: '4px', letterSpacing: '-0.02em' }}>{stat.value}</div>
               <div style={{ fontSize: '14px', color: '#64748b', fontWeight: 600 }}>{stat.label}</div>
@@ -67,10 +87,11 @@ export default function AboutPage() {
             <h2 style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, color: '#0f172a', margin: '8px 0 0 0', letterSpacing: '-0.03em' }}>Đội ngũ ban điều hành & chuyên gia</h2>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px', width: '100%' }}>
-            {TEAM_DATA.map(member => (
+            {teamList.map(member => (
               <div key={member.id} style={{ background: '#ffffff', borderRadius: '24px', padding: '36px 28px', textAlign: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.08)' }}>
-                <img src={member.portrait} alt={member.name} style={{ width: '140px', height: '140px', borderRadius: '50%', objectFit: 'cover', margin: '0 auto 20px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
+                <img src={getImageUrl(member.portrait)} alt={member.name} style={{ width: '140px', height: '140px', borderRadius: '50%', objectFit: 'cover', margin: '0 auto 20px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)' }} />
                 <h3 style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', margin: '0 0 6px 0' }}>{member.name}</h3>
+
                 <div style={{ fontSize: '14px', color: '#006d36', fontWeight: 700, marginBottom: '16px' }}>{member.role}</div>
                 <p style={{ fontSize: '14px', color: '#64748b', lineHeight: 1.6, margin: 0 }}>{member.bio}</p>
               </div>

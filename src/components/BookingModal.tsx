@@ -55,7 +55,7 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
   }, [isOpen]);
 
   const defaultTourTitle = selectedTour?.title || 'Retreat Chữa Lành Thân Tâm Trí (Nam Cát Tiên)';
-  
+
   const parsePrice = (priceVal: any): number => {
     if (typeof priceVal === 'number' && !isNaN(priceVal)) return priceVal;
     if (typeof priceVal === 'string') {

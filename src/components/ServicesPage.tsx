@@ -1,12 +1,25 @@
-import React from 'react';
-import { SERVICES_DATA } from '../data/servicesData';
+import React, { useEffect, useState } from 'react';
+import { SERVICES_DATA, syncServicesDataFromApi, TravelService } from '../data/servicesData';
+import { fetchSectionItemsApi, getImageUrl } from '../services/apiService';
 import { ShieldCheck, Compass, CheckCircle2, ArrowRight } from 'lucide-react';
+
 
 interface ServicesPageProps {
   onOpenBooking: () => void;
 }
 
 export default function ServicesPage({ onOpenBooking }: ServicesPageProps) {
+  const [services, setServices] = useState<TravelService[]>(SERVICES_DATA);
+
+  useEffect(() => {
+    fetchSectionItemsApi('services').then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        syncServicesDataFromApi(data);
+        setServices([...data]);
+      }
+    });
+  }, []);
+
   return (
     <div style={{ background: '#ffffff', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px' }}>
       {/* Hero */}
@@ -32,7 +45,7 @@ export default function ServicesPage({ onOpenBooking }: ServicesPageProps) {
 
       {/* Services List */}
       <div style={{ maxWidth: '1280px', margin: '48px auto 0', padding: '0 24px' }}>
-        {SERVICES_DATA.map((service, index) => (
+        {services.map((service, index) => (
           <div
             key={service.id}
             style={{
@@ -50,10 +63,11 @@ export default function ServicesPage({ onOpenBooking }: ServicesPageProps) {
           >
             <div style={{ order: index % 2 === 0 ? 1 : 2 }}>
               <img
-                src={service.heroImage}
+                src={getImageUrl(service.heroImage)}
                 alt={service.title}
                 style={{ width: '100%', height: '360px', objectFit: 'cover', borderRadius: '20px' }}
               />
+
             </div>
             <div style={{ order: index % 2 === 0 ? 2 : 1 }}>
               <span style={{ color: '#006d36', fontSize: '13px', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase' }}>

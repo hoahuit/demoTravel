@@ -1,13 +1,15 @@
 export interface PartnerItem {
   id: string;
   name: string;
-  category: 'Airline' | 'Hotel' | 'Cruise' | 'Insurance' | 'Bank' | 'TourismBoard';
+  category: string;
   logoText: string;
 }
 
-// 3 SAMPLE PARTNERS
-export const PARTNERS_DATA: PartnerItem[] = [
-  { id: 'p-1', name: 'Vietnam Airlines', category: 'Airline', logoText: 'VIETNAM AIRLINES' },
-  { id: 'p-2', name: 'Hoshinoya Resorts', category: 'Hotel', logoText: 'HOSHINOYA LUXURY' },
-  { id: 'p-3', name: 'The Ritz-Carlton', category: 'Hotel', logoText: 'THE RITZ-CARLTON' }
-];
+// 100% REAL DATA STORE (EMPTY UNTIL LOADED FROM LOOPBACK 4 / SQL SERVER)
+export let PARTNERS_DATA: PartnerItem[] = [];
+
+export function syncPartnersDataFromApi(livePartners: PartnerItem[]) {
+  if (Array.isArray(livePartners)) {
+    PARTNERS_DATA.splice(0, PARTNERS_DATA.length, ...livePartners);
+  }
+}

@@ -27,6 +27,19 @@ import RetreatHot from './pages/retreat/retreathot/RetreatHot';
 import KhongTheBoLoSection from './components/KhongTheBoLoSection';
 import UuDaiGioChotSection from './components/UuDaiGioChotSection';
 import DepartureCalendarModal from './components/DepartureCalendarModal';
+import AdminDashboard from './components/AdminDashboard';
+import AdminTourEditor from './components/AdminTourEditor';
+import { fetchToursApi, fetchSectionItemsApi } from './services/apiService';
+import { syncToursDataFromApi } from './data/toursData';
+import { syncBlogsDataFromApi } from './data/blogsData';
+import { syncDestinationsDataFromApi } from './data/destinationsData';
+import { syncFaqDataFromApi } from './data/faqData';
+import { syncPartnersDataFromApi } from './data/partnersData';
+import { syncPromotionsDataFromApi } from './data/promotionsData';
+import { syncServicesDataFromApi } from './data/servicesData';
+import { syncTeamDataFromApi } from './data/teamData';
+import { syncTestimonialsDataFromApi } from './data/testimonialsData';
+import { syncAboutDataFromApi } from './data/aboutData';
 
 export default function App() {
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
@@ -58,6 +71,21 @@ export default function App() {
       setCurrentPath(window.location.pathname);
     };
     window.addEventListener('popstate', handlePopState);
+
+    // Fetch initial tours data from Backend API once on startup
+    const loadInitialData = async () => {
+      try {
+        const tours = await fetchToursApi();
+        if (Array.isArray(tours) && tours.length > 0) {
+          syncToursDataFromApi(tours);
+        }
+      } catch (err) {
+        console.warn('[CLIENT INIT DATA WARNING]', err);
+      }
+    };
+
+    loadInitialData();
+
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
@@ -67,8 +95,19 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const normalizeSlug = (path: string) => {
+    return path
+      .trim()
+      .toLowerCase()
+      .replace(/^\/+/, '')
+      .replace(/^sanpham\/?/, '')
+      .replace(/^productdetail\/?/, '')
+      .split(/[?#]/)[0]
+      .replace(/\/$/, '');
+  };
+
   const isProductRoute = currentPath.startsWith('/sanpham/') || currentPath.startsWith('/productdetail');
-  const productSlug = currentPath.replace('/sanpham/', '').replace('/productdetail', '').replace(/\//g, '') || 'retreat-chua-lanh';
+  const productSlug = normalizeSlug(currentPath) || 'retreat-chua-lanh';
 
   const isRetreatDocQuyenRoute = currentPath.startsWith('/retreat/docquyen') || currentPath.startsWith('/retreats-doc-quyen');
   const isSapKhoiHanhRoute = currentPath.startsWith('/retreat/sapkhoihanh') || currentPath.startsWith('/sap-khoi-hanh');
@@ -111,6 +150,7 @@ export default function App() {
 
   const isDestinationsRoute = currentPath.startsWith('/destinations') || currentPath.startsWith('/diem-den');
   const isServicesRoute = currentPath.startsWith('/services') || currentPath.startsWith('/dich-vu');
+  const isAdminRoute = currentPath.startsWith('/admin');
 
   const renderCurrentRoute = () => {
     if (isProductRoute) {
@@ -133,6 +173,9 @@ export default function App() {
     }
     if (isToursRoute) {
       return <ToursPage currentPath={currentPath} onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
+    }
+    if (isAdminRoute) {
+      return <AdminDashboard currentPath={currentPath} onNavigate={navigateTo} />;
     }
     if (isDestinationsRoute) {
       return <DestinationsPage onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
@@ -203,18 +246,20 @@ export default function App() {
       />
 
       {/* Header — "Nhận tư vấn" opens Consultation Modal, "Lịch khởi hành" opens Departure Calendar */}
-      <Header
-        onOpenSearch={() => setSearchOpen(true)}
-        onNavigate={navigateTo}
-        onOpenBooking={handleOpenConsultation}
-        onOpenCalendar={() => setCalendarOpen(true)}
-      />
+      {!isAdminRoute && (
+        <Header
+          onOpenSearch={() => setSearchOpen(true)}
+          onNavigate={navigateTo}
+          onOpenBooking={handleOpenConsultation}
+          onOpenCalendar={() => setCalendarOpen(true)}
+        />
+      )}
 
       {/* Conditional Route Rendering */}
       {renderCurrentRoute()}
 
       {/* Footer */}
-      <Footer onNavigate={navigateTo} />
+      {!isAdminRoute && <Footer onNavigate={navigateTo} />}
     </div>
   );
 }

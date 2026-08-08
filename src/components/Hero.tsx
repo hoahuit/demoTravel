@@ -1,13 +1,33 @@
-import React from 'react';
-import { TOURS_DATA } from '../data/toursData';
+import React, { useEffect, useState } from 'react';
+import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
+import { fetchToursApi, getImageUrl } from '../services/apiService';
+
 
 export interface HeroProps {
   onOpenBooking?: () => void;
 }
 
 export default function Hero({ onOpenBooking }: HeroProps = {}) {
-  // Use the primary featured retreat package directly from TOURS_DATA
-  const heroTour = TOURS_DATA.find(t => t.slug === 'tinh-lang-giua-dai-ngan') || TOURS_DATA[0];
+  const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
+
+  useEffect(() => {
+    fetchToursApi().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        syncToursDataFromApi(data);
+        setTours([...data]);
+      }
+    });
+  }, []);
+
+  const defaultHero = {
+    title: 'Hành Trình Tĩnh Dưỡng 4U',
+    subtitle: 'Nghỉ dưỡng & Phục hồi Thân · Tâm · Trí giữa thiên nhiên tuyệt tác',
+    heroImage: 'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=2000&q=80',
+    city: '4U Retreat',
+    duration: 'International Signature',
+  };
+
+  const heroTour = tours[0] || defaultHero;
 
   return (
     <section style={{ padding: 0, margin: 0, width: '100%', position: 'relative', overflow: 'hidden' }}>
@@ -28,8 +48,9 @@ export default function Hero({ onOpenBooking }: HeroProps = {}) {
         {/* ── 1. BACKGROUND MEDIA IMAGE ── */}
         <div className="tile-image-wrapper" style={{ position: 'absolute', inset: 0, overflow: 'hidden', zIndex: 0 }}>
           <img
-            src={heroTour.heroImage}
+            src={getImageUrl(heroTour.heroImage)}
             alt={heroTour.title}
+
             style={{
               width: '100%',
               height: '100%',

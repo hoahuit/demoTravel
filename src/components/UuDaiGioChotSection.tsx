@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ScrollReveal from './ScrollReveal';
-import { TOURS_DATA } from '../data/toursData';
+import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
+import { fetchToursApi, getImageUrl } from '../services/apiService';
 import { ChevronDown } from 'lucide-react';
+
 
 export interface UuDaiGioChotSectionProps {
   onOpenBooking?: (tourData?: any) => void;
@@ -10,6 +12,17 @@ export interface UuDaiGioChotSectionProps {
 
 export default function UuDaiGioChotSection({ onOpenBooking, onNavigate }: UuDaiGioChotSectionProps) {
   const [showAll, setShowAll] = useState<boolean>(false);
+  const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
+
+  useEffect(() => {
+    fetchToursApi().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        syncToursDataFromApi(data);
+        setTours([...data]);
+      }
+    });
+  }, []);
+
   const [timeLeft, setTimeLeft] = useState<{ hours: number; minutes: number; seconds: number }>({
     hours: 4,
     minutes: 59,
@@ -34,7 +47,7 @@ export default function UuDaiGioChotSection({ onOpenBooking, onNavigate }: UuDai
   }, []);
 
   // Filter promotion tours with discounts
-  const promoTours = TOURS_DATA.filter((tour) => tour.discountPercentage || tour.isPromotion);
+  const promoTours = tours.filter((tour) => tour.discountPercentage || tour.isPromotion || tours.length <= 4);
   const visiblePromoTours = showAll ? promoTours : promoTours.slice(0, 4);
 
   const formatNumber = (num: number) => (num < 10 ? `0${num}` : `${num}`);
@@ -428,7 +441,8 @@ export default function UuDaiGioChotSection({ onOpenBooking, onNavigate }: UuDai
                     <div className="udgc-slots-badge">
                       Chỉ còn 2 suất
                     </div>
-                    <img src={tour.heroImage} alt={tour.title} />
+                    <img src={getImageUrl(tour.heroImage)} alt={tour.title} />
+
                   </div>
 
                   {/* BODY CONTENT */}

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ScrollReveal from './ScrollReveal';
-import { TOURS_DATA } from '../data/toursData';
+import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
+import { fetchToursApi } from '../services/apiService';
 import { ChevronDown, ArrowRight } from 'lucide-react';
 
 export interface BentoGridProps {
@@ -10,9 +11,19 @@ export interface BentoGridProps {
 
 export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps) {
   const [showAll, setShowAll] = useState<boolean>(false);
+  const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
 
-  // Map safely over TOURS_DATA directly
-  const items = TOURS_DATA.map((tour) => ({
+  useEffect(() => {
+    fetchToursApi().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        syncToursDataFromApi(data);
+        setTours([...data]);
+      }
+    });
+  }, []);
+
+  // Map safely over tours list directly
+  const items = tours.map((tour) => ({
     id: tour.id,
     slug: tour.slug,
     image: tour.heroImage,
@@ -20,7 +31,7 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
     category: tour.category,
     title: tour.title,
     desc: tour.subtitle,
-    price: `${tour.price.toLocaleString('vi-VN')} ₫`,
+    price: `${tour.price?.toLocaleString('vi-VN')} ₫`,
     departureDates: tour.departureDates?.length ? tour.departureDates.join(' • ') : 'Hàng tuần',
     action: 'Khám phá ngay'
   }));

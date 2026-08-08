@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ShieldCheck } from 'lucide-react';
+import { fetchSectionItemsApi } from '../services/apiService';
+import { PARTNERS_DATA, syncPartnersDataFromApi } from '../data/partnersData';
 import './PartnerLogos.css';
 
 interface BrandLogo {
   name: string;
-  svg: React.ReactNode;
+  svg?: React.ReactNode;
 }
 
 const brandLogos: BrandLogo[] = [
@@ -69,9 +71,21 @@ const brandLogos: BrandLogo[] = [
   }
 ];
 
-const duplicatedLogos = [...brandLogos, ...brandLogos, ...brandLogos];
-
 export default function PartnerLogos() {
+  const [partnerItems, setPartnerItems] = useState<any[]>(PARTNERS_DATA.length > 0 ? PARTNERS_DATA : brandLogos);
+
+  useEffect(() => {
+    fetchSectionItemsApi('partners').then((res) => {
+      if (Array.isArray(res) && res.length > 0) {
+        syncPartnersDataFromApi(res);
+        setPartnerItems(res);
+      }
+    });
+  }, []);
+
+  const displayList = partnerItems.length > 0 ? partnerItems : brandLogos;
+  const duplicatedLogos = [...displayList, ...displayList, ...displayList];
+
   return (
     <section className="partner-logos-section">
       <div className="partner-logos-header">
@@ -89,8 +103,8 @@ export default function PartnerLogos() {
           <div className="partner-logos-track-overflow">
             <div className="infinite-slider-track" style={{ display: 'flex', gap: '60px', alignItems: 'center', width: 'max-content' }}>
               {duplicatedLogos.map((brand, idx) => (
-                <div key={idx} className="partner-logos-item">
-                  {brand.svg}
+                <div key={idx} className="partner-logos-item" style={{ fontSize: '20px', fontWeight: 700, color: '#1E4A3D' }}>
+                  {brand.svg ? brand.svg : brand.name || brand.logoText}
                 </div>
               ))}
             </div>

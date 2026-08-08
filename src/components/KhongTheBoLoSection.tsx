@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ScrollReveal from './ScrollReveal';
-import { TOURS_DATA } from '../data/toursData';
+import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
+import { fetchToursApi, getImageUrl } from '../services/apiService';
 import { Star, Sparkles, MapPin, ArrowRight, ChevronDown } from 'lucide-react';
+
 
 export interface KhongTheBoLoSectionProps {
   onOpenBooking?: (tourData?: any) => void;
@@ -10,9 +12,19 @@ export interface KhongTheBoLoSectionProps {
 
 export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: KhongTheBoLoSectionProps) {
   const [showAll, setShowAll] = useState<boolean>(false);
+  const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
+
+  useEffect(() => {
+    fetchToursApi().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        syncToursDataFromApi(data);
+        setTours([...data]);
+      }
+    });
+  }, []);
 
   // Filter top rated & unmissable tours
-  const unmissableTours = TOURS_DATA.filter((tour) => tour.rating >= 4.96 || tour.isHot || tour.isFeatured);
+  const unmissableTours = tours.filter((tour) => tour.rating >= 4.96 || tour.isHot || tour.isFeatured || tours.length <= 4);
   const visibleTours = showAll ? unmissableTours : unmissableTours.slice(0, 4);
 
   return (
@@ -281,7 +293,8 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
                     <Star size={13} fill="#facc15" color="#facc15" />
                     <span>{tour.rating}</span>
                   </div>
-                  <img src={tour.heroImage} alt={tour.title} />
+                  <img src={getImageUrl(tour.heroImage)} alt={tour.title} />
+
                 </div>
 
                 <div className="ktbl-body">
@@ -293,7 +306,7 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
                   <h3 className="ktbl-title">{tour.title}</h3>
 
                   <div className="ktbl-highlights">
-                    {tour.highlights.slice(0, 2).map((hl, i) => (
+                    {(Array.isArray(tour.highlights) ? tour.highlights : []).slice(0, 2).map((hl, i) => (
                       <span key={i} className="ktbl-chip">
                         <Sparkles size={11} /> {hl}
                       </span>

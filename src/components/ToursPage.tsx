@@ -1,5 +1,7 @@
-import React, { useState, useMemo } from 'react';
-import { TOURS_DATA, TourPackage } from '../data/toursData';
+import React, { useState, useMemo, useEffect } from 'react';
+import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
+import { fetchToursApi, getImageUrl } from '../services/apiService';
+
 import {
   Search, Star, Clock, Images, X, ArrowRight, Sparkles, BookOpen,
   MapPin, Heart, Shield, Leaf, Compass, Calendar, CheckCircle2,
@@ -13,6 +15,17 @@ interface ToursPageProps {
 }
 
 export default function ToursPage({ currentPath = '/series-retreat', onNavigate, onOpenBooking }: ToursPageProps) {
+  const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
+
+  useEffect(() => {
+    fetchToursApi().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        syncToursDataFromApi(data);
+        setTours([...data]);
+      }
+    });
+  }, []);
+
   const [selectedSeries, setSelectedSeries] = useState<string>('All');
   const [selectedCity, setSelectedCity] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -125,7 +138,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
   // Filtered & Sorted Tours
   const filteredTours = useMemo(() => {
-    return TOURS_DATA.filter(tour => {
+    return tours.filter(tour => {
       let matchesPath = true;
       if (currentPath.includes('/series-retreat/chua-lanh')) {
         matchesPath = tour.seriesType === 'chua-lanh' || tour.category === 'Wellness';
@@ -136,15 +149,15 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       } else if (currentPath.includes('/series-retreat/thien-nguyen')) {
         matchesPath = tour.seriesType === 'thien-nguyen';
       } else if (currentPath.includes('/retreat/docquyen') || currentPath.includes('/retreats-doc-quyen')) {
-        matchesPath = tour.isExclusive === true || ['binh-yen-tren-cao-nguyen', 'tinh-lang-giua-dai-ngan', 'tim-lai-ket-noi'].includes(tour.slug);
+        matchesPath = tour.isExclusive === true || ['binh-yen-tren-cao-nguyen', 'tinh-lang-giua-dai-ngan', 'tim-lai-ket-noi'].includes(tour.slug) || tours.length <= 4;
       } else if (currentPath.includes('/retreat/retreathot') || currentPath.includes('/retreat-hot')) {
-        matchesPath = tour.isHot === true || ['binh-yen-tren-cao-nguyen', 'tinh-lang-giua-dai-ngan', 'tim-lai-ket-noi'].includes(tour.slug);
+        matchesPath = tour.isHot === true || ['binh-yen-tren-cao-nguyen', 'tinh-lang-giua-dai-ngan', 'tim-lai-ket-noi'].includes(tour.slug) || tours.length <= 4;
       } else if (currentPath.includes('/retreat/sapkhoihanh') || currentPath.includes('/sap-khoi-hanh')) {
-        matchesPath = tour.departureDates && tour.departureDates.length > 0;
+        matchesPath = (tour.departureDates && tour.departureDates.length > 0) || tours.length <= 4;
       } else if (currentPath.includes('/retreat/khongthebolo') || currentPath.includes('/khong-the-khong-co')) {
-        matchesPath = tour.rating >= 4.9;
+        matchesPath = tour.rating >= 4.9 || tours.length <= 4;
       } else if (currentPath.includes('/retreat/uudaigiochot') || currentPath.includes('/uu-dai-gio-chot') || currentPath.includes('/uu-dai') || currentPath.includes('/promotions')) {
-        matchesPath = tour.isPromotion === true || (tour.discountPercentage && tour.discountPercentage > 0);
+        matchesPath = tour.isPromotion === true || (tour.discountPercentage && tour.discountPercentage > 0) || tours.length <= 4;
       }
 
       const matchesSeries = selectedSeries === 'All' || tour.seriesType === selectedSeries;
@@ -163,12 +176,11 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       if (sortBy === 'rating') return b.rating - a.rating;
       return 0;
     });
-  }, [currentPath, selectedSeries, selectedCity, searchQuery, sortBy]);
+  }, [tours, currentPath, selectedSeries, selectedCity, searchQuery, sortBy]);
 
-  // Featured Hero Tour (Editor's Pick)
   const featuredTour = useMemo(() => {
-    return filteredTours.find(t => t.isFeatured) || filteredTours[0] || TOURS_DATA[0];
-  }, [filteredTours]);
+    return filteredTours.find(t => t.isFeatured) || filteredTours[0] || tours[0];
+  }, [filteredTours, tours]);
 
   return (
     <div style={{ backgroundColor: '#e5efe8', color: '#1a1714', minHeight: '100vh', paddingTop: '0', fontFamily: "'Be Vietnam Pro', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif", width: '100%', overflowX: 'hidden' }}>
@@ -197,7 +209,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
           <div onClick={e => e.stopPropagation()} style={{ width: '100%', maxWidth: '1200px', textAlign: 'center' }}>
             <img
-              src={activeGalleryTour.gallery[activePhotoIndex] || activeGalleryTour.heroImage}
+              src={getImageUrl(activeGalleryTour.gallery[activePhotoIndex] || activeGalleryTour.heroImage)}
               alt={activeGalleryTour.title}
               style={{ width: '100%', maxHeight: '72vh', objectFit: 'contain', borderRadius: '8px', marginBottom: '20px' }}
             />
@@ -207,7 +219,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
             <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', overflowX: 'auto', padding: '8px' }}>
               {activeGalleryTour.gallery.map((img, idx) => (
                 <img
-                  key={idx} src={img} alt="Thumb"
+                  key={idx} src={getImageUrl(img)} alt="Thumb"
                   onClick={() => setActivePhotoIndex(idx)}
                   style={{
                     width: '90px', height: '64px', objectFit: 'cover', cursor: 'pointer', borderRadius: '6px',
@@ -226,7 +238,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       {/* ── EDITORIAL FULL-WIDTH HERO BANNER ── */}
       <section style={{ position: 'relative', width: '100%', height: '100vh', minHeight: '100vh', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
         <img
-          src={pageHeader.heroImage || featuredTour?.heroImage || "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=85&w=2560&auto=format&fit=crop"}
+          src={getImageUrl(pageHeader.heroImage || featuredTour?.heroImage || "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=85&w=2560&auto=format&fit=crop")}
           alt={pageHeader.title}
           style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.62)', transition: 'src 0.5s ease' }}
         />
@@ -346,7 +358,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                       style={{ cursor: 'pointer', overflow: 'hidden', borderRadius: '0px', width: '100%' }}
                     >
                       <img
-                        src={feat.heroImage}
+                        src={getImageUrl(feat.heroImage)}
                         alt={feat.title}
                         style={{
                           width: '100%',
@@ -396,7 +408,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', paddingTop: '20px', borderTop: '1px solid rgba(26,23,20,0.1)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                           <img
-                            src={feat.gallery && feat.gallery[0] ? feat.gallery[0] : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop'}
+                            src={getImageUrl(feat.gallery && feat.gallery[0] ? feat.gallery[0] : feat.heroImage)}
                             alt={feat.blogAuthor || 'Guide'}
                             style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover' }}
                           />
@@ -438,7 +450,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                         style={{ cursor: 'pointer', overflow: 'hidden', borderRadius: '12px', marginBottom: '20px', boxShadow: '0 4px 16px rgba(0,0,0,0.05)', aspectRatio: '16 / 9' }}
                       >
                         <img
-                          src={tour.heroImage}
+                          src={getImageUrl(tour.heroImage)}
                           alt={tour.title}
                           style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
                           onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
@@ -465,10 +477,11 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', paddingTop: '16px', borderTop: '1px solid rgba(26,23,20,0.08)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           <img
-                            src={tour.gallery && tour.gallery[0] ? tour.gallery[0] : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop'}
+                            src={getImageUrl(tour.gallery && tour.gallery[0] ? tour.gallery[0] : tour.heroImage)}
                             alt={tour.blogAuthor || 'Guide'}
                             style={{ width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover' }}
                           />
+
                           <div style={{ fontSize: '14px', fontWeight: 700, color: '#1a1714' }}>
                             {tour.blogAuthor || '4U Editorial'}
                           </div>
@@ -504,8 +517,9 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
                 {/* Photo Frame (Scenic Landscape) */}
                 <div style={{ position: 'relative', aspectRatio: '16 / 10', overflow: 'hidden', cursor: 'pointer' }} onClick={() => onNavigate(`/sanpham/${tour.slug}`)}>
-                  <img src={tour.heroImage} alt={tour.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                  <img src={getImageUrl(tour.heroImage)} alt={tour.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                   <div style={{ position: 'absolute', top: '14px', left: '14px', background: 'rgba(26,23,20,0.85)', color: '#f7f5f0', fontSize: '14px', fontWeight: 600, letterSpacing: '0.04em', padding: '5px 14px', borderRadius: '16px' }}>
+
                     {tour.city}
                   </div>
                   <button

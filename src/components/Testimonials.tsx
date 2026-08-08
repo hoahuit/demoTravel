@@ -1,27 +1,35 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ScrollReveal from './ScrollReveal';
+import { fetchSectionItemsApi, getImageUrl } from '../services/apiService';
+import { TESTIMONIALS_DATA, syncTestimonialsDataFromApi } from '../data/testimonialsData';
 import './Testimonials.css';
 
-interface TestimonialData {
-  name: string;
-  role: string;
-  text: string;
-  color: string;
-}
 
-const TESTIMONIALS_DATA: TestimonialData[] = [
+const DEFAULT_TESTIMONIALS = [
   { name: "Trần Bích Ngọc", role: "Gia Đình Nhiều Thế Hệ", text: "Chuyến đi trọn vẹn niềm vui cho cả 3 thế hệ gia đình tôi. Resort có không gian tĩnh lặng, đồ ăn hữu cơ tươi ngon và hỗ trợ xe nôi chu đáo.", color: "#1E4A3D" },
   { name: "Chị Telesia Phạm", role: "Gói Combo Gia Đình Phú Quốc", text: "4U Retreat lo từng chi tiết nhỏ nhất cho gia đình tôi. Mọi thủ tục nhanh chóng, tinh tế và riêng tư tuyệt đối.", color: "#B08A46" },
   { name: "Elena R.", role: "Du Khách Tự Túc (Solo Traveler)", text: "Tour trekking Sapa bản địa chân thực và rất an toàn cho nữ du khách đi một mình. Rất tiến cử 4U Retreat cho các bạn du lịch tự túc!", color: "#2E86AB" },
-  { name: "Hassan Ali", role: "Khách Hàng Expat", text: "Trải nghiệm vượt xa mong đợi của khách nước ngoài như tôi. Mọi thủ tục nhanh chóng, tinh tế và riêng tư tuyệt đối.", color: "#0C2620" },
-  { name: "Lê Anh Tuấn", role: "Giám Đốc Sáng Tạo", text: "Được tận hưởng những ngày ngắt kết nối với công nghệ giữa thiên nhiên ngập tràn năng lượng. Cảm ơn 4U Retreat vì trải nghiệm tuyệt vời!", color: "#B7C9AE" },
-  { name: "Đoàn DN Củ Chi", role: "Team Building Doanh Nghiệp", text: "Đoàn doanh nghiệp của chúng tôi đã có trải nghiệm tuyệt vời với hoạt động hái rau và nấu ăn tại Củ Chi. Đội ngũ 4U phục vụ cực kỳ chu đáo.", color: "#1E4A3D" },
-  { name: "Nguyễn Hải Yến", role: "Hành Trình Di Sản Hội An – Huế", text: "Hành trình di sản Hội An – Huế được thiết kế riêng với hướng dẫn viên kiến thức uyên thâm và những góc nhìn rất khác biệt.", color: "#2E86AB" },
-  { name: "Minh Khuê", role: "Cặp Đôi Honeymoon Đà Lạt", text: "Không gian riêng tư, lãng mạn giữa đồi thông. Từng chi tiết nhỏ đều được chăm chút khiến chuyến đi trở nên đáng nhớ.", color: "#B08A46" }
+  { name: "Hassan Ali", role: "Khách Hàng Expat", text: "Trải nghiệm vượt xa mong đợi của khách nước ngoài như tôi. Mọi thủ tục nhanh chóng, tinh tế và riêng tư tuyệt đối.", color: "#0C2620" }
 ];
 
-
 export default function Testimonials() {
+  const [list, setList] = useState<any[]>(TESTIMONIALS_DATA.length > 0 ? TESTIMONIALS_DATA : DEFAULT_TESTIMONIALS);
+
+  useEffect(() => {
+    fetchSectionItemsApi('testimonials').then((res) => {
+      if (Array.isArray(res) && res.length > 0) {
+        syncTestimonialsDataFromApi(res);
+        const mapped = res.map((item: any) => ({
+          name: item.name || 'Khách hàng 4U',
+          role: item.role || item.occupation || 'Hành khách Retreat',
+          text: item.text || item.comment || 'Dịch vụ vô cùng tuyệt vời!',
+          color: item.color || '#1E4A3D'
+        }));
+        setList(mapped);
+      }
+    });
+  }, []);
+
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -35,7 +43,7 @@ export default function Testimonials() {
   const activeCardIndexRef = useRef<number>(0);
   const singleSetWidthRef = useRef<number>(0);
 
-  const doubleTestimonials = [...TESTIMONIALS_DATA, ...TESTIMONIALS_DATA];
+  const doubleTestimonials = [...list, ...list];
   const speed = 0.55;
 
   const getInitials = (name: string) => {
@@ -48,9 +56,9 @@ export default function Testimonials() {
 
   useEffect(() => {
     const measure = () => {
-      if (cardsRef.current[0] && cardsRef.current[TESTIMONIALS_DATA.length]) {
+      if (cardsRef.current[0] && cardsRef.current[list.length]) {
         const first = cardsRef.current[0];
-        const midCard = cardsRef.current[TESTIMONIALS_DATA.length];
+        const midCard = cardsRef.current[list.length];
         if (first && midCard) {
           singleSetWidthRef.current = midCard.offsetLeft - first.offsetLeft;
         }
@@ -108,7 +116,7 @@ export default function Testimonials() {
       window.removeEventListener('resize', measure);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [TESTIMONIALS_DATA.length]);
+  }, [list.length]);
 
   return (
     <section
@@ -198,9 +206,14 @@ export default function Testimonials() {
 
                   {/* Person Profile */}
                   <div className="person">
-                    <div className="testimonial-avatar" style={{ background: t.color }}>
-                      {getInitials(t.name)}
-                    </div>
+                    {t.avatar ? (
+                      <img src={getImageUrl(t.avatar)} alt={t.name} style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover' }} />
+                    ) : (
+                      <div className="testimonial-avatar" style={{ background: t.color }}>
+                        {getInitials(t.name)}
+                      </div>
+                    )}
+
                     <div className="who">
                       <strong>
                         {t.name}

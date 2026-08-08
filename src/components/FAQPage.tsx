@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
-import { FAQ_DATA } from '../data/faqData';
+import React, { useState, useEffect } from 'react';
+import { FAQ_DATA, syncFaqDataFromApi, FAQItem } from '../data/faqData';
+import { fetchSectionItemsApi } from '../services/apiService';
 import { HelpCircle, ChevronDown, Search } from 'lucide-react';
 
 export default function FAQPage() {
-  const [openId, setOpenId] = useState<string | null>(FAQ_DATA[0].id);
+  const [faqs, setFaqs] = useState<FAQItem[]>(FAQ_DATA);
+
+  useEffect(() => {
+    fetchSectionItemsApi('faq').then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        syncFaqDataFromApi(data);
+        setFaqs([...data]);
+      }
+    });
+  }, []);
+
+  const [openId, setOpenId] = useState<string | null>(faqs[0]?.id || null);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const filteredFaqs = FAQ_DATA.filter(f =>
+  const filteredFaqs = faqs.filter(f =>
     f.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
     f.answer.toLowerCase().includes(searchQuery.toLowerCase())
   );
