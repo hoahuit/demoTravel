@@ -9,11 +9,26 @@ import PartnerLogos from './PartnerLogos';
 
 export interface ProductDetailProps {
   productSlug?: string;
+  customTourData?: TourPackage;
+  hideTestimonials?: boolean;
   onBackHome?: () => void;
   onOpenBooking?: (tourData?: any) => void;
 }
 
-export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBackHome, onOpenBooking }: ProductDetailProps) {
+const parseArrayField = (val: any): string[] => {
+  if (!val) return [];
+  if (Array.isArray(val)) return val.map(s => String(s || '').trim()).filter(Boolean);
+  if (typeof val === 'string') {
+    try {
+      const parsed = JSON.parse(val);
+      if (Array.isArray(parsed)) return parsed.map(s => String(s || '').trim()).filter(Boolean);
+    } catch (e) {}
+    return val.split(',').map(s => s.trim()).filter(Boolean);
+  }
+  return [];
+};
+
+export default function ProductDetail({ productSlug = 'retreat-chua-lanh', customTourData, hideTestimonials = false, onBackHome, onOpenBooking }: ProductDetailProps) {
   const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
 
   useEffect(() => {
@@ -41,7 +56,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
   const normalizedSlug = normalizeSlug(productSlug);
   const tourFound = tours.find(t => t.slug === normalizedSlug) || tours.find(t => t.slug.includes(normalizedSlug) || normalizedSlug.includes(t.slug));
 
-  const product = tourFound || tours[0] || null;
+  const product = customTourData || tourFound || tours[0] || null;
   if (!product) {
     return (
       <div style={{ minHeight: '100vh', background: '#f4f5f3', color: '#1b1b1a', padding: '40px 24px' }}>
@@ -52,6 +67,8 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
       </div>
     );
   }
+
+  const parsedInclusions = parseArrayField(product.included).filter(s => !s.includes('Ngăn cách dấu phẩy'));
 
   const pageData = {
     slug: product.slug,
@@ -67,7 +84,16 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
     type: product.category,
     priceText: `${product.price.toLocaleString('vi-VN')} VNĐ`,
     priceAdult: product.price,
-    priceChild: Math.round(product.price * 0.5),
+    childPriceText: product.childPrice && product.childPrice > 0
+      ? `${product.childPrice.toLocaleString('vi-VN')} VNĐ`
+      : `${Math.round(product.price * 0.7).toLocaleString('vi-VN')} VNĐ`,
+    infantPriceText: product.infantPrice && product.infantPrice > 0
+      ? `${product.infantPrice.toLocaleString('vi-VN')} VNĐ`
+      : 'MIỄN PHÍ',
+    adultNote: product.adultNote || 'Bao gồm xe VIP Limousine, Resort cao cấp, 100% bữa ăn & liệu trình thiền định',
+    childNote: product.childNote || 'Hưởng giường riêng & suất ăn trọn gói dành cho trẻ em',
+    infantNote: product.infantNote || 'Ngồi cùng bố mẹ, miễn phí vé tham quan & phụ thu lưu trú',
+    bookingPolicyNotes: product.bookingPolicyNotes || (product.notes && product.notes.length > 0 ? product.notes.join('. ') : 'Đổi ngày khởi hành miễn phí 01 lần trước 07 ngày. Đã bao gồm bảo hiểm du lịch trọn gói mức bồi thường tối đa 100.000.000 VNĐ/vụ.'),
     experienceTitle: product.subtitle || `Trải nghiệm ${product.category} tại ${product.city}`,
     experiencePara1: product.highlights && product.highlights.length > 0 ? product.highlights.join('. ') : product.subtitle,
     experiencePara2: product.blogStorySnippet || product.subtitle || `Hành trình ${product.title} tại ${product.city} với trải nghiệm trọn gói đặc sắc.`,
@@ -82,11 +108,13 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
       transportAndCulinary: item.transportAndCulinary ?? [],
       attractions: item.attractions ?? []
     })),
-    inclusions: product.included && product.included.length > 0 ? product.included : [
-      `Lưu trú cao cấp tại ${product.city}`,
-      'Toàn bộ các bữa ăn thực dưỡng & xe đưa đón cao cấp',
-      'Hướng dẫn viên & Chuyên gia tư vấn 1:1'
-    ],
+    inclusions: parsedInclusions.length > 0
+      ? parsedInclusions
+      : [
+        `Lưu trú cao cấp tại ${product.city || 'Resort 5 sao'}`,
+        'Toàn bộ các bữa ăn thực dưỡng & xe đưa đón cao cấp',
+        'Hướng dẫn viên & Chuyên gia tư vấn 1:1'
+      ],
     mapLocation: product.destinationMap || product.city,
     mapCoords: product.destinationMap || product.city,
     reviewScore: `${product.rating} / 5.0`,
@@ -630,17 +658,17 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                         <tr>
                           <td style={{ fontWeight: '700' }}>Người lớn (Từ 12 tuổi)</td>
                           <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.15rem' }}>{pageData.priceText}</td>
-                          <td style={{ color: '#5b6561' }}>Bao gồm xe VIP Limousine, Resort cao cấp, 100% bữa ăn & liệu trình thiền định</td>
+                          <td style={{ color: '#5b6561' }}>{pageData.adultNote}</td>
                         </tr>
                         <tr>
                           <td style={{ fontWeight: '700' }}>Trẻ em (5 - 11 tuổi)</td>
-                          <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.05rem' }}>5.000.000 VNĐ</td>
-                          <td style={{ color: '#5b6561' }}>Hưởng giường riêng & suất ăn trọn gói dành cho trẻ em</td>
+                          <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.05rem' }}>{pageData.childPriceText}</td>
+                          <td style={{ color: '#5b6561' }}>{pageData.childNote}</td>
                         </tr>
                         <tr>
                           <td style={{ fontWeight: '700' }}>Em bé (&lt; 5 tuổi)</td>
-                          <td style={{ color: '#27ae60', fontWeight: '800', fontSize: '1.05rem' }}>MIỄN PHÍ</td>
-                          <td style={{ color: '#5b6561' }}>Ngồi cùng bố mẹ, miễn phí vé tham quan & phụ thu lưu trú</td>
+                          <td style={{ color: '#27ae60', fontWeight: '800', fontSize: '1.05rem' }}>{pageData.infantPriceText}</td>
+                          <td style={{ color: '#5b6561' }}>{pageData.infantNote}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -659,7 +687,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                   </div>
 
                   <div style={{ background: 'rgba(0, 109, 54, 0.05)', border: '1px dashed #006d36', borderRadius: '16px', padding: '20px 24px', fontSize: '0.95rem', color: '#062c23', lineHeight: '1.6' }}>
-                    <strong>Chính sách bảo lưu & Đổi ngày đặc quyền:</strong> Đổi ngày khởi hành miễn phí 01 lần trước 07 ngày. Đã bao gồm bảo hiểm du lịch trọn gói mức bồi thường tối đa 100.000.000 VNĐ/vụ.
+                    <strong>Chính sách bảo lưu & Đổi ngày đặc quyền:</strong> {pageData.bookingPolicyNotes}
                   </div>
                 </div>
               )}
@@ -810,12 +838,12 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
               </div>
             )}
 
-          </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Khách Hàng Nói Gì Về Trải Nghiệm 4U Retreat */}
-        <Testimonials />
-      </ScrollExpandMedia>
+      {/* Khách Hàng Nói Gì Về Trải Nghiệm 4U Retreat */}
+      {!hideTestimonials && <Testimonials />}
+    </ScrollExpandMedia>
 
     </div>
   );

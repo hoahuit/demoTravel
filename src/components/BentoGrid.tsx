@@ -3,6 +3,7 @@ import ScrollReveal from './ScrollReveal';
 import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
 import { fetchToursApi } from '../services/apiService';
 import { ChevronDown, ArrowRight } from 'lucide-react';
+import EmptyState from './ui/EmptyState';
 
 export interface BentoGridProps {
   onOpenBooking?: () => void;
@@ -22,8 +23,13 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
     });
   }, []);
 
-  // Map safely over tours list directly
-  const items = tours.map((tour) => ({
+  // Filter for Sản Phẩm Sắp Khởi Hành (isFeatured === true AND NOT isExclusive)
+  let featuredTours = tours.filter((t) => t.isFeatured && !t.isExclusive);
+  if (featuredTours.length === 0) {
+    featuredTours = tours.filter((t) => !t.isExclusive);
+  }
+
+  const items = featuredTours.map((tour) => ({
     id: tour.id,
     slug: tour.slug,
     image: tour.heroImage,
@@ -280,16 +286,23 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
         </ScrollReveal>
 
         {/* ── 2. BALANCED 2-COLUMN GRID (4 ITEMS INITIAL) ── */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '52px 38px',
-            width: '100%'
-          }}
-          className="editorial-grid-wrapper"
-        >
-          {visibleItems.map((item, idx) => (
+        {items.length === 0 ? (
+          <EmptyState
+            title="Chưa có sản phẩm sắp khởi hành"
+            description="Hiện tại chưa có tour nào phù hợp ở danh mục Sắp khởi hành. Hãy quay lại sau để cập nhật mới nhất!"
+            transparent={true}
+          />
+        ) : (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '52px 38px',
+              width: '100%'
+            }}
+            className="editorial-grid-wrapper"
+          >
+            {visibleItems.map((item, idx) => (
             <ScrollReveal key={item.id} delay={idx * 120} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <div
                 onClick={() => {
@@ -332,6 +345,7 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
             </ScrollReveal>
           ))}
         </div>
+        )}
 
         {/* XEM THÊM BUTTON */}
         {items.length > 4 && (

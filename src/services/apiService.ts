@@ -56,6 +56,30 @@ async function compressImageFile(file: File, maxDimension = 1920, quality = 0.85
   });
 }
 
+// Helper to extract descriptive error message from LoopBack 4 or Express REST API response
+export async function getApiErrorMessage(response: Response): Promise<string> {
+  try {
+    const json = await response.json();
+    if (json) {
+      if (json.error && typeof json.error === 'object' && json.error.message) {
+        return json.error.message;
+      }
+      if (json.error && typeof json.error === 'string') {
+        return json.error;
+      }
+      if (json.message && typeof json.message === 'string') {
+        return json.message;
+      }
+      if (json.details && Array.isArray(json.details) && json.details.length > 0) {
+        return json.details[0].message || JSON.stringify(json.details);
+      }
+    }
+  } catch (e) {
+    // If response body is not JSON
+  }
+  return `Lỗi HTTP ${response.status}: ${response.statusText || 'Yêu cầu thất bại'}`;
+}
+
 // Upload image file or base64 to backend server
 export async function uploadImageApi(
   fileInput: File | { filename: string; data: string }
@@ -77,7 +101,8 @@ export async function uploadImageApi(
   });
 
   if (!response.ok) {
-    throw new Error('Upload failed');
+    const errMsg = await getApiErrorMessage(response);
+    throw new Error(errMsg);
   }
 
   return await response.json();
@@ -109,6 +134,7 @@ export function getLb4Endpoint(section: string): string {
 
 export function parseTourJsonFields(tour: any) {
   if (!tour) return tour;
+
   const arrayFields = [
     'highlights', 'itinerary', 'gallery', 'included', 'excluded',
     'departureDates', 'notes', 'travelTips', 'faq', 'reviews'
@@ -306,6 +332,11 @@ export async function saveTourApi(identifier: string | number, tourData: any) {
   // Invalidate query cache on mutation so next fetch gets fresh MS SQL data
   invalidateQueryCache('tours');
 
+  if (!response.ok) {
+    const errMsg = await getApiErrorMessage(response);
+    throw new Error(errMsg);
+  }
+
   if (response.status === 204) return { success: true };
   return await response.json();
 }
@@ -326,6 +357,11 @@ export async function createTourApi(tourData: any) {
   // Invalidate query cache on mutation
   invalidateQueryCache('tours');
 
+  if (!response.ok) {
+    const errMsg = await getApiErrorMessage(response);
+    throw new Error(errMsg);
+  }
+
   return await response.json();
 }
 
@@ -344,6 +380,11 @@ export async function deleteTourApi(id: number | string) {
 
   // Invalidate query cache on mutation
   invalidateQueryCache('tours');
+
+  if (!response.ok) {
+    const errMsg = await getApiErrorMessage(response);
+    throw new Error(errMsg);
+  }
 
   return response.ok;
 }
@@ -427,6 +468,10 @@ export async function saveSectionItemApi(section: string, action: 'create' | 'up
   // Invalidate query cache for this section on mutation
   invalidateQueryCache(`section:${section}`);
 
+  if (!response.ok) {
+    const errMsg = await getApiErrorMessage(response);
+    throw new Error(errMsg);
+  }
 
   if (response.status === 204) {
     return { success: true, action };

@@ -3,6 +3,7 @@ import ScrollReveal from './ScrollReveal';
 import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
 import { fetchToursApi, getImageUrl } from '../services/apiService';
 import { Star, Sparkles, MapPin, ArrowRight, ChevronDown } from 'lucide-react';
+import EmptyState from './ui/EmptyState';
 
 
 export interface KhongTheBoLoSectionProps {
@@ -23,8 +24,8 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
     });
   }, []);
 
-  // Filter top rated & unmissable tours
-  const unmissableTours = tours.filter((tour) => tour.rating >= 4.96 || tour.isHot || tour.isFeatured || tours.length <= 4);
+  // Filter unmissable HOT tours (excluding exclusive-only tours)
+  const unmissableTours = tours.filter((tour) => tour.isHot && !tour.isExclusive);
   const visibleTours = showAll ? unmissableTours : unmissableTours.slice(0, 4);
 
   return (
@@ -269,16 +270,23 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
         </ScrollReveal>
 
         {/* 2-COLUMN CARD GRID (4 ITEMS INITIAL) */}
-        <div
-          className="ktbl-grid"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '52px 38px',
-            width: '100%'
-          }}
-        >
-          {visibleTours.map((tour, idx) => (
+        {unmissableTours.length === 0 ? (
+          <EmptyState
+            title="Chưa có tour thuộc mục KHÔNG THỂ BỎ LỠ"
+            description="Hiện tại chưa có hành trình nào được đánh dấu Không Thể Bỏ Lỡ. Hãy quay lại sau để trải nghiệm!"
+            transparent={true}
+          />
+        ) : (
+          <div
+            className="ktbl-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: '24px',
+              alignItems: 'stretch'
+            }}
+          >
+            {visibleTours.map((tour, idx) => (
             <ScrollReveal key={tour.id} delay={idx * 120} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <div
                 className="ktbl-card"
@@ -336,6 +344,7 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
             </ScrollReveal>
           ))}
         </div>
+        )}
 
         {/* XEM THÊM BUTTON */}
         {unmissableTours.length > 4 && (

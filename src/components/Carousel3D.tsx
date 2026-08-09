@@ -45,11 +45,14 @@ export default function Carousel3D({ onOpenBooking, onNavigate }: Carousel3DProp
   }, []);
 
   const CARDS: CardItem[] = useMemo(() => {
-    if (tours.length > 0) {
-      return tours.map((t, idx) => ({
+    // Filter strictly for Retreats ĐỘC QUYỀN (isExclusive === true)
+    const exclusiveTours = tours.filter((t) => t.isExclusive === true);
+
+    if (exclusiveTours.length > 0) {
+      return exclusiveTours.map((t, idx) => ({
         id: idx + 1,
         slug: t.slug,
-        tag: t.isExclusive ? "Retreat ĐỘC QUYỀN" : t.isHot ? "Retreat HOT" : "KHÔNG THỂ BỎ LỠ",
+        tag: "RETREAT ĐỘC QUYỀN",
         title: t.title,
         subtitle: `${t.city} • ${t.category}`,
         footer: "4U Wellness Signature",
@@ -62,7 +65,7 @@ export default function Carousel3D({ onOpenBooking, onNavigate }: Carousel3DProp
         description: t.subtitle || "Hành trình nghỉ dưỡng độc bản may đo độc quyền.",
       }));
     }
-    return STATIC_CARDS;
+    return [];
   }, [tours]);
 
   const [position, setPosition] = useState<number>(0);
