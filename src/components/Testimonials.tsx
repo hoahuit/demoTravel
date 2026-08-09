@@ -30,6 +30,16 @@ export default function Testimonials() {
     });
   }, []);
 
+  const normalizedList = React.useMemo(() => {
+    return list.map((item: any) => ({
+      ...item,
+      name: item?.name || 'Khách Hàng 4U',
+      role: item?.role || item?.occupation || 'Thành Viên Retreat',
+      text: item?.text || item?.comment || 'Trải nghiệm vô cùng tuyệt vời!',
+      color: item?.color || '#1E4A3D',
+    }));
+  }, [list]);
+
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -43,22 +53,23 @@ export default function Testimonials() {
   const activeCardIndexRef = useRef<number>(0);
   const singleSetWidthRef = useRef<number>(0);
 
-  const doubleTestimonials = [...list, ...list];
+  const doubleTestimonials = [...normalizedList, ...normalizedList];
   const speed = 0.55;
 
-  const getInitials = (name: string) => {
-    const parts = name.split(' ').filter(w => w.length > 1);
+  const getInitials = (name?: string) => {
+    if (!name || typeof name !== 'string' || !name.trim()) return '4U';
+    const parts = name.trim().split(' ').filter(w => w.length > 0);
     if (parts.length >= 2) {
       return (parts[parts.length - 2][0] + parts[parts.length - 1][0]).toUpperCase();
     }
-    return name[0].toUpperCase();
+    return parts[0] ? parts[0][0].toUpperCase() : '4U';
   };
 
   useEffect(() => {
     const measure = () => {
-      if (cardsRef.current[0] && cardsRef.current[list.length]) {
+      if (cardsRef.current[0] && cardsRef.current[normalizedList.length]) {
         const first = cardsRef.current[0];
-        const midCard = cardsRef.current[list.length];
+        const midCard = cardsRef.current[normalizedList.length];
         if (first && midCard) {
           singleSetWidthRef.current = midCard.offsetLeft - first.offsetLeft;
         }

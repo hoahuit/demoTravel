@@ -13,8 +13,8 @@
   --admin-card-border: rgba(6, 27, 14, 0.08);
   --admin-input-bg: #f3f4f2;
   --admin-input-border: rgba(115, 121, 115, 0.25);
-  --admin-font-serif: 'Libre Caslon Text', Georgia, serif;
-  --admin-font-sans: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --admin-font-serif: 'Playfair Display', 'Cormorant Garamond', 'Libre Caslon Text', Georgia, serif;
+  --admin-font-sans: 'Be Vietnam Pro', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --admin-shadow-card: 0 4px 24px rgba(6, 27, 14, 0.04);
   --admin-shadow-hover: 0 8px 32px rgba(6, 27, 14, 0.08);
 }
@@ -165,9 +165,11 @@
 }
 
 .serene-container-inner {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 32px 32px 120px 32px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 28px 40px 120px 40px;
+  box-sizing: border-box;
 }
 
 /* STICKY TOP ACTION BAR */

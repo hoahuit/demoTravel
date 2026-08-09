@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
 import { fetchToursApi, getImageUrl } from '../services/apiService';
+import EmptyState from './ui/EmptyState';
 
 import {
   Search, Star, Clock, Images, X, ArrowRight, Sparkles, BookOpen,
@@ -136,31 +137,69 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
   // Cities List
   const cities = ['All', 'Hồ Lắk', 'Nam Cát Tiên', 'Vịnh Hạ Long', 'Yên Tử, Quảng Ninh', 'Sapa, Lao Cai', 'Hà Giang'];
 
+  // Helper to match series category automatically via category & keywords in title/subtitle/slug (Zero DB migration needed)
+  const matchSeriesType = (tour: any, targetType: string): boolean => {
+    const cat = (tour.category || '').toLowerCase();
+    const title = (tour.title || '').toLowerCase();
+    const slug = (tour.slug || '').toLowerCase();
+    const sub = (tour.subtitle || '').toLowerCase();
+    const fullText = `${cat} ${title} ${slug} ${sub}`;
+
+    if (targetType === 'chua-lanh' || targetType === 'healing') {
+      return cat === 'healing' || cat === 'wellness' || fullText.includes('chữa lành') || fullText.includes('thiền');
+    }
+    if (targetType === 'bao-ton' || targetType === 'conservation') {
+      return cat === 'conservation' || cat === 'bảo tồn' || fullText.includes('bảo tồn') || fullText.includes('nam cát tiên');
+    }
+    if (targetType === 'thien-nhien' || targetType === 'nature') {
+      return cat === 'nature' || cat === 'thiên nhiên' || fullText.includes('thiên nhiên') || fullText.includes('rừng');
+    }
+    if (targetType === 'thien-nguyen' || targetType === 'volunteer') {
+      return cat === 'volunteer' || cat === 'voluntourism' || fullText.includes('thiện nguyện') || fullText.includes('cộng đồng');
+    }
+    if (targetType === 'binh-yen-tren-cao-nguyen' || targetType === 'highland') {
+      return cat === 'highland' || fullText.includes('cao nguyên') || fullText.includes('bình yên') || fullText.includes('lắk');
+    }
+    if (targetType === 'tinh-lang-giua-dai-ngan' || targetType === 'deepforest') {
+      return cat === 'deepforest' || fullText.includes('đại ngàn') || fullText.includes('tĩnh lặng') || fullText.includes('sapa');
+    }
+    if (targetType === 'tim-lai-ket-noi' || targetType === 'reconnection') {
+      return cat === 'reconnection' || fullText.includes('kết nối') || fullText.includes('tìm lại');
+    }
+    return false;
+  };
+
   // Filtered & Sorted Tours
   const filteredTours = useMemo(() => {
-    return tours.filter(tour => {
+    const list = tours.filter(tour => {
       let matchesPath = true;
       if (currentPath.includes('/series-retreat/chua-lanh')) {
-        matchesPath = tour.seriesType === 'chua-lanh' || tour.category === 'Wellness';
+        matchesPath = matchSeriesType(tour, 'chua-lanh');
       } else if (currentPath.includes('/series-retreat/bao-ton')) {
-        matchesPath = tour.seriesType === 'bao-ton';
+        matchesPath = matchSeriesType(tour, 'bao-ton');
       } else if (currentPath.includes('/series-retreat/thien-nhien')) {
-        matchesPath = tour.seriesType === 'thien-nhien' || tour.category === 'Luxury';
+        matchesPath = matchSeriesType(tour, 'thien-nhien');
       } else if (currentPath.includes('/series-retreat/thien-nguyen')) {
-        matchesPath = tour.seriesType === 'thien-nguyen';
+        matchesPath = matchSeriesType(tour, 'thien-nguyen');
+      } else if (currentPath.includes('/retreat/hot/binh-yen-tren-cao-nguyen')) {
+        matchesPath = matchSeriesType(tour, 'binh-yen-tren-cao-nguyen');
+      } else if (currentPath.includes('/retreat/hot/tinh-lang-giua-dai-ngan')) {
+        matchesPath = matchSeriesType(tour, 'tinh-lang-giua-dai-ngan');
+      } else if (currentPath.includes('/retreat/hot/tim-lai-ket-noi')) {
+        matchesPath = matchSeriesType(tour, 'tim-lai-ket-noi');
       } else if (currentPath.includes('/retreat/docquyen') || currentPath.includes('/retreats-doc-quyen')) {
-        matchesPath = tour.isExclusive === true || ['binh-yen-tren-cao-nguyen', 'tinh-lang-giua-dai-ngan', 'tim-lai-ket-noi'].includes(tour.slug) || tours.length <= 4;
+        matchesPath = tour.isExclusive === true;
       } else if (currentPath.includes('/retreat/retreathot') || currentPath.includes('/retreat-hot')) {
-        matchesPath = tour.isHot === true || ['binh-yen-tren-cao-nguyen', 'tinh-lang-giua-dai-ngan', 'tim-lai-ket-noi'].includes(tour.slug) || tours.length <= 4;
+        matchesPath = tour.isHot === true;
       } else if (currentPath.includes('/retreat/sapkhoihanh') || currentPath.includes('/sap-khoi-hanh')) {
-        matchesPath = (tour.departureDates && tour.departureDates.length > 0) || tours.length <= 4;
+        matchesPath = tour.isFeatured === true;
       } else if (currentPath.includes('/retreat/khongthebolo') || currentPath.includes('/khong-the-khong-co')) {
-        matchesPath = tour.rating >= 4.9 || tours.length <= 4;
+        matchesPath = tour.isHot === true;
       } else if (currentPath.includes('/retreat/uudaigiochot') || currentPath.includes('/uu-dai-gio-chot') || currentPath.includes('/uu-dai') || currentPath.includes('/promotions')) {
-        matchesPath = tour.isPromotion === true || (tour.discountPercentage && tour.discountPercentage > 0) || tours.length <= 4;
+        matchesPath = tour.isPromotion === true || (tour.originalPrice !== undefined && tour.originalPrice > tour.price);
       }
 
-      const matchesSeries = selectedSeries === 'All' || tour.seriesType === selectedSeries;
+      const matchesSeries = selectedSeries === 'All' || matchSeriesType(tour, selectedSeries);
       const matchesCity = selectedCity === 'All' || tour.city.includes(selectedCity);
       const matchesSearch =
         searchQuery.trim() === '' ||
@@ -170,11 +209,12 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
         (tour.blogStorySnippet && tour.blogStorySnippet.toLowerCase().includes(searchQuery.toLowerCase()));
 
       return matchesPath && matchesSeries && matchesCity && matchesSearch;
-    }).sort((a, b) => {
+    });
+
+    return [...list].sort((a, b) => {
       if (sortBy === 'priceAsc') return a.price - b.price;
       if (sortBy === 'priceDesc') return b.price - a.price;
-      if (sortBy === 'rating') return b.rating - a.rating;
-      return 0;
+      return b.rating - a.rating;
     });
   }, [tours, currentPath, selectedSeries, selectedCity, searchQuery, sortBy]);
 
@@ -327,20 +367,13 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
         {/* IF NO RESULTS */}
         {filteredTours.length === 0 && (
-          <div style={{ textAlign: 'center', margin: '0 48px', padding: '80px 24px', background: '#ffffff', borderRadius: '24px', border: '1px solid rgba(26,23,20,0.08)' }}>
-            <h3 style={{ fontSize: '30px', fontWeight: 700, color: '#1a1714', margin: '0 0 8px 0' }}>
-              Không tìm thấy điểm đến phù hợp
-            </h3>
-            <p style={{ fontSize: '17px', color: '#7a6f63', margin: '0 0 24px 0' }}>
-              Rất tiếc, chưa có bài viết nào phù hợp với bộ lọc của bạn. Hãy thử chọn danh mục hoặc tìm kiếm khác.
-            </p>
-            <button
-              onClick={() => { setSelectedSeries('All'); setSelectedCity('All'); setSearchQuery(''); }}
-              style={{ background: '#1a1714', color: '#f7f5f0', border: 'none', padding: '12px 28px', borderRadius: '24px', fontSize: '14px', cursor: 'pointer' }}
-            >
-              Đặt Lại Bộ Lọc
-            </button>
-          </div>
+          <EmptyState
+            title="Không tìm thấy điểm đến phù hợp"
+            description="Rất tiếc, chưa có bài viết hoặc tour retreat nào phù hợp với bộ lọc của bạn. Hãy thử chọn danh mục hoặc tìm kiếm khác."
+            actionLabel="Đặt Lại Bộ Lọc"
+            onAction={() => { setSelectedSeries('All'); setSelectedCity('All'); setSearchQuery(''); }}
+            transparent={true}
+          />
         )}
 
         {/* ── LAYOUT MODE A: DẠNG BLOG V0 / BASEHUB EDITORIAL (FEATURED + MORE POSTS GRID + NEWSLETTER) ── */}

@@ -2,7 +2,7 @@ export interface TourItineraryDay {
   day: number;
   title: string;
   description: string;
-  image: string;
+  image?: string;
   activities: string[];
   transportAndCulinary?: string[];
   attractions?: string[];
@@ -24,7 +24,7 @@ export interface TourPackage {
   slug: string;
   title: string;
   subtitle: string;
-  category: 'Wellness' | 'Luxury' | 'Honeymoon' | 'Family' | 'Promotion' | 'New' | 'Domestic' | 'International';
+  category: 'Nature' | 'Healing' | 'Conservation' | 'Volunteer' | 'Highland' | 'DeepForest' | 'Reconnection' | 'Wellness' | 'Exclusive' | 'Hot' | 'Luxury' | 'Family' | 'Promotion' | 'New' | 'Domestic' | 'International' | string;
   country: string;
   city: string;
   duration: string;
@@ -35,6 +35,8 @@ export interface TourPackage {
   transportation: string;
   price: number;
   originalPrice?: number;
+  childPrice?: number;
+  infantPrice?: number;
   discountPercentage?: number;
   rating: number;
   reviewsCount: number;
@@ -45,20 +47,23 @@ export interface TourPackage {
   isExclusive?: boolean;
   highlights: string[];
   itinerary: TourItineraryDay[];
-  included: string[];
-  excluded: string[];
-  notes: string[];
+  included?: string[];
+  excluded?: string[];
+  notes?: string[];
+  bookingPolicyNotes?: string;
+  adultNote?: string;
+  childNote?: string;
+  infantNote?: string;
   heroImage: string;
   gallery: string[];
-  destinationMap: string;
-  travelTips: string[];
-  faq: { question: string; answer: string }[];
-  reviews: TourReview[];
+  destinationMap?: string;
+  travelTips?: string[];
+  faq?: { question: string; answer: string }[];
+  reviews?: TourReview[];
   blogReadTime?: string;
   blogAuthor?: string;
   blogAuthorRole?: string;
   blogStorySnippet?: string;
-  seriesType?: 'chua-lanh' | 'bao-ton' | 'thien-nhien' | 'thien-nguyen';
 }
 
 // 100% REAL DATA STORE (EMPTY UNTIL LOADED FROM LOOPBACK 4 / SQL SERVER)
