@@ -137,36 +137,9 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
   // Cities List
   const cities = ['All', 'Hồ Lắk', 'Nam Cát Tiên', 'Vịnh Hạ Long', 'Yên Tử, Quảng Ninh', 'Sapa, Lao Cai', 'Hà Giang'];
 
-  // Helper to match series category automatically via category & keywords in title/subtitle/slug (Zero DB migration needed)
+  // Tour visibility is controlled exclusively by the category slugs assigned in `categories`.
   const matchSeriesType = (tour: any, targetType: string): boolean => {
-    const cat = (tour.category || '').toLowerCase();
-    const title = (tour.title || '').toLowerCase();
-    const slug = (tour.slug || '').toLowerCase();
-    const sub = (tour.subtitle || '').toLowerCase();
-    const fullText = `${cat} ${title} ${slug} ${sub}`;
-
-    if (targetType === 'chua-lanh' || targetType === 'healing') {
-      return cat === 'healing' || cat === 'wellness' || fullText.includes('chữa lành') || fullText.includes('thiền');
-    }
-    if (targetType === 'bao-ton' || targetType === 'conservation') {
-      return cat === 'conservation' || cat === 'bảo tồn' || fullText.includes('bảo tồn') || fullText.includes('nam cát tiên');
-    }
-    if (targetType === 'thien-nhien' || targetType === 'nature') {
-      return cat === 'nature' || cat === 'thiên nhiên' || fullText.includes('thiên nhiên') || fullText.includes('rừng');
-    }
-    if (targetType === 'thien-nguyen' || targetType === 'volunteer') {
-      return cat === 'volunteer' || cat === 'voluntourism' || fullText.includes('thiện nguyện') || fullText.includes('cộng đồng');
-    }
-    if (targetType === 'binh-yen-tren-cao-nguyen' || targetType === 'highland') {
-      return cat === 'highland' || fullText.includes('cao nguyên') || fullText.includes('bình yên') || fullText.includes('lắk');
-    }
-    if (targetType === 'tinh-lang-giua-dai-ngan' || targetType === 'deepforest') {
-      return cat === 'deepforest' || fullText.includes('đại ngàn') || fullText.includes('tĩnh lặng') || fullText.includes('sapa');
-    }
-    if (targetType === 'tim-lai-ket-noi' || targetType === 'reconnection') {
-      return cat === 'reconnection' || fullText.includes('kết nối') || fullText.includes('tìm lại');
-    }
-    return false;
+    return Array.isArray(tour.categories) && tour.categories.includes(targetType);
   };
 
   // Filtered & Sorted Tours
@@ -187,16 +160,33 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
         matchesPath = matchSeriesType(tour, 'tinh-lang-giua-dai-ngan');
       } else if (currentPath.includes('/retreat/hot/tim-lai-ket-noi')) {
         matchesPath = matchSeriesType(tour, 'tim-lai-ket-noi');
+      } else if (currentPath.startsWith('/retreat-hot/')) {
+        const pathSegments = currentPath.split('/').filter(Boolean);
+        const categorySlug = pathSegments[pathSegments.length - 1];
+        matchesPath = Boolean(categorySlug) && matchSeriesType(tour, categorySlug);
       } else if (currentPath.includes('/retreat/docquyen') || currentPath.includes('/retreats-doc-quyen')) {
-        matchesPath = tour.isExclusive === true;
+        matchesPath = matchSeriesType(tour, 'doc-quyen');
       } else if (currentPath.includes('/retreat/retreathot') || currentPath.includes('/retreat-hot')) {
-        matchesPath = tour.isHot === true;
+        matchesPath = matchSeriesType(tour, 'retreat-hot');
       } else if (currentPath.includes('/retreat/sapkhoihanh') || currentPath.includes('/sap-khoi-hanh')) {
-        matchesPath = tour.isFeatured === true;
+        matchesPath = matchSeriesType(tour, 'sap-khoi-hanh');
       } else if (currentPath.includes('/retreat/khongthebolo') || currentPath.includes('/khong-the-khong-co')) {
-        matchesPath = tour.isHot === true;
+        matchesPath = matchSeriesType(tour, 'khong-the-bo-lo');
       } else if (currentPath.includes('/retreat/uudaigiochot') || currentPath.includes('/uu-dai-gio-chot') || currentPath.includes('/uu-dai') || currentPath.includes('/promotions')) {
-        matchesPath = tour.isPromotion === true || (tour.originalPrice !== undefined && tour.originalPrice > tour.price);
+        matchesPath = matchSeriesType(tour, 'uu-dai-gio-chot');
+      } else if (currentPath.includes('/kollection-4u/new-arrivals')) {
+        matchesPath = matchSeriesType(tour, 'new-arrivals');
+      } else if (currentPath.includes('/kollection-4u/must-have')) {
+        matchesPath = matchSeriesType(tour, 'must-have');
+      } else if (currentPath.includes('/kollection-4u/exclusive')) {
+        matchesPath = matchSeriesType(tour, 'exclusive');
+      } else {
+        // Categories created in Admin use /{parent-slug}/{category-slug} URLs.
+        const segments = currentPath.split('/').filter(Boolean);
+        const categorySlug = segments.length > 1 ? segments[segments.length - 1] : undefined;
+        if (categorySlug && !['tours', 'retreat', 'series-retreat', 'sanpham'].includes(categorySlug)) {
+          matchesPath = matchSeriesType(tour, categorySlug);
+        }
       }
 
       const matchesSeries = selectedSeries === 'All' || matchSeriesType(tour, selectedSeries);

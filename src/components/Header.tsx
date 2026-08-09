@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Search, Menu, X, Phone, ChevronDown, Crown, Zap, Flame, Heart, Leaf, Shield, Sparkles, Compass, BookOpen, Star, HelpCircle, Calendar, Briefcase, ArrowRight, LucideIcon } from 'lucide-react';
+import { fetchMenuCategoriesApi, MenuCategoryItem } from '../services/apiService';
 
 export interface HeaderProps {
   onOpenSearch?: () => void;
@@ -7,6 +8,10 @@ export interface HeaderProps {
   onOpenBooking?: (tourData?: any) => void;
   onOpenCalendar?: () => void;
 }
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  Heart, Shield, Leaf, Sparkles, Compass, BookOpen, Star, HelpCircle, Calendar, Briefcase, Crown, Zap, Flame
+};
 
 interface MenuItem {
   label: string;
@@ -30,6 +35,15 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [mobileExpandedCat, setMobileExpandedCat] = useState<string | null>(null);
+  const [liveCategories, setLiveCategories] = useState<MenuCategoryItem[]>([]);
+
+  useEffect(() => {
+    fetchMenuCategoriesApi().then((cats) => {
+      if (Array.isArray(cats) && cats.length > 0) {
+        setLiveCategories(cats);
+      }
+    }).catch(() => { });
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,75 +63,53 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const fixedBadges = [
-    { label: 'Retreats ĐỘC QUYỀN', href: '/retreat/docquyen', isHighlight: true },
-    { label: 'Sắp Khởi hành', href: '/retreat/sapkhoihanh', isHighlight: false },
-    { label: 'KHÔNG THỂ BỎ LỠ', href: '/retreat/khongthebolo', isHighlight: false },
-    { label: 'Ưu đãi GIỜ CHÓT', href: '/retreat/uudaigiochot', isHighlight: false },
-  ];
-
-  const menuData: MenuCategory[] = [
-    {
-      id: 'series-retreat',
-      title: 'Series Retreat',
-      hasSubmenu: true,
-      href: '/series-retreat',
-      headerTitle: 'Series Retreat',
-      items: [
-        { label: 'Retreat Chữa lành', href: '/series-retreat/chua-lanh', icon: Heart, color: '#4ade80' },
-        { label: 'Retreat Bảo tồn', href: '/series-retreat/bao-ton', icon: Shield, color: '#38bdf8' },
-        { label: 'Retreat Thiên nhiên', href: '/series-retreat/thien-nhien', icon: Leaf, color: '#facc15' },
-        { label: 'Retreat Thiện nguyện', href: '/series-retreat/thien-nguyen', icon: Sparkles, color: '#f472b6' },
-      ]
-    },
-    {
-      id: 'retreat-hot',
-      title: 'Retreat HOT',
-      hasSubmenu: true,
-      href: '/retreat',
-      headerTitle: 'Retreat HOT',
-      items: [
-        { label: '"Bình Yên trên Cao Nguyên"', href: '/retreat/hot/binh-yen-tren-cao-nguyen', icon: Compass, color: '#f97316' },
-        { label: '"Tĩnh Lặng Giữa Đại Ngàn"', href: '/retreat/hot/tinh-lang-giua-dai-ngan', icon: Leaf, color: '#4ade80' },
-        { label: '"Tìm Lại Kết Nối"', href: '/retreat/hot/tim-lai-ket-noi', icon: Heart, color: '#fb7185' },
-      ]
-    },
-    {
-      id: 'dieu-hay',
-      title: '101 Điều HAY',
-      hasSubmenu: true,
-      href: '/101-dieu-hay',
-      headerTitle: '101 Điều HAY',
-      items: [
-        { label: 'Blog Magazine', href: '/101-dieu-hay/blog', icon: BookOpen, color: '#38bdf8' },
-      ]
-    },
-    {
-      id: 'kollection-4u',
-      title: 'Kollection 4U',
-      hasSubmenu: true,
-      href: '/kollection-4u',
-      headerTitle: 'Kollection 4U',
-      items: [
-        { label: 'New Arrivals', href: '/kollection-4u/new-arrivals', icon: Sparkles, color: '#38bdf8' },
-        { label: 'A Must-Have', href: '/kollection-4u/must-have', icon: Flame, color: '#f97316' },
-        { label: 'EXCLUSIVE', href: '/kollection-4u/exclusive', icon: Crown, color: '#facc15' },
-        { label: 'Promotions', href: '/kollection-4u/promotions', icon: Zap, color: '#4ade80' },
-      ]
-    },
-    {
-      id: 'vi-sao-chon-4u',
-      title: 'Vì sao chọn 4U?',
-      hasSubmenu: true,
-      href: '/vi-sao-chon-4u',
-      headerTitle: 'Vì sao chọn 4U?',
-      items: [
-        { label: 'Giới Thiệu 4U', href: '/vi-sao-chon-4u/gioi-thieu', icon: Star, color: '#e5c158' },
-        { label: 'Câu hỏi Thường gặp', href: '/vi-sao-chon-4u/cau-hoi-thuong-gap', icon: HelpCircle, color: '#38bdf8' },
-        { label: 'Cơ hội Nghề nghiệp', href: '/vi-sao-chon-4u/co-hoi-nghe-nghiep', icon: Briefcase, color: '#a78bfa' },
-      ]
+  const fixedBadges = useMemo(() => {
+    const fixedFromDb = liveCategories.filter((c) => c.menuType === 'fixed_top');
+    if (fixedFromDb.length > 0) {
+      return fixedFromDb.map((c) => ({
+        label: c.name,
+        href: c.slug === 'doc-quyen' ? '/retreat/docquyen' :
+          c.slug === 'sap-khoi-hanh' ? '/retreat/sapkhoihanh' :
+            c.slug === 'khong-the-bo-lo' ? '/retreat/khongthebolo' :
+              c.slug === 'uu-dai-gio-chot' ? '/retreat/uudaigiochot' :
+                `/retreat/${c.slug}`,
+        isHighlight: c.slug === 'doc-quyen' || c.slug === 'docquyen' || c.icon === 'Crown',
+        icon: (c.icon && ICON_MAP[c.icon]) || null
+      }));
     }
-  ];
+    return [];
+  }, [liveCategories]);
+
+  const menuData: MenuCategory[] = useMemo(() => {
+    const parentCats = liveCategories.filter((c) => c.menuType !== 'fixed_top' && !c.parentSlug);
+
+    if (parentCats.length > 0) {
+      return parentCats.map((parent) => {
+        const children = liveCategories.filter((c) => c.parentSlug === parent.slug);
+
+        let items: MenuItem[] = [];
+        if (children.length > 0) {
+          items = children.map((child) => ({
+            label: child.name,
+            href: `/${parent.slug}/${child.slug}`,
+            icon: (child.icon && ICON_MAP[child.icon]) || Leaf,
+            color: child.color || '#4ade80'
+          }));
+        }
+
+        return {
+          id: parent.slug,
+          title: parent.name,
+          hasSubmenu: items.length > 0,
+          href: `/${parent.slug}`,
+          headerTitle: parent.name.toUpperCase(),
+          items
+        };
+      });
+    }
+
+    return [];
+  }, [liveCategories]);
 
   const activeCategoryData = menuData.find(m => m.id === activeCategory);
 
@@ -469,11 +461,9 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               top: '100%',
               left: 0,
               right: 0,
-              background: 'rgba(10, 15, 11, 0.98)',
-              backdropFilter: 'blur(30px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(30px) saturate(180%)',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-              boxShadow: '0 40px 80px rgba(0, 0, 0, 0.85)',
+              background: 'rgb(229, 239, 232)',
+              borderBottom: '1px solid rgba(15, 23, 42, 0.12)',
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.12)',
               zIndex: 9995,
               animation: 'fadeInFlyout 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
@@ -493,7 +483,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                   style={{
                     fontSize: '0.76rem',
                     fontWeight: '700',
-                    color: '#a3b899',
+                    color: '#0f172a',
                     textTransform: 'uppercase',
                     letterSpacing: '0.08em',
                   }}
@@ -524,7 +514,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                       style={{
                         fontSize: '1.02rem',
                         fontWeight: '600',
-                        color: '#ffffff',
+                        color: '#0f172a',
                         textDecoration: 'none',
                         transition: 'all 0.2s ease',
                         padding: '4px 0',
@@ -534,11 +524,11 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                         alignItems: 'center'
                       }}
                       onMouseEnter={e => {
-                        e.currentTarget.style.color = '#4ade80';
+                        e.currentTarget.style.color = '#166534';
                         e.currentTarget.style.transform = 'translateX(6px)';
                       }}
                       onMouseLeave={e => {
-                        e.currentTarget.style.color = '#ffffff';
+                        e.currentTarget.style.color = '#0f172a';
                         e.currentTarget.style.transform = 'translateX(0)';
                       }}
                     >

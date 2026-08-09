@@ -325,13 +325,13 @@ export function CoverflowCarousel({
                     </span>
                   )}
                   {slide.title && (
-                    <h3 
-                      style={{ 
-                        fontSize: '0.98rem', 
-                        fontWeight: 800, 
-                        color: '#ffffff', 
-                        margin: 0, 
-                        lineHeight: 1.35, 
+                    <h3
+                      style={{
+                        fontSize: '0.98rem',
+                        fontWeight: 800,
+                        color: '#ffffff',
+                        margin: 0,
+                        lineHeight: 1.35,
                         textShadow: '0 2px 4px rgba(0,0,0,0.6)',
                         display: '-webkit-box',
                         WebkitLineClamp: 2,

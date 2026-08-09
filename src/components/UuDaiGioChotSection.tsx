@@ -46,9 +46,9 @@ export default function UuDaiGioChotSection({ onOpenBooking, onNavigate }: UuDai
     return () => clearInterval(timer);
   }, []);
 
-  // Filter promotion tours with discounts (strictly requiring discount or promotion flag and NOT exclusive)
+  // Only tours assigned to the "Ưu Đãi Giờ Chót" category appear here.
   const promoTours = tours.filter((tour) =>
-    (((tour.originalPrice && tour.originalPrice > (tour.price || 0)) || tour.discountPercentage || tour.isPromotion) && !tour.isExclusive)
+    Array.isArray(tour.categories) && tour.categories.includes('uu-dai-gio-chot')
   );
   const visiblePromoTours = showAll ? promoTours : promoTours.slice(0, 4);
 
@@ -71,117 +71,183 @@ export default function UuDaiGioChotSection({ onOpenBooking, onNavigate }: UuDai
         .udgc-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
-          gap: 52px 38px;
+          gap: 40px 32px;
           width: 100%;
         }
+        @media (max-width: 860px) {
+          .udgc-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
         .udgc-card {
-          background: #ffffff;
-          border-radius: 28px;
           overflow: hidden;
-          border: 1px solid rgba(16, 32, 27, 0.08);
-          box-shadow: 0 16px 40px -12px rgba(16, 32, 27, 0.06);
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
           display: flex;
           flex-direction: column;
           height: 100%;
           cursor: pointer;
-          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
           position: relative;
         }
         .udgc-card:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 24px 50px -16px rgba(16, 32, 27, 0.15);
-          border-color: rgba(30, 74, 61, 0.25);
+          transform: translateY(-6px);
+          background: #d2e2d6;
+          box-shadow: 0 24px 48px -12px rgba(20, 38, 25, 0.16);
+          border-color: rgba(45, 90, 54, 0.35);
         }
         .udgc-image-wrap {
           position: relative;
           width: 100%;
-          height: 280px;
+          aspect-ratio: 16 / 9.8;
           overflow: hidden;
         }
         .udgc-image-wrap img {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: transform 0.6s ease;
+          transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .udgc-card:hover .udgc-image-wrap img {
           transform: scale(1.06);
         }
         .udgc-discount-badge {
           position: absolute;
-          top: 20px;
-          left: 20px;
-          background: #dc2626;
+          top: 16px;
+          left: 16px;
+          background: #ff1f3d;
           color: #ffffff;
           font-weight: 800;
-          font-size: 13px;
-          padding: 6px 14px;
+          font-size: 11px;
+          padding: 5px 12px;
           border-radius: 99px;
           letter-spacing: 0.05em;
-          box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+          box-shadow: 0 4px 12px rgba(255, 31, 61, 0.35);
+          z-index: 2;
+        }
+        .udgc-seats-badge {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          background: rgba(16, 32, 27, 0.88);
+          backdrop-filter: blur(10px);
+          color: #facc15;
+          font-weight: 800;
+          font-size: 11px;
+          padding: 5px 12px;
+          border-radius: 99px;
           z-index: 2;
         }
         .udgc-body {
-          padding: 32px;
+          padding: 24px 28px;
           display: flex;
           flex-direction: column;
           flex-grow: 1;
         }
         .udgc-location-tag {
-          font-size: 12px;
+          font-size: 11.5px;
           font-weight: 700;
           color: #2d5a36;
           text-transform: uppercase;
-          letter-spacing: 0.06em;
-          margin-bottom: 10px;
+          letter-spacing: 0.04em;
+          margin-bottom: 6px;
         }
         .udgc-title {
           font-family: 'Playfair Display', Georgia, serif;
           font-size: 22px;
+          font-style: italic;
           font-weight: 700;
           color: #10201B;
-          margin: 0 0 10px 0;
-          line-height: 1.3;
+          margin: 0 0 8px 0;
+          line-height: 1.25;
         }
         .udgc-desc {
-          font-size: 14px;
-          color: #525a54;
-          margin: 0 0 20px 0;
+          font-size: 13.5px;
           line-height: 1.6;
+          color: #475569;
+          margin: 0 0 16px 0;
+        }
+        .udgc-progress-wrapper {
+          margin-bottom: 20px;
+        }
+        .udgc-progress-bar {
+          width: 100%;
+          height: 6px;
+          background: #cbd5e1;
+          border-radius: 99px;
+          overflow: hidden;
+          margin-bottom: 6px;
+        }
+        .udgc-progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #ff4500, #ff1f3d);
+          border-radius: 99px;
+        }
+        .udgc-progress-info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 11px;
+          font-weight: 700;
+          color: #475569;
+        }
+        .udgc-seats-left-tag {
+          background: #fecdd3;
+          color: #e11d48;
+          font-size: 10.5px;
+          font-weight: 800;
+          padding: 2px 8px;
+          border-radius: 99px;
         }
         .udgc-footer {
           margin-top: auto;
-          padding-top: 20px;
+          padding-top: 16px;
           border-top: 1px solid rgba(16, 32, 27, 0.08);
           display: flex;
-          align-items: center;
+          align-items: flex-end;
           justify-content: space-between;
         }
+        .udgc-price-block {
+          display: flex;
+          flex-direction: column;
+        }
         .udgc-orig-price {
-          font-size: 13px;
-          color: #94a3b8;
+          font-size: 12px;
+          color: #64748b;
           text-decoration: line-through;
-          margin-right: 8px;
+          margin-bottom: 2px;
         }
         .udgc-sale-price {
           font-family: 'Playfair Display', Georgia, serif;
-          font-size: 24px;
-          font-weight: 700;
+          font-size: 26px;
+          font-weight: 800;
           color: #10201B;
+          line-height: 1;
+        }
+        .udgc-savings-badge {
+          display: inline-block;
+          margin-top: 4px;
+          background: #fee2e2;
+          color: #dc2626;
+          font-size: 11px;
+          font-weight: 700;
+          padding: 2px 8px;
+          border-radius: 99px;
+          width: fit-content;
         }
         .udgc-cta-btn {
-          background: #10201B;
+          background: #1e4a3d;
           color: #ffffff;
           border: none;
-          padding: 10px 22px;
+          padding: 10px 24px;
           border-radius: 99px;
           font-size: 13px;
           font-weight: 700;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.25s ease;
+          box-shadow: 0 4px 12px rgba(30, 74, 61, 0.2);
         }
         .udgc-cta-btn:hover {
-          background: #059669;
+          background: #2d5a36;
+          box-shadow: 0 6px 18px rgba(45, 90, 54, 0.35);
         }
       `}</style>
 
@@ -249,6 +315,7 @@ export default function UuDaiGioChotSection({ onOpenBooking, onNavigate }: UuDai
             {visiblePromoTours.map((tour, idx) => {
               const disc = tour.discountPercentage || 18;
               const origPrice = tour.originalPrice || Math.round((tour.price || 0) * 1.22);
+              const savings = origPrice - (tour.price || 0);
 
               return (
                 <ScrollReveal key={tour.id} delay={idx * 120} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -263,6 +330,9 @@ export default function UuDaiGioChotSection({ onOpenBooking, onNavigate }: UuDai
                       <div className="udgc-discount-badge">
                         GIẢM {disc}%
                       </div>
+                      <div className="udgc-seats-badge">
+                        Chỉ còn 2 suất
+                      </div>
                       <img src={getImageUrl(tour.heroImage)} alt={tour.title} />
                     </div>
 
@@ -271,14 +341,30 @@ export default function UuDaiGioChotSection({ onOpenBooking, onNavigate }: UuDai
                         {tour.city} • {tour.duration}
                       </div>
 
-                      <h3 className="udgc-title">{tour.title}</h3>
+                      <h3 className="udgc-title">“{tour.title}”</h3>
 
                       <p className="udgc-desc">{tour.subtitle}</p>
 
+                      {/* Progress Bar & Seat Status */}
+                      <div className="udgc-progress-wrapper">
+                        <div className="udgc-progress-bar">
+                          <div className="udgc-progress-fill" style={{ width: '80%' }}></div>
+                        </div>
+                        <div className="udgc-progress-info">
+                          <span>Đã đăng ký 80% số chỗ</span>
+                          <span className="udgc-seats-left-tag">🔥 Còn 2 chỗ</span>
+                        </div>
+                      </div>
+
                       <div className="udgc-footer">
-                        <div>
+                        <div className="udgc-price-block">
                           <span className="udgc-orig-price">{(origPrice || 0).toLocaleString('vi-VN')} ₫</span>
                           <span className="udgc-sale-price">{(tour.price || 0).toLocaleString('vi-VN')} ₫</span>
+                          {savings > 0 && (
+                            <span className="udgc-savings-badge">
+                              Tiết kiệm {savings.toLocaleString('vi-VN')} đ
+                            </span>
+                          )}
                         </div>
 
                         <button

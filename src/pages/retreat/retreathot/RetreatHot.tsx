@@ -4,12 +4,13 @@ import ToursPage from '../../../components/ToursPage';
 interface RetreatHotProps {
   onNavigate: (path: string) => void;
   onOpenBooking: () => void;
+  currentPath?: string;
 }
 
-export default function RetreatHot({ onNavigate, onOpenBooking }: RetreatHotProps) {
+export default function RetreatHot({ onNavigate, onOpenBooking, currentPath = '/retreat/retreathot' }: RetreatHotProps) {
   return (
     <ToursPage
-      currentPath="/retreat/retreathot"
+      currentPath={currentPath}
       onNavigate={onNavigate}
       onOpenBooking={onOpenBooking}
     />

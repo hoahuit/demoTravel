@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { ChevronRight, Sparkles, MapPin, Clock } from "lucide-react";
 import { CoverflowCarousel, CoverflowSlide } from "@/components/ui/coverflow-carousel";
-import { TOURS_DATA, TourPackage } from "../data/toursData";
-
-const getImageUrl = (url: string) => {
-  if (!url) return "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800";
-  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:")) return url;
-  return `http://localhost:3001${url.startsWith('/') ? '' : '/'}${url}`;
-};
+import { TOURS_DATA, syncToursDataFromApi, TourPackage } from "../data/toursData";
+import { fetchToursApi, getImageUrl } from "../services/apiService";
 
 export interface Carousel3Dv2Props {
   onOpenBooking?: (tourData?: any) => void;
@@ -19,19 +14,18 @@ export default function Carousel3Dv2({ onOpenBooking, onNavigate }: Carousel3Dv2
   const [activeTourIndex, setActiveTourIndex] = useState<number>(0);
 
   useEffect(() => {
-    fetch("http://localhost:3001/tours")
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setTours(data);
-        }
-      })
-      .catch(() => { });
+    fetchToursApi().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        syncToursDataFromApi(data);
+        setTours([...data]);
+      }
+    });
   }, []);
 
-  // Filter featured / exclusive / hot tours for 3D Slider display
-  const displayTours = tours.filter(t => t.isExclusive || t.isHot || t.isFeatured);
-  const carouselTours = displayTours.length > 0 ? displayTours : tours;
+  // Only tours assigned to the "Retreats Độc Quyền" category appear here.
+  const carouselTours = tours.filter((tour) =>
+    Array.isArray(tour.categories) && tour.categories.includes('doc-quyen')
+  );
 
   const slides: CoverflowSlide[] = carouselTours.map((tour) => ({
     src: getImageUrl(tour.heroImage),

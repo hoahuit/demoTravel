@@ -12,6 +12,7 @@ import AdminServicesManager from './admin/AdminServicesManager';
 import AdminTeamManager from './admin/AdminTeamManager';
 import AdminTestimonialsManager from './admin/AdminTestimonialsManager';
 import AdminSettingsManager from './admin/AdminSettingsManager';
+import AdminCategoriesManager from './admin/AdminCategoriesManager';
 
 import { BLOGS_DATA, BlogArticle } from '../data/blogsData';
 import { DESTINATIONS_DATA, Destination } from '../data/destinationsData';
@@ -30,6 +31,7 @@ import './Admin.css';
 
 export const ADMIN_SECTIONS = [
   { id: 'tours', label: 'Tours Du Lịch' },
+  { id: 'categories', label: 'Danh Mục Menu' },
   { id: 'bookings', label: 'Đơn Đặt Tour' },
   { id: 'analytics', label: 'Thống Kê & Báo Cáo' },
   { id: 'about', label: 'Giới Thiệu 4U' },
@@ -348,6 +350,7 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
         {/* MAIN WORKSPACE AREA RENDERING MODULAR TSX COMPONENTS */}
         <main className="serene-main" style={{ flex: 1, backgroundColor: '#f4f5f3', padding: '28px', minHeight: 'calc(100vh - 64px)' }}>
           {activeSection === 'tours' && <AdminToursManager toast={toast} onNavigate={onNavigate} />}
+          {activeSection === 'categories' && <AdminCategoriesManager toast={toast} />}
           {activeSection === 'bookings' && <AdminBookingsManager bookingsList={bookingsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
           {activeSection === 'analytics' && <AdminAnalyticsManager />}
           {activeSection === 'about' && <AdminAboutManager aboutState={aboutState} setAboutState={setAboutState} toast={toast} />}

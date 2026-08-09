@@ -169,7 +169,7 @@ export default function App() {
       return <UuDaiGioChot onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
     if (isRetreatHotRoute) {
-      return <RetreatHot onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
+      return <RetreatHot currentPath={currentPath} onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
     if (isToursRoute) {
       return <ToursPage currentPath={currentPath} onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;

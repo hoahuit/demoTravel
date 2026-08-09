@@ -24,8 +24,10 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
     });
   }, []);
 
-  // Filter unmissable HOT tours (excluding exclusive-only tours)
-  const unmissableTours = tours.filter((tour) => tour.isHot && !tour.isExclusive);
+  // Only tours assigned to the "Không Thể Bỏ Lỡ" category appear here.
+  const unmissableTours = tours.filter((tour) =>
+    Array.isArray(tour.categories) && tour.categories.includes('khong-the-bo-lo')
+  );
   const visibleTours = showAll ? unmissableTours : unmissableTours.slice(0, 4);
 
   return (
@@ -43,10 +45,7 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
     >
       <style>{`
         .ktbl-card {
-          background: #dce7df;
-          border-radius: 24px;
           overflow: hidden;
-          border: 1px solid rgba(45, 90, 54, 0.18);
           transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
           display: flex;
           flex-direction: column;
@@ -281,69 +280,70 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
             className="ktbl-grid"
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: '24px',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '52px 38px',
+              width: '100%',
               alignItems: 'stretch'
             }}
           >
             {visibleTours.map((tour, idx) => (
-            <ScrollReveal key={tour.id} delay={idx * 120} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <div
-                className="ktbl-card"
-                onClick={() => {
-                  if (onNavigate) onNavigate(`/sanpham/${tour.slug}`);
-                  else if (onOpenBooking) onOpenBooking(tour);
-                }}
-              >
-                <div className="ktbl-image-wrap">
-                  <div className="ktbl-badge-top">Không thể bỏ lỡ</div>
-                  <div className="ktbl-rating-top">
-                    <Star size={13} fill="#facc15" color="#facc15" />
-                    <span>{tour.rating}</span>
-                  </div>
-                  <img src={getImageUrl(tour.heroImage)} alt={tour.title} />
+              <ScrollReveal key={tour.id} delay={idx * 120} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <div
+                  className="ktbl-card"
+                  onClick={() => {
+                    if (onNavigate) onNavigate(`/sanpham/${tour.slug}`);
+                    else if (onOpenBooking) onOpenBooking(tour);
+                  }}
+                >
+                  <div className="ktbl-image-wrap">
+                    <div className="ktbl-badge-top">Không thể bỏ lỡ</div>
+                    <div className="ktbl-rating-top">
+                      <Star size={13} fill="#facc15" color="#facc15" />
+                      <span>{tour.rating}</span>
+                    </div>
+                    <img src={getImageUrl(tour.heroImage)} alt={tour.title} />
 
-                </div>
-
-                <div className="ktbl-body">
-                  <div className="ktbl-meta">
-                    <MapPin size={13} />
-                    <span>{tour.city} • {tour.duration}</span>
                   </div>
 
-                  <h3 className="ktbl-title">{tour.title}</h3>
-
-                  <div className="ktbl-highlights">
-                    {(Array.isArray(tour.highlights) ? tour.highlights : []).slice(0, 2).map((hl, i) => (
-                      <span key={i} className="ktbl-chip">
-                        <Sparkles size={11} /> {hl}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="ktbl-footer">
-                    <div>
-                      <span style={{ fontSize: '11px', textTransform: 'uppercase', color: '#738d7a', display: 'block', fontWeight: 600 }}>Giá trọn gói</span>
-                      <span className="ktbl-price-val">{tour.price.toLocaleString('vi-VN')} ₫</span>
+                  <div className="ktbl-body">
+                    <div className="ktbl-meta">
+                      <MapPin size={13} />
+                      <span>{tour.city} • {tour.duration}</span>
                     </div>
 
-                    <button
-                      className="ktbl-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (onOpenBooking) onOpenBooking(tour);
-                        else if (onNavigate) onNavigate(`/sanpham/${tour.slug}`);
-                      }}
-                    >
-                      <span>Đặt Ngay</span>
-                      <ArrowRight size={14} />
-                    </button>
+                    <h3 className="ktbl-title">{tour.title}</h3>
+
+                    <div className="ktbl-highlights">
+                      {(Array.isArray(tour.highlights) ? tour.highlights : []).slice(0, 2).map((hl, i) => (
+                        <span key={i} className="ktbl-chip">
+                          <Sparkles size={11} /> {hl}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="ktbl-footer">
+                      <div>
+                        <span style={{ fontSize: '11px', textTransform: 'uppercase', color: '#738d7a', display: 'block', fontWeight: 600 }}>Giá trọn gói</span>
+                        <span className="ktbl-price-val">{tour.price.toLocaleString('vi-VN')} ₫</span>
+                      </div>
+
+                      <button
+                        className="ktbl-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (onOpenBooking) onOpenBooking(tour);
+                          else if (onNavigate) onNavigate(`/sanpham/${tour.slug}`);
+                        }}
+                      >
+                        <span>Đặt Ngay</span>
+                        <ArrowRight size={14} />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
+              </ScrollReveal>
+            ))}
+          </div>
         )}
 
         {/* XEM THÊM BUTTON */}

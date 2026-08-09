@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ScrollReveal from './ScrollReveal';
 import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
-import { fetchToursApi } from '../services/apiService';
+import { fetchToursApi, getImageUrl } from '../services/apiService';
 import { ChevronDown, ArrowRight } from 'lucide-react';
 import EmptyState from './ui/EmptyState';
 
@@ -23,16 +23,15 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
     });
   }, []);
 
-  // Filter for Sản Phẩm Sắp Khởi Hành (isFeatured === true AND NOT isExclusive)
-  let featuredTours = tours.filter((t) => t.isFeatured && !t.isExclusive);
-  if (featuredTours.length === 0) {
-    featuredTours = tours.filter((t) => !t.isExclusive);
-  }
+  // Only tours assigned to the "Sắp Khởi Hành" category appear here.
+  const featuredTours = tours.filter((t) =>
+    Array.isArray(t.categories) && t.categories.includes('sap-khoi-hanh')
+  );
 
   const items = featuredTours.map((tour) => ({
     id: tour.id,
     slug: tour.slug,
-    image: tour.heroImage,
+    image: getImageUrl(tour.heroImage),
     location: tour.city,
     category: tour.category,
     title: tour.title,
@@ -303,48 +302,48 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
             className="editorial-grid-wrapper"
           >
             {visibleItems.map((item, idx) => (
-            <ScrollReveal key={item.id} delay={idx * 120} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <div
-                onClick={() => {
-                  if (onNavigate) {
-                    onNavigate(`/sanpham/${item.slug}`);
-                  } else if (onOpenBooking) {
-                    onOpenBooking();
-                  }
-                }}
-                className="editorial-card"
-              >
-                {/* TOP: PURE PHOTO FRAME */}
-                <div className="editorial-image-wrapper">
-                  <div className="editorial-departure-badge">
-                    <span>📅 Khởi hành:</span>
-                    <span>{item.departureDates}</span>
-                  </div>
-                  <img src={item.image} alt={item.title} />
-                </div>
-
-                {/* BOTTOM: EDITORIAL TEXT CONTENT */}
-                <div className="editorial-content-box">
-                  <div className="editorial-tag-row">
-                    <span className="editorial-location">{item.location}</span>
-                    <span className="editorial-dot">•</span>
-                    <span className="editorial-category">{item.category}</span>
-                  </div>
-                  <h3 className="editorial-title">{item.title}</h3>
-                  <p className="editorial-desc">{item.desc}</p>
-
-                  <div className="editorial-bottom">
-                    <div className="editorial-price-wrap">
-                      <span className="editorial-price-label">Giá trọn gói từ</span>
-                      <span className="editorial-price">{item.price}</span>
+              <ScrollReveal key={item.id} delay={idx * 120} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <div
+                  onClick={() => {
+                    if (onNavigate) {
+                      onNavigate(`/sanpham/${item.slug}`);
+                    } else if (onOpenBooking) {
+                      onOpenBooking();
+                    }
+                  }}
+                  className="editorial-card"
+                >
+                  {/* TOP: PURE PHOTO FRAME */}
+                  <div className="editorial-image-wrapper">
+                    <div className="editorial-departure-badge">
+                      <span>📅 Khởi hành:</span>
+                      <span>{item.departureDates}</span>
                     </div>
-                    <span className="editorial-cta-btn">{item.action}</span>
+                    <img src={item.image} alt={item.title} />
+                  </div>
+
+                  {/* BOTTOM: EDITORIAL TEXT CONTENT */}
+                  <div className="editorial-content-box">
+                    <div className="editorial-tag-row">
+                      <span className="editorial-location">{item.location}</span>
+                      <span className="editorial-dot">•</span>
+                      <span className="editorial-category">{item.category}</span>
+                    </div>
+                    <h3 className="editorial-title">{item.title}</h3>
+                    <p className="editorial-desc">{item.desc}</p>
+
+                    <div className="editorial-bottom">
+                      <div className="editorial-price-wrap">
+                        <span className="editorial-price-label">Giá trọn gói từ</span>
+                        <span className="editorial-price">{item.price}</span>
+                      </div>
+                      <span className="editorial-cta-btn">{item.action}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </ScrollReveal>
-          ))}
-        </div>
+              </ScrollReveal>
+            ))}
+          </div>
         )}
 
         {/* XEM THÊM BUTTON */}

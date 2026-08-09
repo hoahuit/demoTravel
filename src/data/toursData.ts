@@ -25,6 +25,7 @@ export interface TourPackage {
   title: string;
   subtitle: string;
   category: 'Nature' | 'Healing' | 'Conservation' | 'Volunteer' | 'Highland' | 'DeepForest' | 'Reconnection' | 'Wellness' | 'Exclusive' | 'Hot' | 'Luxury' | 'Family' | 'Promotion' | 'New' | 'Domestic' | 'International' | string;
+  categories?: string[];
   country: string;
   city: string;
   duration: string;

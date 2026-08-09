@@ -124,6 +124,8 @@ export function getLb4Endpoint(section: string): string {
     testimonials: '/testimonials',
     about: '/about',
     settings: '/settings',
+    categories: '/menu-categories',
+    'menu-categories': '/menu-categories',
   };
   return mapping[section] || `/${section}`;
 }
@@ -136,7 +138,7 @@ export function parseTourJsonFields(tour: any) {
   if (!tour) return tour;
 
   const arrayFields = [
-    'highlights', 'itinerary', 'gallery', 'included', 'excluded',
+    'categories', 'highlights', 'itinerary', 'gallery', 'included', 'excluded',
     'departureDates', 'notes', 'travelTips', 'faq', 'reviews'
   ];
 
@@ -202,7 +204,7 @@ export function parseTourJsonFields(tour: any) {
 export function sanitizeTourPayload(tourData: any, isUpdate = false) {
   const payload: any = {};
   const validKeys = [
-    'slug', 'title', 'subtitle', 'category', 'country', 'city', 'duration', 'durationDays',
+    'slug', 'title', 'subtitle', 'category', 'categories', 'country', 'city', 'duration', 'durationDays',
     'heroImage', 'price', 'originalPrice', 'isHot', 'isFeatured', 'isExclusive',
     'departureDates', 'airline', 'hotel', 'transportation', 'rating', 'reviewsCount',
     'highlights', 'itinerary', 'gallery', 'included', 'excluded', 'notes', 'destinationMap',
@@ -478,4 +480,41 @@ export async function saveSectionItemApi(section: string, action: 'create' | 'up
   }
 
   return await response.json();
+}
+
+// --------------------------------------------------------------------------
+// MENU CATEGORIES CRUD API CALLS
+// --------------------------------------------------------------------------
+
+export interface MenuCategoryItem {
+  id?: number;
+  name: string;
+  slug: string;
+  parentSlug?: string | null;
+  menuType?: string; // 'fixed_top' | 'mega_menu'
+  orderIndex?: number;
+  icon?: string;
+  color?: string;
+  description?: string;
+}
+
+export async function fetchMenuCategoriesApi(forceRefresh = false): Promise<MenuCategoryItem[]> {
+  const data = await fetchSectionItemsApi('categories', forceRefresh);
+  if (Array.isArray(data)) {
+    return data.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
+  }
+  return [];
+}
+
+export async function createMenuCategoryApi(categoryData: Partial<MenuCategoryItem>): Promise<MenuCategoryItem> {
+  return await saveSectionItemApi('categories', 'create', categoryData);
+}
+
+export async function saveMenuCategoryApi(id: number | string, categoryData: Partial<MenuCategoryItem>): Promise<MenuCategoryItem> {
+  return await saveSectionItemApi('categories', 'update', { ...categoryData, id });
+}
+
+export async function deleteMenuCategoryApi(id: number | string): Promise<boolean> {
+  await saveSectionItemApi('categories', 'delete', { id });
+  return true;
 }
