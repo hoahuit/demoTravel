@@ -89,7 +89,6 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
       href: '/101-dieu-hay',
       headerTitle: '101 Điều HAY',
       items: [
-        { label: 'A Tip A Day', href: '/101-dieu-hay/a-tip-a-day', icon: Sparkles, color: '#e5c158' },
         { label: 'Blog Magazine', href: '/101-dieu-hay/blog', icon: BookOpen, color: '#38bdf8' },
       ]
     },
@@ -114,10 +113,8 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
       headerTitle: 'Vì sao chọn 4U?',
       items: [
         { label: 'Giới Thiệu 4U', href: '/vi-sao-chon-4u/gioi-thieu', icon: Star, color: '#e5c158' },
-        { label: 'Những Chuyến đi Ấn tượng', href: '/vi-sao-chon-4u/nhung-chuyen-di-an-tuong', icon: Compass, color: '#4ade80' },
         { label: 'Câu hỏi Thường gặp', href: '/vi-sao-chon-4u/cau-hoi-thuong-gap', icon: HelpCircle, color: '#38bdf8' },
         { label: 'Cơ hội Nghề nghiệp', href: '/vi-sao-chon-4u/co-hoi-nghe-nghiep', icon: Briefcase, color: '#a78bfa' },
-        { label: 'Lịch Khai giảng', href: '/vi-sao-chon-4u/lich-khai-giang', icon: Calendar, color: '#f472b6' },
       ]
     }
   ];

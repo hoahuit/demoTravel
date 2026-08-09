@@ -1,5 +1,5 @@
 import React from 'react';
-import Carousel3D from './Carousel3D';
+import Carousel3Dv2 from './Carousel3Dv2';
 import ScrollReveal from './ScrollReveal';
 
 export interface AudienceBentoProps {
@@ -48,7 +48,7 @@ export default function AudienceBento({ onOpenBooking, onNavigate }: AudienceBen
       {/* NEW 3D CAROUSEL COMPONENT — FULL SCREEN WIDTH */}
       <ScrollReveal delay={150}>
         <div style={{ width: '100%', overflow: 'hidden' }}>
-          <Carousel3D onOpenBooking={onOpenBooking} onNavigate={onNavigate} />
+          <Carousel3Dv2 onOpenBooking={onOpenBooking} onNavigate={onNavigate} />
         </div>
       </ScrollReveal>
 
