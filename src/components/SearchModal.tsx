@@ -16,11 +16,25 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState<string>('');
 
   useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+      document.documentElement.style.overflow = '';
+    }
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     if (isOpen) window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+      document.documentElement.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
@@ -88,7 +102,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
           <button
             onClick={onClose}
             style={{
-              background: 'rgba(74, 124, 89, 0.1)',
+              background: '#ef4444',
               border: 'none',
               borderRadius: '50%',
               width: '32px',
@@ -97,7 +111,8 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: '#142619'
+              color: '#ffffff',
+              boxShadow: '0 4px 12px rgba(239, 68, 68, 0.35)'
             }}
           >
             <X size={18} />

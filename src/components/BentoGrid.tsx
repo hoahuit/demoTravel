@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ScrollReveal from './ScrollReveal';
 import { TOURS_DATA } from '../data/toursData';
+import { ChevronDown, ArrowRight } from 'lucide-react';
 
 export interface BentoGridProps {
   onOpenBooking?: () => void;
@@ -8,24 +9,29 @@ export interface BentoGridProps {
 }
 
 export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps) {
+  const [showAll, setShowAll] = useState<boolean>(false);
+
   // Map safely over TOURS_DATA directly
   const items = TOURS_DATA.map((tour) => ({
     id: tour.id,
     slug: tour.slug,
     image: tour.heroImage,
-    location: `${tour.city}, ${tour.country}`,
+    location: tour.city,
     category: tour.category,
     title: tour.title,
     desc: tour.subtitle,
     price: `${tour.price.toLocaleString('vi-VN')} ₫`,
+    departureDates: tour.departureDates?.length ? tour.departureDates.join(' • ') : 'Hàng tuần',
     action: 'Khám phá ngay'
   }));
 
+  const visibleItems = showAll ? items : items.slice(0, 4);
+
   return (
     <section
-      id="signatures"
+      id="sap-khoi-hanh"
       style={{
-        background: '#f3f7f4',
+        background: '#e5efe8',
         padding: '110px 0 130px',
         color: '#10201B',
         fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -37,6 +43,7 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
         .editorial-card {
           display: flex;
           flex-direction: column;
+          height: 100%;
           cursor: pointer;
           text-decoration: none;
           color: inherit;
@@ -70,6 +77,24 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
           transform: scale(1.06);
           filter: brightness(1.03);
         }
+        .editorial-departure-badge {
+          position: absolute;
+          top: 16px;
+          left: 16px;
+          background: rgba(16, 32, 27, 0.82);
+          backdrop-filter: blur(10px);
+          color: #ffffff;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          padding: 6px 14px;
+          border-radius: 99px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          z-index: 2;
+        }
         .editorial-tag-row {
           display: flex;
           align-items: center;
@@ -80,8 +105,7 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
         .editorial-location {
           font-size: 11.5px;
           font-weight: 700;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
+          letter-spacing: 0.04em;
           color: #2d5a36;
         }
         .editorial-dot {
@@ -152,7 +176,7 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
           font-weight: 700;
           letter-spacing: 0.06em;
           padding: 10px 22px;
-          border-radius: 999px;
+          border-radius: 99px;
           transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
           box-shadow: 0 6px 18px rgba(30, 74, 61, 0.18);
         }
@@ -160,6 +184,27 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
           background: #2d5a36;
           box-shadow: 0 10px 24px rgba(45, 90, 54, 0.3);
           transform: translateY(-1px);
+        }
+        .xem-them-btn {
+          padding: 14px 34px;
+          border-radius: 99px;
+          border: 1.5px solid #1E4A3D;
+          background: transparent;
+          color: #1E4A3D;
+          font-weight: 700;
+          font-size: 13.5px;
+          letter-spacing: 0.04em;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .xem-them-btn:hover {
+          background: #1E4A3D;
+          color: #ffffff;
+          transform: translateY(-2px);
+          box-shadow: 0 10px 24px rgba(30, 74, 61, 0.2);
         }
         @media (max-width: 860px) {
           .editorial-grid-wrapper {
@@ -203,7 +248,7 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
                   marginBottom: '12px'
                 }}
               >
-                Bộ sưu tập retreat 2026
+                ✦ LỊCH KHỞI HÀNH GẦN NHẤT 2026
               </div>
               <h2
                 style={{
@@ -217,15 +262,13 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
                   letterSpacing: '-0.01em'
                 }}
               >
-                Tìm về những khoảng lặng giữa thiên nhiên
+                Sản Phẩm Sắp Khởi Hành
               </h2>
             </div>
-
-
           </div>
         </ScrollReveal>
 
-        {/* ── 2. BALANCED 2x2 GRID (4 ITEMS TOTAL) ── */}
+        {/* ── 2. BALANCED 2-COLUMN GRID (4 ITEMS INITIAL) ── */}
         <div
           style={{
             display: 'grid',
@@ -235,8 +278,8 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
           }}
           className="editorial-grid-wrapper"
         >
-          {items.map((item, idx) => (
-            <ScrollReveal key={item.id} delay={idx * 120}>
+          {visibleItems.map((item, idx) => (
+            <ScrollReveal key={item.id} delay={idx * 120} style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <div
                 onClick={() => {
                   if (onNavigate) {
@@ -249,6 +292,10 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
               >
                 {/* TOP: PURE PHOTO FRAME */}
                 <div className="editorial-image-wrapper">
+                  <div className="editorial-departure-badge">
+                    <span>📅 Khởi hành:</span>
+                    <span>{item.departureDates}</span>
+                  </div>
                   <img src={item.image} alt={item.title} />
                 </div>
 
@@ -274,6 +321,21 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
             </ScrollReveal>
           ))}
         </div>
+
+        {/* XEM THÊM BUTTON */}
+        {items.length > 4 && (
+          <ScrollReveal delay={200}>
+            <div style={{ textAlign: 'center', marginTop: '60px' }}>
+              <button
+                className="xem-them-btn"
+                onClick={() => setShowAll(!showAll)}
+              >
+                <span>{showAll ? 'Thu gọn sản phẩm' : 'Xem thêm sản phẩm sắp khởi hành'}</span>
+                <ChevronDown size={18} style={{ transform: showAll ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s ease' }} />
+              </button>
+            </div>
+          </ScrollReveal>
+        )}
 
       </div>
     </section>

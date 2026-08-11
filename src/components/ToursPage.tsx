@@ -171,7 +171,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
   }, [filteredTours]);
 
   return (
-    <div style={{ backgroundColor: '#ffffff', color: '#1a1714', minHeight: '100vh', paddingTop: '0', fontFamily: "'Be Vietnam Pro', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif", width: '100%', overflowX: 'hidden' }}>
+    <div style={{ backgroundColor: '#e5efe8', color: '#1a1714', minHeight: '100vh', paddingTop: '0', fontFamily: "'Be Vietnam Pro', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif", width: '100%', overflowX: 'hidden' }}>
 
       {/* ── LIGHTBOX MODAL ── */}
       {activeGalleryTour && (
@@ -232,7 +232,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
         />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(15,12,9,0.25) 0%, rgba(15,12,9,0.88) 100%)' }} />
 
-        <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', width: '100%', maxWidth: '1200px', padding: '80px 4vw 0' }}>
+        <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', width: '100%', maxWidth: '1200px', padding: '110px 4vw 0' }}>
           {/* Badge: PURE YELLOW TEXT WITHOUT DARK BACKGROUND BOX */}
           <div style={{ display: 'inline-block', color: '#facc15', fontSize: '14px', fontWeight: 800, letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '22px', textShadow: '0 2px 10px rgba(0,0,0,0.9)' }}>
             <span>{pageHeader.badge}</span>
@@ -302,14 +302,14 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '44px', padding: '0 48px 18px 48px', borderBottom: '1px solid rgba(26,23,20,0.1)' }}>
           <div>
             <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 400, fontSize: 'clamp(30px, 3.2vw, 44px)', color: '#1a1714', margin: 0, letterSpacing: '-0.01em' }}>
-              {selectedSeries === 'All' ? 'Tất Cả Bài Viết Danh Lam Series Retreat' : `Danh Sách — ${seriesCategories.find(s => s.id === selectedSeries)?.label}`}
+              {selectedSeries === 'All' ? 'Tất cả bài viết danh lam Series Retreat' : `Danh sách — ${seriesCategories.find(s => s.id === selectedSeries)?.label}`}
             </h2>
             <p style={{ fontSize: '14px', color: '#7a6f63', margin: '6px 0 0 0', fontWeight: 300 }}>
               Mỗi bài viết giới thiệu một danh lam thắng cảnh hoang sơ kết hợp nghệ thuật phục hồi sức khỏe Thân · Tâm · Trí.
             </p>
           </div>
           <span style={{ fontSize: '13px', fontWeight: 600, color: '#c89d54', background: '#faf3e6', padding: '7px 20px', borderRadius: '20px' }}>
-            {filteredTours.length} Hành Trình & Danh Lam
+            {filteredTours.length} hành trình & danh lam
           </span>
         </div>
 
@@ -365,8 +365,8 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                   {/* 2-Column Details Grid (Padding 48px) */}
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px 36px', alignItems: 'start', padding: '0 48px' }}>
                     <div>
-                      <div style={{ fontSize: '14px', fontWeight: 600, color: '#8c8275', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                        {feat.city}, {feat.country} • {feat.duration} • Rating: {feat.rating}
+                      <div style={{ fontSize: '14px', fontWeight: 600, color: '#8c8275', marginBottom: '12px', letterSpacing: '0.04em' }}>
+                        {feat.city} • {feat.duration} • Rating: {feat.rating}
                       </div>
                       <h2
                         onClick={() => onNavigate(`/sanpham/${feat.slug}`)}
@@ -424,12 +424,12 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
             {/* MORE POSTS SECTION (GRID OF OTHER TOURS) */}
             {filteredTours.length > 1 && (
-              <section>
-                <h2 style={{ fontSize: '30px', fontWeight: 800, color: '#1a1714', marginBottom: '32px' }}>
-                  Hành Trình Tiếp Theo (More Retreats)
+              <section style={{ padding: '0 48px', marginTop: '72px', paddingTop: '48px', borderTop: '1px solid rgba(26, 23, 20, 0.12)' }}>
+                <h2 style={{ fontSize: '32px', fontWeight: 800, color: '#1a1714', marginBottom: '36px' }}>
+                  Hành trình tiếp theo (More Retreats)
                 </h2>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '48px 32px', marginBottom: '80px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '48px 36px', marginBottom: '80px' }}>
                   {filteredTours.slice(1).map((tour) => (
                     <article key={tour.id} style={{ display: 'flex', flexDirection: 'column' }}>
                       {/* Image aspect-video */}
@@ -498,14 +498,14 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
         {/* ── LAYOUT MODE B: DẠNG LƯỚI THẺ DU LỊCH (GRID VIEW FULL-WIDTH) ── */}
         {viewMode === 'grid' && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '28px', width: '100%' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '48px 36px', padding: '0 48px', width: '100%', boxSizing: 'border-box' }}>
             {filteredTours.map(tour => (
-              <article key={tour.id} style={{ background: '#ffffff', borderRadius: '20px', overflow: 'hidden', boxShadow: '0 8px 30px rgba(26,23,20,0.06)', border: '1px solid rgba(26,23,20,0.08)', display: 'flex', flexDirection: 'column' }}>
+              <article key={tour.id} style={{ background: '#dce7df', borderRadius: '20px', overflow: 'hidden', boxShadow: '0 8px 30px rgba(26,23,20,0.06)', border: '1px solid rgba(45,90,54,0.18)', display: 'flex', flexDirection: 'column' }}>
 
                 {/* Photo Frame (Scenic Landscape) */}
                 <div style={{ position: 'relative', aspectRatio: '16 / 10', overflow: 'hidden', cursor: 'pointer' }} onClick={() => onNavigate(`/sanpham/${tour.slug}`)}>
                   <img src={tour.heroImage} alt={tour.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                  <div style={{ position: 'absolute', top: '14px', left: '14px', background: 'rgba(26,23,20,0.85)', color: '#f7f5f0', fontSize: '14px', fontWeight: 600, letterSpacing: '0.12em', padding: '5px 14px', borderRadius: '16px', textTransform: 'uppercase' }}>
+                  <div style={{ position: 'absolute', top: '14px', left: '14px', background: 'rgba(26,23,20,0.85)', color: '#f7f5f0', fontSize: '14px', fontWeight: 600, letterSpacing: '0.04em', padding: '5px 14px', borderRadius: '16px' }}>
                     {tour.city}
                   </div>
                   <button
@@ -566,40 +566,40 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       </main>
 
       {/* ── TRAVELER TIPS & EXPERT EDITORIAL NOTES FULL-WIDTH SECTION ── */}
-      <section style={{ background: '#ffffff', padding: '88px 4vw', borderTop: '1px solid rgba(26,23,20,0.08)', width: '100%' }}>
+      <section style={{ background: '#e5efe8', padding: '88px 4vw', borderTop: '1px solid rgba(26,23,20,0.08)', width: '100%' }}>
         <div style={{ width: '100%', maxWidth: '1400px', margin: '0 auto', textAlign: 'center' }}>
-          <span style={{ fontSize: '14px', fontWeight: 600, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#c89d54', marginBottom: '12px', display: 'block' }}>
-            EDITORIAL JOURNAL GUIDES
+          <span style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#1e4a3d', marginBottom: '12px', display: 'block' }}>
+            ✦ CẨM NANG & KINH NGHIỆM RETREAT
           </span>
           <h2 style={{ fontSize: '30px', fontWeight: 700, color: '#1a1714', margin: '0 0 16px 0' }}>
-            Kinh Nghiệm & Lời Khuyên Cho Chuyến Đi Retreat Đầu Tiên
+            Kinh nghiệm & lời khuyên cho chuyến đi retreat đầu tiên
           </h2>
           <p style={{ fontSize: '17px', color: '#6b5e52', maxWidth: '780px', margin: '0 auto 52px', fontWeight: 300, lineHeight: 1.65 }}>
             Tổng hợp chia sẻ từ các chuyên gia chăm sóc sức khỏe & biên tập viên du lịch 4U giúp bạn có sự chuẩn bị trọn vẹn nhất khi về với thiên nhiên.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '36px', textAlign: 'left', width: '100%' }}>
-            <div style={{ background: '#ffffff', borderRadius: '20px', padding: '36px', border: '1px solid rgba(26,23,20,0.08)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+            <div style={{ background: '#dce7df', borderRadius: '20px', padding: '36px', border: '1px solid rgba(45,90,54,0.18)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
               <h3 style={{ fontSize: '30px', fontWeight: 700, color: '#1a1714', margin: '0 0 12px 0' }}>
-                Thiền Chuông Xoay Tác Dụng Thế Nào?
+                Thiền chuông xoay tác dụng thế nào?
               </h3>
               <p style={{ fontSize: '17px', color: '#6b5e52', lineHeight: '1.7', margin: 0, fontWeight: 300 }}>
                 Tần số âm thanh 432Hz từ chuông xoay Tây Tạng tác động trực tiếp lên hệ thần kinh, giúp đưa não bộ về trạng thái thư giãn sâu và giải tỏa căng thẳng sau vài phút.
               </p>
             </div>
 
-            <div style={{ background: '#ffffff', borderRadius: '20px', padding: '36px', border: '1px solid rgba(26,23,20,0.08)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+            <div style={{ background: '#dce7df', borderRadius: '20px', padding: '36px', border: '1px solid rgba(45,90,54,0.18)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
               <h3 style={{ fontSize: '30px', fontWeight: 700, color: '#1a1714', margin: '0 0 12px 0' }}>
-                Nghệ Thuật Tắm Rừng Shinrin-Yoku
+                Nghệ thuật tắm rừng Shinrin-Yoku
               </h3>
               <p style={{ fontSize: '17px', color: '#6b5e52', lineHeight: '1.7', margin: 0, fontWeight: 300 }}>
                 Đi bộ chậm rãi giữa rừng đại ngàn, hít thở Phytoncides (hợp chất kháng sinh tự nhiên do thực vật tiết ra) giúp tăng cường sức đề kháng và thanh lọc lá phổi.
               </p>
             </div>
 
-            <div style={{ background: '#ffffff', borderRadius: '20px', padding: '36px', border: '1px solid rgba(26,23,20,0.08)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+            <div style={{ background: '#dce7df', borderRadius: '20px', padding: '36px', border: '1px solid rgba(45,90,54,0.18)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
               <h3 style={{ fontSize: '30px', fontWeight: 700, color: '#1a1714', margin: '0 0 12px 0' }}>
-                Chuẩn Bị Tâm Lý Buông Bỏ Digital
+                Chuẩn bị tâm lý buông bỏ digital
               </h3>
               <p style={{ fontSize: '17px', color: '#6b5e52', lineHeight: '1.7', margin: 0, fontWeight: 300 }}>
                 Để đạt hiệu quả phục hồi cao nhất, hãy tạm gác các thông báo công việc, dành trọn 100% sự hiện diện cho thiên nhiên, bản thân và những người đồng hành.

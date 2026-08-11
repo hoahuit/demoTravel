@@ -1,0 +1,85 @@
+.product-detail-root {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--apple-bg, #e5efe8);
+  min-height: 100vh;
+}
+
+.pd-summary-card {
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) 1fr;
+  gap: 32px;
+  background: #dce7df;
+  border-radius: 24px;
+  padding: 24px;
+  border: 1px solid rgba(45, 90, 54, 0.18);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  margin-bottom: 40px;
+  align-items: center;
+}
+
+.pd-summary-badge {
+  background: #cbe0d0;
+  color: #1e4a3d;
+  font-weight: 800;
+  font-size: 0.78rem;
+  padding: 4px 14px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pd-day-btn {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 24px;
+  font-size: 0.92rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pd-day-btn.inactive {
+  background: #dce7df;
+  color: #10201B;
+  border: 1px solid rgba(45, 90, 54, 0.18);
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.pd-day-btn.active {
+  background: #1e4a3d;
+  color: #ffffff;
+  border: none;
+  font-weight: 800;
+  box-shadow: 0 8px 20px rgba(30, 74, 61, 0.25);
+}
+
+.pd-day-content-card {
+  background: #dce7df;
+  border-radius: 24px;
+  padding: 36px;
+  border: 1px solid rgba(45, 90, 54, 0.18);
+  min-height: 480px;
+}
+
+.pd-chip-pill {
+  background: #cbe0d0;
+  color: #1e4a3d;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 12px;
+}
+
+.pd-inclusion-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.98rem;
+  color: #1e4a3d;
+  background: #cbe0d0;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(45, 90, 54, 0.18);
+}

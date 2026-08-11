@@ -28,13 +28,27 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
   useEffect(() => {
     if (externalOpen !== undefined) {
       setModalOpen(externalOpen);
-      if (externalOpen) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
-      }
     }
   }, [externalOpen]);
+
+  const isOpen = Boolean(externalOpen || modalOpen);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+      document.documentElement.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [isOpen]);
 
   const defaultTourTitle = selectedTour?.title || '';
 
@@ -94,8 +108,6 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
     setModalOpen(true);
     document.body.style.overflow = 'hidden';
   };
-
-  const isOpen = Boolean(externalOpen || modalOpen);
 
   return (
     <>
@@ -210,9 +222,9 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
           <div
             style={{
               width: '92vw',
-              maxWidth: '620px',
-              maxHeight: '90vh',
-              overflowY: 'auto',
+              maxWidth: '560px',
+              maxHeight: '92vh',
+              overflow: 'hidden',
               background: '#ffffff',
               borderRadius: '24px',
               boxShadow: '0 40px 90px -20px rgba(0, 0, 0, 0.5)',
@@ -226,11 +238,11 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
               aria-label="Đóng"
               style={{
                 position: 'absolute',
-                top: '16px',
-                right: '16px',
+                top: '14px',
+                right: '14px',
                 zIndex: 10,
-                width: '36px',
-                height: '36px',
+                width: '32px',
+                height: '32px',
                 borderRadius: '50%',
                 background: '#ef4444',
                 color: '#ffffff',
@@ -251,7 +263,7 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                 e.currentTarget.style.background = '#ef4444';
               }}
             >
-              <X size={18} strokeWidth={2.5} />
+              <X size={16} strokeWidth={2.5} />
             </button>
 
             {!submitted ? (
@@ -259,7 +271,7 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                 {/* HEADER SECTION */}
                 <div style={{
                   background: 'linear-gradient(135deg, #062c23 0%, #1E4A3D 50%, #0C2620 100%)',
-                  padding: '40px 36px 32px',
+                  padding: '24px 28px 18px',
                   borderRadius: '24px 24px 0 0',
                   position: 'relative',
                   overflow: 'hidden'
@@ -269,20 +281,10 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                     position: 'absolute',
                     top: '-30px',
                     right: '-30px',
-                    width: '120px',
-                    height: '120px',
+                    width: '100px',
+                    height: '100px',
                     borderRadius: '50%',
                     background: 'rgba(74, 222, 128, 0.08)',
-                    pointerEvents: 'none'
-                  }} />
-                  <div style={{
-                    position: 'absolute',
-                    bottom: '-20px',
-                    left: '-20px',
-                    width: '80px',
-                    height: '80px',
-                    borderRadius: '50%',
-                    background: 'rgba(74, 222, 128, 0.06)',
                     pointerEvents: 'none'
                   }} />
 
@@ -292,12 +294,12 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                     gap: '6px',
                     background: 'rgba(74, 222, 128, 0.15)',
                     border: '1px solid rgba(74, 222, 128, 0.3)',
-                    padding: '5px 14px',
+                    padding: '4px 12px',
                     borderRadius: '999px',
-                    marginBottom: '16px'
+                    marginBottom: '10px'
                   }}>
                     <span style={{
-                      fontSize: '11px',
+                      fontSize: '10.5px',
                       fontWeight: 700,
                       letterSpacing: '0.12em',
                       textTransform: 'uppercase' as const,
@@ -308,13 +310,13 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                   </div>
 
                   <h2 style={{
-                    fontSize: '30px',
+                    fontSize: '24px',
                     fontWeight: 800,
                     color: '#ffffff',
-                    margin: '0 0 10px 0',
+                    margin: '0 0 6px 0',
                     lineHeight: 1.2
                   }}>
-                    Đăng Ký Nhận Tư Vấn{' '}
+                    Đăng ký nhận tư vấn{' '}
                     <span style={{
                       fontStyle: 'italic',
                       background: 'linear-gradient(135deg, #4ade80, #22c55e)',
@@ -324,9 +326,9 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                   </h2>
 
                   <p style={{
-                    fontSize: '17px',
-                    color: 'rgba(255,255,255,0.75)',
-                    lineHeight: 1.6,
+                    fontSize: '13.5px',
+                    color: 'rgba(255,255,255,0.78)',
+                    lineHeight: 1.45,
                     margin: 0
                   }}>
                     Để lại thông tin, chuyên gia 4U Wellness sẽ liên hệ tư vấn lộ trình Retreat phù hợp nhất cho bạn.
@@ -334,20 +336,20 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                 </div>
 
                 {/* FORM SECTION */}
-                <div style={{ padding: '32px 36px 36px' }}>
+                <div style={{ padding: '20px 28px 24px' }}>
                   <form onSubmit={handleSubmit}>
                     {/* Name */}
-                    <div style={{ marginBottom: '20px' }}>
+                    <div style={{ marginBottom: '12px' }}>
                       <label htmlFor="cm-name" style={{
                         fontSize: '11px',
                         fontWeight: 700,
-                        letterSpacing: '0.12em',
+                        letterSpacing: '0.1em',
                         textTransform: 'uppercase' as const,
                         color: '#1E4A3D',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '6px',
-                        marginBottom: '8px'
+                        gap: '4px',
+                        marginBottom: '4px'
                       }}>
                         Họ & Tên <span style={{ color: '#ef4444' }}>*</span>
                       </label>
@@ -360,11 +362,11 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         style={{
                           width: '100%',
-                          padding: '14px 16px',
+                          padding: '10px 14px',
                           background: '#f8faf9',
-                          border: '1px solid rgba(30,74,61,0.15)',
-                          borderRadius: '12px',
-                          fontSize: '14px',
+                          border: '1px solid rgba(30,74,61,0.18)',
+                          borderRadius: '10px',
+                          fontSize: '13.5px',
                           color: '#0f172a',
                           outline: 'none',
                           transition: 'all 0.2s ease',
@@ -376,7 +378,7 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                           e.currentTarget.style.background = '#ffffff';
                         }}
                         onBlur={(e) => {
-                          e.currentTarget.style.borderColor = 'rgba(30,74,61,0.15)';
+                          e.currentTarget.style.borderColor = 'rgba(30,74,61,0.18)';
                           e.currentTarget.style.boxShadow = 'none';
                           e.currentTarget.style.background = '#f8faf9';
                         }}
@@ -384,18 +386,18 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                     </div>
 
                     {/* Phone & Preferred Time Grid */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
                       <div>
                         <label htmlFor="cm-phone" style={{
                           fontSize: '11px',
                           fontWeight: 700,
-                          letterSpacing: '0.12em',
+                          letterSpacing: '0.1em',
                           textTransform: 'uppercase' as const,
                           color: '#1E4A3D',
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '6px',
-                          marginBottom: '8px'
+                          gap: '4px',
+                          marginBottom: '4px'
                         }}>
                           SĐT / Zalo <span style={{ color: '#ef4444' }}>*</span>
                         </label>
@@ -408,11 +410,11 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           style={{
                             width: '100%',
-                            padding: '14px 16px',
+                            padding: '10px 14px',
                             background: '#f8faf9',
-                            border: '1px solid rgba(30,74,61,0.15)',
-                            borderRadius: '12px',
-                            fontSize: '14px',
+                            border: '1px solid rgba(30,74,61,0.18)',
+                            borderRadius: '10px',
+                            fontSize: '13.5px',
                             color: '#0f172a',
                             outline: 'none',
                             transition: 'all 0.2s ease',
@@ -424,7 +426,7 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                             e.currentTarget.style.background = '#ffffff';
                           }}
                           onBlur={(e) => {
-                            e.currentTarget.style.borderColor = 'rgba(30,74,61,0.15)';
+                            e.currentTarget.style.borderColor = 'rgba(30,74,61,0.18)';
                             e.currentTarget.style.boxShadow = 'none';
                             e.currentTarget.style.background = '#f8faf9';
                           }}
@@ -435,13 +437,13 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                         <label htmlFor="cm-time" style={{
                           fontSize: '11px',
                           fontWeight: 700,
-                          letterSpacing: '0.12em',
+                          letterSpacing: '0.1em',
                           textTransform: 'uppercase' as const,
                           color: '#1E4A3D',
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '6px',
-                          marginBottom: '8px'
+                          gap: '4px',
+                          marginBottom: '4px'
                         }}>
                           Thời Gian Tiện Gọi
                         </label>
@@ -451,11 +453,11 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                           onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
                           style={{
                             width: '100%',
-                            padding: '14px 16px',
+                            padding: '10px 14px',
                             background: '#f8faf9',
-                            border: '1px solid rgba(30,74,61,0.15)',
-                            borderRadius: '12px',
-                            fontSize: '14px',
+                            border: '1px solid rgba(30,74,61,0.18)',
+                            borderRadius: '10px',
+                            fontSize: '13.5px',
                             color: '#0f172a',
                             outline: 'none',
                             appearance: 'none' as const,
@@ -463,9 +465,9 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                             boxSizing: 'border-box' as const,
                             backgroundImage: "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%231E4A3D' stroke-width='1.6'><path d='M5 8l5 5 5-5'/></svg>\")",
                             backgroundRepeat: 'no-repeat',
-                            backgroundPosition: 'right 14px center',
-                            backgroundSize: '16px',
-                            paddingRight: '38px'
+                            backgroundPosition: 'right 12px center',
+                            backgroundSize: '14px',
+                            paddingRight: '34px'
                           }}
                         >
                           <option value="morning">Sáng (8h - 12h)</option>
@@ -481,29 +483,29 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                       type="submit"
                       style={{
                         width: '100%',
-                        padding: '16px',
+                        padding: '12px 18px',
                         border: 'none',
-                        borderRadius: '14px',
+                        borderRadius: '12px',
                         cursor: 'pointer',
                         background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #16a34a 100%)',
                         color: '#062c23',
-                        fontSize: '15px',
+                        fontSize: '14px',
                         fontWeight: 800,
-                        letterSpacing: '0.04em',
+                        letterSpacing: '0.03em',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        gap: '10px',
+                        gap: '8px',
                         transition: 'all 0.3s cubic-bezier(.22,.61,.36,1)',
-                        boxShadow: '0 4px 20px rgba(34, 197, 94, 0.3)'
+                        boxShadow: '0 4px 16px rgba(34, 197, 94, 0.28)'
                       }}
                       onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.boxShadow = '0 12px 32px rgba(34, 197, 94, 0.45)';
+                        e.currentTarget.style.boxShadow = '0 8px 24px rgba(34, 197, 94, 0.4)';
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 4px 20px rgba(34, 197, 94, 0.3)';
+                        e.currentTarget.style.boxShadow = '0 4px 16px rgba(34, 197, 94, 0.28)';
                       }}
                     >
                       Gửi Yêu Cầu Tư Vấn Miễn Phí
@@ -514,9 +516,9 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '8px',
-                      marginTop: '16px',
-                      fontSize: '14px',
+                      gap: '6px',
+                      marginTop: '10px',
+                      fontSize: '12px',
                       color: '#64748b'
                     }}>
                       Thông tin bảo mật 100% • Tư vấn hoàn toàn miễn phí
@@ -525,40 +527,35 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
 
                   {/* Hotline quick contact */}
                   <div style={{
-                    marginTop: '24px',
+                    marginTop: '14px',
                     background: 'linear-gradient(135deg, #f0fdf4, #ecfdf5)',
                     border: '1px solid rgba(34, 197, 94, 0.2)',
-                    borderRadius: '14px',
-                    padding: '16px 20px',
+                    borderRadius: '12px',
+                    padding: '10px 16px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    gap: '12px',
-                    flexWrap: 'wrap' as const
+                    gap: '10px'
                   }}>
                     <div>
-                      <div style={{ fontSize: '11px', fontWeight: 700, color: '#1E4A3D', letterSpacing: '0.08em', textTransform: 'uppercase' as const, marginBottom: '4px' }}>
-                        Hoặc gọi ngay Hotline
+                      <div style={{ fontSize: '10.5px', fontWeight: 700, color: '#1E4A3D', letterSpacing: '0.06em', textTransform: 'uppercase' as const, marginBottom: '2px' }}>
+                        HOẶC GỌI NGAY HOTLINE
                       </div>
-                      <div style={{ fontSize: '14px', color: '#475569' }}>
+                      <div style={{ fontSize: '12.5px', color: '#475569' }}>
                         Chuyên gia tư vấn trực tuyến 24/7
                       </div>
                     </div>
                     <a
                       href="tel:0764886877"
                       style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        padding: '10px 20px',
                         background: '#1E4A3D',
                         color: '#ffffff',
-                        borderRadius: '999px',
+                        padding: '8px 16px',
+                        borderRadius: '99px',
+                        fontWeight: 800,
+                        fontSize: '13px',
                         textDecoration: 'none',
-                        fontSize: '15px',
-                        fontWeight: 700,
-                        transition: 'all 0.2s ease',
-                        whiteSpace: 'nowrap' as const
+                        whiteSpace: 'nowrap'
                       }}
                     >
                       0764.886.877

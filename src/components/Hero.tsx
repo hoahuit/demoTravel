@@ -72,15 +72,14 @@ export default function Hero({ onOpenBooking }: HeroProps = {}) {
               color: '#4ade80',
               fontSize: '12px',
               fontWeight: 700,
-              letterSpacing: '0.18em',
+              letterSpacing: '0.04em',
               padding: '6px 18px',
               borderRadius: '999px',
-              textTransform: 'uppercase',
               marginBottom: '18px',
               fontFamily: "'Plus Jakarta Sans', sans-serif"
             }}
           >
-            {heroTour.city}, {heroTour.country} • {heroTour.duration}
+            {heroTour.city} • {heroTour.duration}
           </span>
 
           {/* Main Headline */}
