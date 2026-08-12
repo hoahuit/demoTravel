@@ -46,6 +46,9 @@ export interface TourPackage {
   isNew?: boolean;
   isPromotion?: boolean;
   isExclusive?: boolean;
+  isCustomer?: boolean;
+  isAdminApproved?: boolean;
+  isAdminAprove?: boolean;
   highlights: string[];
   itinerary: TourItineraryDay[];
   included?: string[];

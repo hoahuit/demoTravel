@@ -241,12 +241,38 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
     if (!window.confirm(`Bạn có chắc chắn muốn xóa tour "${tour.title}" không?`)) return;
 
     try {
-      await deleteTourApi(tour.slug);
+      await deleteTourApi(tour.id || tour.slug);
       setToursList((prev) => prev.filter((t) => t.slug !== tour.slug));
-      toast.success(`Đã xóa tour "${tour.title}" thành công!`);
-      handleBackToList();
+      if (selectedSlug === tour.slug) handleBackToList();
+      toast.success(`Đã xóa tour thành công!`);
     } catch (err: any) {
       toast.error(`Lỗi khi xóa tour: ${err?.message || err}`);
+    }
+  };
+
+  const handleToggleApproval = async (tour: TourPackage) => {
+    const currentApproved = tour.isAdminApproved !== false && (tour as any).isAdminAprove !== false;
+    const newApprovedState = !currentApproved;
+
+    try {
+      const updatedTour = {
+        ...tour,
+        isAdminApproved: newApprovedState,
+        isAdminAprove: newApprovedState,
+      };
+
+      await saveTourApi(tour.id || tour.slug, updatedTour);
+      setToursList((prev) =>
+        prev.map((t) => (t.slug === tour.slug ? { ...t, isAdminApproved: newApprovedState, isAdminAprove: newApprovedState } : t))
+      );
+
+      toast.success(
+        newApprovedState
+          ? `Đã duyệt hiển thị tour "${tour.title}" lên hệ thống!`
+          : `Đã tạm ẩn / hủy duyệt hiển thị tour "${tour.title}"!`
+      );
+    } catch (err: any) {
+      toast.error(`Cập nhật duyệt tour thất bại: ${err?.message || err}`);
     }
   };
 
@@ -449,6 +475,34 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                       <span style={{ fontSize: '10px', fontWeight: 800, backgroundColor: '#dbeafe', color: '#1d4ed8', padding: '4px 10px', borderRadius: '999px', textTransform: 'uppercase' }}>
                         SẮP KHỞI HÀNH
                       </span>
+                    )}
+                    {tour.isCustomer && (
+                      <span style={{ fontSize: '10px', fontWeight: 800, backgroundColor: '#fef3c7', color: '#b45309', padding: '4px 10px', borderRadius: '999px', textTransform: 'uppercase' }}>
+                        👤 KHÁCH TẠO
+                      </span>
+                    )}
+                    {tour.isAdminApproved === false || (tour as any).isAdminAprove === false ? (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleApproval(tour);
+                        }}
+                        style={{ fontSize: '10px', fontWeight: 800, backgroundColor: '#fee2e2', color: '#dc2626', padding: '4px 10px', borderRadius: '999px', border: '1px solid #fca5a5', cursor: 'pointer' }}
+                      >
+                        ⏳ CHỜ DUYỆT (CLICK DUYỆT)
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleApproval(tour);
+                        }}
+                        style={{ fontSize: '10px', fontWeight: 800, backgroundColor: '#dcfce7', color: '#166534', padding: '4px 10px', borderRadius: '999px', border: '1px solid #86efac', cursor: 'pointer' }}
+                      >
+                        ✓ ĐÃ DUYỆT HIỂN THỊ
+                      </button>
                     )}
                   </div>
                 </div>
@@ -1480,6 +1534,32 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                       checked={tourDraft.isNew || false}
                       onChange={(e) => setTourDraft({ ...tourDraft, isNew: e.target.checked })}
                       style={{ width: '18px', height: '18px', accentColor: '#081f13', cursor: 'pointer' }}
+                    />
+                  </label>
+
+                  <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: '12px', backgroundColor: '#fef3c7', cursor: 'pointer', border: '1px solid #fde68a' }}>
+                    <div>
+                      <strong style={{ fontSize: '14px', color: '#92400e' }}>👤 6. Tour Do Khách Hàng Yêu Cầu/Tạo (isCustomer)</strong>
+                      <p style={{ fontSize: '12px', color: '#b45309', margin: '2px 0 0 0' }}>Đánh dấu tour này được tạo hoặc đề xuất bởi khách hàng</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={tourDraft.isCustomer || false}
+                      onChange={(e) => setTourDraft({ ...tourDraft, isCustomer: e.target.checked })}
+                      style={{ width: '18px', height: '18px', accentColor: '#d97706', cursor: 'pointer' }}
+                    />
+                  </label>
+
+                  <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', borderRadius: '12px', backgroundColor: '#dcfce7', cursor: 'pointer', border: '1px solid #86efac' }}>
+                    <div>
+                      <strong style={{ fontSize: '14px', color: '#14532d' }}>🛡️ 7. Đã Được Admin Duyệt Hiển Thị (isAdminApproved / isAdminAprove)</strong>
+                      <p style={{ fontSize: '12px', color: '#166534', margin: '2px 0 0 0' }}>Khi tích chọn, Tour mới được phép xuất hiện công khai trên Website</p>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={tourDraft.isAdminApproved !== false && (tourDraft as any).isAdminAprove !== false}
+                      onChange={(e) => setTourDraft({ ...tourDraft, isAdminApproved: e.target.checked, isAdminAprove: e.target.checked } as any)}
+                      style={{ width: '18px', height: '18px', accentColor: '#16a34a', cursor: 'pointer' }}
                     />
                   </label>
                 </div>

@@ -249,41 +249,44 @@ export default function UuDaiGioChotSection({ onOpenBooking, onNavigate }: UuDai
           background: #2d5a36;
           box-shadow: 0 6px 18px rgba(45, 90, 54, 0.35);
         }
+        .udgc-header-flex {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          align-items: flex-end;
+          gap: 24px;
+          margin-bottom: 48px;
+          padding-bottom: 28px;
+          border-bottom: 1px solid rgba(16, 32, 27, 0.1);
+        }
+        .udgc-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #dc2626;
+          background: rgba(220, 38, 38, 0.08);
+          padding: 6px 14px;
+          border-radius: 999px;
+          margin-bottom: 12px;
+          border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+        .udgc-action-footer {
+          text-align: center;
+          margin-top: 60px;
+        }
       `}</style>
 
-      <div style={{ width: '100%', maxWidth: '100%', padding: '0 48px' }} className="bento-full-container">
+      <div className="bento-full-container">
 
         {/* SECTION HEADER */}
         <ScrollReveal>
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
-              gap: '24px',
-              marginBottom: '48px',
-              paddingBottom: '28px',
-              borderBottom: '1px solid rgba(16, 32, 27, 0.1)'
-            }}
-          >
+          <div className="udgc-header-flex">
             <div>
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontSize: '11px',
-                  fontWeight: 800,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  color: '#dc2626',
-                  marginBottom: '12px',
-                  background: 'rgba(220, 38, 38, 0.08)',
-                  padding: '5px 14px',
-                  borderRadius: '99px'
-                }}
-              >
+              <div className="udgc-badge">
                 <span>⚡ FLASH SALE GIỜ CHÓT</span>
               </div>
               <h2

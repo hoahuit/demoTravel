@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MessageCircle, ChevronUp, X } from 'lucide-react';
+import { saveSectionItemApi } from '../services/apiService';
 
 export interface ConsultationModalProps {
   externalOpen?: boolean;
@@ -80,12 +81,35 @@ export default function ConsultationModal({ externalOpen, onExternalClose, selec
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.phone) {
       alert('Vui lòng nhập Họ tên và Số điện thoại!');
       return;
     }
+    
+    try {
+      const timeMapping: Record<string, string> = {
+        morning: 'Sáng (8h - 12h)',
+        afternoon: 'Chiều (13h30 - 17h30)',
+        evening: 'Tối (18h - 21h)',
+        anytime: 'Bất kỳ lúc nào'
+      };
+      
+      await saveSectionItemApi('consultations', 'create', {
+        customerName: formData.name,
+        customerPhone: formData.phone,
+        customerEmail: formData.email || '',
+        preferredCallTime: timeMapping[formData.preferredTime] || formData.preferredTime || 'Sáng (8h - 12h)',
+        tourName: formData.tour || 'Yêu cầu tư vấn chung',
+        note: formData.message || '',
+        status: 'Chưa tư vấn',
+        createdAt: new Date().toISOString()
+      });
+    } catch (err) {
+      console.warn('Lưu lịch hẹn tư vấn vào API backend:', err);
+    }
+
     setSubmitted(true);
   };
 

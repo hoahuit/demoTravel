@@ -67,39 +67,67 @@ export default function AdminBookingsManager({
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
             <thead>
               <tr style={{ backgroundColor: '#f8faf7', borderBottom: '1px solid rgba(6, 27, 14, 0.08)', color: '#525a54' }}>
-                <th style={{ padding: '14px 18px', fontWeight: 700 }}>Mã Đơn</th>
+                <th style={{ padding: '14px 18px', fontWeight: 700 }}>Mã Đơn / ID</th>
                 <th style={{ padding: '14px 18px', fontWeight: 700 }}>Khách Hàng</th>
-                <th style={{ padding: '14px 18px', fontWeight: 700 }}>Tên Tour</th>
+                <th style={{ padding: '14px 18px', fontWeight: 700 }}>Thời Gian Tiện Gọi</th>
+                <th style={{ padding: '14px 18px', fontWeight: 700 }}>Tên Tour / Nội Dung</th>
                 <th style={{ padding: '14px 18px', fontWeight: 700 }}>Ngày Đi</th>
-                <th style={{ padding: '14px 18px', fontWeight: 700 }}>Số Khách</th>
-                <th style={{ padding: '14px 18px', fontWeight: 700 }}>Tổng Tiền</th>
                 <th style={{ padding: '14px 18px', fontWeight: 700 }}>Trạng Thái</th>
                 <th style={{ padding: '14px 18px', fontWeight: 700, textAlign: 'right' }}>Thao Tác</th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map((b, idx) => (
-                <tr key={b.id || idx} style={{ borderBottom: '1px solid rgba(6, 27, 14, 0.05)' }}>
-                  <td style={{ padding: '14px 18px', fontWeight: 700, fontFamily: 'monospace', color: '#081f13' }}>{b.id}</td>
-                  <td style={{ padding: '14px 18px', fontWeight: 600 }}>
-                    <div>{b.customer}</div>
-                    <div style={{ fontSize: '12px', color: '#525a54' }}>{b.phone || b.email}</div>
-                  </td>
-                  <td style={{ padding: '14px 18px' }}>{b.tour}</td>
-                  <td style={{ padding: '14px 18px' }}>{b.date}</td>
-                  <td style={{ padding: '14px 18px', fontWeight: 600 }}>{b.guests} người</td>
-                  <td style={{ padding: '14px 18px', fontWeight: 700, fontFamily: 'monospace' }}>{(b.amount || 0).toLocaleString('vi-VN')} ₫</td>
-                  <td style={{ padding: '14px 18px' }}>
-                    <span style={{ fontSize: '11px', fontWeight: 800, padding: '4px 10px', borderRadius: '999px', backgroundColor: b.status === 'Confirmed' ? '#dcfce7' : '#fef3c7', color: b.status === 'Confirmed' ? '#166534' : '#b45309' }}>
-                      {b.status === 'Confirmed' ? 'Đã Xác Nhận' : 'Chờ Xử Lý'}
-                    </span>
-                  </td>
-                  <td style={{ padding: '14px 18px', textAlign: 'right' }}>
-                    <button onClick={() => openEditModal('bookings', b)} style={{ border: 'none', background: 'transparent', color: '#081f13', fontWeight: 700, cursor: 'pointer', marginRight: '12px' }}>Chỉnh Sửa</button>
-                    <button onClick={() => handleDeleteItem('bookings', b.id)} style={{ border: 'none', background: 'transparent', color: '#dc2626', fontWeight: 700, cursor: 'pointer' }}>Xóa</button>
-                  </td>
-                </tr>
-              ))}
+              {filtered.map((b, idx) => {
+                const name = b.customerName || b.customer || 'Khách hàng';
+                const phone = b.customerPhone || b.phone || '';
+                const email = b.customerEmail || b.email || '';
+                const callTime = b.preferredCallTime || 'Sáng (8h - 12h)';
+                const tour = b.tourName || b.tour || 'Tư vấn tổng quát';
+                const date = b.travelDate || b.date || 'Chưa xếp';
+                const statusStr = b.status || 'Chưa tư vấn';
+
+                let badgeStyle = { backgroundColor: '#fef3c7', color: '#b45309' };
+                let statusLabel = statusStr;
+
+                if (statusStr === 'Confirmed' || statusStr === 'Đã Xác Nhận') {
+                  badgeStyle = { backgroundColor: '#e0f2fe', color: '#0369a1' };
+                  statusLabel = 'Đã Xác Nhận';
+                } else if (statusStr === 'Đã tư vấn' || statusStr === 'Consulted') {
+                  badgeStyle = { backgroundColor: '#dcfce7', color: '#166534' };
+                  statusLabel = 'Đã Tư Vấn';
+                } else if (statusStr === 'Chưa tư vấn' || statusStr === 'Pending') {
+                  badgeStyle = { backgroundColor: '#fef3c7', color: '#b45309' };
+                  statusLabel = 'Chưa Tư Vấn';
+                }
+
+                return (
+                  <tr key={b.id || idx} style={{ borderBottom: '1px solid rgba(6, 27, 14, 0.05)' }}>
+                    <td style={{ padding: '14px 18px', fontWeight: 700, fontFamily: 'monospace', color: '#081f13' }}>
+                      {b.bookingCode || b.id}
+                    </td>
+                    <td style={{ padding: '14px 18px', fontWeight: 600 }}>
+                      <div>{name}</div>
+                      <div style={{ fontSize: '12px', color: '#525a54' }}>{phone} {email ? `• ${email}` : ''}</div>
+                    </td>
+                    <td style={{ padding: '14px 18px', fontSize: '13px', color: '#081f13' }}>
+                      <span style={{ backgroundColor: '#f1f5f9', padding: '4px 8px', borderRadius: '6px', fontWeight: 600 }}>
+                        {callTime}
+                      </span>
+                    </td>
+                    <td style={{ padding: '14px 18px' }}>{tour}</td>
+                    <td style={{ padding: '14px 18px' }}>{date}</td>
+                    <td style={{ padding: '14px 18px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 800, padding: '4px 10px', borderRadius: '999px', ...badgeStyle }}>
+                        {statusLabel}
+                      </span>
+                    </td>
+                    <td style={{ padding: '14px 18px', textAlign: 'right' }}>
+                      <button onClick={() => openEditModal('bookings', b)} style={{ border: 'none', background: 'transparent', color: '#081f13', fontWeight: 700, cursor: 'pointer', marginRight: '12px' }}>Chỉnh Sửa</button>
+                      <button onClick={() => handleDeleteItem('bookings', b.id)} style={{ border: 'none', background: 'transparent', color: '#dc2626', fontWeight: 700, cursor: 'pointer' }}>Xóa</button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

@@ -22,7 +22,9 @@ const parseArrayField = (val: any): string[] => {
     try {
       const parsed = JSON.parse(val);
       if (Array.isArray(parsed)) return parsed.map(s => String(s || '').trim()).filter(Boolean);
-    } catch (e) {}
+    } catch (parseErr) {
+      // String is comma-delimited rather than JSON
+    }
     return val.split(',').map(s => s.trim()).filter(Boolean);
   }
   return [];
@@ -510,40 +512,35 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                       {selectedDayIndex < (pageData.itinerary ? pageData.itinerary.length : 0) ? (
                         (() => {
                           const currentDay = pageData.itinerary[selectedDayIndex];
-                          const dayMoments = currentDay.image && currentDay.image.trim().length > 0
-                            ? [currentDay.image, ...(pageData.galleryImages?.slice(0, 5) || [])]
+                          const dayMoments = (currentDay.image && currentDay.image.trim().length > 0
+                            ? [currentDay.image]
                             : (pageData.galleryImages && pageData.galleryImages.length > 0
                               ? pageData.galleryImages
-                              : [
-                                pageData.heroImage,
-                                'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop',
-                                'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=600&auto=format&fit=crop',
-                                'https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=600&auto=format&fit=crop',
-                                'https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=600&auto=format&fit=crop',
-                                'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?q=80&w=600&auto=format&fit=crop',
-                              ]);
+                              : [])).filter((img: string) => img && img.trim().length > 0 && img !== '--');
+
                           return (
                             <div>
                               {/* Day Title */}
                               <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: '0 0 18px 0' }}>
-                                {currentDay.title}
+                                {currentDay.title || '--'}
                               </h3>
-
-
-
 
                               {/* Day Overview Paragraph */}
                               <div style={{ fontSize: '0.98rem', color: '#475569', lineHeight: 1.85, marginBottom: '24px' }}>
-                                {currentDay.description && (
+                                {currentDay.description ? (
                                   <p style={{ margin: '0 0 18px 0' }}>
                                     {currentDay.description}
                                   </p>
+                                ) : (
+                                  <p style={{ margin: '0 0 18px 0', color: '#64748b' }}>--</p>
                                 )}
-                                {currentDay.activities?.map((activity: string, activityIdx: number) => (
-                                  <p key={activityIdx} style={{ margin: '0 0 12px 0' }}>
-                                    • {activity}
-                                  </p>
-                                ))}
+                                {currentDay.activities && currentDay.activities.length > 0 ? (
+                                  currentDay.activities.map((activity: string, activityIdx: number) => (
+                                    <p key={activityIdx} style={{ margin: '0 0 12px 0' }}>
+                                      • {activity}
+                                    </p>
+                                  ))
+                                ) : null}
                               </div>
 
                               {/* Moments Section */}
@@ -551,17 +548,21 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                                 <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 16px 0' }}>
                                   Moments
                                 </h4>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
-                                  {dayMoments.slice(0, 6).map((imgUrl: string, imgIdx: number) => (
-                                    <div key={imgIdx} style={{ width: '100%', height: '88px', borderRadius: '14px', overflow: 'hidden', background: '#f1f5f9' }}>
-                                      <img
-                                        src={imgUrl}
-                                        alt={`Moment ${imgIdx + 1}`}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                      />
-                                    </div>
-                                  ))}
-                                </div>
+                                {dayMoments.length > 0 ? (
+                                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
+                                    {dayMoments.slice(0, 6).map((imgUrl: string, imgIdx: number) => (
+                                      <div key={imgIdx} style={{ width: '100%', height: '88px', borderRadius: '14px', overflow: 'hidden', background: '#f1f5f9' }}>
+                                        <img
+                                          src={imgUrl}
+                                          alt={`Moment ${imgIdx + 1}`}
+                                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                      </div>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <div style={{ fontSize: '0.88rem', color: '#64748b', fontWeight: 600 }}>--</div>
+                                )}
                               </div>
 
                               {/* Transport Section */}
@@ -570,21 +571,15 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                                   Transport & Culinary
                                 </h4>
                                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                  {currentDay.transportAndCulinary && currentDay.transportAndCulinary.length > 0
-                                    ? currentDay.transportAndCulinary.map((tag: string, tagIdx: number) => (
+                                  {currentDay.transportAndCulinary && currentDay.transportAndCulinary.length > 0 ? (
+                                    currentDay.transportAndCulinary.map((tag: string, tagIdx: number) => (
                                       <span key={tagIdx} style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
                                         {tag}
                                       </span>
                                     ))
-                                    : [
-                                      '🚌 Xe Limousine VIP 4U',
-                                      '🥗 Thực dưỡng 100% hữu cơ',
-                                      '🍵 Trà thảo mộc bản địa'
-                                    ].map((tag, tagIdx) => (
-                                      <span key={tagIdx} style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
-                                        {tag}
-                                      </span>
-                                    ))}
+                                  ) : (
+                                    <div style={{ fontSize: '0.88rem', color: '#64748b', fontWeight: 600 }}>--</div>
+                                  )}
                                 </div>
                               </div>
 
@@ -594,21 +589,15 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                                   Attractions
                                 </h4>
                                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                  {currentDay.attractions && currentDay.attractions.length > 0
-                                    ? currentDay.attractions.map((attraction: string, attractionIdx: number) => (
+                                  {currentDay.attractions && currentDay.attractions.length > 0 ? (
+                                    currentDay.attractions.map((attraction: string, attractionIdx: number) => (
                                       <span key={attractionIdx} style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
                                         {attraction}
                                       </span>
                                     ))
-                                    : [
-                                      `📍 ${pageData.location}`,
-                                      '🧘 Khung cảnh an yên tĩnh lặng',
-                                      '🌲 Thiên nhiên nguyên sơ'
-                                    ].map((tag, tagIdx) => (
-                                      <span key={tagIdx} style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
-                                        {tag}
-                                      </span>
-                                    ))}
+                                  ) : (
+                                    <div style={{ fontSize: '0.88rem', color: '#64748b', fontWeight: 600 }}>--</div>
+                                  )}
                                 </div>
                               </div>
 

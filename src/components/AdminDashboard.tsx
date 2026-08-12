@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import AdminToursManager from './admin/AdminToursManager';
 import AdminBookingsManager from './admin/AdminBookingsManager';
+import AdminConsultationsManager from './admin/AdminConsultationsManager';
 import AdminAnalyticsManager from './admin/AdminAnalyticsManager';
 import AdminAboutManager from './admin/AdminAboutManager';
 import AdminBlogManager from './admin/AdminBlogManager';
@@ -30,23 +31,24 @@ import { ToastProvider, useToast } from './ui/Toast';
 import './Admin.css';
 
 export const ADMIN_SECTIONS = [
-  { id: 'tours', label: 'Tours Du Lịch' },
-  { id: 'categories', label: 'Danh Mục Menu' },
-  { id: 'bookings', label: 'Đơn Đặt Tour' },
-  { id: 'analytics', label: 'Thống Kê & Báo Cáo' },
-  { id: 'about', label: 'Giới Thiệu 4U' },
-  { id: 'blog', label: 'Bài Viết Blog' },
-  { id: 'destinations', label: 'Điểm Đến Tĩnh Dưỡng' },
-  { id: 'faq', label: 'Câu Hỏi Thường Gặp' },
-  { id: 'partners', label: 'Đối Tác Doanh Nghiệp' },
-  { id: 'promotions', label: 'Mã Ưu Đãi & Voucher' },
-  { id: 'services', label: 'Dịch Vụ Retreat' },
-  { id: 'team', label: 'Đội Ngũ Nhân Sự' },
-  { id: 'testimonials', label: 'Đánh Giá Khách Hàng' },
-  { id: 'settings', label: 'Cấu Hình Hệ Thống' },
+  { id: 'tours', label: 'Quản Lý Tour' },
+  { id: 'blog', label: 'Quản Lý Bài Viết' },
+  { id: 'destinations', label: 'Quản Lý Điểm Đến' },
+  { id: 'partners', label: 'Quản Lý Đối Tác Doanh Nghiệp' },
+  { id: 'consultations', label: 'Quản Lý Lịch Hẹn Tư Vấn' },
+  // { id: 'categories', label: 'Danh Mục Menu' },
+  // { id: 'bookings', label: 'Đơn Đặt Tour' },
+  // { id: 'analytics', label: 'Thống Kê & Báo Cáo' },
+  // { id: 'about', label: 'Giới Thiệu 4U' },
+  // { id: 'faq', label: 'Câu Hỏi Thường Gặp' },
+  // { id: 'promotions', label: 'Mã Ưu Đãi & Voucher' },
+  // { id: 'services', label: 'Dịch Vụ Retreat' },
+  // { id: 'team', label: 'Đội Ngũ Nhân Sự' },
+  // { id: 'testimonials', label: 'Đánh Giá Khách Hàng' },
+  // { id: 'settings', label: 'Cấu Hình Hệ Thống' },
 ] as const;
 
-export type AdminSectionId = typeof ADMIN_SECTIONS[number]['id'];
+export type AdminSectionId = typeof ADMIN_SECTIONS[number]['id'] | string;
 
 interface AdminDashboardProps {
   currentPath: string;
@@ -65,7 +67,7 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
   const toast = useToast();
   const effectiveSection = useMemo<AdminSectionId>(() => {
     const match = currentPath.replace(/^\/admin\/?/, '').split('/')[0];
-    const found = ADMIN_SECTIONS.find((item) => item.id === match || (match === 'destination' && item.id === 'destinations') || (match === 'partner' && item.id === 'partners') || (match === 'promotion' && item.id === 'promotions') || (match === 'service' && item.id === 'services') || (match === 'testimonial' && item.id === 'testimonials'));
+    const found = ADMIN_SECTIONS.find((item) => (item.id as string) === match || (match === 'destination' && item.id === 'destinations') || (match === 'partner' && item.id === 'partners'));
     return (found?.id ?? 'tours') as AdminSectionId;
   }, [currentPath]);
 
@@ -91,6 +93,7 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
     { id: 'BK-178902', customer: 'Nguyễn Văn An', phone: '0901234567', email: 'an.nguyen@gmail.com', tour: 'Hành Trình Chữa Lành Thân Tâm 3D2N', date: '15/08/2026', guests: 2, amount: 13000000, status: 'Confirmed' },
     { id: 'BK-178903', customer: 'Trần Thị Mai', phone: '0988776655', email: 'mai.tran@gmail.com', tour: 'Retreat Bảo Tồn Rừng Nguyên Sinh 4D3N', date: '20/08/2026', guests: 4, amount: 26000000, status: 'Pending' }
   ]);
+  const [consultationsList, setConsultationsList] = useState<any[]>([]);
 
   // MODAL EDITING STATE
   const [modalOpen, setModalOpen] = useState(false);
@@ -108,6 +111,7 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
         if (Array.isArray(liveItems)) {
           switch (effectiveSection) {
             case 'bookings': setBookingsList(liveItems); break;
+            case 'consultations': setConsultationsList(liveItems); break;
             case 'blog': setBlogsList(liveItems); break;
             case 'destinations': setDestinationsList(liveItems); break;
             case 'faq': setFaqList(liveItems); break;
@@ -126,6 +130,18 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
     loadLiveData();
   }, [effectiveSection]);
 
+  const handleConsultationStatusUpdate = async (item: any, newStatus: string) => {
+    try {
+      await saveSectionItemApi('consultations', 'update', { ...item, status: newStatus });
+      setConsultationsList((prev) =>
+        prev.map((c) => (c.id === item.id ? { ...c, status: newStatus } : c))
+      );
+      toast.success(`Đã cập nhật trạng thái hẹn tư vấn thành "${newStatus}"!`);
+    } catch (err: any) {
+      toast.error(`Cập nhật thất bại: ${err?.message || err}`);
+    }
+  };
+
   const handleSelectSection = (sectionId: AdminSectionId) => {
     setActiveSection(sectionId);
     onNavigate(`/admin/${sectionId}`);
@@ -139,6 +155,10 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
       case 'bookings':
         title = 'Thêm Đơn Đặt Tour Mới';
         newItem = { id: `BK-${Date.now()}`, customer: '', email: '', phone: '', tour: TOURS_DATA[0]?.title || 'Retreat Tour', date: '20/08/2026', guests: 2, amount: 6500000, status: 'Confirmed' };
+        break;
+      case 'consultations':
+        title = 'Thêm Lịch Hẹn Tư Vấn Mới';
+        newItem = { customerName: '', customerPhone: '', preferredCallTime: 'Sáng (8h - 12h)', tourName: 'Retreat Tour', status: 'Chưa tư vấn', note: '' };
         break;
       case 'blog':
         title = 'Tạo Bài Viết Blog Mới';
@@ -202,6 +222,10 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
         if (isNew) setBookingsList([item, ...bookingsList]);
         else setBookingsList(bookingsList.map(b => b.id === item.id ? item : b));
         break;
+      case 'consultations':
+        if (isNew) setConsultationsList([item, ...consultationsList]);
+        else setConsultationsList(consultationsList.map(c => c.id === item.id ? item : c));
+        break;
       case 'blog':
         if (isNew) setBlogsList([item, ...blogsList]);
         else setBlogsList(blogsList.map(b => b.id === item.id ? item : b));
@@ -253,6 +277,9 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
     switch (section) {
       case 'bookings':
         setBookingsList(bookingsList.filter(b => b.id !== identifier));
+        break;
+      case 'consultations':
+        setConsultationsList(consultationsList.filter(c => c.id !== identifier));
         break;
       case 'blog':
         setBlogsList(blogsList.filter(b => b.id !== identifier));
@@ -352,6 +379,7 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
           {activeSection === 'tours' && <AdminToursManager toast={toast} onNavigate={onNavigate} />}
           {activeSection === 'categories' && <AdminCategoriesManager toast={toast} />}
           {activeSection === 'bookings' && <AdminBookingsManager bookingsList={bookingsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
+          {activeSection === 'consultations' && <AdminConsultationsManager consultationsList={consultationsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} handleStatusUpdate={handleConsultationStatusUpdate} />}
           {activeSection === 'analytics' && <AdminAnalyticsManager />}
           {activeSection === 'about' && <AdminAboutManager aboutState={aboutState} setAboutState={setAboutState} toast={toast} />}
           {activeSection === 'blog' && <AdminBlogManager blogsList={blogsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}

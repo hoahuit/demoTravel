@@ -3,6 +3,7 @@ import Header from './components/Header';
 import SearchModal from './components/SearchModal';
 import BookingModal from './components/BookingModal';
 import ConsultationModal from './components/ConsultationModal';
+import CreateCustomTourModal from './components/CreateCustomTourModal';
 import ProductDetail from './components/ProductDetail';
 import Hero from './components/Hero';
 import BentoGrid from './components/BentoGrid';
@@ -46,6 +47,7 @@ export default function App() {
   const [calendarOpen, setCalendarOpen] = useState<boolean>(false);
   const [bookingState, setBookingState] = useState<{ open: boolean; tour: any }>({ open: false, tour: null });
   const [consultationOpen, setConsultationOpen] = useState<boolean>(false);
+  const [customTourOpen, setCustomTourOpen] = useState<boolean>(false);
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
 
   // PayPal Booking Modal — triggered by "Đặt Ngay" buttons
@@ -245,6 +247,12 @@ export default function App() {
         onNavigate={navigateTo}
       />
 
+      {/* Create Custom Tour Modal — opened by "Tạo Lịch Trình Riêng" button */}
+      <CreateCustomTourModal
+        isOpen={customTourOpen}
+        onClose={() => setCustomTourOpen(false)}
+      />
+
       {/* Header — "Nhận tư vấn" opens Consultation Modal, "Lịch khởi hành" opens Departure Calendar */}
       {!isAdminRoute && (
         <Header
@@ -252,6 +260,7 @@ export default function App() {
           onNavigate={navigateTo}
           onOpenBooking={handleOpenConsultation}
           onOpenCalendar={() => setCalendarOpen(true)}
+          onOpenCustomTour={() => setCustomTourOpen(true)}
         />
       )}
 

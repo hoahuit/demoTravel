@@ -1,14 +1,21 @@
-// 4U RETREAT FRONTEND - REAL BACKEND API INTEGRATION SERVICE (100% Direct LoopBack 4 + MS SQL Server)
-
-export const API_BASE_URL = 'http://127.0.0.1:3001';
+export const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://127.0.0.1:3001';
 
 // Format image URL: if relative filename like 'a.jpg' is provided, load using API_BASE_URL/uploads/a.jpg
 export function getImageUrl(imagePath?: string): string {
+  const DEFAULT_PLACEHOLDER = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80';
+
   if (!imagePath || typeof imagePath !== 'string' || !imagePath.trim()) {
-    return 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80';
+    return DEFAULT_PLACEHOLDER;
   }
   const trimmed = imagePath.trim();
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:')) {
+  const lower = trimmed.toLowerCase();
+
+  // Security Sanitization: Prevent XSS / malicious script pseudo-protocols
+  if (lower.startsWith('javascript:') || lower.startsWith('vbscript:')) {
+    return DEFAULT_PLACEHOLDER;
+  }
+
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:image/')) {
     return trimmed;
   }
   if (trimmed.startsWith('/')) {
@@ -126,6 +133,7 @@ export function getLb4Endpoint(section: string): string {
     settings: '/settings',
     categories: '/menu-categories',
     'menu-categories': '/menu-categories',
+    consultations: '/consultations',
   };
   return mapping[section] || `/${section}`;
 }
@@ -205,7 +213,7 @@ export function sanitizeTourPayload(tourData: any, isUpdate = false) {
   const payload: any = {};
   const validKeys = [
     'slug', 'title', 'subtitle', 'category', 'categories', 'country', 'city', 'duration', 'durationDays',
-    'heroImage', 'price', 'originalPrice', 'isHot', 'isFeatured', 'isExclusive',
+    'heroImage', 'price', 'originalPrice', 'isHot', 'isFeatured', 'isExclusive', 'isCustomer', 'isAdminApproved', 'isAdminAprove',
     'departureDates', 'airline', 'hotel', 'transportation', 'rating', 'reviewsCount',
     'highlights', 'itinerary', 'gallery', 'included', 'excluded', 'notes', 'destinationMap',
     'travelTips', 'faq', 'reviews'
@@ -308,6 +316,14 @@ export async function fetchToursApi(forceRefresh = false) {
   return inflightToursPromise;
 }
 
+export function getAuthHeader(): string {
+  const stored = typeof window !== 'undefined' ? localStorage.getItem('4u_admin_jwt_token') : null;
+  if (stored) {
+    return stored.startsWith('Bearer ') ? stored : `Bearer ${stored}`;
+  }
+  return '';
+}
+
 export async function saveTourApi(identifier: string | number, tourData: any) {
   let targetId: any = identifier;
   if ((!targetId || targetId === 'new') && tourData) {
@@ -322,12 +338,17 @@ export async function saveTourApi(identifier: string | number, tourData: any) {
   const method = 'PATCH';
   const payload = sanitizeTourPayload(tourData, true);
 
+  const authHeader = getAuthHeader();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  if (authHeader) {
+    headers['Authorization'] = authHeader;
+  }
+
   const response = await fetch(url, {
     method,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer 4u_admin_jwt_token_sample_2026',
-    },
+    headers,
     body: JSON.stringify(payload),
   });
 
@@ -347,12 +368,17 @@ export async function saveTourApi(identifier: string | number, tourData: any) {
 export async function createTourApi(tourData: any) {
   const payload = sanitizeTourPayload(tourData, false);
 
+  const authHeader = getAuthHeader();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  if (authHeader) {
+    headers['Authorization'] = authHeader;
+  }
+
   const response = await fetch(`${API_BASE_URL}/tours`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer 4u_admin_jwt_token_sample_2026',
-    },
+    headers,
     body: JSON.stringify(payload),
   });
 
@@ -373,11 +399,15 @@ export async function deleteTourApi(id: number | string) {
     ? `${API_BASE_URL}/tours/${id}`
     : `${API_BASE_URL}/tours/slug/${encodeURIComponent(String(id))}`;
 
+  const authHeader = getAuthHeader();
+  const headers: Record<string, string> = {};
+  if (authHeader) {
+    headers['Authorization'] = authHeader;
+  }
+
   const response = await fetch(url, {
     method: 'DELETE',
-    headers: {
-      Authorization: 'Bearer 4u_admin_jwt_token_sample_2026',
-    },
+    headers,
   });
 
   // Invalidate query cache on mutation
@@ -438,15 +468,17 @@ export async function fetchSectionItemsApi(section: string, forceRefresh = false
   return inflightSectionPromises[section];
 }
 
-export async function saveSectionItemApi(section: string, action: 'create' | 'update' | 'delete', data: any) {
+
+export async function saveSectionItemApi(
+  section: string,
+  action: 'create' | 'update' | 'delete',
+  data: any
+) {
   const endpoint = getLb4Endpoint(section);
+  const payload = sanitizeTourPayload(data, action === 'update');
+
   let method = 'POST';
   let url = `${API_BASE_URL}${endpoint}`;
-
-  const payload = { ...data };
-  if (action === 'create' || typeof payload.id === 'string') {
-    delete payload.id;
-  }
 
   const targetId = data.id || data.slug;
 
@@ -462,7 +494,7 @@ export async function saveSectionItemApi(section: string, action: 'create' | 'up
     method,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer 4u_admin_jwt_token_sample_2026',
+      Authorization: getAuthHeader(),
     },
     body: action !== 'delete' ? JSON.stringify(payload) : undefined,
   });
@@ -517,4 +549,8 @@ export async function saveMenuCategoryApi(id: number | string, categoryData: Par
 export async function deleteMenuCategoryApi(id: number | string): Promise<boolean> {
   await saveSectionItemApi('categories', 'delete', { id });
   return true;
+}
+
+export async function createConsultationApi(consultationData: any): Promise<any> {
+  return await saveSectionItemApi('consultations', 'create', consultationData);
 }

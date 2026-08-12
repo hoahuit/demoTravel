@@ -7,6 +7,7 @@ export interface HeaderProps {
   onNavigate?: (path: string) => void;
   onOpenBooking?: (tourData?: any) => void;
   onOpenCalendar?: () => void;
+  onOpenCustomTour?: () => void;
 }
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -29,7 +30,7 @@ interface MenuCategory {
   items?: MenuItem[];
 }
 
-export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpenCalendar }: HeaderProps) {
+export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpenCalendar, onOpenCustomTour }: HeaderProps) {
   const [scrolled, setScrolled] = useState<boolean>(false);
   const [row2Visible, setRow2Visible] = useState<boolean>(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
@@ -131,7 +132,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
           right: 0,
           zIndex: 10000,
           background: activeCategory
-            ? 'rgba(10, 15, 11, 0.98)'
+            ? 'rgba(13, 23, 16, 0.88)'
             : (scrolled
               ? 'rgba(13, 23, 16, 0.88)'
               : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%)'),
@@ -399,6 +400,50 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               <span>Lịch khởi hành</span>
             </button>
 
+            {/* Tạo Lịch Trình Riêng Tôi Button */}
+            <button
+              onClick={() => {
+                if (onOpenCustomTour) onOpenCustomTour();
+              }}
+              className="hide-mobile"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '7px',
+                padding: '11px 20px',
+                borderRadius: '999px',
+                background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%)',
+                color: '#4ade80',
+                fontWeight: '700',
+                fontSize: '0.92rem',
+                letterSpacing: '0.01em',
+                border: '1px solid rgba(74, 222, 128, 0.4)',
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 4px 15px rgba(74, 222, 128, 0.15)',
+                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={e => {
+                setActiveCategory(null);
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(74, 222, 128, 0.35) 0%, rgba(34, 197, 94, 0.25) 100%)';
+                e.currentTarget.style.borderColor = '#4ade80';
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(74, 222, 128, 0.3)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(74, 222, 128, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%)';
+                e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.4)';
+                e.currentTarget.style.color = '#4ade80';
+                e.currentTarget.style.transform = 'none';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(74, 222, 128, 0.15)';
+              }}
+            >
+              <Sparkles size={16} style={{ color: '#4ade80' }} />
+              <span>Tạo Lịch Trình Riêng</span>
+            </button>
+
             {/* Nhận tư vấn Button */}
             <button
               onClick={() => {
@@ -461,9 +506,11 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               top: '100%',
               left: 0,
               right: 0,
-              background: 'rgb(229, 239, 232)',
-              borderBottom: '1px solid rgba(15, 23, 42, 0.12)',
-              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.12)',
+              background: 'rgba(13, 23, 16, 0.88)',
+              backdropFilter: 'blur(24px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+              borderBottom: '1px solid rgba(74, 124, 89, 0.28)',
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.45)',
               zIndex: 9995,
               animation: 'fadeInFlyout 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
@@ -472,10 +519,10 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               style={{
                 maxWidth: '1080px',
                 margin: '0 auto',
-                padding: '36px 32px 42px 32px',
+                padding: '28px 32px 36px 32px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '32px',
+                gap: '24px',
               }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -483,9 +530,9 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                   style={{
                     fontSize: '0.76rem',
                     fontWeight: '700',
-                    color: '#0f172a',
+                    color: '#4ade80',
                     textTransform: 'uppercase',
-                    letterSpacing: '0.08em',
+                    letterSpacing: '0.12em',
                   }}
                 >
                   DANH MỤC THUỘC {activeCategoryData.headerTitle}
@@ -514,7 +561,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                       style={{
                         fontSize: '1.02rem',
                         fontWeight: '600',
-                        color: '#0f172a',
+                        color: '#ffffff',
                         textDecoration: 'none',
                         transition: 'all 0.2s ease',
                         padding: '4px 0',
@@ -524,11 +571,11 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                         alignItems: 'center'
                       }}
                       onMouseEnter={e => {
-                        e.currentTarget.style.color = '#166534';
+                        e.currentTarget.style.color = '#4ade80';
                         e.currentTarget.style.transform = 'translateX(6px)';
                       }}
                       onMouseLeave={e => {
-                        e.currentTarget.style.color = '#0f172a';
+                        e.currentTarget.style.color = '#ffffff';
                         e.currentTarget.style.transform = 'translateX(0)';
                       }}
                     >
