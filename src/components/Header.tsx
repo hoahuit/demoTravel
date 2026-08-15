@@ -425,29 +425,29 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 height: '36px',
                 padding: '0 16px',
                 borderRadius: '999px',
-                background: 'rgba(255, 255, 255, 0.12)',
+                background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(6, 78, 59, 0.7) 100%)',
                 color: '#ffffff',
                 fontWeight: '700',
                 fontSize: '0.86rem',
                 letterSpacing: '0.01em',
-                border: '1px solid rgba(255, 255, 255, 0.28)',
+                border: '1px solid rgba(74, 222, 128, 0.45)',
                 backdropFilter: 'blur(10px)',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.12)',
+                boxShadow: '0 4px 15px rgba(6, 78, 59, 0.35)',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap'
               }}
               onMouseEnter={e => {
                 setActiveCategory(null);
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.4) 0%, rgba(6, 78, 59, 0.9) 100%)';
                 e.currentTarget.style.borderColor = '#4ade80';
-                e.currentTarget.style.color = '#4ade80';
+                e.currentTarget.style.boxShadow = '0 6px 18px rgba(74, 222, 128, 0.35)';
                 e.currentTarget.style.transform = 'translateY(-1px)';
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.28)';
-                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(6, 78, 59, 0.7) 100%)';
+                e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.45)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(6, 78, 59, 0.35)';
                 e.currentTarget.style.transform = 'none';
               }}
             >
@@ -467,12 +467,13 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 height: '36px',
                 padding: '0 18px',
                 borderRadius: '999px',
-                background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 100%)',
-                color: '#09150c',
+                background: 'linear-gradient(135deg, #22c55e 0%, #15803d 100%)',
+                color: '#ffffff',
                 fontWeight: '800',
                 fontSize: '0.88rem',
                 letterSpacing: '0.01em',
-                boxShadow: '0 6px 22px rgba(74, 222, 128, 0.4)',
+                textShadow: '0 1px 2px rgba(0, 0, 0, 0.25)',
+                boxShadow: '0 6px 22px rgba(34, 197, 94, 0.45)',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 border: 'none',
                 cursor: 'pointer',
@@ -481,11 +482,11 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               onMouseEnter={e => {
                 setActiveCategory(null);
                 e.currentTarget.style.transform = 'scale(1.04)';
-                e.currentTarget.style.boxShadow = '0 8px 26px rgba(74, 222, 128, 0.55)';
+                e.currentTarget.style.boxShadow = '0 8px 26px rgba(34, 197, 94, 0.6)';
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.boxShadow = '0 6px 22px rgba(74, 222, 128, 0.4)';
+                e.currentTarget.style.boxShadow = '0 6px 22px rgba(34, 197, 94, 0.45)';
               }}
             >
               <span style={{ whiteSpace: 'nowrap' }}>Nhận tư vấn</span>
