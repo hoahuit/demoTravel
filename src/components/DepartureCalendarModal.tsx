@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, MapPin, Clock, ArrowRight, Sparkles, Filter } from 'lucide-react';
-import { TOURS_DATA, TourPackage } from '../data/toursData';
+import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
+import { fetchToursApi } from '../services/apiService';
 
 export interface DepartureCalendarModalProps {
   isOpen: boolean;
@@ -23,10 +24,22 @@ export default function DepartureCalendarModal({
   onOpenBooking,
   onNavigate
 }: DepartureCalendarModalProps) {
+  const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
   const [currentMonth, setCurrentMonth] = useState<number>(9); // 9 = Sept 2026, 8 = Aug 2026
   const [currentYear] = useState<number>(2026);
   const [selectedDateFilter, setSelectedDateFilter] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchToursApi().then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          syncToursDataFromApi(data);
+          setTours([...data]);
+        }
+      });
+    }
+  }, [isOpen]);
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -46,10 +59,10 @@ export default function DepartureCalendarModal({
     };
   }, [isOpen]);
 
-  // Extract all departure events from TOURS_DATA
+  // Extract all departure events from tours
   const allEvents: DepartureEvent[] = useMemo(() => {
     const events: DepartureEvent[] = [];
-    TOURS_DATA.forEach((tour) => {
+    tours.forEach((tour) => {
       tour.departureDates?.forEach((dateStr) => {
         const parts = dateStr.split('/');
         if (parts.length === 3) {

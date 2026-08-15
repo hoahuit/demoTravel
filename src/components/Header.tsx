@@ -1,12 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Search, Menu, X, Phone, ChevronDown, Crown, Zap, Flame, Heart, Leaf, Shield, Sparkles, Compass, BookOpen, Star, HelpCircle, Calendar, Briefcase, ArrowRight, LucideIcon } from 'lucide-react';
+import { fetchMenuCategoriesApi, MenuCategoryItem } from '../services/apiService';
 
 export interface HeaderProps {
   onOpenSearch?: () => void;
   onNavigate?: (path: string) => void;
   onOpenBooking?: (tourData?: any) => void;
   onOpenCalendar?: () => void;
+  onOpenCustomTour?: () => void;
 }
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  Heart, Shield, Leaf, Sparkles, Compass, BookOpen, Star, HelpCircle, Calendar, Briefcase, Crown, Zap, Flame
+};
 
 interface MenuItem {
   label: string;
@@ -24,12 +30,21 @@ interface MenuCategory {
   items?: MenuItem[];
 }
 
-export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpenCalendar }: HeaderProps) {
+export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpenCalendar, onOpenCustomTour }: HeaderProps) {
   const [scrolled, setScrolled] = useState<boolean>(false);
   const [row2Visible, setRow2Visible] = useState<boolean>(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [mobileExpandedCat, setMobileExpandedCat] = useState<string | null>(null);
+  const [liveCategories, setLiveCategories] = useState<MenuCategoryItem[]>([]);
+
+  useEffect(() => {
+    fetchMenuCategoriesApi().then((cats) => {
+      if (Array.isArray(cats) && cats.length > 0) {
+        setLiveCategories(cats);
+      }
+    }).catch(() => { });
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,75 +64,53 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const fixedBadges = [
-    { label: 'Retreats ĐỘC QUYỀN', href: '/retreat/docquyen', isHighlight: true },
-    { label: 'Sắp Khởi hành', href: '/retreat/sapkhoihanh', isHighlight: false },
-    { label: 'KHÔNG THỂ BỎ LỠ', href: '/retreat/khongthebolo', isHighlight: false },
-    { label: 'Ưu đãi GIỜ CHÓT', href: '/retreat/uudaigiochot', isHighlight: false },
-  ];
-
-  const menuData: MenuCategory[] = [
-    {
-      id: 'series-retreat',
-      title: 'Series Retreat',
-      hasSubmenu: true,
-      href: '/series-retreat',
-      headerTitle: 'Series Retreat',
-      items: [
-        { label: 'Retreat Chữa lành', href: '/series-retreat/chua-lanh', icon: Heart, color: '#4ade80' },
-        { label: 'Retreat Bảo tồn', href: '/series-retreat/bao-ton', icon: Shield, color: '#38bdf8' },
-        { label: 'Retreat Thiên nhiên', href: '/series-retreat/thien-nhien', icon: Leaf, color: '#facc15' },
-        { label: 'Retreat Thiện nguyện', href: '/series-retreat/thien-nguyen', icon: Sparkles, color: '#f472b6' },
-      ]
-    },
-    {
-      id: 'retreat-hot',
-      title: 'Retreat HOT',
-      hasSubmenu: true,
-      href: '/retreat',
-      headerTitle: 'Retreat HOT',
-      items: [
-        { label: '"Bình Yên trên Cao Nguyên"', href: '/retreat/hot/binh-yen-tren-cao-nguyen', icon: Compass, color: '#f97316' },
-        { label: '"Tĩnh Lặng Giữa Đại Ngàn"', href: '/retreat/hot/tinh-lang-giua-dai-ngan', icon: Leaf, color: '#4ade80' },
-        { label: '"Tìm Lại Kết Nối"', href: '/retreat/hot/tim-lai-ket-noi', icon: Heart, color: '#fb7185' },
-      ]
-    },
-    {
-      id: 'dieu-hay',
-      title: '101 Điều HAY',
-      hasSubmenu: true,
-      href: '/101-dieu-hay',
-      headerTitle: '101 Điều HAY',
-      items: [
-        { label: 'Blog Magazine', href: '/101-dieu-hay/blog', icon: BookOpen, color: '#38bdf8' },
-      ]
-    },
-    {
-      id: 'kollection-4u',
-      title: 'Kollection 4U',
-      hasSubmenu: true,
-      href: '/kollection-4u',
-      headerTitle: 'Kollection 4U',
-      items: [
-        { label: 'New Arrivals', href: '/kollection-4u/new-arrivals', icon: Sparkles, color: '#38bdf8' },
-        { label: 'A Must-Have', href: '/kollection-4u/must-have', icon: Flame, color: '#f97316' },
-        { label: 'EXCLUSIVE', href: '/kollection-4u/exclusive', icon: Crown, color: '#facc15' },
-        { label: 'Promotions', href: '/kollection-4u/promotions', icon: Zap, color: '#4ade80' },
-      ]
-    },
-    {
-      id: 'vi-sao-chon-4u',
-      title: 'Vì sao chọn 4U?',
-      hasSubmenu: true,
-      href: '/vi-sao-chon-4u',
-      headerTitle: 'Vì sao chọn 4U?',
-      items: [
-        { label: 'Giới Thiệu 4U', href: '/vi-sao-chon-4u/gioi-thieu', icon: Star, color: '#e5c158' },
-        { label: 'Câu hỏi Thường gặp', href: '/vi-sao-chon-4u/cau-hoi-thuong-gap', icon: HelpCircle, color: '#38bdf8' },
-        { label: 'Cơ hội Nghề nghiệp', href: '/vi-sao-chon-4u/co-hoi-nghe-nghiep', icon: Briefcase, color: '#a78bfa' },
-      ]
+  const fixedBadges = useMemo(() => {
+    const fixedFromDb = liveCategories.filter((c) => c.menuType === 'fixed_top');
+    if (fixedFromDb.length > 0) {
+      return fixedFromDb.map((c) => ({
+        label: c.name,
+        href: c.slug === 'doc-quyen' ? '/retreat/docquyen' :
+          c.slug === 'sap-khoi-hanh' ? '/retreat/sapkhoihanh' :
+            c.slug === 'khong-the-bo-lo' ? '/retreat/khongthebolo' :
+              c.slug === 'uu-dai-gio-chot' ? '/retreat/uudaigiochot' :
+                `/retreat/${c.slug}`,
+        isHighlight: c.slug === 'doc-quyen' || c.slug === 'docquyen' || c.icon === 'Crown',
+        icon: (c.icon && ICON_MAP[c.icon]) || null
+      }));
     }
-  ];
+    return [];
+  }, [liveCategories]);
+
+  const menuData: MenuCategory[] = useMemo(() => {
+    const parentCats = liveCategories.filter((c) => c.menuType !== 'fixed_top' && !c.parentSlug);
+
+    if (parentCats.length > 0) {
+      return parentCats.map((parent) => {
+        const children = liveCategories.filter((c) => c.parentSlug === parent.slug);
+
+        let items: MenuItem[] = [];
+        if (children.length > 0) {
+          items = children.map((child) => ({
+            label: child.name,
+            href: `/${parent.slug}/${child.slug}`,
+            icon: (child.icon && ICON_MAP[child.icon]) || Leaf,
+            color: child.color || '#4ade80'
+          }));
+        }
+
+        return {
+          id: parent.slug,
+          title: parent.name,
+          hasSubmenu: items.length > 0,
+          href: `/${parent.slug}`,
+          headerTitle: parent.name.toUpperCase(),
+          items
+        };
+      });
+    }
+
+    return [];
+  }, [liveCategories]);
 
   const activeCategoryData = menuData.find(m => m.id === activeCategory);
 
@@ -139,7 +132,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
           right: 0,
           zIndex: 10000,
           background: activeCategory
-            ? 'rgba(10, 15, 11, 0.98)'
+            ? 'rgba(13, 23, 16, 0.88)'
             : (scrolled
               ? 'rgba(13, 23, 16, 0.88)'
               : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%)'),
@@ -154,12 +147,14 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
       >
         <div
           style={{
-            maxWidth: '1440px',
+            width: '100%',
+            maxWidth: '100%',
+            padding: '0 40px',
             margin: '0 auto',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '28px',
+            gap: '20px',
           }}
         >
           {/* Logo */}
@@ -188,7 +183,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               src="/images/logo.png"
               alt="4U Tours Logo"
               style={{
-                height: '46px',
+                height: '44px',
                 width: 'auto',
                 objectFit: 'contain',
                 display: 'block',
@@ -203,8 +198,9 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '8px',
+              gap: '6px',
               flex: 1,
+              minWidth: 0,
             }}
           >
             <div
@@ -214,7 +210,9 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '48px',
+                flexWrap: 'nowrap',
+                whiteSpace: 'nowrap',
+                gap: '36px',
                 fontSize: '0.96rem',
                 fontWeight: '700',
                 letterSpacing: '0.01em',
@@ -242,6 +240,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
+                    whiteSpace: 'nowrap',
                     fontWeight: b.isHighlight ? 800 : 700
                   }}
                   onMouseEnter={e => {
@@ -255,7 +254,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                   }}
                 >
                   {b.isHighlight && <Crown size={15} style={{ color: '#facc15', fill: '#facc15', marginRight: '5px' }} />}
-                  {b.label}
+                  <span style={{ whiteSpace: 'nowrap' }}>{b.label}</span>
                 </a>
               ))}
             </div>
@@ -271,6 +270,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                whiteSpace: 'nowrap',
               }}
             >
               <nav
@@ -279,15 +279,17 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '44px',
-                  paddingTop: '4px',
+                  flexWrap: 'nowrap',
+                  whiteSpace: 'nowrap',
+                  gap: '32px',
+                  paddingTop: '2px',
                 }}
               >
                 {menuData.map(item => (
                   <div
                     key={item.id}
                     onMouseEnter={() => item.hasSubmenu ? setActiveCategory(item.id) : setActiveCategory(null)}
-                    style={{ display: 'flex', alignItems: 'center', position: 'relative' }}
+                    style={{ display: 'flex', alignItems: 'center', position: 'relative', whiteSpace: 'nowrap', flexShrink: 0 }}
                   >
                     {item.hasSubmenu ? (
                       <button
@@ -307,10 +309,11 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                           fontSize: '1.02rem',
                           fontWeight: '700',
                           cursor: 'pointer',
-                          display: 'flex',
+                          display: 'inline-flex',
                           alignItems: 'center',
                           gap: '6px',
                           padding: '0',
+                          whiteSpace: 'nowrap',
                           transition: 'color 0.2s ease',
                         }}
                         onMouseEnter={e => e.currentTarget.style.color = '#4ade80'}
@@ -318,7 +321,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                           if (activeCategory !== item.id) e.currentTarget.style.color = '#ffffff';
                         }}
                       >
-                        <span>{item.title}</span>
+                        <span style={{ whiteSpace: 'nowrap' }}>{item.title}</span>
                         <ChevronDown
                           size={14}
                           style={{
@@ -326,6 +329,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                             transition: 'transform 0.25s ease',
                             opacity: 0.85,
                             color: activeCategory === item.id ? '#4ade80' : 'currentColor',
+                            flexShrink: 0
                           }}
                         />
                       </button>
@@ -345,12 +349,17 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                           fontWeight: '700',
                           textDecoration: 'none',
                           padding: '0',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          whiteSpace: 'nowrap',
                           transition: 'color 0.2s ease',
                         }}
                         onMouseEnter={e => e.currentTarget.style.color = '#4ade80'}
-                        onMouseLeave={e => e.currentTarget.style.color = '#ffffff'}
+                        onMouseLeave={e => {
+                          if (activeCategory !== item.id) e.currentTarget.style.color = '#ffffff';
+                        }}
                       >
-                        {item.title}
+                        <span style={{ whiteSpace: 'nowrap' }}>{item.title}</span>
                       </a>
                     )}
                   </div>
@@ -359,9 +368,9 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
             </div>
           </div>
 
-          {/* Right CTA */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
-            {/* Lịch khởi hành Button with Calendar Icon */}
+          {/* Right CTA - Compact & Balanced */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+            {/* Lịch khởi hành Button */}
             <button
               onClick={(e) => {
                 e.preventDefault();
@@ -376,14 +385,11 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '7px',
-                padding: '11px 22px',
+                height: '36px',
+                padding: '0 14px',
                 borderRadius: '999px',
                 background: 'rgba(255, 255, 255, 0.12)',
                 color: '#ffffff',
-                fontWeight: '700',
-                fontSize: '0.92rem',
-                letterSpacing: '0.01em',
                 border: '1px solid rgba(255, 255, 255, 0.25)',
                 backdropFilter: 'blur(10px)',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -403,8 +409,49 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 e.currentTarget.style.transform = 'none';
               }}
             >
-              <Calendar size={17} style={{ color: '#4ade80' }} />
-              <span>Lịch khởi hành</span>
+              <Calendar size={16} style={{ color: '#4ade80' }} />
+            </button>
+
+            {/* Thiết Kế Lịch Trình Button */}
+            <button
+              onClick={() => {
+                if (onOpenCustomTour) onOpenCustomTour();
+              }}
+              className="hide-mobile"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '36px',
+                padding: '0 16px',
+                borderRadius: '999px',
+                background: 'rgba(255, 255, 255, 0.12)',
+                color: '#ffffff',
+                fontWeight: '700',
+                fontSize: '0.86rem',
+                letterSpacing: '0.01em',
+                border: '1px solid rgba(255, 255, 255, 0.28)',
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.12)',
+                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap'
+              }}
+              onMouseEnter={e => {
+                setActiveCategory(null);
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)';
+                e.currentTarget.style.borderColor = '#4ade80';
+                e.currentTarget.style.color = '#4ade80';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.28)';
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.transform = 'none';
+              }}
+            >
+              <span style={{ whiteSpace: 'nowrap' }}>Thiết kế lịch trình</span>
             </button>
 
             {/* Nhận tư vấn Button */}
@@ -417,29 +464,31 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '12px 26px',
+                height: '36px',
+                padding: '0 18px',
                 borderRadius: '999px',
                 background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 100%)',
                 color: '#09150c',
                 fontWeight: '800',
-                fontSize: '0.94rem',
-                letterSpacing: '0.02em',
-                boxShadow: '0 6px 22px rgba(74, 222, 128, 0.45)',
+                fontSize: '0.88rem',
+                letterSpacing: '0.01em',
+                boxShadow: '0 6px 22px rgba(74, 222, 128, 0.4)',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 border: 'none',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                whiteSpace: 'nowrap'
               }}
               onMouseEnter={e => {
                 setActiveCategory(null);
                 e.currentTarget.style.transform = 'scale(1.04)';
-                e.currentTarget.style.boxShadow = '0 8px 26px rgba(74, 222, 128, 0.6)';
+                e.currentTarget.style.boxShadow = '0 8px 26px rgba(74, 222, 128, 0.55)';
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.boxShadow = '0 6px 22px rgba(74, 222, 128, 0.45)';
+                e.currentTarget.style.boxShadow = '0 6px 22px rgba(74, 222, 128, 0.4)';
               }}
             >
-              Nhận tư vấn
+              <span style={{ whiteSpace: 'nowrap' }}>Nhận tư vấn</span>
             </button>
 
             <button
@@ -469,11 +518,11 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               top: '100%',
               left: 0,
               right: 0,
-              background: 'rgba(10, 15, 11, 0.98)',
-              backdropFilter: 'blur(30px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(30px) saturate(180%)',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-              boxShadow: '0 40px 80px rgba(0, 0, 0, 0.85)',
+              background: 'rgba(13, 23, 16, 0.88)',
+              backdropFilter: 'blur(24px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+              borderBottom: '1px solid rgba(74, 124, 89, 0.28)',
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.45)',
               zIndex: 9995,
               animation: 'fadeInFlyout 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
@@ -482,10 +531,10 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               style={{
                 maxWidth: '1080px',
                 margin: '0 auto',
-                padding: '36px 32px 42px 32px',
+                padding: '28px 32px 36px 32px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '32px',
+                gap: '24px',
               }}
             >
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -493,9 +542,9 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                   style={{
                     fontSize: '0.76rem',
                     fontWeight: '700',
-                    color: '#a3b899',
+                    color: '#4ade80',
                     textTransform: 'uppercase',
-                    letterSpacing: '0.08em',
+                    letterSpacing: '0.12em',
                   }}
                 >
                   DANH MỤC THUỘC {activeCategoryData.headerTitle}

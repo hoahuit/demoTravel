@@ -1,6 +1,8 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { TOURS_DATA, syncToursDataFromApi, TourPackage } from "../data/toursData";
+import { fetchToursApi } from "../services/apiService";
 
 interface CardItem {
   id: number;
@@ -18,83 +20,7 @@ interface CardItem {
   description: string;
 }
 
-const CARDS: CardItem[] = [
-  {
-    id: 1,
-    slug: "tinh-lang-giua-dai-ngan",
-    tag: "Retreat HOT",
-    title: "Tĩnh Lặng Giữa Đại Ngàn",
-    subtitle: "Nam Cát Tiên • Kết Nối & Chữa Lành",
-    footer: "4U Wellness Signature",
-    img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2560&auto=format&fit=crop",
-    accent: "#f2b632",
-    location: "Nam Cát Tiên",
-    price: "3.450.000đ",
-    duration: "2 Ngày 1 Đêm",
-    transport: "Xe Limousine VIP 4U",
-    description: "Được ôm ấp bởi Núi rừng Cát Tiên, để Ta thả lỏng, kết nối sâu sắc và hòa mình trọn vẹn vào vòng tay của Mẹ Thiên nhiên. Giúp bạn không chỉ 'đi' mà thật sự 'chạm' vào sự bình yên bên trong.",
-  },
-  {
-    id: 2,
-    slug: "di-san-vinh-ha-long",
-    tag: "Retreat ĐỘC QUYỀN",
-    title: "Di Sản Vịnh Hạ Long",
-    subtitle: "Vịnh Hạ Long • Kỳ Quan Thiên Nhiên",
-    footer: "4U Wellness Collection",
-    img: "https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=2560&auto=format&fit=crop",
-    accent: "#f2b632",
-    location: "Vịnh Hạ Long",
-    price: "4.850.000đ",
-    duration: "3 Ngày 2 Đêm",
-    transport: "Du Thuyền VIP 5 Sao",
-    description: "Hành trình ngắm hoàng hôn giữa kỳ quan thiên nhiên thế giới. Thưởng thức trà đạo riêng tư và phục hồi năng lượng giữa khung cảnh biển xanh đảo đá danh tiếng.",
-  },
-  {
-    id: 3,
-    slug: "binh-yen-tren-cao-nguyen",
-    tag: "KHÔNG THỂ BỎ LỠ",
-    title: "Tìm Lại Bình Yên trên Cao Nguyên",
-    subtitle: "Đà Lạt • Cân Bằng Thân Tâm Trí",
-    footer: "4U Healing Escape",
-    img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2560&auto=format&fit=crop",
-    accent: "#f2b632",
-    location: "Đà Lạt",
-    price: "4.250.000đ",
-    duration: "3 Ngày 2 Đêm",
-    transport: "Xe VIP 4U Wellness",
-    description: "Không còn là những chuyến đi vội vã để chạy show hay liên tục check-in, mà là hành trình trở về giữa ngàn thông. Thư giãn, đọc sách và tận hưởng sự bình yên sâu lắng.",
-  },
-  {
-    id: 4,
-    slug: "chon-bong-lai-sapa",
-    tag: "ƯU ĐÃI GIỜ CHÓT",
-    title: "Sương Mờ Đỉnh Fansipan",
-    subtitle: "Sapa • Ruộng Bậc Thang & Bản Địa",
-    footer: "4U Mountain Lodge",
-    img: "https://images.unsplash.com/photo-1540611025311-01df3cef54b5?q=80&w=2560&auto=format&fit=crop",
-    accent: "#f2b632",
-    location: "Sapa, Lào Cai",
-    price: "5.290.000đ",
-    duration: "3 Ngày 2 Đêm",
-    transport: "Xe Limousine May Đo",
-    description: "Trekking nhẹ nhàng qua thung lũng Mường Hoa, nghỉ tại lodge mây bản địa và trải nghiệm ngâm tắm lá thuốc người Dao Đỏ truyền thống.",
-  },
-  {
-    id: 5,
-    slug: "binh-yen-tren-cao-nguyen",
-    tag: "Retreat HOT",
-    title: "Hoàng Hôn Đảo Ngọc",
-    subtitle: "Phú Quốc • Biển Xanh & Phục Hồi",
-    footer: "4U Coastal Retreat",
-    img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2560&auto=format&fit=crop",
-    accent: "#f2b632",
-    location: "Phú Quốc",
-    price: "6.200.000đ",
-    duration: "3 Ngày 2 Đêm",
-    transport: "Xe VIP & Canô Riêng",
-    description: "Hòa mình cùng tiếng sóng biển đêm, ngắm hoàng hôn ngắt kết nối tuyệt đối và thực hành yoga bãi biển bình minh cùng chuyên gia.",
-  },
-];
+const STATIC_CARDS: CardItem[] = [];
 
 const RESUME_DELAY = 500;
 const EASING = "cubic-bezier(0.4, 0, 0.2, 1)";
@@ -107,6 +33,43 @@ export interface Carousel3DProps {
 }
 
 export default function Carousel3D({ onOpenBooking, onNavigate }: Carousel3DProps) {
+  const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
+
+  useEffect(() => {
+    fetchToursApi().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        syncToursDataFromApi(data);
+        setTours([...data]);
+      }
+    });
+  }, []);
+
+  const CARDS: CardItem[] = useMemo(() => {
+    // Only tours assigned to the "Retreats Độc Quyền" category appear here.
+    const exclusiveTours = tours.filter((t) =>
+      Array.isArray(t.categories) && t.categories.includes('doc-quyen')
+    );
+
+    if (exclusiveTours.length > 0) {
+      return exclusiveTours.map((t, idx) => ({
+        id: idx + 1,
+        slug: t.slug,
+        tag: "RETREAT ĐỘC QUYỀN",
+        title: t.title,
+        subtitle: `${t.city} • ${t.category}`,
+        footer: "4U Wellness Signature",
+        img: t.heroImage || "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2560&auto=format&fit=crop",
+        accent: "#f2b632",
+        location: t.city,
+        price: `${t.price?.toLocaleString('vi-VN')} ₫`,
+        duration: t.duration,
+        transport: t.transportation || "Xe Limousine VIP 4U",
+        description: t.subtitle || "Hành trình nghỉ dưỡng độc bản may đo độc quyền.",
+      }));
+    }
+    return [];
+  }, [tours]);
+
   const [position, setPosition] = useState<number>(0);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [expandedCard, setExpandedCard] = useState<CardItem | null>(null);

@@ -1,5 +1,6 @@
-import React from 'react';
-import { PROMOTIONS_DATA } from '../data/promotionsData';
+import React, { useEffect, useState } from 'react';
+import { PROMOTIONS_DATA, syncPromotionsDataFromApi, PromotionItem } from '../data/promotionsData';
+import { fetchSectionItemsApi } from '../services/apiService';
 import { Tag, Clock, ArrowRight, Sparkles } from 'lucide-react';
 
 interface PromotionsPageProps {
@@ -8,6 +9,17 @@ interface PromotionsPageProps {
 }
 
 export default function PromotionsPage({ onNavigate, onOpenBooking }: PromotionsPageProps) {
+  const [promotions, setPromotions] = useState<PromotionItem[]>(PROMOTIONS_DATA);
+
+  useEffect(() => {
+    fetchSectionItemsApi('promotions').then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        syncPromotionsDataFromApi(data);
+        setPromotions([...data]);
+      }
+    });
+  }, []);
+
   return (
     <div style={{ background: '#ffffff', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px' }}>
       {/* Hero */}
@@ -34,7 +46,7 @@ export default function PromotionsPage({ onNavigate, onOpenBooking }: Promotions
       {/* Promotions List */}
       <div style={{ maxWidth: '1280px', margin: '48px auto 0', padding: '0 24px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: '32px' }}>
-          {PROMOTIONS_DATA.map(promo => (
+          {promotions.map(promo => (
             <div
               key={promo.id}
               style={{

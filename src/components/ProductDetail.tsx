@@ -1,62 +1,128 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Clock, Star, Compass, ChevronDown, CheckCircle, MapPin, ArrowRight, Navigation, ShieldCheck, Tag, Info, UserCheck, Heart, Sparkles } from 'lucide-react';
-import { productsData, ProductItem } from '../data/productsData';
-import { TOURS_DATA } from '../data/toursData';
+import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
+import { fetchToursApi, getImageUrl } from '../services/apiService';
 import ScrollExpandMedia from './ui/scroll-expansion-hero';
 import ElegantCarousel, { SlideData } from './ui/elegant-carousel';
 import Testimonials from './Testimonials';
 import PartnerLogos from './PartnerLogos';
-import './ProductDetail.css';
 
 export interface ProductDetailProps {
   productSlug?: string;
+  customTourData?: TourPackage;
+  hideTestimonials?: boolean;
   onBackHome?: () => void;
   onOpenBooking?: (tourData?: any) => void;
 }
 
-export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBackHome, onOpenBooking }: ProductDetailProps) {
+const parseArrayField = (val: any): string[] => {
+  if (!val) return [];
+  if (Array.isArray(val)) return val.map(s => String(s || '').trim()).filter(Boolean);
+  if (typeof val === 'string') {
+    try {
+      const parsed = JSON.parse(val);
+      if (Array.isArray(parsed)) return parsed.map(s => String(s || '').trim()).filter(Boolean);
+    } catch (parseErr) {
+      // String is comma-delimited rather than JSON
+    }
+    return val.split(',').map(s => s.trim()).filter(Boolean);
+  }
+  return [];
+};
+
+export default function ProductDetail({ productSlug = 'retreat-chua-lanh', customTourData, hideTestimonials = false, onBackHome, onOpenBooking }: ProductDetailProps) {
+  const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
+
+  useEffect(() => {
+    fetchToursApi().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        syncToursDataFromApi(data);
+        setTours([...data]);
+      }
+    });
+  }, []);
+
   const [activeTab, setActiveTab] = useState<string>('Highlight');
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [guests, setGuests] = useState<string>('1 Khách');
   const [selectedDayIndex, setSelectedDayIndex] = useState<number>(0);
 
-  // Unified Data Lookup: Check productsData first, then TOURS_DATA by slug
-  const tourFound = TOURS_DATA.find(t => t.slug === productSlug);
+  const normalizeSlug = (slug: string) => {
+    return slug
+      .trim()
+      .toLowerCase()
+      .split(/[?#]/)[0]
+      .replace(/^\/+|\/+$/g, '');
+  };
 
-  const product: ProductItem = productsData[productSlug] || (tourFound ? {
-    slug: tourFound.slug,
-    badge1: tourFound.category.toUpperCase(),
-    badge2: tourFound.isExclusive ? 'ĐỘC QUYỀN' : (tourFound.isHot ? 'HOT SELECTION' : '5 STAR'),
-    title: tourFound.title,
-    subtitle: tourFound.subtitle,
-    location: tourFound.city,
-    heroImage: tourFound.heroImage,
-    duration: tourFound.duration,
-    rating: `${tourFound.rating} / 5.0 (${tourFound.reviewsCount} Đánh giá)`,
-    type: tourFound.category,
-    priceText: `${tourFound.price.toLocaleString('vi-VN')} VNĐ`,
-    priceAdult: tourFound.price,
-    priceChild: Math.round(tourFound.price * 0.5),
-    experienceTitle: 'Trải Nghiệm Độc Bản',
-    experiencePara1: tourFound.highlights.join('. '),
-    experiencePara2: `Hành trình du lịch nghỉ dưỡng tuyệt vời tại ${tourFound.city} được thiết kế tinh tế giúp tái tạo năng lượng Thân - Tâm - Trí.`,
-    galleryImages: tourFound.gallery.length > 0 ? tourFound.gallery : [tourFound.heroImage],
-    itinerary: tourFound.itinerary.map(item => ({
+  const normalizedSlug = normalizeSlug(productSlug);
+  const tourFound = tours.find(t => t.slug === normalizedSlug) || tours.find(t => t.slug.includes(normalizedSlug) || normalizedSlug.includes(t.slug));
+
+  const product = customTourData || tourFound || tours[0] || null;
+  if (!product) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#f4f5f3', color: '#1b1b1a', padding: '40px 24px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <h1 style={{ fontSize: 28, marginBottom: 16 }}>Tour không tồn tại</h1>
+          <p>Không tìm thấy tour với slug: <strong>{normalizedSlug}</strong></p>
+        </div>
+      </div>
+    );
+  }
+
+  const parsedInclusions = parseArrayField(product.included).filter(s => !s.includes('Ngăn cách dấu phẩy'));
+
+  const pageData = {
+    slug: product.slug,
+    badge1: product.category.toUpperCase(),
+    badge2: product.isExclusive ? 'ĐỘC QUYỀN' : (product.isHot ? 'HOT SELECTION' : '5 STAR'),
+    title: product.title,
+    subtitle: product.subtitle,
+    location: product.city,
+    heroImage: getImageUrl(product.heroImage),
+    duration: product.duration,
+    rating: `${product.rating} / 5.0 (${product.reviewsCount} Đánh giá)`,
+    ratingValue: product.rating,
+    type: product.category,
+    priceText: `${product.price.toLocaleString('vi-VN')} VNĐ`,
+    priceAdult: product.price,
+    childPriceText: product.childPrice && product.childPrice > 0
+      ? `${product.childPrice.toLocaleString('vi-VN')} VNĐ`
+      : `${Math.round(product.price * 0.7).toLocaleString('vi-VN')} VNĐ`,
+    infantPriceText: product.infantPrice && product.infantPrice > 0
+      ? `${product.infantPrice.toLocaleString('vi-VN')} VNĐ`
+      : 'MIỄN PHÍ',
+    adultNote: product.adultNote || 'Bao gồm xe VIP Limousine, Resort cao cấp, 100% bữa ăn & liệu trình thiền định',
+    childNote: product.childNote || 'Hưởng giường riêng & suất ăn trọn gói dành cho trẻ em',
+    infantNote: product.infantNote || 'Ngồi cùng bố mẹ, miễn phí vé tham quan & phụ thu lưu trú',
+    bookingPolicyNotes: product.bookingPolicyNotes || (product.notes && product.notes.length > 0 ? product.notes.join('. ') : 'Đổi ngày khởi hành miễn phí 01 lần trước 07 ngày. Đã bao gồm bảo hiểm du lịch trọn gói mức bồi thường tối đa 100.000.000 VNĐ/vụ.'),
+    experienceTitle: product.subtitle || `Trải nghiệm ${product.category} tại ${product.city}`,
+    experiencePara1: product.highlights && product.highlights.length > 0 ? product.highlights.join('. ') : product.subtitle,
+    experiencePara2: product.blogStorySnippet || product.subtitle || `Hành trình ${product.title} tại ${product.city} với trải nghiệm trọn gói đặc sắc.`,
+    highlights: product.highlights,
+    galleryImages: product.gallery.length > 0 ? product.gallery.map(img => getImageUrl(img)) : [getImageUrl(product.heroImage)],
+    itinerary: product.itinerary.map(item => ({
       day: `NGÀY ${item.day}`,
       title: item.title,
-      events: item.activities && item.activities.length > 0 ? item.activities : [item.description]
+      image: getImageUrl(item.image),
+      description: item.description,
+      activities: item.activities ?? [],
+      transportAndCulinary: item.transportAndCulinary ?? [],
+      attractions: item.attractions ?? []
     })),
-    inclusions: tourFound.included && tourFound.included.length > 0 ? tourFound.included : [
-      `Lưu trú cao cấp tại ${tourFound.city}`,
-      'Toàn bộ các bữa ăn thực dưỡng & xe đưa đón cao cấp',
-      'Hướng dẫn viên & Chuyên gia tư vấn 1:1'
-    ],
-    mapLocation: tourFound.city,
-    mapCoords: tourFound.city,
-    reviewScore: `${tourFound.rating} / 5.0`,
-    reviewCount: tourFound.reviewsCount,
-    reviewQuote: tourFound.reviews?.[0]?.comment || '"Chuyến đi mang lại cảm giác tĩnh lặng tuyệt vời giữa thiên nhiên hoang sơ."'
-  } : productsData['retreat-chua-lanh']);
+    inclusions: parsedInclusions.length > 0
+      ? parsedInclusions
+      : [
+        `Lưu trú cao cấp tại ${product.city || 'Resort 5 sao'}`,
+        'Toàn bộ các bữa ăn thực dưỡng & xe đưa đón cao cấp',
+        'Hướng dẫn viên & Chuyên gia tư vấn 1:1'
+      ],
+    mapLocation: product.destinationMap || product.city,
+    mapCoords: product.destinationMap || product.city,
+    reviewScore: `${product.rating} / 5.0`,
+    reviewCount: product.reviewsCount,
+    reviewQuote: product.reviews?.[0]?.comment || product.blogStorySnippet || 'Hành trình đánh thức cảm giác an yên giữa thiên nhiên hoang sơ.'
+  };
 
   const tabs = [
     { id: 'Highlight', label: 'TRẢI NGHIỆM ĐỘC BẢN' },
@@ -67,32 +133,32 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
 
   const experienceSlides: SlideData[] = [
     {
-      title: product.experienceTitle || 'Trải Nghiệm Độc Bản',
-      subtitle: 'Retreat Chăm Sóc Thân Tâm',
-      description: product.experiencePara1 || 'Rời xa nhịp sống hối hả nơi đô thị để hòa mình vào không gian tĩnh lặng nguyên sơ của vùng Cao Nguyên.',
+      title: pageData.experienceTitle,
+      subtitle: pageData.subtitle,
+      description: pageData.experiencePara1,
       accent: '#006d36',
-      imageUrl: product.galleryImages?.[0] || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=85',
+      imageUrl: pageData.galleryImages?.[0] || pageData.heroImage,
     },
     {
-      title: 'Hòa Mình Vào Thiên Nhiên',
-      subtitle: 'Nghỉ Dưỡng Sinh Thái',
-      description: product.experiencePara2 || 'Hành trình đưa bạn đi qua những rừng thông cổ thụ mờ sương và những hồ nước tĩnh lặng cùng sự đồng hành của chuyên gia.',
+      title: pageData.highlights?.[0] || `Hành trình ${pageData.location}`,
+      subtitle: pageData.type,
+      description: pageData.subtitle,
       accent: '#B08A46',
-      imageUrl: product.galleryImages?.[1] || 'https://images.unsplash.com/photo-1540611025311-01df3cef54b5?auto=format&fit=crop&w=1920&q=85',
+      imageUrl: pageData.galleryImages?.[1] || pageData.galleryImages?.[0] || pageData.heroImage,
     },
     {
-      title: 'Ẩm Thực Thực Dưỡng',
-      subtitle: 'Farm-To-Table Đặc Quyền',
-      description: 'Thưởng thức ẩm thực hữu cơ tươi ngon ngập tràn năng lượng được chế biến tinh tế từ nguồn nông sản địa phương.',
+      title: pageData.highlights?.[1] || `Trải nghiệm ẩm thực & tinh thần`,
+      subtitle: pageData.subtitle,
+      description: pageData.experiencePara2,
       accent: '#2E86AB',
-      imageUrl: product.galleryImages?.[2] || 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1920&q=85',
+      imageUrl: pageData.galleryImages?.[2] || pageData.galleryImages?.[0] || pageData.heroImage,
     },
     {
-      title: 'Khoảnh Khắc Tĩnh Lặng',
-      subtitle: 'Chữa Lành & Kết Nối',
-      description: 'Mỗi khoảnh khắc là một lời mời gọi bạn sống chậm lại, hít thở sâu và kết nối lại với sự an yên từ chính bên trong.',
+      title: pageData.title,
+      subtitle: pageData.location,
+      description: pageData.experiencePara2,
       accent: '#C4956A',
-      imageUrl: product.heroImage || 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1920&q=85',
+      imageUrl: pageData.galleryImages?.[3] || pageData.heroImage,
     },
   ];
 
@@ -111,8 +177,8 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
     'https://assets.mixkit.co/videos/preview/mixkit-view-of-the-sea-from-the-beach-41434-large.mp4'
   ];
   const videoFallback = defaultVideos[Math.abs(productSlug.length) % defaultVideos.length];
-  const mediaSrc = product.heroVideo || videoFallback;
-  const bgImageSrc = product.heroImage || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&auto=format&fit=crop';
+  const mediaSrc = videoFallback;
+  const bgImageSrc = pageData.heroImage;
 
   return (
     <div style={{ background: '#e5efe8', color: '#191c1c', minHeight: '100vh', fontFamily: '"Be Vietnam Pro", "Plus Jakarta Sans", -apple-system, sans-serif' }}>
@@ -121,10 +187,10 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
       <ScrollExpandMedia
         mediaType="video"
         mediaSrc={mediaSrc}
-        posterSrc={product.heroImage}
+        posterSrc={pageData.heroImage}
         bgImageSrc={bgImageSrc}
-        title={product.title}
-        date={product.duration || '3 Ngày 2 Đêm'}
+        title={pageData.title}
+        date={pageData.duration}
         scrollToExpand="Cuộn xuống để mở rộng & khám phá"
         textBlend={false}
       >
@@ -144,7 +210,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                 border: '1px solid rgba(0, 109, 54, 0.25)',
               }}
             >
-              {product.badge1 || 'RETREAT CHỮA LÀNH'}
+              {pageData.badge1}
             </span>
             <span
               style={{
@@ -159,25 +225,25 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                 border: '1px solid rgba(45, 90, 54, 0.22)',
               }}
             >
-              {product.badge2 || 'ĐỘC QUYỀN'}
+              {pageData.badge2}
             </span>
           </div>
 
           <p style={{ fontSize: 'clamp(1rem, 2.5vw, 1.25rem)', color: '#142619', fontWeight: '700', maxWidth: '760px', margin: '0 auto 16px', lineHeight: '1.55' }}>
-            {product.subtitle}
+            {pageData.subtitle}
           </p>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '18px', fontSize: '0.9rem', color: '#415a47', flexWrap: 'wrap', fontWeight: '600' }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-              <MapPin size={16} style={{ color: '#006d36' }} /> {product.location}
+              <MapPin size={16} style={{ color: '#006d36' }} /> {pageData.location}
             </span>
             <span>•</span>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-              <Clock size={16} style={{ color: '#006d36' }} /> {product.duration}
+              <Clock size={16} style={{ color: '#006d36' }} /> {pageData.duration}
             </span>
             <span>•</span>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-              <Star size={16} style={{ color: '#e5a100', fill: '#e5a100' }} /> <strong style={{ color: '#142619' }}>{product.rating}</strong>
+              <Star size={16} style={{ color: '#e5a100', fill: '#e5a100' }} /> <strong style={{ color: '#142619' }}>{pageData.ratingValue}</strong>
             </span>
           </div>
         </div>
@@ -213,7 +279,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
             <div className="pd-subnav-cta">
               <div className="pd-subnav-price-box" style={{ textAlign: 'right' }}>
                 <div style={{ fontSize: '0.7rem', color: '#5b6561', textTransform: 'uppercase' }}>Giá Trọn Gói</div>
-                <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#006d36' }}>{product.priceText}</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#006d36' }}>{pageData.priceText}</div>
               </div>
               <button
                 className="pd-subnav-cta-btn"
@@ -275,14 +341,14 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                     </div>
 
                     <h3 className="pd-editorial-title" style={{ marginBottom: '20px' }}>
-                      {product.experienceTitle}
+                      {pageData.experienceTitle}
                     </h3>
 
                     <p className="pd-editorial-lead">
-                      {product.experiencePara1}
+                      {pageData.experiencePara1}
                     </p>
                     <p className="pd-editorial-body">
-                      {product.experiencePara2}
+                      {pageData.experiencePara2}
                     </p>
 
                     {/* 4 Core Pillars Highlights */}
@@ -344,29 +410,30 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                     {/* Left Cover Image */}
                     <div style={{ width: '100%', height: '220px', borderRadius: '18px', overflow: 'hidden' }}>
                       <img
-                        src={product.heroImage}
-                        alt={product.title}
+                        src={getImageUrl(pageData.heroImage)}
+                        alt={pageData.title}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
+
                     </div>
 
                     {/* Right Summary Info */}
                     <div>
                       <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', flexWrap: 'wrap' }}>
                         <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontWeight: 800, fontSize: '0.78rem', padding: '4px 14px', borderRadius: '20px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                          🌙 {product.duration}
+                          🌙 {pageData.duration}
                         </span>
                         <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontWeight: 800, fontSize: '0.78rem', padding: '4px 14px', borderRadius: '20px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                          🎯 {product.location}
+                          🎯 {pageData.location}
                         </span>
                       </div>
 
                       <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#10201B', margin: '0 0 10px 0', lineHeight: 1.3 }}>
-                        {product.title}
+                        {pageData.title}
                       </h2>
 
                       <p style={{ fontSize: '0.88rem', color: '#415a47', margin: '0 0 16px 0', fontWeight: 500 }}>
-                        <strong style={{ color: '#10201B' }}>Lộ trình:</strong> {product.location} — Trải nghiệm Chữa lành & Kết nối
+                        <strong style={{ color: '#10201B' }}>Lộ trình:</strong> {pageData.location} — {pageData.subtitle}
                       </p>
 
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '14px', borderTop: '1px solid rgba(45, 90, 54, 0.18)' }}>
@@ -392,7 +459,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                         Days
                       </div>
 
-                      {product.itinerary?.map((item: any, idx: number) => {
+                      {pageData.itinerary?.map((item: any, idx: number) => {
                         const isActive = selectedDayIndex === idx;
                         return (
                           <button
@@ -420,19 +487,19 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
 
                       {/* Tips Tab */}
                       <button
-                        onClick={() => setSelectedDayIndex(product.itinerary ? product.itinerary.length : 99)}
+                        onClick={() => setSelectedDayIndex(pageData.itinerary ? pageData.itinerary.length : 99)}
                         style={{
                           width: '100%',
                           padding: '12px 20px',
                           borderRadius: '24px',
-                          border: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? 'none' : '1px solid rgba(45, 90, 54, 0.18)',
+                          border: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? 'none' : '1px solid rgba(45, 90, 54, 0.18)',
                           fontSize: '0.92rem',
-                          fontWeight: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? 800 : 600,
+                          fontWeight: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? 800 : 600,
                           textAlign: 'left',
                           cursor: 'pointer',
-                          background: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? '#1e4a3d' : '#dce7df',
-                          color: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? '#ffffff' : '#10201B',
-                          boxShadow: selectedDayIndex === (product.itinerary ? product.itinerary.length : 99) ? '0 8px 20px rgba(30, 74, 61, 0.25)' : 'none',
+                          background: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? '#1e4a3d' : '#dce7df',
+                          color: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? '#ffffff' : '#10201B',
+                          boxShadow: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? '0 8px 20px rgba(30, 74, 61, 0.25)' : 'none',
                           transition: 'all 0.2s ease',
                         }}
                       >
@@ -442,33 +509,38 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
 
                     {/* Right Content Panel for Selected Day */}
                     <div style={{ background: '#dce7df', borderRadius: '24px', padding: '36px', border: '1px solid rgba(45,90,54,0.18)', minHeight: '480px' }}>
-                      {selectedDayIndex < (product.itinerary ? product.itinerary.length : 0) ? (
+                      {selectedDayIndex < (pageData.itinerary ? pageData.itinerary.length : 0) ? (
                         (() => {
-                          const currentDay = product.itinerary[selectedDayIndex];
-                          const dayMoments = product.galleryImages && product.galleryImages.length > 0
-                            ? product.galleryImages
-                            : [
-                              product.heroImage,
-                              'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop',
-                              'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=600&auto=format&fit=crop',
-                              'https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=600&auto=format&fit=crop',
-                              'https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=600&auto=format&fit=crop',
-                              'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?q=80&w=600&auto=format&fit=crop',
-                            ];
+                          const currentDay = pageData.itinerary[selectedDayIndex];
+                          const dayMoments = (currentDay.image && currentDay.image.trim().length > 0
+                            ? [currentDay.image]
+                            : (pageData.galleryImages && pageData.galleryImages.length > 0
+                              ? pageData.galleryImages
+                              : [])).filter((img: string) => img && img.trim().length > 0 && img !== '--');
+
                           return (
                             <div>
                               {/* Day Title */}
                               <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: '0 0 18px 0' }}>
-                                {currentDay.title}
+                                {currentDay.title || '--'}
                               </h3>
 
                               {/* Day Overview Paragraph */}
-                              <div style={{ fontSize: '0.98rem', color: '#475569', lineHeight: 1.85, marginBottom: '36px' }}>
-                                {currentDay.events?.map((evt: string, evtIdx: number) => (
-                                  <p key={evtIdx} style={{ margin: '0 0 12px 0' }}>
-                                    {evt}
+                              <div style={{ fontSize: '0.98rem', color: '#475569', lineHeight: 1.85, marginBottom: '24px' }}>
+                                {currentDay.description ? (
+                                  <p style={{ margin: '0 0 18px 0' }}>
+                                    {currentDay.description}
                                   </p>
-                                ))}
+                                ) : (
+                                  <p style={{ margin: '0 0 18px 0', color: '#64748b' }}>--</p>
+                                )}
+                                {currentDay.activities && currentDay.activities.length > 0 ? (
+                                  currentDay.activities.map((activity: string, activityIdx: number) => (
+                                    <p key={activityIdx} style={{ margin: '0 0 12px 0' }}>
+                                      • {activity}
+                                    </p>
+                                  ))
+                                ) : null}
                               </div>
 
                               {/* Moments Section */}
@@ -476,17 +548,21 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                                 <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 16px 0' }}>
                                   Moments
                                 </h4>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
-                                  {dayMoments.slice(0, 6).map((imgUrl: string, imgIdx: number) => (
-                                    <div key={imgIdx} style={{ width: '100%', height: '88px', borderRadius: '14px', overflow: 'hidden', background: '#f1f5f9' }}>
-                                      <img
-                                        src={imgUrl}
-                                        alt={`Moment ${imgIdx + 1}`}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                      />
-                                    </div>
-                                  ))}
-                                </div>
+                                {dayMoments.length > 0 ? (
+                                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
+                                    {dayMoments.slice(0, 6).map((imgUrl: string, imgIdx: number) => (
+                                      <div key={imgIdx} style={{ width: '100%', height: '88px', borderRadius: '14px', overflow: 'hidden', background: '#f1f5f9' }}>
+                                        <img
+                                          src={imgUrl}
+                                          alt={`Moment ${imgIdx + 1}`}
+                                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                        />
+                                      </div>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <div style={{ fontSize: '0.88rem', color: '#64748b', fontWeight: 600 }}>--</div>
+                                )}
                               </div>
 
                               {/* Transport Section */}
@@ -495,15 +571,15 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                                   Transport & Culinary
                                 </h4>
                                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                  <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
-                                    🚌 Xe Limousine VIP 4U
-                                  </span>
-                                  <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
-                                    🥗 Thực dưỡng 100% hữu cơ
-                                  </span>
-                                  <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
-                                    🍵 Trà thảo mộc bản địa
-                                  </span>
+                                  {currentDay.transportAndCulinary && currentDay.transportAndCulinary.length > 0 ? (
+                                    currentDay.transportAndCulinary.map((tag: string, tagIdx: number) => (
+                                      <span key={tagIdx} style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
+                                        {tag}
+                                      </span>
+                                    ))
+                                  ) : (
+                                    <div style={{ fontSize: '0.88rem', color: '#64748b', fontWeight: 600 }}>--</div>
+                                  )}
                                 </div>
                               </div>
 
@@ -513,15 +589,15 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                                   Attractions
                                 </h4>
                                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                  <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
-                                    📍 {product.location}
-                                  </span>
-                                  <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
-                                    🧘 Khung cảnh an yên tĩnh lặng
-                                  </span>
-                                  <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
-                                    🌲 Thiên nhiên nguyên sơ
-                                  </span>
+                                  {currentDay.attractions && currentDay.attractions.length > 0 ? (
+                                    currentDay.attractions.map((attraction: string, attractionIdx: number) => (
+                                      <span key={attractionIdx} style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
+                                        {attraction}
+                                      </span>
+                                    ))
+                                  ) : (
+                                    <div style={{ fontSize: '0.88rem', color: '#64748b', fontWeight: 600 }}>--</div>
+                                  )}
                                 </div>
                               </div>
 
@@ -570,18 +646,18 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                       <tbody>
                         <tr>
                           <td style={{ fontWeight: '700' }}>Người lớn (Từ 12 tuổi)</td>
-                          <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.15rem' }}>{product.priceText}</td>
-                          <td style={{ color: '#5b6561' }}>Bao gồm xe VIP Limousine, Resort cao cấp, 100% bữa ăn & liệu trình thiền định</td>
+                          <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.15rem' }}>{pageData.priceText}</td>
+                          <td style={{ color: '#5b6561' }}>{pageData.adultNote}</td>
                         </tr>
                         <tr>
                           <td style={{ fontWeight: '700' }}>Trẻ em (5 - 11 tuổi)</td>
-                          <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.05rem' }}>5.000.000 VNĐ</td>
-                          <td style={{ color: '#5b6561' }}>Hưởng giường riêng & suất ăn trọn gói dành cho trẻ em</td>
+                          <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.05rem' }}>{pageData.childPriceText}</td>
+                          <td style={{ color: '#5b6561' }}>{pageData.childNote}</td>
                         </tr>
                         <tr>
                           <td style={{ fontWeight: '700' }}>Em bé (&lt; 5 tuổi)</td>
-                          <td style={{ color: '#27ae60', fontWeight: '800', fontSize: '1.05rem' }}>MIỄN PHÍ</td>
-                          <td style={{ color: '#5b6561' }}>Ngồi cùng bố mẹ, miễn phí vé tham quan & phụ thu lưu trú</td>
+                          <td style={{ color: '#27ae60', fontWeight: '800', fontSize: '1.05rem' }}>{pageData.infantPriceText}</td>
+                          <td style={{ color: '#5b6561' }}>{pageData.infantNote}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -591,7 +667,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                     Dịch vụ bao gồm nổi bật
                   </h4>
                   <div className="pd-inclusions-grid" style={{ marginBottom: '32px' }}>
-                    {product.inclusions?.map((inc: string, idx: number) => (
+                    {pageData.inclusions?.map((inc: string, idx: number) => (
                       <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '0.98rem', color: '#1e4a3d', background: '#cbe0d0', padding: '12px 16px', borderRadius: '14px', border: '1px solid rgba(45, 90, 54, 0.18)' }}>
                         <CheckCircle size={20} style={{ color: '#006d36', flexShrink: 0, marginTop: '2px' }} />
                         <span style={{ fontWeight: '700' }}>{inc}</span>
@@ -600,7 +676,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                   </div>
 
                   <div style={{ background: 'rgba(0, 109, 54, 0.05)', border: '1px dashed #006d36', borderRadius: '16px', padding: '20px 24px', fontSize: '0.95rem', color: '#062c23', lineHeight: '1.6' }}>
-                    <strong>Chính sách bảo lưu & Đổi ngày đặc quyền:</strong> Đổi ngày khởi hành miễn phí 01 lần trước 07 ngày. Đã bao gồm bảo hiểm du lịch trọn gói mức bồi thường tối đa 100.000.000 VNĐ/vụ.
+                    <strong>Chính sách bảo lưu & Đổi ngày đặc quyền:</strong> {pageData.bookingPolicyNotes}
                   </div>
                 </div>
               )}
@@ -613,14 +689,15 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                     Bản đồ & vị trí khu vực nghỉ dưỡng
                   </h3>
                   <p style={{ fontSize: '1.08rem', color: '#5b6561', marginBottom: '32px', lineHeight: '1.7' }}>
-                    {product.location} — Tọa độ biệt lập giữa thiên nhiên nguyên sơ, cách trung tâm thành phố khoảng 45 phút di chuyển bằng xe VIP Limousine.
+                    {pageData.location} — Tọa độ biệt lập giữa thiên nhiên nguyên sơ, cách trung tâm thành phố khoảng 45 phút di chuyển bằng xe VIP Limousine.
                   </p>
 
                   <div className="pd-map-viewport">
-                    <img src={product.heroImage} alt="Location Map Preview" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.82)' }} />
+                    <img src={getImageUrl(pageData.heroImage)} alt="Location Map Preview" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.82)' }} />
+
                     <div style={{ position: 'absolute', background: 'rgba(6, 44, 35, 0.92)', backdropFilter: 'blur(16px)', color: '#ffffff', padding: '28px 40px', borderRadius: '22px', textAlign: 'center', maxWidth: '440px', boxShadow: '0 20px 50px rgba(0,0,0,0.3)' }}>
                       <Navigation size={40} style={{ margin: '0 auto 14px', color: '#4ade80' }} />
-                      <div style={{ fontWeight: '800', fontSize: '1.35rem', marginBottom: '8px' }}>{product.location}</div>
+                      <div style={{ fontWeight: '800', fontSize: '1.35rem', marginBottom: '8px' }}>{pageData.location}</div>
                       <div style={{ fontSize: '0.95rem', opacity: 0.9, lineHeight: '1.6' }}>Tọa độ tĩnh lặng riêng tư dành riêng cho khách hàng 4U Retreat</div>
                     </div>
                   </div>
@@ -636,7 +713,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                     GIÁ CHUYẾN ĐỊNH
                   </div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '24px' }}>
-                    <span style={{ fontSize: '2rem', fontWeight: '800', color: '#006d36' }}>{product.priceText}</span>
+                    <span style={{ fontSize: '2rem', fontWeight: '800', color: '#006d36' }}>{pageData.priceText}</span>
                     <span style={{ fontSize: '0.85rem', color: '#5b6561' }}>/ Khách</span>
                   </div>
 
@@ -695,10 +772,10 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
                     onClick={() => {
                       if (onOpenBooking) {
                         onOpenBooking({
-                          title: product.title,
-                          price: product.priceAdult,
-                          city: product.location,
-                          duration: product.duration
+                          title: pageData.title,
+                          price: pageData.priceAdult,
+                          city: pageData.location,
+                          duration: pageData.duration
                         });
                       }
                     }}
@@ -750,12 +827,12 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', onBac
               </div>
             )}
 
-          </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Khách Hàng Nói Gì Về Trải Nghiệm 4U Retreat */}
-        <Testimonials />
-      </ScrollExpandMedia>
+      {/* Khách Hàng Nói Gì Về Trải Nghiệm 4U Retreat */}
+      {!hideTestimonials && <Testimonials />}
+    </ScrollExpandMedia>
 
     </div>
   );

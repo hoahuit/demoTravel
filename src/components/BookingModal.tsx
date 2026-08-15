@@ -55,7 +55,7 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
   }, [isOpen]);
 
   const defaultTourTitle = selectedTour?.title || 'Retreat Chữa Lành Thân Tâm Trí (Nam Cát Tiên)';
-  
+
   const parsePrice = (priceVal: any): number => {
     if (typeof priceVal === 'number' && !isNaN(priceVal)) return priceVal;
     if (typeof priceVal === 'string') {
@@ -342,7 +342,9 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
                             }
                           }}
                           onError={(err) => {
-                            console.log('PayPal Sandbox error or test mode:', err);
+                            if ((import.meta as any).env?.DEV) {
+                              // Debug log for sandbox testing mode
+                            }
                             handlePayPalSuccess({
                               id: 'PAYPAL-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
                               payer: { name: { given_name: formData.name || 'Du Khách' } },

@@ -3,6 +3,7 @@ import Header from './components/Header';
 import SearchModal from './components/SearchModal';
 import BookingModal from './components/BookingModal';
 import ConsultationModal from './components/ConsultationModal';
+import CreateCustomTourModal from './components/CreateCustomTourModal';
 import ProductDetail from './components/ProductDetail';
 import Hero from './components/Hero';
 import BentoGrid from './components/BentoGrid';
@@ -18,6 +19,8 @@ import BlogPage from './components/BlogPage';
 import AboutPage from './components/AboutPage';
 import PromotionsPage from './components/PromotionsPage';
 import FAQPage from './components/FAQPage';
+import KollectionShopPage from './components/KollectionShopPage';
+
 
 import RetreatDocQuyen from './pages/retreat/retreatdocquyen/RetreatDocQuyen';
 import SapKhoiHanh from './pages/retreat/sapkhoihanh/SapKhoiHanh';
@@ -26,13 +29,28 @@ import UuDaiGioChot from './pages/retreat/uudaigiochot/UuDaiGioChot';
 import RetreatHot from './pages/retreat/retreathot/RetreatHot';
 import KhongTheBoLoSection from './components/KhongTheBoLoSection';
 import UuDaiGioChotSection from './components/UuDaiGioChotSection';
+import KhamPhaDiemDenSection from './components/KhamPhaDiemDenSection';
 import DepartureCalendarModal from './components/DepartureCalendarModal';
+import AdminDashboard from './components/AdminDashboard';
+import AdminTourEditor from './components/AdminTourEditor';
+import { fetchToursApi, fetchSectionItemsApi } from './services/apiService';
+import { syncToursDataFromApi } from './data/toursData';
+import { syncBlogsDataFromApi } from './data/blogsData';
+import { syncDestinationsDataFromApi } from './data/destinationsData';
+import { syncFaqDataFromApi } from './data/faqData';
+import { syncPartnersDataFromApi } from './data/partnersData';
+import { syncPromotionsDataFromApi } from './data/promotionsData';
+import { syncServicesDataFromApi } from './data/servicesData';
+import { syncTeamDataFromApi } from './data/teamData';
+import { syncTestimonialsDataFromApi } from './data/testimonialsData';
+import { syncAboutDataFromApi } from './data/aboutData';
 
 export default function App() {
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
   const [calendarOpen, setCalendarOpen] = useState<boolean>(false);
   const [bookingState, setBookingState] = useState<{ open: boolean; tour: any }>({ open: false, tour: null });
   const [consultationOpen, setConsultationOpen] = useState<boolean>(false);
+  const [customTourState, setCustomTourState] = useState<{ open: boolean; destination?: string }>({ open: false });
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
 
   // PayPal Booking Modal — triggered by "Đặt Ngay" buttons
@@ -42,6 +60,15 @@ export default function App() {
 
   const handleCloseBooking = () => {
     setBookingState({ open: false, tour: null });
+  };
+
+  // Custom Tour Builder Modal — triggered by "Tạo lịch trình đến [Điểm đến] ngay"
+  const handleOpenCustomTour = (destination?: string) => {
+    setCustomTourState({ open: true, destination });
+  };
+
+  const handleCloseCustomTour = () => {
+    setCustomTourState({ open: false });
   };
 
   // Consultation Modal — triggered by "Nhận tư vấn" button & floating button
@@ -58,6 +85,21 @@ export default function App() {
       setCurrentPath(window.location.pathname);
     };
     window.addEventListener('popstate', handlePopState);
+
+    // Fetch initial tours data from Backend API once on startup
+    const loadInitialData = async () => {
+      try {
+        const tours = await fetchToursApi();
+        if (Array.isArray(tours) && tours.length > 0) {
+          syncToursDataFromApi(tours);
+        }
+      } catch (err) {
+        console.warn('[CLIENT INIT DATA WARNING]', err);
+      }
+    };
+
+    loadInitialData();
+
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
@@ -67,8 +109,19 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const normalizeSlug = (path: string) => {
+    return path
+      .trim()
+      .toLowerCase()
+      .replace(/^\/+/, '')
+      .replace(/^sanpham\/?/, '')
+      .replace(/^productdetail\/?/, '')
+      .split(/[?#]/)[0]
+      .replace(/\/$/, '');
+  };
+
   const isProductRoute = currentPath.startsWith('/sanpham/') || currentPath.startsWith('/productdetail');
-  const productSlug = currentPath.replace('/sanpham/', '').replace('/productdetail', '').replace(/\//g, '') || 'retreat-chua-lanh';
+  const productSlug = normalizeSlug(currentPath) || 'retreat-chua-lanh';
 
   const isRetreatDocQuyenRoute = currentPath.startsWith('/retreat/docquyen') || currentPath.startsWith('/retreats-doc-quyen');
   const isSapKhoiHanhRoute = currentPath.startsWith('/retreat/sapkhoihanh') || currentPath.startsWith('/sap-khoi-hanh');
@@ -82,35 +135,47 @@ export default function App() {
 
   const isRetreatHotRoute = currentPath.startsWith('/retreat/retreathot') || currentPath.startsWith('/retreat/hot') || currentPath.startsWith('/retreat-hot') || currentPath === '/retreat';
 
+  const isKollectionRoute =
+    currentPath.startsWith('/kollection-4u') ||
+    currentPath.startsWith('/kollection') ||
+    currentPath.startsWith('/san-pham-vat-ly') ||
+    currentPath.startsWith('/shop') ||
+    currentPath.startsWith('/store');
+
   const isToursRoute =
     currentPath.startsWith('/tours') ||
-    currentPath.startsWith('/series-retreat') ||
-    currentPath.startsWith('/kollection-4u');
+    currentPath.startsWith('/series-retreat');
 
   const isBlogRoute =
     currentPath.startsWith('/101-dieu-hay/blog') ||
     currentPath.startsWith('/101-dieu-hay/a-tip-a-day') ||
     currentPath.startsWith('/101-dieu-hay') ||
+    currentPath.startsWith('/dieu-hay') ||
     currentPath.startsWith('/blog') ||
-    currentPath.startsWith('/tin-tuc');
+    currentPath.startsWith('/tin-tuc') ||
+    currentPath.startsWith('/bai-viet');
 
   const isFaqRoute =
     currentPath.startsWith('/vi-sao-chon-4u/cau-hoi-thuong-gap') ||
+    currentPath.startsWith('/cau-hoi-thuong-gap') ||
     currentPath.startsWith('/faq') ||
     currentPath.startsWith('/hoi-dap');
 
   const isAboutRoute =
     currentPath.startsWith('/vi-sao-chon-4u') ||
     currentPath.startsWith('/about') ||
-    currentPath.startsWith('/ve-chung-toi');
+    currentPath.startsWith('/ve-chung-toi') ||
+    currentPath.startsWith('/gioi-thieu');
 
   const isPromotionsRoute =
     currentPath.startsWith('/kollection-4u/promotions') ||
     currentPath.startsWith('/promotions') ||
-    currentPath.startsWith('/uu-dai');
+    currentPath.startsWith('/uu-dai') ||
+    currentPath.startsWith('/khuyen-mai');
 
   const isDestinationsRoute = currentPath.startsWith('/destinations') || currentPath.startsWith('/diem-den');
   const isServicesRoute = currentPath.startsWith('/services') || currentPath.startsWith('/dich-vu');
+  const isAdminRoute = currentPath.startsWith('/admin');
 
   const renderCurrentRoute = () => {
     if (isProductRoute) {
@@ -129,10 +194,16 @@ export default function App() {
       return <UuDaiGioChot onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
     if (isRetreatHotRoute) {
-      return <RetreatHot onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
+      return <RetreatHot currentPath={currentPath} onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
+    }
+    if (isKollectionRoute) {
+      return <KollectionShopPage currentPath={currentPath} onNavigate={navigateTo} />;
     }
     if (isToursRoute) {
       return <ToursPage currentPath={currentPath} onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
+    }
+    if (isAdminRoute) {
+      return <AdminDashboard currentPath={currentPath} onNavigate={navigateTo} />;
     }
     if (isDestinationsRoute) {
       return <DestinationsPage onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
@@ -144,7 +215,7 @@ export default function App() {
       return <BlogPage onNavigate={navigateTo} />;
     }
     if (isAboutRoute) {
-      return <AboutPage />;
+      return <AboutPage onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
     if (isPromotionsRoute) {
       return <PromotionsPage onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
@@ -170,7 +241,14 @@ export default function App() {
         {/* Section 5: Ưu Đãi Giờ Chót */}
         <UuDaiGioChotSection onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />
 
-        {/* Section 6: Đối Tác Doanh Nghiệp & Thương Hiệu Đồng Hành */}
+        {/* Section 6: Khám Phá Những Điểm Đến Tuyệt Vời */}
+        <KhamPhaDiemDenSection
+          onNavigate={navigateTo}
+          onOpenBooking={handleOpenBooking}
+          onOpenCustomTour={handleOpenCustomTour}
+        />
+
+        {/* Section 7: Đối Tác Doanh Nghiệp & Thương Hiệu Đồng Hành */}
         <PartnerLogos />
       </main>
     );
@@ -202,19 +280,29 @@ export default function App() {
         onNavigate={navigateTo}
       />
 
-      {/* Header — "Nhận tư vấn" opens Consultation Modal, "Lịch khởi hành" opens Departure Calendar */}
-      <Header
-        onOpenSearch={() => setSearchOpen(true)}
-        onNavigate={navigateTo}
-        onOpenBooking={handleOpenConsultation}
-        onOpenCalendar={() => setCalendarOpen(true)}
+      {/* Create Custom Tour Modal — opened by "Tạo Lịch Trình Đến ... Ngay" button */}
+      <CreateCustomTourModal
+        isOpen={customTourState.open}
+        onClose={handleCloseCustomTour}
+        initialDestination={customTourState.destination}
       />
+
+      {/* Header — "Nhận tư vấn" opens Consultation Modal, "Lịch khởi hành" opens Departure Calendar */}
+      {!isAdminRoute && (
+        <Header
+          onOpenSearch={() => setSearchOpen(true)}
+          onNavigate={navigateTo}
+          onOpenBooking={handleOpenConsultation}
+          onOpenCalendar={() => setCalendarOpen(true)}
+          onOpenCustomTour={handleOpenCustomTour}
+        />
+      )}
 
       {/* Conditional Route Rendering */}
       {renderCurrentRoute()}
 
       {/* Footer */}
-      <Footer onNavigate={navigateTo} />
+      {!isAdminRoute && <Footer onNavigate={navigateTo} />}
     </div>
   );
 }

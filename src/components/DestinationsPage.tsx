@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { DESTINATIONS_DATA } from '../data/destinationsData';
+import React, { useState, useEffect } from 'react';
+import { DESTINATIONS_DATA, syncDestinationsDataFromApi, Destination } from '../data/destinationsData';
+import { fetchSectionItemsApi, getImageUrl } from '../services/apiService';
 import { MapPin, Compass, ArrowRight, Camera, Star } from 'lucide-react';
+
 
 interface DestinationsPageProps {
   onNavigate: (path: string) => void;
@@ -8,11 +10,22 @@ interface DestinationsPageProps {
 }
 
 export default function DestinationsPage({ onNavigate, onOpenBooking }: DestinationsPageProps) {
+  const [destinations, setDestinations] = useState<Destination[]>(DESTINATIONS_DATA);
+
+  useEffect(() => {
+    fetchSectionItemsApi('destinations').then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        syncDestinationsDataFromApi(data);
+        setDestinations([...data]);
+      }
+    });
+  }, []);
+
   const [activeRegion, setActiveRegion] = useState<string>('All');
 
   const regions = ['All', 'Đông Nam Á', 'Đông Bắc Á', 'Châu Âu'];
 
-  const filteredDestinations = DESTINATIONS_DATA.filter(dest =>
+  const filteredDestinations = destinations.filter(dest =>
     activeRegion === 'All' || dest.region === activeRegion
   );
 
@@ -92,7 +105,8 @@ export default function DestinationsPage({ onNavigate, onOpenBooking }: Destinat
               }}
             >
               <div style={{ position: 'relative', width: '100%', height: '280px', overflow: 'hidden' }}>
-                <img src={dest.heroImage} alt={dest.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }} />
+                <img src={getImageUrl(dest.heroImage)} alt={dest.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }} />
+
                 <div style={{ position: 'absolute', top: '16px', left: '16px', background: '#006d36', color: '#fff', fontSize: '11px', fontWeight: 800, padding: '5px 14px', borderRadius: '999px', textTransform: 'uppercase' }}>
                   {dest.region}
                 </div>
