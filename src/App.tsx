@@ -114,13 +114,18 @@ export default function App() {
       .trim()
       .toLowerCase()
       .replace(/^\/+/, '')
-      .replace(/^sanpham\/?/, '')
-      .replace(/^productdetail\/?/, '')
+      .replace(/^(sanpham|san-pham|productdetail|tours|tour|detail)\/?/, '')
       .split(/[?#]/)[0]
       .replace(/\/$/, '');
   };
 
-  const isProductRoute = currentPath.startsWith('/sanpham/') || currentPath.startsWith('/productdetail');
+  const isProductRoute =
+    currentPath.startsWith('/tour/') ||
+    currentPath.startsWith('/sanpham/') ||
+    currentPath.startsWith('/san-pham/') ||
+    currentPath.startsWith('/productdetail') ||
+    currentPath.startsWith('/detail/') ||
+    (currentPath.startsWith('/tours/') && currentPath !== '/tours' && currentPath !== '/tours/' && !currentPath.startsWith('/tours?'));
   const productSlug = normalizeSlug(currentPath) || 'retreat-chua-lanh';
 
   const isRetreatDocQuyenRoute = currentPath.startsWith('/retreat/docquyen') || currentPath.startsWith('/retreats-doc-quyen');
@@ -143,7 +148,9 @@ export default function App() {
     currentPath.startsWith('/store');
 
   const isToursRoute =
-    currentPath.startsWith('/tours') ||
+    currentPath === '/tours' ||
+    currentPath === '/tours/' ||
+    currentPath.startsWith('/tours?') ||
     currentPath.startsWith('/series-retreat');
 
   const isBlogRoute =
@@ -227,7 +234,10 @@ export default function App() {
     return (
       <main>
         {/* Section 1: Hero */}
-        <Hero onOpenBooking={handleOpenBooking} />
+        <Hero
+          onOpenBooking={handleOpenBooking}
+          onOpenCustomTour={handleOpenCustomTour}
+        />
 
         {/* Section 2: Sản Phẩm Retreat Độc Quyền (3D Carousel) */}
         <AudienceBento onOpenBooking={handleOpenBooking} onNavigate={navigateTo} />
@@ -257,7 +267,7 @@ export default function App() {
   return (
     <div className="apple-app" style={{ minHeight: '100vh', background: 'var(--apple-bg)' }}>
       {/* Search Modal */}
-      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} onNavigate={navigateTo} />
 
       {/* PayPal Checkout Modal — only for "Đặt Ngay" */}
       <BookingModal

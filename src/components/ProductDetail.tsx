@@ -56,7 +56,10 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
   };
 
   const normalizedSlug = normalizeSlug(productSlug);
-  const tourFound = tours.find(t => t.slug === normalizedSlug) || tours.find(t => t.slug.includes(normalizedSlug) || normalizedSlug.includes(t.slug));
+
+  const tourFound =
+    tours.find(t => t.slug === normalizedSlug || t.id === normalizedSlug) ||
+    tours.find(t => (t.slug && normalizedSlug && (t.slug.includes(normalizedSlug) || normalizedSlug.includes(t.slug))));
 
   const product = customTourData || tourFound || tours[0] || null;
   if (!product) {
