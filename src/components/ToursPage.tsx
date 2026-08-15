@@ -165,15 +165,15 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
         const categorySlug = pathSegments[pathSegments.length - 1];
         matchesPath = Boolean(categorySlug) && matchSeriesType(tour, categorySlug);
       } else if (currentPath.includes('/retreat/docquyen') || currentPath.includes('/retreats-doc-quyen')) {
-        matchesPath = matchSeriesType(tour, 'doc-quyen');
+        matchesPath = matchSeriesType(tour, 'doc-quyen') || tour.isExclusive === true;
       } else if (currentPath.includes('/retreat/retreathot') || currentPath.includes('/retreat-hot')) {
-        matchesPath = matchSeriesType(tour, 'retreat-hot');
+        matchesPath = matchSeriesType(tour, 'retreat-hot') || tour.isHot === true;
       } else if (currentPath.includes('/retreat/sapkhoihanh') || currentPath.includes('/sap-khoi-hanh')) {
-        matchesPath = matchSeriesType(tour, 'sap-khoi-hanh');
+        matchesPath = matchSeriesType(tour, 'sap-khoi-hanh') || (Array.isArray(tour.departureDates) && tour.departureDates.length > 0);
       } else if (currentPath.includes('/retreat/khongthebolo') || currentPath.includes('/khong-the-khong-co')) {
-        matchesPath = matchSeriesType(tour, 'khong-the-bo-lo');
+        matchesPath = matchSeriesType(tour, 'khong-the-bo-lo') || tour.isFeatured === true;
       } else if (currentPath.includes('/retreat/uudaigiochot') || currentPath.includes('/uu-dai-gio-chot') || currentPath.includes('/uu-dai') || currentPath.includes('/promotions')) {
-        matchesPath = matchSeriesType(tour, 'uu-dai-gio-chot');
+        matchesPath = matchSeriesType(tour, 'uu-dai-gio-chot') || ((tour.originalPrice || 0) > (tour.price || 0)) || tour.isHot === true;
       } else if (currentPath.includes('/kollection-4u/new-arrivals')) {
         matchesPath = matchSeriesType(tour, 'new-arrivals');
       } else if (currentPath.includes('/kollection-4u/must-have')) {

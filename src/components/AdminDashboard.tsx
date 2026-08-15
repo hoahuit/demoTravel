@@ -14,6 +14,7 @@ import AdminTeamManager from './admin/AdminTeamManager';
 import AdminTestimonialsManager from './admin/AdminTestimonialsManager';
 import AdminSettingsManager from './admin/AdminSettingsManager';
 import AdminCategoriesManager from './admin/AdminCategoriesManager';
+import AdminProductsManager from './admin/AdminProductsManager';
 
 import { BLOGS_DATA, BlogArticle } from '../data/blogsData';
 import { DESTINATIONS_DATA, Destination } from '../data/destinationsData';
@@ -32,11 +33,12 @@ import './Admin.css';
 
 export const ADMIN_SECTIONS = [
   { id: 'tours', label: 'Quản Lý Tour' },
+  { id: 'products', label: 'Sản Phẩm (Kollection 4U)' },
   { id: 'blog', label: 'Quản Lý Bài Viết' },
   { id: 'destinations', label: 'Quản Lý Điểm Đến' },
   { id: 'partners', label: 'Quản Lý Đối Tác Doanh Nghiệp' },
   { id: 'consultations', label: 'Quản Lý Lịch Hẹn Tư Vấn' },
-  // { id: 'categories', label: 'Danh Mục Menu' },
+  { id: 'categories', label: 'Danh Mục Menu' },
   // { id: 'bookings', label: 'Đơn Đặt Tour' },
   // { id: 'analytics', label: 'Thống Kê & Báo Cáo' },
   // { id: 'about', label: 'Giới Thiệu 4U' },
@@ -45,7 +47,7 @@ export const ADMIN_SECTIONS = [
   // { id: 'services', label: 'Dịch Vụ Retreat' },
   // { id: 'team', label: 'Đội Ngũ Nhân Sự' },
   // { id: 'testimonials', label: 'Đánh Giá Khách Hàng' },
-  // { id: 'settings', label: 'Cấu Hình Hệ Thống' },
+  { id: 'settings', label: 'Cấu Hình Hệ Thống' },
 ] as const;
 
 export type AdminSectionId = typeof ADMIN_SECTIONS[number]['id'] | string;
@@ -377,6 +379,7 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
         {/* MAIN WORKSPACE AREA RENDERING MODULAR TSX COMPONENTS */}
         <main className="serene-main" style={{ flex: 1, backgroundColor: '#f4f5f3', padding: '28px', minHeight: 'calc(100vh - 64px)' }}>
           {activeSection === 'tours' && <AdminToursManager toast={toast} onNavigate={onNavigate} />}
+          {activeSection === 'products' && <AdminProductsManager toast={toast} onNavigate={onNavigate} />}
           {activeSection === 'categories' && <AdminCategoriesManager toast={toast} />}
           {activeSection === 'bookings' && <AdminBookingsManager bookingsList={bookingsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
           {activeSection === 'consultations' && <AdminConsultationsManager consultationsList={consultationsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} handleStatusUpdate={handleConsultationStatusUpdate} />}

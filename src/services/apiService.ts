@@ -1,4 +1,28 @@
+import {
+  getMockTours,
+  getMockDestinations,
+  getMockProducts,
+  getMockBlogs,
+  getMockFaqs,
+  getMockPartners,
+  getMockServices,
+  getMockTeam,
+  getMockTestimonials,
+  getMockAbout,
+  getMockCategories,
+  getMockConsultations,
+  getMockBookings,
+  addMockConsultation,
+  addMockBooking,
+  addMockTour,
+  updateMockTour,
+  deleteMockTour
+} from '../data/mockData';
+
 export const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://127.0.0.1:3001';
+
+// Toggle mock data mode via .env (VITE_USE_MOCK_DATA=true)
+export const USE_MOCK_DATA = String((import.meta as any).env?.VITE_USE_MOCK_DATA || '').toLowerCase() === 'true';
 
 // Format image URL: if relative filename like 'a.jpg' is provided, load using API_BASE_URL/uploads/a.jpg
 export function getImageUrl(imagePath?: string): string {
@@ -134,6 +158,7 @@ export function getLb4Endpoint(section: string): string {
     categories: '/menu-categories',
     'menu-categories': '/menu-categories',
     consultations: '/consultations',
+    products: '/products',
   };
   return mapping[section] || `/${section}`;
 }
@@ -280,6 +305,11 @@ export function invalidateQueryCache(keyPattern?: string) {
 let inflightToursPromise: Promise<any> | null = null;
 
 export async function fetchToursApi(forceRefresh = false) {
+  if (USE_MOCK_DATA) {
+    const mockList = getMockTours();
+    return setCachedQuery('tours', mockList);
+  }
+
   if (!forceRefresh) {
     const cached = getCachedQuery('tours');
     if (cached) {
@@ -297,15 +327,19 @@ export async function fetchToursApi(forceRefresh = false) {
         method: 'GET',
         headers: { Accept: 'application/json' },
       });
-      if (!response.ok) return getCachedQuery('tours') || [];
+      if (!response.ok) {
+        console.warn(`[API Service] Failed to fetch live tours (${response.status}), falling back to mock tours.`);
+        return setCachedQuery('tours', getMockTours());
+      }
       const rawList = await response.json();
-      if (Array.isArray(rawList)) {
+      if (Array.isArray(rawList) && rawList.length > 0) {
         const parsedList = rawList.map(parseTourJsonFields);
         return setCachedQuery('tours', parsedList);
       }
-      return getCachedQuery('tours') || [];
+      return setCachedQuery('tours', getMockTours());
     } catch (err) {
-      return getCachedQuery('tours') || [];
+      console.warn(`[API Service] Backend unreachable at ${API_BASE_URL}, using fallback mock data.`);
+      return setCachedQuery('tours', getMockTours());
     } finally {
       setTimeout(() => {
         inflightToursPromise = null;
@@ -426,6 +460,29 @@ export async function deleteTourApi(id: number | string) {
 // GENERIC MODULE CRUD API CALLS WITH QUERY CACHE
 // --------------------------------------------------------------------------
 
+// Helper to get fallback mock dataset for any frontend section
+export function getSectionMockFallback(section: string): any {
+  switch (section) {
+    case 'destinations': return getMockDestinations();
+    case 'products': return getMockProducts();
+    case 'blogs':
+    case 'blog': return getMockBlogs();
+    case 'faqs':
+    case 'faq': return getMockFaqs();
+    case 'partners': return getMockPartners();
+    case 'services': return getMockServices();
+    case 'team':
+    case 'team-members': return getMockTeam();
+    case 'testimonials': return getMockTestimonials();
+    case 'about': return getMockAbout();
+    case 'categories':
+    case 'menu-categories': return getMockCategories();
+    case 'consultations': return getMockConsultations();
+    case 'bookings': return getMockBookings();
+    default: return [];
+  }
+}
+
 const inflightSectionPromises: Record<string, Promise<any> | null> = {};
 
 export async function fetchSectionItemsApi(section: string, forceRefresh = false) {
@@ -434,6 +491,11 @@ export async function fetchSectionItemsApi(section: string, forceRefresh = false
   }
 
   const cacheKey = `section:${section}`;
+
+  if (USE_MOCK_DATA) {
+    const mockData = getSectionMockFallback(section);
+    return setCachedQuery(cacheKey, mockData);
+  }
 
   if (!forceRefresh) {
     const cached = getCachedQuery(cacheKey);
@@ -453,11 +515,16 @@ export async function fetchSectionItemsApi(section: string, forceRefresh = false
         method: 'GET',
         headers: { Accept: 'application/json' },
       });
-      if (!response.ok) return getCachedQuery(cacheKey) || [];
+      if (!response.ok) {
+        return setCachedQuery(cacheKey, getSectionMockFallback(section));
+      }
       const data = await response.json();
-      return setCachedQuery(cacheKey, data);
+      if (Array.isArray(data) && data.length > 0) {
+        return setCachedQuery(cacheKey, data);
+      }
+      return setCachedQuery(cacheKey, getSectionMockFallback(section));
     } catch (err) {
-      return getCachedQuery(cacheKey) || [];
+      return setCachedQuery(cacheKey, getSectionMockFallback(section));
     } finally {
       setTimeout(() => {
         inflightSectionPromises[section] = null;
@@ -474,8 +541,38 @@ export async function saveSectionItemApi(
   action: 'create' | 'update' | 'delete',
   data: any
 ) {
+  if (USE_MOCK_DATA) {
+    if (section === 'consultations' && action === 'create') {
+      const created = addMockConsultation(data);
+      invalidateQueryCache(`section:${section}`);
+      return created;
+    }
+    if (section === 'bookings' && action === 'create') {
+      const created = addMockBooking(data);
+      invalidateQueryCache(`section:${section}`);
+      return created;
+    }
+    if (section === 'tours') {
+      if (action === 'create') addMockTour(data);
+      if (action === 'update') updateMockTour(data.id || data.slug, data);
+      if (action === 'delete') deleteMockTour(data.id || data.slug);
+      invalidateQueryCache('tours');
+      return { success: true, action, data };
+    }
+    invalidateQueryCache(`section:${section}`);
+    return { success: true, action, data };
+  }
+
   const endpoint = getLb4Endpoint(section);
-  const payload = sanitizeTourPayload(data, action === 'update');
+  let payload: any;
+  if (section === 'tours') {
+    payload = sanitizeTourPayload(data, action === 'update');
+  } else {
+    payload = { ...data };
+    if (action === 'create') {
+      delete payload.id;
+    }
+  }
 
   let method = 'POST';
   let url = `${API_BASE_URL}${endpoint}`;
@@ -554,3 +651,75 @@ export async function deleteMenuCategoryApi(id: number | string): Promise<boolea
 export async function createConsultationApi(consultationData: any): Promise<any> {
   return await saveSectionItemApi('consultations', 'create', consultationData);
 }
+
+// --------------------------------------------------------------------------
+// KOLLECTION 4U PHYSICAL PRODUCTS API CALLS
+// --------------------------------------------------------------------------
+
+export interface KollectionProduct {
+  id?: number;
+  slug: string;
+  title: string;
+  subtitle?: string;
+  category: string;
+  sku?: string;
+  price: number;
+  originalPrice?: number;
+  stock?: number;
+  heroImage: string;
+  gallery?: string[] | string;
+  description?: string;
+  specifications?: string;
+  isFeatured?: boolean;
+  isNewArrival?: boolean;
+  isBestSeller?: boolean;
+  rating?: number;
+  reviewsCount?: number;
+}
+
+export async function fetchProductsApi(forceRefresh = false): Promise<KollectionProduct[]> {
+  const data = await fetchSectionItemsApi('products', forceRefresh);
+  if (Array.isArray(data)) {
+    return data.map((item: any) => {
+      let galleryArr: string[] = [];
+      if (Array.isArray(item.gallery)) {
+        galleryArr = item.gallery;
+      } else if (typeof item.gallery === 'string' && item.gallery.trim().startsWith('[')) {
+        try {
+          galleryArr = JSON.parse(item.gallery);
+        } catch {
+          galleryArr = [item.heroImage];
+        }
+      } else if (item.heroImage) {
+        galleryArr = [item.heroImage];
+      }
+      return {
+        ...item,
+        gallery: galleryArr
+      };
+    });
+  }
+  return [];
+}
+
+export async function createProductApi(productData: Partial<KollectionProduct>): Promise<KollectionProduct> {
+  const payload = { ...productData };
+  if (Array.isArray(payload.gallery)) {
+    payload.gallery = JSON.stringify(payload.gallery);
+  }
+  return await saveSectionItemApi('products', 'create', payload);
+}
+
+export async function saveProductApi(id: number | string, productData: Partial<KollectionProduct>): Promise<KollectionProduct> {
+  const payload = { ...productData };
+  if (Array.isArray(payload.gallery)) {
+    payload.gallery = JSON.stringify(payload.gallery);
+  }
+  return await saveSectionItemApi('products', 'update', { ...payload, id });
+}
+
+export async function deleteProductApi(id: number | string): Promise<boolean> {
+  await saveSectionItemApi('products', 'delete', { id });
+  return true;
+}
+

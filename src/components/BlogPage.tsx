@@ -22,6 +22,10 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
 
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
+  const getAuthorName = (article?: BlogArticle) => article?.author?.name || article?.authorName || 'Ban Biên Tập 4U';
+  const getAuthorRole = (article?: BlogArticle) => article?.author?.role || article?.authorRole || 'Senior Travel Editor';
+  const getAuthorAvatar = (article?: BlogArticle) => article?.author?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80';
+
   const selectedArticle = blogs.find(b => b.slug === selectedSlug);
 
   if (selectedArticle) {
@@ -35,10 +39,10 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
           >
             <ArrowLeft size={16} /> Trở về danh sách bài viết
           </button>
-          
+
           <div>
             <span style={{ display: 'inline-block', background: 'rgba(0,109,54,0.1)', color: '#006d36', fontSize: '12px', fontWeight: 800, padding: '6px 18px', borderRadius: '999px', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.08em' }}>
-              {selectedArticle.category} MAGAZINE
+              {selectedArticle.category || 'Retreat'} MAGAZINE
             </span>
             <h1 style={{ fontSize: 'clamp(32px, 5vw, 56px)', fontWeight: 800, color: '#0f172a', lineHeight: 1.2, margin: '0 0 20px 0', letterSpacing: '-0.02em' }}>
               {selectedArticle.title}
@@ -48,10 +52,10 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
             </p>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', borderTop: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9', padding: '20px 0' }}>
-              <img src={getImageUrl(selectedArticle.author?.avatar)} alt={selectedArticle.author?.name || selectedArticle.authorName || '4U Author'} style={{ width: '52px', height: '52px', borderRadius: '50%', objectFit: 'cover' }} />
+              <img src={getImageUrl(getAuthorAvatar(selectedArticle))} alt={getAuthorName(selectedArticle)} style={{ width: '52px', height: '52px', borderRadius: '50%', objectFit: 'cover' }} />
               <div>
-                <div style={{ fontWeight: 800, color: '#0f172a', fontSize: '15px' }}>{selectedArticle.author?.name || selectedArticle.authorName || 'Lê Ngọc Minh'}</div>
-                <div style={{ fontSize: '13px', color: '#64748b' }}>{selectedArticle.author?.role || selectedArticle.authorRole || 'Senior Travel Editor'} • {selectedArticle.publishedDate || '10/08/2026'} • {selectedArticle.readTime || '5 min read'}</div>
+                <div style={{ fontWeight: 800, color: '#0f172a', fontSize: '15px' }}>{getAuthorName(selectedArticle)}</div>
+                <div style={{ fontSize: '13px', color: '#64748b' }}>{getAuthorRole(selectedArticle)} • {selectedArticle.publishedDate || '10/08/2026'} • {selectedArticle.readTime || '5 min read'}</div>
               </div>
             </div>
           </div>
@@ -64,7 +68,7 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
 
         {/* Article Body Content (Full Screen Grid Layout) */}
         <div style={{ width: '100%', padding: '0 48px', boxSizing: 'border-box', display: 'grid', gridTemplateColumns: 'minmax(280px, 360px) 1fr', gap: '56px', alignItems: 'start' }}>
-          
+
           {/* Left Column: Table of Contents & Info */}
           <div style={{ position: 'sticky', top: '120px' }}>
             <div style={{ background: '#f8fafc', borderRadius: '24px', padding: '28px', border: '1px solid #e2e8f0' }}>
@@ -72,7 +76,7 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
                 📌 Mục Lục Bài Viết
               </h3>
               <ul style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {selectedArticle.tableOfContents.map((toc, idx) => (
+                {(selectedArticle.tableOfContents || ['Giới thiệu', 'Chi tiết hành trình', 'Lời kết']).map((toc, idx) => (
                   <li key={idx} style={{ fontSize: '14px', color: '#006d36', fontWeight: 600, lineHeight: 1.5 }}>{toc}</li>
                 ))}
               </ul>
@@ -82,11 +86,11 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
           {/* Right Column: Full Main Text & Sections */}
           <div style={{ fontSize: '18px', lineHeight: 1.85, color: '#334155' }}>
             <p style={{ fontWeight: 600, fontSize: '20px', color: '#1e293b', marginBottom: '36px', lineHeight: 1.6 }}>
-              {selectedArticle.introduction}
+              {selectedArticle.introduction || selectedArticle.subtitle}
             </p>
 
             {/* Sections */}
-            {selectedArticle.sections.map((sec, idx) => (
+            {(selectedArticle.sections || []).map((sec, idx) => (
               <div key={idx} style={{ marginBottom: '48px' }}>
                 <h2 style={{ fontSize: '28px', fontWeight: 800, color: '#0f172a', margin: '0 0 20px 0', lineHeight: 1.3 }}>
                   {sec.title}
@@ -106,10 +110,12 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
             ))}
 
             {/* Conclusion */}
-            <div style={{ background: 'rgba(0,109,54,0.05)', borderRadius: '24px', padding: '32px 36px', borderLeft: '5px solid #006d36', marginTop: '48px' }}>
-              <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#006d36', margin: '0 0 10px 0' }}>💡 Lời kết</h3>
-              <p style={{ margin: 0, fontSize: '17px', color: '#1e293b', lineHeight: 1.7 }}>{selectedArticle.conclusion}</p>
-            </div>
+            {selectedArticle.conclusion && (
+              <div style={{ background: 'rgba(0,109,54,0.05)', borderRadius: '24px', padding: '32px 36px', borderLeft: '5px solid #006d36', marginTop: '48px' }}>
+                <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#006d36', margin: '0 0 10px 0' }}>💡 Lời kết</h3>
+                <p style={{ margin: 0, fontSize: '17px', color: '#1e293b', lineHeight: 1.7 }}>{selectedArticle.conclusion}</p>
+              </div>
+            )}
           </div>
 
         </div>
@@ -171,7 +177,7 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
                   </span>
                 </h3>
                 <div style={{ fontSize: '16px', color: '#737373', marginBottom: '16px' }}>
-                  <time>{featArticle.publishedDate}</time> • {featArticle.category}
+                  <time>{featArticle.publishedDate || '10/08/2026'}</time> • {featArticle.category || 'Retreat'}
                 </div>
               </div>
 
@@ -182,13 +188,13 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div style={{ marginRight: '16px', width: '48px', height: '48px' }}>
                     <img
-                      src={getImageUrl(featArticle.author.avatar)}
-                      alt={featArticle.author.name}
+                      src={getImageUrl(getAuthorAvatar(featArticle))}
+                      alt={getAuthorName(featArticle)}
                       style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                     />
                   </div>
                   <div style={{ fontSize: '18px', fontWeight: 700, color: '#0a0a0a' }}>
-                    {featArticle.author.name}
+                    {getAuthorName(featArticle)}
                   </div>
                 </div>
               </div>
@@ -229,7 +235,7 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
                   </h3>
 
                   <div style={{ fontSize: '15px', color: '#737373', marginBottom: '14px' }}>
-                    <time>{article.publishedDate}</time> • {article.readTime}
+                    <time>{article.publishedDate || '10/08/2026'}</time> • {article.readTime || '5 min read'}
                   </div>
 
                   <p style={{ fontSize: '16px', lineHeight: 1.6, color: '#404040', marginBottom: '24px', flex: 1 }}>
@@ -239,14 +245,14 @@ export default function BlogPage({ onNavigate }: BlogPageProps) {
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div style={{ marginRight: '14px', width: '44px', height: '44px' }}>
                       <img
-                        src={getImageUrl(article.author.avatar)}
-                        alt={article.author.name}
+                        src={getImageUrl(getAuthorAvatar(article))}
+                        alt={getAuthorName(article)}
                         style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                       />
                     </div>
 
                     <div style={{ fontSize: '16px', fontWeight: 700, color: '#0a0a0a' }}>
-                      {article.author.name}
+                      {getAuthorName(article)}
                     </div>
                   </div>
                 </article>

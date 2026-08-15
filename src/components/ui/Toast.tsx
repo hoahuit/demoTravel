@@ -10,8 +10,9 @@ export interface ToastItem {
   duration?: number;
 }
 
-interface ToastContextValue {
+export interface ToastContextValue {
   showToast: (type: ToastType, message: string, title?: string, duration?: number) => void;
+  show: (message: string, type?: ToastType) => void;
   success: (message: string, title?: string) => void;
   error: (message: string, title?: string) => void;
   info: (message: string, title?: string) => void;
@@ -22,7 +23,14 @@ const ToastContext = createContext<ToastContextValue | null>(null);
 export function useToast(): ToastContextValue {
   const context = useContext(ToastContext);
   if (!context) {
-    throw new Error('useToast must be used within a ToastProvider');
+    // Return a safe fallback dummy if used outside ToastProvider
+    return {
+      showToast: () => {},
+      show: () => {},
+      success: () => {},
+      error: () => {},
+      info: () => {}
+    };
   }
   return context;
 }
@@ -50,12 +58,16 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     [removeToast]
   );
 
+  const show = useCallback((message: string, type: ToastType = 'info') => {
+    showToast(type, message);
+  }, [showToast]);
+
   const success = useCallback((message: string, title?: string) => showToast('success', message, title), [showToast]);
   const error = useCallback((message: string, title?: string) => showToast('error', message, title, 6000), [showToast]);
   const info = useCallback((message: string, title?: string) => showToast('info', message, title), [showToast]);
 
   return (
-    <ToastContext.Provider value={{ showToast, success, error, info }}>
+    <ToastContext.Provider value={{ showToast, show, success, error, info }}>
       {children}
       {/* Floating Toast Notification Container */}
       <div

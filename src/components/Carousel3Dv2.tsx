@@ -22,9 +22,10 @@ export default function Carousel3Dv2({ onOpenBooking, onNavigate }: Carousel3Dv2
     });
   }, []);
 
-  // Only tours assigned to the "Retreats Độc Quyền" category appear here.
+  // Tours assigned to "Retreats Độc Quyền" or with isExclusive = true appear here.
   const carouselTours = tours.filter((tour) =>
-    Array.isArray(tour.categories) && tour.categories.includes('doc-quyen')
+    (Array.isArray(tour.categories) && tour.categories.includes('doc-quyen')) ||
+    tour.isExclusive === true
   );
 
   const slides: CoverflowSlide[] = carouselTours.map((tour) => ({

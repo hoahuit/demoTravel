@@ -147,12 +147,14 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
       >
         <div
           style={{
-            maxWidth: '1440px',
+            width: '100%',
+            maxWidth: '100%',
+            padding: '0 40px',
             margin: '0 auto',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '28px',
+            gap: '20px',
           }}
         >
           {/* Logo */}
@@ -181,7 +183,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               src="/images/logo.png"
               alt="4U Tours Logo"
               style={{
-                height: '46px',
+                height: '44px',
                 width: 'auto',
                 objectFit: 'contain',
                 display: 'block',
@@ -196,8 +198,9 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '8px',
+              gap: '6px',
               flex: 1,
+              minWidth: 0,
             }}
           >
             <div
@@ -207,7 +210,9 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '48px',
+                flexWrap: 'nowrap',
+                whiteSpace: 'nowrap',
+                gap: '36px',
                 fontSize: '0.96rem',
                 fontWeight: '700',
                 letterSpacing: '0.01em',
@@ -235,6 +240,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
+                    whiteSpace: 'nowrap',
                     fontWeight: b.isHighlight ? 800 : 700
                   }}
                   onMouseEnter={e => {
@@ -248,7 +254,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                   }}
                 >
                   {b.isHighlight && <Crown size={15} style={{ color: '#facc15', fill: '#facc15', marginRight: '5px' }} />}
-                  {b.label}
+                  <span style={{ whiteSpace: 'nowrap' }}>{b.label}</span>
                 </a>
               ))}
             </div>
@@ -264,6 +270,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                whiteSpace: 'nowrap',
               }}
             >
               <nav
@@ -272,15 +279,17 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '44px',
-                  paddingTop: '4px',
+                  flexWrap: 'nowrap',
+                  whiteSpace: 'nowrap',
+                  gap: '32px',
+                  paddingTop: '2px',
                 }}
               >
                 {menuData.map(item => (
                   <div
                     key={item.id}
                     onMouseEnter={() => item.hasSubmenu ? setActiveCategory(item.id) : setActiveCategory(null)}
-                    style={{ display: 'flex', alignItems: 'center', position: 'relative' }}
+                    style={{ display: 'flex', alignItems: 'center', position: 'relative', whiteSpace: 'nowrap', flexShrink: 0 }}
                   >
                     {item.hasSubmenu ? (
                       <button
@@ -300,10 +309,11 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                           fontSize: '1.02rem',
                           fontWeight: '700',
                           cursor: 'pointer',
-                          display: 'flex',
+                          display: 'inline-flex',
                           alignItems: 'center',
                           gap: '6px',
                           padding: '0',
+                          whiteSpace: 'nowrap',
                           transition: 'color 0.2s ease',
                         }}
                         onMouseEnter={e => e.currentTarget.style.color = '#4ade80'}
@@ -311,7 +321,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                           if (activeCategory !== item.id) e.currentTarget.style.color = '#ffffff';
                         }}
                       >
-                        <span>{item.title}</span>
+                        <span style={{ whiteSpace: 'nowrap' }}>{item.title}</span>
                         <ChevronDown
                           size={14}
                           style={{
@@ -319,6 +329,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                             transition: 'transform 0.25s ease',
                             opacity: 0.85,
                             color: activeCategory === item.id ? '#4ade80' : 'currentColor',
+                            flexShrink: 0
                           }}
                         />
                       </button>
@@ -338,12 +349,17 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                           fontWeight: '700',
                           textDecoration: 'none',
                           padding: '0',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          whiteSpace: 'nowrap',
                           transition: 'color 0.2s ease',
                         }}
                         onMouseEnter={e => e.currentTarget.style.color = '#4ade80'}
-                        onMouseLeave={e => e.currentTarget.style.color = '#ffffff'}
+                        onMouseLeave={e => {
+                          if (activeCategory !== item.id) e.currentTarget.style.color = '#ffffff';
+                        }}
                       >
-                        {item.title}
+                        <span style={{ whiteSpace: 'nowrap' }}>{item.title}</span>
                       </a>
                     )}
                   </div>
@@ -352,9 +368,9 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
             </div>
           </div>
 
-          {/* Right CTA */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
-            {/* Lịch khởi hành Button with Calendar Icon */}
+          {/* Right CTA - Compact & Balanced */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+            {/* Lịch khởi hành Button */}
             <button
               onClick={(e) => {
                 e.preventDefault();
@@ -369,14 +385,11 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '7px',
-                padding: '11px 22px',
+                height: '36px',
+                padding: '0 14px',
                 borderRadius: '999px',
                 background: 'rgba(255, 255, 255, 0.12)',
                 color: '#ffffff',
-                fontWeight: '700',
-                fontSize: '0.92rem',
-                letterSpacing: '0.01em',
                 border: '1px solid rgba(255, 255, 255, 0.25)',
                 backdropFilter: 'blur(10px)',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -396,11 +409,10 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 e.currentTarget.style.transform = 'none';
               }}
             >
-              <Calendar size={17} style={{ color: '#4ade80' }} />
-              <span>Lịch khởi hành</span>
+              <Calendar size={16} style={{ color: '#4ade80' }} />
             </button>
 
-            {/* Tạo Lịch Trình Riêng Tôi Button */}
+            {/* Thiết Kế Lịch Trình Button */}
             <button
               onClick={() => {
                 if (onOpenCustomTour) onOpenCustomTour();
@@ -410,38 +422,36 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '7px',
-                padding: '11px 20px',
+                height: '36px',
+                padding: '0 16px',
                 borderRadius: '999px',
-                background: 'linear-gradient(135deg, rgba(74, 222, 128, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%)',
-                color: '#4ade80',
+                background: 'rgba(255, 255, 255, 0.12)',
+                color: '#ffffff',
                 fontWeight: '700',
-                fontSize: '0.92rem',
+                fontSize: '0.86rem',
                 letterSpacing: '0.01em',
-                border: '1px solid rgba(74, 222, 128, 0.4)',
+                border: '1px solid rgba(255, 255, 255, 0.28)',
                 backdropFilter: 'blur(10px)',
-                boxShadow: '0 4px 15px rgba(74, 222, 128, 0.15)',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.12)',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                whiteSpace: 'nowrap'
               }}
               onMouseEnter={e => {
                 setActiveCategory(null);
-                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(74, 222, 128, 0.35) 0%, rgba(34, 197, 94, 0.25) 100%)';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)';
                 e.currentTarget.style.borderColor = '#4ade80';
-                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.color = '#4ade80';
                 e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(74, 222, 128, 0.3)';
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(74, 222, 128, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%)';
-                e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.4)';
-                e.currentTarget.style.color = '#4ade80';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.28)';
+                e.currentTarget.style.color = '#ffffff';
                 e.currentTarget.style.transform = 'none';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(74, 222, 128, 0.15)';
               }}
             >
-              <Sparkles size={16} style={{ color: '#4ade80' }} />
-              <span>Tạo Lịch Trình Riêng</span>
+              <span style={{ whiteSpace: 'nowrap' }}>Thiết kế lịch trình</span>
             </button>
 
             {/* Nhận tư vấn Button */}
@@ -454,29 +464,31 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '12px 26px',
+                height: '36px',
+                padding: '0 18px',
                 borderRadius: '999px',
                 background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 100%)',
                 color: '#09150c',
                 fontWeight: '800',
-                fontSize: '0.94rem',
-                letterSpacing: '0.02em',
-                boxShadow: '0 6px 22px rgba(74, 222, 128, 0.45)',
+                fontSize: '0.88rem',
+                letterSpacing: '0.01em',
+                boxShadow: '0 6px 22px rgba(74, 222, 128, 0.4)',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 border: 'none',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                whiteSpace: 'nowrap'
               }}
               onMouseEnter={e => {
                 setActiveCategory(null);
                 e.currentTarget.style.transform = 'scale(1.04)';
-                e.currentTarget.style.boxShadow = '0 8px 26px rgba(74, 222, 128, 0.6)';
+                e.currentTarget.style.boxShadow = '0 8px 26px rgba(74, 222, 128, 0.55)';
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.boxShadow = '0 6px 22px rgba(74, 222, 128, 0.45)';
+                e.currentTarget.style.boxShadow = '0 6px 22px rgba(74, 222, 128, 0.4)';
               }}
             >
-              Nhận tư vấn
+              <span style={{ whiteSpace: 'nowrap' }}>Nhận tư vấn</span>
             </button>
 
             <button

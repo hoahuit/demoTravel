@@ -19,6 +19,8 @@ import BlogPage from './components/BlogPage';
 import AboutPage from './components/AboutPage';
 import PromotionsPage from './components/PromotionsPage';
 import FAQPage from './components/FAQPage';
+import KollectionShopPage from './components/KollectionShopPage';
+
 
 import RetreatDocQuyen from './pages/retreat/retreatdocquyen/RetreatDocQuyen';
 import SapKhoiHanh from './pages/retreat/sapkhoihanh/SapKhoiHanh';
@@ -27,6 +29,7 @@ import UuDaiGioChot from './pages/retreat/uudaigiochot/UuDaiGioChot';
 import RetreatHot from './pages/retreat/retreathot/RetreatHot';
 import KhongTheBoLoSection from './components/KhongTheBoLoSection';
 import UuDaiGioChotSection from './components/UuDaiGioChotSection';
+import KhamPhaDiemDenSection from './components/KhamPhaDiemDenSection';
 import DepartureCalendarModal from './components/DepartureCalendarModal';
 import AdminDashboard from './components/AdminDashboard';
 import AdminTourEditor from './components/AdminTourEditor';
@@ -47,7 +50,7 @@ export default function App() {
   const [calendarOpen, setCalendarOpen] = useState<boolean>(false);
   const [bookingState, setBookingState] = useState<{ open: boolean; tour: any }>({ open: false, tour: null });
   const [consultationOpen, setConsultationOpen] = useState<boolean>(false);
-  const [customTourOpen, setCustomTourOpen] = useState<boolean>(false);
+  const [customTourState, setCustomTourState] = useState<{ open: boolean; destination?: string }>({ open: false });
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
 
   // PayPal Booking Modal — triggered by "Đặt Ngay" buttons
@@ -57,6 +60,15 @@ export default function App() {
 
   const handleCloseBooking = () => {
     setBookingState({ open: false, tour: null });
+  };
+
+  // Custom Tour Builder Modal — triggered by "Tạo lịch trình đến [Điểm đến] ngay"
+  const handleOpenCustomTour = (destination?: string) => {
+    setCustomTourState({ open: true, destination });
+  };
+
+  const handleCloseCustomTour = () => {
+    setCustomTourState({ open: false });
   };
 
   // Consultation Modal — triggered by "Nhận tư vấn" button & floating button
@@ -123,32 +135,43 @@ export default function App() {
 
   const isRetreatHotRoute = currentPath.startsWith('/retreat/retreathot') || currentPath.startsWith('/retreat/hot') || currentPath.startsWith('/retreat-hot') || currentPath === '/retreat';
 
+  const isKollectionRoute =
+    currentPath.startsWith('/kollection-4u') ||
+    currentPath.startsWith('/kollection') ||
+    currentPath.startsWith('/san-pham-vat-ly') ||
+    currentPath.startsWith('/shop') ||
+    currentPath.startsWith('/store');
+
   const isToursRoute =
     currentPath.startsWith('/tours') ||
-    currentPath.startsWith('/series-retreat') ||
-    currentPath.startsWith('/kollection-4u');
+    currentPath.startsWith('/series-retreat');
 
   const isBlogRoute =
     currentPath.startsWith('/101-dieu-hay/blog') ||
     currentPath.startsWith('/101-dieu-hay/a-tip-a-day') ||
     currentPath.startsWith('/101-dieu-hay') ||
+    currentPath.startsWith('/dieu-hay') ||
     currentPath.startsWith('/blog') ||
-    currentPath.startsWith('/tin-tuc');
+    currentPath.startsWith('/tin-tuc') ||
+    currentPath.startsWith('/bai-viet');
 
   const isFaqRoute =
     currentPath.startsWith('/vi-sao-chon-4u/cau-hoi-thuong-gap') ||
+    currentPath.startsWith('/cau-hoi-thuong-gap') ||
     currentPath.startsWith('/faq') ||
     currentPath.startsWith('/hoi-dap');
 
   const isAboutRoute =
     currentPath.startsWith('/vi-sao-chon-4u') ||
     currentPath.startsWith('/about') ||
-    currentPath.startsWith('/ve-chung-toi');
+    currentPath.startsWith('/ve-chung-toi') ||
+    currentPath.startsWith('/gioi-thieu');
 
   const isPromotionsRoute =
     currentPath.startsWith('/kollection-4u/promotions') ||
     currentPath.startsWith('/promotions') ||
-    currentPath.startsWith('/uu-dai');
+    currentPath.startsWith('/uu-dai') ||
+    currentPath.startsWith('/khuyen-mai');
 
   const isDestinationsRoute = currentPath.startsWith('/destinations') || currentPath.startsWith('/diem-den');
   const isServicesRoute = currentPath.startsWith('/services') || currentPath.startsWith('/dich-vu');
@@ -173,6 +196,9 @@ export default function App() {
     if (isRetreatHotRoute) {
       return <RetreatHot currentPath={currentPath} onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
+    if (isKollectionRoute) {
+      return <KollectionShopPage currentPath={currentPath} onNavigate={navigateTo} />;
+    }
     if (isToursRoute) {
       return <ToursPage currentPath={currentPath} onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
@@ -189,7 +215,7 @@ export default function App() {
       return <BlogPage onNavigate={navigateTo} />;
     }
     if (isAboutRoute) {
-      return <AboutPage />;
+      return <AboutPage onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
     if (isPromotionsRoute) {
       return <PromotionsPage onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
@@ -215,7 +241,14 @@ export default function App() {
         {/* Section 5: Ưu Đãi Giờ Chót */}
         <UuDaiGioChotSection onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />
 
-        {/* Section 6: Đối Tác Doanh Nghiệp & Thương Hiệu Đồng Hành */}
+        {/* Section 6: Khám Phá Những Điểm Đến Tuyệt Vời */}
+        <KhamPhaDiemDenSection
+          onNavigate={navigateTo}
+          onOpenBooking={handleOpenBooking}
+          onOpenCustomTour={handleOpenCustomTour}
+        />
+
+        {/* Section 7: Đối Tác Doanh Nghiệp & Thương Hiệu Đồng Hành */}
         <PartnerLogos />
       </main>
     );
@@ -247,10 +280,11 @@ export default function App() {
         onNavigate={navigateTo}
       />
 
-      {/* Create Custom Tour Modal — opened by "Tạo Lịch Trình Riêng" button */}
+      {/* Create Custom Tour Modal — opened by "Tạo Lịch Trình Đến ... Ngay" button */}
       <CreateCustomTourModal
-        isOpen={customTourOpen}
-        onClose={() => setCustomTourOpen(false)}
+        isOpen={customTourState.open}
+        onClose={handleCloseCustomTour}
+        initialDestination={customTourState.destination}
       />
 
       {/* Header — "Nhận tư vấn" opens Consultation Modal, "Lịch khởi hành" opens Departure Calendar */}
@@ -260,7 +294,7 @@ export default function App() {
           onNavigate={navigateTo}
           onOpenBooking={handleOpenConsultation}
           onOpenCalendar={() => setCalendarOpen(true)}
-          onOpenCustomTour={() => setCustomTourOpen(true)}
+          onOpenCustomTour={handleOpenCustomTour}
         />
       )}
 
