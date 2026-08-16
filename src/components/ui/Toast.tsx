@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
-export type ToastType = 'success' | 'error' | 'info';
+export type ToastType = 'success' | 'error' | 'info' | 'warning';
 
 export interface ToastItem {
   id: string;
@@ -16,6 +16,7 @@ export interface ToastContextValue {
   success: (message: string, title?: string) => void;
   error: (message: string, title?: string) => void;
   info: (message: string, title?: string) => void;
+  warning?: (message: string, title?: string) => void;
 }
 
 const ToastContext = createContext<ToastContextValue | null>(null);
@@ -95,13 +96,14 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 const ToastCard: React.FC<{ toast: ToastItem; onClose: () => void }> = ({ toast, onClose }) => {
   const isError = toast.type === 'error';
   const isSuccess = toast.type === 'success';
+  const isWarning = toast.type === 'warning';
 
-  const bgColor = isError ? '#180a0a' : isSuccess ? '#041d13' : '#0a192f';
-  const borderColor = isError ? 'rgba(239, 68, 68, 0.4)' : isSuccess ? 'rgba(16, 185, 129, 0.4)' : 'rgba(59, 130, 246, 0.4)';
-  const iconColor = isError ? '#f87171' : isSuccess ? '#34d399' : '#60a5fa';
-  const iconName = isError ? 'error' : isSuccess ? 'check_circle' : 'info';
-  const accentBarColor = isError ? '#ef4444' : isSuccess ? '#10b981' : '#3b82f6';
-  const defaultTitle = isError ? 'Thất bại / Error' : isSuccess ? 'Thành công / Success' : 'Thông báo / Notice';
+  const bgColor = isError ? '#180a0a' : isSuccess ? '#041d13' : isWarning ? '#261704' : '#0a192f';
+  const borderColor = isError ? 'rgba(239, 68, 68, 0.4)' : isSuccess ? 'rgba(16, 185, 129, 0.4)' : isWarning ? 'rgba(245, 158, 11, 0.4)' : 'rgba(59, 130, 246, 0.4)';
+  const iconColor = isError ? '#f87171' : isSuccess ? '#34d399' : isWarning ? '#fbbf24' : '#60a5fa';
+  const iconName = isError ? 'error' : isSuccess ? 'check_circle' : isWarning ? 'warning' : 'info';
+  const accentBarColor = isError ? '#ef4444' : isSuccess ? '#10b981' : isWarning ? '#f59e0b' : '#3b82f6';
+  const defaultTitle = isError ? 'Thất bại / Error' : isSuccess ? 'Thành công / Success' : isWarning ? 'Lưu ý / Notice' : 'Thông báo / Notice';
 
   return (
     <div

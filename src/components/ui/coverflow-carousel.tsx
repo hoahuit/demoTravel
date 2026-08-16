@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -13,6 +13,8 @@ export interface CoverflowSlide {
   alt: string;
   title?: string;
   subtitle?: string;
+  badge?: string;
+  isExclusive?: boolean;
   meta?: { label: string; value: string }[];
   onClick?: () => void;
 }
@@ -306,6 +308,31 @@ export function CoverflowCarousel({
                   className="h-full w-full select-none object-cover"
                   style={{ borderRadius: "24px" }}
                 />
+
+                {/* Top Badge: Độc Quyền */}
+                <div style={{ position: 'absolute', top: '14px', left: '14px', zIndex: 10 }}>
+                  <span
+                    style={{
+                      backgroundColor: 'rgba(6, 40, 28, 0.88)',
+                      color: '#4ade80',
+                      border: '1px solid rgba(74, 222, 128, 0.45)',
+                      padding: '4px 10px',
+                      borderRadius: '999px',
+                      fontSize: '11px',
+                      fontWeight: 800,
+                      letterSpacing: '0.04em',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      boxShadow: '0 4px 14px rgba(0, 0, 0, 0.4)',
+                      backdropFilter: 'blur(6px)',
+                      WebkitBackdropFilter: 'blur(6px)'
+                    }}
+                  >
+                    <Sparkles size={11} /> {slide.badge || 'Độc quyền'}
+                  </span>
+                </div>
+
                 <div
                   style={{
                     position: 'absolute',

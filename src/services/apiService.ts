@@ -657,22 +657,27 @@ export async function createConsultationApi(consultationData: any): Promise<any>
 // --------------------------------------------------------------------------
 
 export interface KollectionProduct {
-  id?: number;
+  id?: number | string;
   slug: string;
   title: string;
+  name?: string;
   subtitle?: string;
   category: string;
   sku?: string;
   price: number;
   originalPrice?: number;
   stock?: number;
+  inStock?: boolean;
   heroImage: string;
+  image?: string;
   gallery?: string[] | string;
   description?: string;
   specifications?: string;
   isFeatured?: boolean;
   isNewArrival?: boolean;
   isBestSeller?: boolean;
+  isExclusive?: boolean;
+  badge?: string;
   rating?: number;
   reviewsCount?: number;
 }
@@ -682,19 +687,27 @@ export async function fetchProductsApi(forceRefresh = false): Promise<Kollection
   if (Array.isArray(data)) {
     return data.map((item: any) => {
       let galleryArr: string[] = [];
+      const resolvedTitle = item.title || item.name || 'Sản phẩm Kollection 4U';
+      const resolvedHero = item.heroImage || item.image || 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=1000&q=85';
+
       if (Array.isArray(item.gallery)) {
         galleryArr = item.gallery;
       } else if (typeof item.gallery === 'string' && item.gallery.trim().startsWith('[')) {
         try {
           galleryArr = JSON.parse(item.gallery);
         } catch {
-          galleryArr = [item.heroImage];
+          galleryArr = [resolvedHero];
         }
-      } else if (item.heroImage) {
-        galleryArr = [item.heroImage];
+      } else if (resolvedHero) {
+        galleryArr = [resolvedHero];
       }
+
       return {
         ...item,
+        title: resolvedTitle,
+        name: resolvedTitle,
+        heroImage: resolvedHero,
+        image: resolvedHero,
         gallery: galleryArr
       };
     });

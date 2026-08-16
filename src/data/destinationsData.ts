@@ -208,7 +208,29 @@ export let DESTINATIONS_DATA: Destination[] = [
     country: 'Việt Nam',
     region: 'Đắk Lắk',
     heroImage: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?q=85&w=1200&auto=format&fit=crop',
-    overview: 'Thủ phủ cà phê đại ngàn với những thác nước Dray Nur hùng vĩ, hồ Lắk phẳng lặng và không gian văn hóa cồng chiêng Tây Nguyên linh thiêng.'
+    overview: 'Thủ phủ cà phê đại ngàn với những thác nước Dray Nur hùng vĩ, hồ Lắk phẳng lặng và không gian văn hóa cồng chiêng Tây Nguyên linh thiêng.',
+    popularAttractions: [{ name: 'Thác Dray Nur', image: '', description: '' }, { name: 'Hồ Lắk', image: '', description: '' }, { name: 'Bảo tàng Thế giới Cà phê', image: '', description: '' }],
+    bestTime: 'Tháng 12 - Tháng 4',
+    tourCount: 4
+  },
+  {
+    id: 21,
+    slug: 'phu-yen',
+    name: 'Phú Yên',
+    country: 'Việt Nam',
+    region: 'Duyên Hải Nam Trung Bộ',
+    heroImage: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=85&w=2560&auto=format&fit=crop',
+    overview: 'Xứ sở hoa vàng trên cỏ xanh với vịnh biển Bãi San Hô nguyên sơ tuyệt mỹ, resort đẳng cấp Zannier Bãi San Hô, gành Đá Đĩa kỳ quan và ngọn hải đăng Mũi Điện đón bình minh đầu tiên của tổ quốc.',
+    popularAttractions: [
+      { name: 'Zannier Bãi San Hô', image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&auto=format&fit=crop', description: 'Khu nghỉ dưỡng biệt lập 5 sao giữa 98 hecta thiên nhiên hoang sơ' },
+      { name: 'Gành Đá Đĩa', image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop', description: 'Kiệt tác địa chất tự nhiên với hàng ngàn cột đá bazan hình lục giác xếp lớp' },
+      { name: 'Hải Đăng Mũi Điện (Đại Lãnh)', image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&auto=format&fit=crop', description: 'Nơi đón những tia nắng bình minh đầu tiên trên đất liền Việt Nam' },
+      { name: 'Vịnh Vũng Rô', image: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&auto=format&fit=crop', description: 'Vịnh biển êm đềm mang dấu ấn lịch sử hào hùng của đoàn tàu Không Số' },
+      { name: 'Bãi Xép - Gành Ông', image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&auto=format&fit=crop', description: 'Thảo nguyên xanh ngát sát vách đá biển trong phim Tôi Thấy Hoa Vàng Trên Cỏ Xanh' },
+      { name: 'Tháp Nhạn', image: 'https://images.unsplash.com/photo-1599707367072-cd6ada2bc375?w=800&auto=format&fit=crop', description: 'Ngọn tháp Chăm Pa cổ kính soi bóng bên dòng sông Ba huyền thoại' }
+    ],
+    bestTime: 'Tháng 2 - Tháng 8',
+    tourCount: 4
   }
 ];
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ScrollReveal from './ScrollReveal';
 import { DESTINATIONS_DATA, syncDestinationsDataFromApi, Destination } from '../data/destinationsData';
 import { fetchSectionItemsApi, getImageUrl } from '../services/apiService';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 export interface KhamPhaDiemDenSectionProps {
   onNavigate?: (path: string) => void;
@@ -132,7 +132,8 @@ export default function KhamPhaDiemDenSection({
           alignItems: 'center',
           justifyContent: 'flex-end',
           overflow: 'hidden',
-          paddingBottom: '64px'
+          paddingBottom: '80px',
+          paddingTop: '100px'
         }}
       >
         <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
@@ -144,14 +145,14 @@ export default function KhamPhaDiemDenSection({
               height: '100%',
               objectFit: 'cover',
               objectPosition: 'center',
-              filter: 'brightness(0.9)'
+              filter: 'brightness(0.72)'
             }}
           />
           <div
             style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(to bottom, rgba(16,32,27,0.35) 0%, rgba(16,32,27,0.1) 40%, rgba(229,239,232,0.96) 100%)'
+              background: 'linear-gradient(180deg, rgba(6, 16, 11, 0.85) 0%, rgba(6, 16, 11, 0.45) 40%, rgba(16, 32, 27, 0.88) 75%, #e5efe8 100%)'
             }}
           />
         </div>
@@ -163,16 +164,40 @@ export default function KhamPhaDiemDenSection({
               position: 'relative',
               zIndex: 10,
               textAlign: 'center',
-              maxWidth: '900px',
+              maxWidth: '920px',
               padding: '0 32px'
             }}
           >
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'rgba(74, 222, 128, 0.22)',
+                border: '1px solid rgba(74, 222, 128, 0.5)',
+                backdropFilter: 'blur(12px)',
+                color: '#4ade80',
+                fontSize: '12px',
+                fontWeight: 800,
+                letterSpacing: '0.18em',
+                padding: '8px 24px',
+                borderRadius: '999px',
+                textTransform: 'uppercase',
+                marginBottom: '20px',
+                boxShadow: '0 4px 18px rgba(0, 0, 0, 0.25)'
+              }}
+            >
+              <Sparkles size={14} />
+              DESTINATIONS COLLECTION • HÀNH TRÌNH DANH THẮNG
+            </span>
+
             <h1
               className="zannier-title-italic"
               style={{
-                fontSize: 'clamp(42px, 5.5vw, 68px)',
-                color: '#10201B',
-                lineHeight: 1.15,
+                fontSize: 'clamp(42px, 5.5vw, 72px)',
+                color: '#ffffff',
+                textShadow: '0 4px 30px rgba(0, 0, 0, 0.7), 0 1px 4px rgba(0, 0, 0, 0.8)',
+                lineHeight: 1.12,
                 margin: '0 0 20px 0',
                 letterSpacing: '-0.02em'
               }}
@@ -182,11 +207,12 @@ export default function KhamPhaDiemDenSection({
 
             <p
               style={{
-                fontSize: 'clamp(16px, 1.8vw, 18px)',
-                color: '#405246',
-                maxWidth: '700px',
+                fontSize: 'clamp(16px, 1.8vw, 19.5px)',
+                color: 'rgba(255, 255, 255, 0.95)',
+                textShadow: '0 2px 14px rgba(0, 0, 0, 0.7)',
+                maxWidth: '740px',
                 margin: '0 auto',
-                lineHeight: 1.6,
+                lineHeight: 1.7,
                 fontWeight: 400
               }}
             >

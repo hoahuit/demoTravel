@@ -213,7 +213,7 @@ export default function App() {
       return <AdminDashboard currentPath={currentPath} onNavigate={navigateTo} />;
     }
     if (isDestinationsRoute) {
-      return <DestinationsPage onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
+      return <DestinationsPage currentPath={currentPath} onNavigate={navigateTo} onOpenBooking={handleOpenBooking} onOpenCustomTour={handleOpenCustomTour} />;
     }
     if (isServicesRoute) {
       return <ServicesPage onOpenBooking={handleOpenBooking} />;

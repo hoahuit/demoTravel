@@ -22,28 +22,51 @@ export default function Carousel3Dv2({ onOpenBooking, onNavigate }: Carousel3Dv2
     });
   }, []);
 
+  // Helper to format category tags cleanly in Vietnamese
+  const formatCategoryTag = (cat?: string) => {
+    if (!cat) return 'ĐỘC QUYỀN';
+    const lower = cat.toLowerCase();
+    if (lower.includes('doc-quyen') || lower.includes('docquyen') || lower.includes('exclusive')) {
+      return 'ĐỘC QUYỀN';
+    }
+    if (lower.includes('nature') || lower.includes('thien-nhien')) return 'THIÊN NHIÊN';
+    if (lower.includes('heritage') || lower.includes('di-san')) return 'DI SẢN';
+    if (lower.includes('luxury') || lower.includes('cao-cap')) return 'NGHỈ DƯỠNG';
+    if (lower.includes('wellness') || lower.includes('healing')) return 'CHỮA LÀNH';
+    return cat.toUpperCase();
+  };
+
   // Tours assigned to "Retreats Độc Quyền" or with isExclusive = true appear here.
   const carouselTours = tours.filter((tour) =>
     (Array.isArray(tour.categories) && tour.categories.includes('doc-quyen')) ||
     tour.isExclusive === true
   );
 
-  const slides: CoverflowSlide[] = carouselTours.map((tour) => ({
-    src: getImageUrl(tour.heroImage),
-    alt: tour.title,
-    title: tour.title,
-    subtitle: `${tour.city} • ${tour.category}`,
-    meta: [
-      { label: "Thời lượng", value: tour.duration || "3 Ngày 2 Đêm" },
-      { label: "Giá trọn gói", value: `${tour.price ? tour.price.toLocaleString("vi-VN") : "3.450.000"} VNĐ` },
-      { label: "Phương tiện", value: tour.transportation || "Xe VIP Limousine 4U" },
-    ],
-    onClick: () => {
-      if (onNavigate) {
-        onNavigate(`/sanpham/${tour.slug}`);
-      }
-    },
-  }));
+  const slides: CoverflowSlide[] = carouselTours.map((tour) => {
+    let cleanHero = tour.heroImage;
+    if (!cleanHero || cleanHero.includes('photo-1540555700478-4be289fbecef')) {
+      cleanHero = 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1600&auto=format&fit=crop&q=85';
+    }
+
+    return {
+      src: getImageUrl(cleanHero),
+      alt: tour.title,
+      title: tour.title,
+      subtitle: `${tour.city.toUpperCase()} • ${formatCategoryTag(tour.category)}`,
+      badge: 'Độc quyền',
+      isExclusive: true,
+      meta: [
+        { label: "Thời lượng", value: tour.duration || "3 Ngày 2 Đêm" },
+        { label: "Giá trọn gói", value: `${tour.price ? tour.price.toLocaleString("vi-VN") : "3.450.000"} VNĐ` },
+        { label: "Phương tiện", value: tour.transportation || "Xe VIP Limousine 4U" },
+      ],
+      onClick: () => {
+        if (onNavigate) {
+          onNavigate(`/sanpham/${tour.slug}`);
+        }
+      },
+    };
+  });
 
   const activeTour = carouselTours[activeTourIndex] || carouselTours[0];
 
