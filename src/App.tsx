@@ -156,9 +156,7 @@ export default function App() {
     currentPath.startsWith('/chua-lanh') ||
     currentPath.startsWith('/bao-ton') ||
     currentPath.startsWith('/thien-nhien') ||
-    currentPath.startsWith('/thien-nguyen') ||
-    currentPath.startsWith('/diem-den') ||
-    currentPath.startsWith('/kham-pha-diem-den');
+    currentPath.startsWith('/thien-nguyen');
 
   const isBlogRoute =
     currentPath.startsWith('/101-dieu-hay/blog') ||
@@ -187,7 +185,10 @@ export default function App() {
     currentPath.startsWith('/uu-dai') ||
     currentPath.startsWith('/khuyen-mai');
 
-  const isDestinationsRoute = currentPath.startsWith('/destinations') || currentPath.startsWith('/diem-den');
+  const isDestinationsRoute =
+    currentPath.startsWith('/destinations') ||
+    currentPath.startsWith('/diem-den') ||
+    currentPath.startsWith('/kham-pha-diem-den');
   const isServicesRoute = currentPath.startsWith('/services') || currentPath.startsWith('/dich-vu');
   const isAdminRoute = currentPath.startsWith('/admin');
 
@@ -213,20 +214,20 @@ export default function App() {
     if (isKollectionRoute) {
       return <KollectionShopPage currentPath={currentPath} onNavigate={navigateTo} />;
     }
+    if (isDestinationsRoute) {
+      return <DestinationsPage currentPath={currentPath} onNavigate={navigateTo} onOpenBooking={handleOpenBooking} onOpenCustomTour={handleOpenCustomTour} />;
+    }
+    if (isBlogRoute) {
+      return <BlogPage currentPath={currentPath} onNavigate={navigateTo} onOpenBooking={handleOpenBooking} onOpenCustomTour={handleOpenCustomTour} />;
+    }
     if (isToursRoute) {
       return <ToursPage currentPath={currentPath} onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
     }
     if (isAdminRoute) {
       return <AdminDashboard currentPath={currentPath} onNavigate={navigateTo} />;
     }
-    if (isDestinationsRoute) {
-      return <DestinationsPage currentPath={currentPath} onNavigate={navigateTo} onOpenBooking={handleOpenBooking} onOpenCustomTour={handleOpenCustomTour} />;
-    }
     if (isServicesRoute) {
       return <ServicesPage onOpenBooking={handleOpenBooking} />;
-    }
-    if (isBlogRoute) {
-      return <BlogPage onNavigate={navigateTo} />;
     }
     if (isAboutRoute) {
       return <AboutPage onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />;
