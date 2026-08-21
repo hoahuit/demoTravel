@@ -35,40 +35,125 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
   const [activeGalleryTour, setActiveGalleryTour] = useState<TourPackage | null>(null);
   const [activePhotoIndex, setActivePhotoIndex] = useState<number>(0);
 
+  // Region recognition helpers
+  const NORTH_CITIES = ['Yên Tử', 'Sa Pa', 'Pù Luông', 'Vịnh Lan Hạ', 'Hải Phòng', 'Hà Giang', 'Ninh Bình', 'Hà Nội', 'Quảng Ninh', 'Ba Bể', 'Cao Bằng', 'Thanh Hóa', 'Lào Cai', 'Bắc'];
+  const CENTRAL_CITIES = ['Hội An', 'Huế', 'Phú Yên', 'Vịnh Vĩnh Hy', 'Ninh Thuận', 'Đà Nẵng', 'Nha Trang', 'Khánh Hòa', 'Quy Nhơn', 'Bình Định', 'Quảng Nam', 'Quảng Trị', 'Quảng Bình', 'Cam Ranh', 'Trung'];
+  const SOUTH_CITIES = ['Côn Đảo', 'Nam Cát Tiên', 'Đà Lạt', 'Hồ Lắk', 'Phú Quốc', 'TP.HCM', 'Sài Gòn', 'Đồng Nai', 'Bà Rịa - Vũng Tàu', 'Kiên Giang', 'Cần Thơ', 'Tây Ninh', 'Lâm Đồng', 'Đắk Lắk', 'Nam'];
+
+  const isNorthCity = (city?: string): boolean => {
+    if (!city) return false;
+    return NORTH_CITIES.some(c => city.toLowerCase().includes(c.toLowerCase()));
+  };
+  const isCentralCity = (city?: string): boolean => {
+    if (!city) return false;
+    return CENTRAL_CITIES.some(c => city.toLowerCase().includes(c.toLowerCase()));
+  };
+  const isSouthCity = (city?: string): boolean => {
+    if (!city) return false;
+    return SOUTH_CITIES.some(c => city.toLowerCase().includes(c.toLowerCase()));
+  };
+
+  // Parse structured URL segments (e.g. /series-retreat/chua-lanh/hot, /series-retreat/bao-ton/bac, etc.)
+  const parsedRoute = useMemo(() => {
+    const cleanPath = currentPath.split(/[?#]/)[0].replace(/\/+$/, '');
+    const segments = cleanPath.split('/').filter(Boolean);
+
+    let series = 'All';
+    let subFilter = 'all';
+
+    if (segments[0] === 'series-retreat') {
+      if (segments.length >= 2) {
+        series = segments[1]; // 'chua-lanh' | 'bao-ton' | 'thien-nhien' | 'thien-nguyen'
+      }
+      if (segments.length >= 3) {
+        subFilter = segments[2]; // 'hot' | 'moi' | 'last-minute' | 'bac' | 'trung' | 'nam'
+      }
+    } else if (segments[0] === 'diem-den' || segments[0] === 'kham-pha-diem-den') {
+      series = 'All';
+      if (segments.length >= 2) {
+        subFilter = segments[1]; // 'bac' | 'trung' | 'nam'
+      }
+    } else if (segments.length >= 2 && ['chua-lanh', 'bao-ton', 'thien-nhien', 'thien-nguyen'].includes(segments[0])) {
+      series = segments[0];
+      subFilter = segments[1];
+    } else if (segments.length === 1 && ['chua-lanh', 'bao-ton', 'thien-nhien', 'thien-nguyen'].includes(segments[0])) {
+      series = segments[0];
+    }
+
+    return { series, subFilter, segments };
+  }, [currentPath]);
+
   // Compute Page Header details dynamically based on active route path
   const pageHeader = useMemo(() => {
-    if (currentPath.includes('/series-retreat/chua-lanh') || currentPath.includes('/retreat-chua-lanh')) {
+    const { series, subFilter } = parsedRoute;
+
+    const SERIES_NAMES: Record<string, { name: string; hero: string; desc: string }> = {
+      'chua-lanh': {
+        name: 'Retreat Chữa Lành',
+        hero: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=85&w=2560&auto=format&fit=crop',
+        desc: 'Hành trình buông bỏ âu lo, nuôi dưỡng năng lượng bình an và phục hồi Thân · Tâm · Trí.'
+      },
+      'bao-ton': {
+        name: 'Retreat Bảo Tồn',
+        hero: 'https://images.unsplash.com/photo-1511497584788-876761c119ef?q=85&w=2560&auto=format&fit=crop',
+        desc: 'Những chuyến thám hiểm rừng già nguyên sinh và chung tay bảo tồn hệ sinh thái tự nhiên.'
+      },
+      'thien-nhien': {
+        name: 'Retreat Thiên Nhiên',
+        hero: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=85&w=2560&auto=format&fit=crop',
+        desc: 'Tắm rừng Shinrin-Yoku, hòa mình giữa non xanh nước biếc và biển hồ ngọc bích.'
+      },
+      'thien-nguyen': {
+        name: 'Retreat Thiện Nguyện',
+        hero: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=85&w=2560&auto=format&fit=crop',
+        desc: 'Hành trình ý nghĩa lan tỏa yêu thương, gieo mầm tri thức và giao lưu văn hóa bản địa.'
+      }
+    };
+
+    const SUB_NAMES: Record<string, { label: string; tag: string }> = {
+      'hot': { label: 'Đang Được Yêu Thích Nhất (HOT)', tag: 'RETREAT HOT' },
+      'moi': { label: 'Mới Ra Mắt (NEW)', tag: 'RETREAT MỚI' },
+      'new': { label: 'Mới Ra Mắt (NEW)', tag: 'RETREAT MỚI' },
+      'last-minute': { label: 'Ưu Đãi Giờ Chót (Last Minute)', tag: 'GIỜ CHÓT' },
+      'uu-dai-gio-chot': { label: 'Ưu Đãi Giờ Chót (Last Minute)', tag: 'GIỜ CHÓT' },
+      'bac': { label: 'Khu Vực Miền Bắc', tag: 'MIỀN BẮC' },
+      'trung': { label: 'Khu Vực Miền Trung', tag: 'MIỀN TRUNG' },
+      'nam': { label: 'Khu Vực Miền Nam', tag: 'MIỀN NAM' },
+    };
+
+    if (series !== 'All' && SERIES_NAMES[series]) {
+      const sInfo = SERIES_NAMES[series];
+      if (subFilter !== 'all' && SUB_NAMES[subFilter]) {
+        const subInfo = SUB_NAMES[subFilter];
+        return {
+          badge: `SERIES RETREAT · ${sInfo.name.toUpperCase()} · ${subInfo.tag}`,
+          title: `${sInfo.name} — ${subInfo.label}`,
+          subtitle: sInfo.desc,
+          heroImage: sInfo.hero
+        };
+      }
       return {
-        badge: 'SERIES RETREAT · CHỮA LÀNH',
-        title: 'Series Retreat Chữa Lành Thân · Tâm · Trí',
-        subtitle: 'Nhật ký các hành trình buông bỏ âu lo, nuôi dưỡng năng lượng bình an với thiền chuông xoay & âm thanh trị liệu',
-        heroImage: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=85&w=2560&auto=format&fit=crop'
+        badge: `SERIES RETREAT · ${sInfo.name.toUpperCase()}`,
+        title: sInfo.name,
+        subtitle: sInfo.desc,
+        heroImage: sInfo.hero
       };
     }
-    if (currentPath.includes('/series-retreat/bao-ton') || currentPath.includes('/retreat-bao-ton')) {
+
+    if (subFilter !== 'all' && SUB_NAMES[subFilter]) {
+      const subInfo = SUB_NAMES[subFilter];
       return {
-        badge: 'SERIES RETREAT · BẢO TỒN',
-        title: 'Series Retreat Bảo Tồn & Thiên Nhiên',
-        subtitle: 'Những câu chuyện thám hiểm hệ sinh thái rừng già ngàn năm và đóng góp bảo tồn thiên nhiên hoang dã',
-        heroImage: 'https://images.unsplash.com/photo-1511497584788-876761c119ef?q=85&w=2560&auto=format&fit=crop'
+        badge: `KHÁM PHÁ ĐIỂM ĐẾN · ${subInfo.tag}`,
+        title: `Điểm Đến Retreat — ${subInfo.label}`,
+        subtitle: `Tuyển tập các tọa độ nghỉ dưỡng & tĩnh dưỡng chữa lành độc bản tại ${subInfo.label}.`,
+        heroImage: subFilter === 'bac'
+          ? 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=85&w=2560&auto=format&fit=crop'
+          : subFilter === 'trung'
+          ? 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=85&w=2560&auto=format&fit=crop'
+          : 'https://images.unsplash.com/photo-1511497584788-876761c119ef?q=85&w=2560&auto=format&fit=crop'
       };
     }
-    if (currentPath.includes('/series-retreat/thien-nhien') || currentPath.includes('/retreat-thien-nhien')) {
-      return {
-        badge: 'SERIES RETREAT · THIÊN NHIÊN',
-        title: 'Series Retreat Thiên Nhiên Hoang Sơ',
-        subtitle: 'Tắm rừng Shinrin-Yoku, hòa mình giữa mây ngàn cao nguyên và biển hồ xanh ngọc',
-        heroImage: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=85&w=2560&auto=format&fit=crop'
-      };
-    }
-    if (currentPath.includes('/series-retreat/thien-nguyen') || currentPath.includes('/retreat-thien-nguyen')) {
-      return {
-        badge: 'SERIES RETREAT · THỆN NGƯỆN',
-        title: 'Series Retreat Thiện Nguyện & Kết Nối',
-        subtitle: 'Hành trình ý nghĩa lan tỏa yêu thương, gieo mầm tri thức và giao lưu văn hóa bản địa',
-        heroImage: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=85&w=2560&auto=format&fit=crop'
-      };
-    }
+
     if (currentPath.includes('/retreat/docquyen') || currentPath.includes('/retreats-doc-quyen')) {
       return {
         badge: 'RETREATS ĐỘC QUYỀN · EXCLUSIVE',
@@ -123,7 +208,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       subtitle: 'Mỗi gói Retreat là một câu chuyện du lịch giàu cảm xúc — vừa giới thiệu sản phẩm cao cấp vừa truyền cảm hứng phục hồi Thân · Tâm · Trí.',
       heroImage: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=85&w=2560&auto=format&fit=crop'
     };
-  }, [currentPath]);
+  }, [parsedRoute, currentPath]);
 
   // Series Categories List
   const seriesCategories = [
@@ -137,60 +222,61 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
   // Cities List
   const cities = ['All', 'Hồ Lắk', 'Nam Cát Tiên', 'Vịnh Hạ Long', 'Yên Tử, Quảng Ninh', 'Sapa, Lao Cai', 'Hà Giang'];
 
-  // Tour visibility is controlled exclusively by the category slugs assigned in `categories`.
+  // Match Series Type Helper
   const matchSeriesType = (tour: any, targetType: string): boolean => {
-    return Array.isArray(tour.categories) && tour.categories.includes(targetType);
+    if (!targetType || targetType === 'All' || targetType === 'all') return true;
+    const cats = Array.isArray(tour.categories) ? tour.categories : [];
+    if (cats.includes(targetType)) return true;
+    if (tour.category && tour.category.toLowerCase().includes(targetType)) return true;
+    if (targetType === 'chua-lanh' && (tour.category === 'Healing' || tour.category === 'Wellness' || cats.includes('Wellness'))) return true;
+    if (targetType === 'bao-ton' && (tour.category === 'Conservation' || cats.includes('Conservation') || cats.includes('Heritage'))) return true;
+    if (targetType === 'thien-nhien' && (tour.category === 'Nature' || cats.includes('Nature'))) return true;
+    if (targetType === 'thien-nguyen' && (tour.category === 'Volunteer' || cats.includes('Volunteer'))) return true;
+    return false;
   };
 
   // Filtered & Sorted Tours
   const filteredTours = useMemo(() => {
+    const { series: routeSeries, subFilter } = parsedRoute;
+    const targetSeries = selectedSeries !== 'All' ? selectedSeries : routeSeries;
+
     const list = tours.filter(tour => {
-      let matchesPath = true;
-      if (currentPath.includes('/series-retreat/chua-lanh')) {
-        matchesPath = matchSeriesType(tour, 'chua-lanh');
-      } else if (currentPath.includes('/series-retreat/bao-ton')) {
-        matchesPath = matchSeriesType(tour, 'bao-ton');
-      } else if (currentPath.includes('/series-retreat/thien-nhien')) {
-        matchesPath = matchSeriesType(tour, 'thien-nhien');
-      } else if (currentPath.includes('/series-retreat/thien-nguyen')) {
-        matchesPath = matchSeriesType(tour, 'thien-nguyen');
-      } else if (currentPath.includes('/retreat/hot/binh-yen-tren-cao-nguyen')) {
-        matchesPath = matchSeriesType(tour, 'binh-yen-tren-cao-nguyen');
-      } else if (currentPath.includes('/retreat/hot/tinh-lang-giua-dai-ngan')) {
-        matchesPath = matchSeriesType(tour, 'tinh-lang-giua-dai-ngan');
-      } else if (currentPath.includes('/retreat/hot/tim-lai-ket-noi')) {
-        matchesPath = matchSeriesType(tour, 'tim-lai-ket-noi');
-      } else if (currentPath.startsWith('/retreat-hot/')) {
-        const pathSegments = currentPath.split('/').filter(Boolean);
-        const categorySlug = pathSegments[pathSegments.length - 1];
-        matchesPath = Boolean(categorySlug) && matchSeriesType(tour, categorySlug);
-      } else if (currentPath.includes('/retreat/docquyen') || currentPath.includes('/retreats-doc-quyen')) {
-        matchesPath = matchSeriesType(tour, 'doc-quyen') || tour.isExclusive === true;
-      } else if (currentPath.includes('/retreat/retreathot') || currentPath.includes('/retreat-hot')) {
-        matchesPath = matchSeriesType(tour, 'retreat-hot') || tour.isHot === true;
-      } else if (currentPath.includes('/retreat/sapkhoihanh') || currentPath.includes('/sap-khoi-hanh')) {
-        matchesPath = matchSeriesType(tour, 'sap-khoi-hanh') || (Array.isArray(tour.departureDates) && tour.departureDates.length > 0);
-      } else if (currentPath.includes('/retreat/khongthebolo') || currentPath.includes('/khong-the-khong-co')) {
-        matchesPath = matchSeriesType(tour, 'khong-the-bo-lo') || tour.isFeatured === true;
-      } else if (currentPath.includes('/retreat/uudaigiochot') || currentPath.includes('/uu-dai-gio-chot') || currentPath.includes('/uu-dai') || currentPath.includes('/promotions')) {
-        matchesPath = matchSeriesType(tour, 'uu-dai-gio-chot') || ((tour.originalPrice || 0) > (tour.price || 0)) || tour.isHot === true;
-      } else if (currentPath.includes('/kollection-4u/new-arrivals')) {
-        matchesPath = matchSeriesType(tour, 'new-arrivals');
-      } else if (currentPath.includes('/kollection-4u/must-have')) {
-        matchesPath = matchSeriesType(tour, 'must-have');
-      } else if (currentPath.includes('/kollection-4u/exclusive')) {
-        matchesPath = matchSeriesType(tour, 'exclusive');
-      } else {
-        // Categories created in Admin use /{parent-slug}/{category-slug} URLs.
-        const segments = currentPath.split('/').filter(Boolean);
-        const categorySlug = segments.length > 1 ? segments[segments.length - 1] : undefined;
-        if (categorySlug && !['tours', 'retreat', 'series-retreat', 'sanpham'].includes(categorySlug)) {
-          matchesPath = matchSeriesType(tour, categorySlug);
+      // 1. Match Series
+      const matchesSeries = matchSeriesType(tour, targetSeries);
+
+      // 2. Match Sub Filter
+      let matchesSub = true;
+      if (subFilter !== 'all' && subFilter !== 'All') {
+        if (subFilter === 'hot') {
+          matchesSub = tour.isHot === true || (Array.isArray(tour.categories) && (tour.categories.includes('hot') || tour.categories.includes('retreat-hot')));
+        } else if (subFilter === 'moi' || subFilter === 'new') {
+          matchesSub = tour.isNew === true || (Array.isArray(tour.categories) && (tour.categories.includes('moi') || tour.categories.includes('new')));
+        } else if (subFilter === 'last-minute' || subFilter === 'uu-dai-gio-chot') {
+          matchesSub = tour.isPromotion === true || ((tour.originalPrice || 0) > (tour.price || 0)) || (Array.isArray(tour.categories) && (tour.categories.includes('last-minute') || tour.categories.includes('uu-dai-gio-chot')));
+        } else if (subFilter === 'bac') {
+          matchesSub = tour.region === 'bac' || isNorthCity(tour.city) || (Array.isArray(tour.categories) && (tour.categories.includes('bac') || tour.categories.includes('mien-bac')));
+        } else if (subFilter === 'trung') {
+          matchesSub = tour.region === 'trung' || isCentralCity(tour.city) || (Array.isArray(tour.categories) && (tour.categories.includes('trung') || tour.categories.includes('mien-trung')));
+        } else if (subFilter === 'nam') {
+          matchesSub = tour.region === 'nam' || isSouthCity(tour.city) || (Array.isArray(tour.categories) && (tour.categories.includes('nam') || tour.categories.includes('mien-nam')));
         }
       }
 
-      const matchesSeries = selectedSeries === 'All' || matchSeriesType(tour, selectedSeries);
-      const matchesCity = selectedCity === 'All' || tour.city.includes(selectedCity);
+      // 3. Match specific legacy routes
+      let matchesLegacy = true;
+      if (currentPath.includes('/retreat/docquyen') || currentPath.includes('/retreats-doc-quyen')) {
+        matchesLegacy = tour.isExclusive === true || (Array.isArray(tour.categories) && tour.categories.includes('doc-quyen'));
+      } else if (currentPath.includes('/retreat/retreathot') || currentPath.includes('/retreat-hot')) {
+        matchesLegacy = tour.isHot === true || (Array.isArray(tour.categories) && (tour.categories.includes('retreat-hot') || tour.categories.includes('hot')));
+      } else if (currentPath.includes('/retreat/sapkhoihanh') || currentPath.includes('/sap-khoi-hanh')) {
+        matchesLegacy = (Array.isArray(tour.departureDates) && tour.departureDates.length > 0) || (Array.isArray(tour.categories) && tour.categories.includes('sap-khoi-hanh'));
+      } else if (currentPath.includes('/retreat/khongthebolo') || currentPath.includes('/khong-the-khong-co')) {
+        matchesLegacy = tour.isFeatured === true || (Array.isArray(tour.categories) && tour.categories.includes('khong-the-bo-lo'));
+      } else if (currentPath.includes('/retreat/uudaigiochot') || currentPath.includes('/uu-dai-gio-chot') || currentPath.includes('/uu-dai') || currentPath.includes('/promotions')) {
+        matchesLegacy = tour.isPromotion === true || ((tour.originalPrice || 0) > (tour.price || 0)) || (Array.isArray(tour.categories) && tour.categories.includes('uu-dai-gio-chot'));
+      }
+
+      const matchesCity = selectedCity === 'All' || (tour.city && tour.city.includes(selectedCity));
       const matchesSearch =
         searchQuery.trim() === '' ||
         tour.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -198,7 +284,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
         tour.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (tour.blogStorySnippet && tour.blogStorySnippet.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      return matchesPath && matchesSeries && matchesCity && matchesSearch;
+      return matchesSeries && matchesSub && matchesLegacy && matchesCity && matchesSearch;
     });
 
     return [...list].sort((a, b) => {
@@ -206,11 +292,13 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       if (sortBy === 'priceDesc') return b.price - a.price;
       return b.rating - a.rating;
     });
-  }, [tours, currentPath, selectedSeries, selectedCity, searchQuery, sortBy]);
+  }, [tours, currentPath, parsedRoute, selectedSeries, selectedCity, searchQuery, sortBy]);
 
   const featuredTour = useMemo(() => {
     return filteredTours.find(t => t.isFeatured) || filteredTours[0] || tours[0];
   }, [filteredTours, tours]);
+
+  const activeSeriesKey = parsedRoute.series !== 'All' ? parsedRoute.series : (selectedSeries !== 'All' ? selectedSeries : null);
 
   return (
     <div style={{ backgroundColor: '#e5efe8', color: '#1a1714', minHeight: '100vh', paddingTop: '0', fontFamily: "'Be Vietnam Pro', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif", width: '100%', overflowX: 'hidden' }}>
@@ -307,17 +395,78 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       {/* ── 100% FULL-WIDTH FILTER & NAVIGATION BAR ── */}
       <div style={{ width: '100%', margin: '0', padding: '40px 48px 0', boxSizing: 'border-box' }}>
 
-        {/* Control Bar: ONLY Layout View Switcher (Dạng Blog & Dạng Thẻ) */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '24px', width: '100%' }}>
+        {/* Sub-Filter Quick Selection Bar */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '24px', width: '100%' }}>
+          {/* Submenu Criteria Pills */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '13px', fontWeight: 700, color: '#1a1714', marginRight: '4px' }}>
+              Tiêu chí:
+            </span>
+            {[
+              { id: 'all', label: 'Tất Cả' },
+              { id: 'hot', label: 'Retreat Hot' },
+              { id: 'moi', label: 'Retreat Mới' },
+              { id: 'last-minute', label: 'Ưu Đãi Giờ Chót' },
+              { id: 'bac', label: 'Miền Bắc' },
+              { id: 'trung', label: 'Miền Trung' },
+              { id: 'nam', label: 'Miền Nam' },
+            ].map((subItem) => {
+              const currentSub = parsedRoute.subFilter || 'all';
+              const isSelected = currentSub === subItem.id || (subItem.id === 'all' && (currentSub === 'all' || !currentSub));
+              const targetSeries = parsedRoute.series !== 'All' ? parsedRoute.series : (selectedSeries !== 'All' ? selectedSeries : 'chua-lanh');
+              const targetUrl = subItem.id === 'all' ? `/series-retreat/${targetSeries}` : `/series-retreat/${targetSeries}/${subItem.id}`;
+
+              return (
+                <button
+                  key={subItem.id}
+                  onClick={() => {
+                    onNavigate(targetUrl);
+                  }}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '999px',
+                    border: isSelected ? '1.5px solid #059669' : '1px solid rgba(26,23,20,0.12)',
+                    background: isSelected ? '#059669' : '#ffffff',
+                    color: isSelected ? '#ffffff' : '#1a1714',
+                    fontSize: '13px',
+                    fontWeight: isSelected ? 700 : 500,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: isSelected ? '0 4px 14px rgba(5,150,105,0.28)' : 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                  }}
+                  onMouseEnter={e => {
+                    if (!isSelected) {
+                      e.currentTarget.style.borderColor = '#059669';
+                      e.currentTarget.style.color = '#059669';
+                      e.currentTarget.style.transform = 'translateY(-1px)';
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (!isSelected) {
+                      e.currentTarget.style.borderColor = 'rgba(26,23,20,0.12)';
+                      e.currentTarget.style.color = '#1a1714';
+                      e.currentTarget.style.transform = 'none';
+                    }
+                  }}
+                >
+                  <span>{subItem.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* View Mode Switcher */}
           <div style={{ display: 'inline-flex', alignItems: 'center', background: '#f2eee7', borderRadius: '14px', padding: '4px', border: '1px solid rgba(26,23,20,0.08)' }}>
             <button
               onClick={() => setViewMode('blog')}
               title="Dạng Blog Tạp Chí"
               style={{
-                display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 22px', borderRadius: '10px', border: 'none',
+                display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 18px', borderRadius: '10px', border: 'none',
                 background: viewMode === 'blog' ? '#1a1714' : 'transparent',
                 color: viewMode === 'blog' ? '#f7f5f0' : '#7a6f63',
-                fontSize: '14px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease'
+                fontSize: '13px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease'
               }}
             >
               Dạng Blog
@@ -326,10 +475,10 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
               onClick={() => setViewMode('grid')}
               title="Dạng Thẻ Du Lịch"
               style={{
-                display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 22px', borderRadius: '10px', border: 'none',
+                display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 18px', borderRadius: '10px', border: 'none',
                 background: viewMode === 'grid' ? '#1a1714' : 'transparent',
                 color: viewMode === 'grid' ? '#f7f5f0' : '#7a6f63',
-                fontSize: '14px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease'
+                fontSize: '13px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease'
               }}
             >
               Dạng Thẻ

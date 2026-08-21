@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Menu, X, Phone, ChevronDown, Crown, Zap, Flame, Heart, Leaf, Shield, Sparkles, Compass, BookOpen, Star, HelpCircle, Calendar, Briefcase, ArrowRight, LucideIcon } from 'lucide-react';
+import { Search, Menu, X, Phone, ChevronDown, ChevronRight, Crown, Zap, Flame, Heart, Leaf, Shield, Sparkles, Compass, BookOpen, Star, HelpCircle, Calendar, Briefcase, ArrowRight, MapPin, LucideIcon } from 'lucide-react';
 import { fetchMenuCategoriesApi, MenuCategoryItem } from '../services/apiService';
 
 export interface HeaderProps {
@@ -11,8 +11,75 @@ export interface HeaderProps {
 }
 
 const ICON_MAP: Record<string, LucideIcon> = {
-  Heart, Shield, Leaf, Sparkles, Compass, BookOpen, Star, HelpCircle, Calendar, Briefcase, Crown, Zap, Flame
+  Heart, Shield, Leaf, Sparkles, Compass, BookOpen, Star, HelpCircle, Calendar, Briefcase, Crown, Zap, Flame, MapPin
 };
+
+export const SERIES_RETREAT_COLUMNS = [
+  {
+    id: 'chua-lanh',
+    title: 'Retreat Chữa Lành',
+    subtitle: 'Phục hồi Thân · Tâm · Trí',
+    color: '#4ade80',
+    bgColor: 'rgba(74, 222, 128, 0.12)',
+    borderColor: 'rgba(74, 222, 128, 0.3)',
+    items: [
+      { label: 'Retreat Hot', href: '/series-retreat/chua-lanh/hot', badge: 'HOT', badgeColor: '#f97316' },
+      { label: 'Retreat Mới', href: '/series-retreat/chua-lanh/moi', badge: 'NEW', badgeColor: '#38bdf8' },
+      { label: 'Retreat Last Minute', href: '/series-retreat/chua-lanh/last-minute', badge: 'ƯU ĐÃI', badgeColor: '#facc15' },
+      { label: 'Miền Bắc', href: '/series-retreat/chua-lanh/bac' },
+      { label: 'Miền Trung', href: '/series-retreat/chua-lanh/trung' },
+      { label: 'Miền Nam', href: '/series-retreat/chua-lanh/nam' },
+    ]
+  },
+  {
+    id: 'bao-ton',
+    title: 'Retreat Bảo Tồn',
+    subtitle: 'Gìn giữ rừng & đa dạng sinh học',
+    color: '#38bdf8',
+    bgColor: 'rgba(56, 189, 248, 0.12)',
+    borderColor: 'rgba(56, 189, 248, 0.3)',
+    items: [
+      { label: 'Retreat Hot', href: '/series-retreat/bao-ton/hot', badge: 'HOT', badgeColor: '#f97316' },
+      { label: 'Retreat Mới', href: '/series-retreat/bao-ton/moi', badge: 'NEW', badgeColor: '#38bdf8' },
+      { label: 'Retreat Last Minute', href: '/series-retreat/bao-ton/last-minute', badge: 'ƯU ĐÃI', badgeColor: '#facc15' },
+      { label: 'Miền Bắc', href: '/series-retreat/bao-ton/bac' },
+      { label: 'Miền Trung', href: '/series-retreat/bao-ton/trung' },
+      { label: 'Miền Nam', href: '/series-retreat/bao-ton/nam' },
+    ]
+  },
+  {
+    id: 'thien-nhien',
+    title: 'Retreat Thiên Nhiên',
+    subtitle: 'Hòa mình giữa đại ngàn nguyên sơ',
+    color: '#facc15',
+    bgColor: 'rgba(250, 204, 21, 0.12)',
+    borderColor: 'rgba(250, 204, 21, 0.3)',
+    items: [
+      { label: 'Retreat Hot', href: '/series-retreat/thien-nhien/hot', badge: 'HOT', badgeColor: '#f97316' },
+      { label: 'Retreat Mới', href: '/series-retreat/thien-nhien/moi', badge: 'NEW', badgeColor: '#38bdf8' },
+      { label: 'Retreat Last Minute', href: '/series-retreat/thien-nhien/last-minute', badge: 'ƯU ĐÃI', badgeColor: '#facc15' },
+      { label: 'Miền Bắc', href: '/series-retreat/thien-nhien/bac' },
+      { label: 'Miền Trung', href: '/series-retreat/thien-nhien/trung' },
+      { label: 'Miền Nam', href: '/series-retreat/thien-nhien/nam' },
+    ]
+  },
+  {
+    id: 'thien-nguyen',
+    title: 'Retreat Thiện Nguyện',
+    subtitle: 'Gắn kết sẻ chia vì cộng đồng',
+    color: '#f472b6',
+    bgColor: 'rgba(244, 114, 182, 0.12)',
+    borderColor: 'rgba(244, 114, 182, 0.3)',
+    items: [
+      { label: 'Retreat Hot', href: '/series-retreat/thien-nguyen/hot', badge: 'HOT', badgeColor: '#f97316' },
+      { label: 'Retreat Mới', href: '/series-retreat/thien-nguyen/moi', badge: 'NEW', badgeColor: '#38bdf8' },
+      { label: 'Retreat Last Minute', href: '/series-retreat/thien-nguyen/last-minute', badge: 'ƯU ĐÃI', badgeColor: '#facc15' },
+      { label: 'Miền Bắc', href: '/series-retreat/thien-nguyen/bac' },
+      { label: 'Miền Trung', href: '/series-retreat/thien-nguyen/trung' },
+      { label: 'Miền Nam', href: '/series-retreat/thien-nguyen/nam' },
+    ]
+  }
+];
 
 interface MenuItem {
   label: string;
@@ -153,11 +220,10 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
             margin: '0 auto',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '20px',
+            gap: '24px',
           }}
         >
-          {/* Logo */}
+          {/* 1. Left Column: Logo */}
           <a
             href="/"
             onClick={(e) => {
@@ -180,10 +246,10 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
             onMouseLeave={e => e.currentTarget.style.opacity = '0.92'}
           >
             <img
-              src="/images/logo.png"
+              src="/images/logo.svg"
               alt="4U Tours Logo"
               style={{
-                height: '44px',
+                height: '46px',
                 width: 'auto',
                 objectFit: 'contain',
                 display: 'block',
@@ -191,18 +257,19 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
             />
           </a>
 
-          {/* Center section */}
+          {/* 2. Middle Column: Centered between Logo and Buttons */}
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '6px',
               flex: 1,
               minWidth: 0,
+              gap: '6px',
             }}
           >
+            {/* Row 1: Badges centered between Logo and Buttons */}
             <div
               className="hide-mobile"
               onMouseEnter={() => setActiveCategory(null)}
@@ -212,10 +279,11 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 justifyContent: 'center',
                 flexWrap: 'nowrap',
                 whiteSpace: 'nowrap',
-                gap: '36px',
-                fontSize: '0.96rem',
+                gap: '34px',
+                fontSize: '0.94rem',
                 fontWeight: '700',
                 letterSpacing: '0.01em',
+                minHeight: '34px',
               }}
             >
               {fixedBadges.map((b, idx) => (
@@ -259,6 +327,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               ))}
             </div>
 
+            {/* Row 2: Main Nav centered between Logo and Buttons */}
             <div
               style={{
                 maxHeight: row2Visible ? '48px' : '0px',
@@ -271,6 +340,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 alignItems: 'center',
                 justifyContent: 'center',
                 whiteSpace: 'nowrap',
+                minHeight: row2Visible ? '34px' : '0px',
               }}
             >
               <nav
@@ -281,8 +351,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                   justifyContent: 'center',
                   flexWrap: 'nowrap',
                   whiteSpace: 'nowrap',
-                  gap: '32px',
-                  paddingTop: '2px',
+                  gap: '28px',
                 }}
               >
                 {menuData.map(item => (
@@ -368,146 +437,177 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
             </div>
           </div>
 
-          {/* Right CTA - Compact & Balanced */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-            {/* Lịch khởi hành Button */}
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                if (onOpenCalendar) {
-                  onOpenCalendar();
-                } else if (onNavigate) {
-                  onNavigate('/retreat/sapkhoihanh');
-                }
-              }}
-              className="hide-mobile"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '36px',
-                padding: '0 14px',
-                borderRadius: '999px',
-                background: 'rgba(255, 255, 255, 0.12)',
-                color: '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.25)',
-                backdropFilter: 'blur(10px)',
-                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                cursor: 'pointer'
-              }}
-              onMouseEnter={e => {
-                setActiveCategory(null);
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)';
-                e.currentTarget.style.borderColor = '#4ade80';
-                e.currentTarget.style.color = '#4ade80';
-                e.currentTarget.style.transform = 'translateY(-1px)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
-                e.currentTarget.style.color = '#ffffff';
-                e.currentTarget.style.transform = 'none';
-              }}
-            >
-              <Calendar size={16} style={{ color: '#4ade80' }} />
-            </button>
+          {/* 3. Right Column: Action Buttons (2 Rows stacked on the right) */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+              flexShrink: 0,
+              gap: '6px',
+            }}
+          >
+            {/* Row 1 Right: Button "Lịch khởi hành" + Mobile toggle */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minHeight: '34px' }}>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (onOpenCalendar) {
+                    onOpenCalendar();
+                  } else if (onNavigate) {
+                    onNavigate('/retreat/sapkhoihanh');
+                  }
+                }}
+                className="hide-mobile"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  height: '32px',
+                  padding: '0 14px',
+                  borderRadius: '999px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  color: '#ffffff',
+                  fontSize: '0.84rem',
+                  fontWeight: '700',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  backdropFilter: 'blur(10px)',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap'
+                }}
+                onMouseEnter={e => {
+                  setActiveCategory(null);
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.borderColor = '#4ade80';
+                  e.currentTarget.style.color = '#4ade80';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.color = '#ffffff';
+                  e.currentTarget.style.transform = 'none';
+                }}
+              >
+                <Calendar size={14} style={{ color: '#4ade80' }} />
+                <span>Lịch khởi hành</span>
+              </button>
 
-            {/* Thiết Kế Lịch Trình Button */}
-            <button
-              onClick={() => {
-                if (onOpenCustomTour) onOpenCustomTour();
-              }}
-              className="hide-mobile"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '36px',
-                padding: '0 16px',
-                borderRadius: '999px',
-                background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(6, 78, 59, 0.7) 100%)',
-                color: '#ffffff',
-                fontWeight: '700',
-                fontSize: '0.86rem',
-                letterSpacing: '0.01em',
-                border: '1px solid rgba(74, 222, 128, 0.45)',
-                backdropFilter: 'blur(10px)',
-                boxShadow: '0 4px 15px rgba(6, 78, 59, 0.35)',
-                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap'
-              }}
-              onMouseEnter={e => {
-                setActiveCategory(null);
-                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.4) 0%, rgba(6, 78, 59, 0.9) 100%)';
-                e.currentTarget.style.borderColor = '#4ade80';
-                e.currentTarget.style.boxShadow = '0 6px 18px rgba(74, 222, 128, 0.35)';
-                e.currentTarget.style.transform = 'translateY(-1px)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(6, 78, 59, 0.7) 100%)';
-                e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.45)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(6, 78, 59, 0.35)';
-                e.currentTarget.style.transform = 'none';
-              }}
-            >
-              <span style={{ whiteSpace: 'nowrap' }}>Thiết kế lịch trình</span>
-            </button>
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                style={{
+                  display: 'none',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  color: '#ffffff',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                className="mobile-toggle-btn"
+              >
+                {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+              </button>
+            </div>
 
-            {/* Nhận tư vấn Button */}
-            <button
-              onClick={() => {
-                if (onOpenBooking) onOpenBooking();
-              }}
-              className="hide-mobile"
+            {/* Row 2 Right: Buttons "Thiết kế lịch trình" & "Nhận tư vấn" */}
+            <div
               style={{
-                display: 'inline-flex',
+                maxHeight: row2Visible ? '48px' : '0px',
+                opacity: row2Visible ? 1 : 0,
+                overflow: 'hidden',
+                pointerEvents: row2Visible ? 'auto' : 'none',
+                transition: 'max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
+                display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                height: '36px',
-                padding: '0 18px',
-                borderRadius: '999px',
-                background: 'linear-gradient(135deg, #22c55e 0%, #15803d 100%)',
-                color: '#ffffff',
-                fontWeight: '800',
-                fontSize: '0.88rem',
-                letterSpacing: '0.01em',
-                textShadow: '0 1px 2px rgba(0, 0, 0, 0.25)',
-                boxShadow: '0 6px 22px rgba(34, 197, 94, 0.45)',
-                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                border: 'none',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap'
-              }}
-              onMouseEnter={e => {
-                setActiveCategory(null);
-                e.currentTarget.style.transform = 'scale(1.04)';
-                e.currentTarget.style.boxShadow = '0 8px 26px rgba(34, 197, 94, 0.6)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.boxShadow = '0 6px 22px rgba(34, 197, 94, 0.45)';
+                gap: '10px',
+                minHeight: row2Visible ? '34px' : '0px',
               }}
             >
-              <span style={{ whiteSpace: 'nowrap' }}>Nhận tư vấn</span>
-            </button>
+              {/* Thiết Kế Lịch Trình Button */}
+              <button
+                onClick={() => {
+                  if (onOpenCustomTour) onOpenCustomTour();
+                }}
+                className="hide-mobile"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '34px',
+                  padding: '0 16px',
+                  borderRadius: '999px',
+                  background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(6, 78, 59, 0.7) 100%)',
+                  color: '#ffffff',
+                  fontWeight: '700',
+                  fontSize: '0.86rem',
+                  letterSpacing: '0.01em',
+                  border: '1px solid rgba(74, 222, 128, 0.45)',
+                  backdropFilter: 'blur(10px)',
+                  boxShadow: '0 4px 15px rgba(6, 78, 59, 0.35)',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap'
+                }}
+                onMouseEnter={e => {
+                  setActiveCategory(null);
+                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.4) 0%, rgba(6, 78, 59, 0.9) 100%)';
+                  e.currentTarget.style.borderColor = '#4ade80';
+                  e.currentTarget.style.boxShadow = '0 6px 18px rgba(74, 222, 128, 0.35)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(6, 78, 59, 0.7) 100%)';
+                  e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.45)';
+                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(6, 78, 59, 0.35)';
+                  e.currentTarget.style.transform = 'none';
+                }}
+              >
+                <span style={{ whiteSpace: 'nowrap' }}>Thiết kế lịch trình</span>
+              </button>
 
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              style={{
-                display: 'none',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '4px',
-                color: '#ffffff',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              className="mobile-toggle-btn"
-            >
-              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
+              {/* Nhận tư vấn Button */}
+              <button
+                onClick={() => {
+                  if (onOpenBooking) onOpenBooking();
+                }}
+                className="hide-mobile"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '34px',
+                  padding: '0 18px',
+                  borderRadius: '999px',
+                  background: 'linear-gradient(135deg, #22c55e 0%, #15803d 100%)',
+                  color: '#ffffff',
+                  fontWeight: '800',
+                  fontSize: '0.88rem',
+                  letterSpacing: '0.01em',
+                  textShadow: '0 1px 2px rgba(0, 0, 0, 0.25)',
+                  boxShadow: '0 6px 22px rgba(34, 197, 94, 0.45)',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                  border: 'none',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap'
+                }}
+                onMouseEnter={e => {
+                  setActiveCategory(null);
+                  e.currentTarget.style.transform = 'scale(1.04)';
+                  e.currentTarget.style.boxShadow = '0 8px 26px rgba(34, 197, 94, 0.6)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.boxShadow = '0 6px 22px rgba(34, 197, 94, 0.45)';
+                }}
+              >
+                <span style={{ whiteSpace: 'nowrap' }}>Nhận tư vấn</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -519,85 +619,202 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               top: '100%',
               left: 0,
               right: 0,
-              background: 'rgba(13, 23, 16, 0.88)',
-              backdropFilter: 'blur(24px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+              background: 'rgba(13, 23, 16, 0.94)',
+              backdropFilter: 'blur(28px) saturate(190%)',
+              WebkitBackdropFilter: 'blur(28px) saturate(190%)',
               borderBottom: '1px solid rgba(74, 124, 89, 0.28)',
-              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.45)',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.55)',
               zIndex: 9995,
               animation: 'fadeInFlyout 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           >
-            <div
-              style={{
-                maxWidth: '1080px',
-                margin: '0 auto',
-                padding: '28px 32px 36px 32px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '24px',
-              }}
-            >
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {activeCategory === 'series-retreat' ? (
+              /* SPECIFIC 4-COLUMN LUXURY GRID FOR SERIES RETREAT */
+              <div
+                style={{
+                  maxWidth: '1280px',
+                  margin: '0 auto',
+                  padding: '24px 36px 28px',
+                }}
+              >
                 <div
                   style={{
-                    fontSize: '0.76rem',
-                    fontWeight: '700',
-                    color: '#4ade80',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.12em',
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gap: '20px',
                   }}
                 >
-                  DANH MỤC THUỘC {activeCategoryData.headerTitle}
-                </div>
+                  {SERIES_RETREAT_COLUMNS.map((col) => {
+                    return (
+                      <div
+                        key={col.id}
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.03)',
+                          border: `1px solid ${col.borderColor}`,
+                          borderRadius: '16px',
+                          padding: '16px 16px 14px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          backdropFilter: 'blur(12px)',
+                          transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
+                          e.currentTarget.style.borderColor = col.color;
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.transform = 'none';
+                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+                          e.currentTarget.style.borderColor = col.borderColor;
+                        }}
+                      >
+                        {/* Group Header: NON-CLICKABLE as requested */}
+                        <div
+                          style={{
+                            paddingBottom: '10px',
+                            marginBottom: '10px',
+                            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                            cursor: 'default',
+                            userSelect: 'none',
+                          }}
+                        >
+                          <h4
+                            style={{
+                              margin: 0,
+                              fontSize: '1rem',
+                              fontWeight: 800,
+                              color: col.color,
+                              letterSpacing: '-0.01em',
+                            }}
+                          >
+                            {col.title}
+                          </h4>
+                        </div>
 
+                        {/* 6 Submenu Clickable Links */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          {col.items.map((sub, sIdx) => {
+                            return (
+                              <a
+                                key={sIdx}
+                                href={sub.href}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  if (onNavigate) onNavigate(sub.href);
+                                  setActiveCategory(null);
+                                }}
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'space-between',
+                                  padding: '5px 0',
+                                  color: 'rgba(255, 255, 255, 0.92)',
+                                  textDecoration: 'none',
+                                  fontSize: '0.92rem',
+                                  fontWeight: 600,
+                                  transition: 'all 0.2s ease',
+                                  background: 'transparent',
+                                  border: 'none',
+                                }}
+                                onMouseEnter={e => {
+                                  e.currentTarget.style.color = col.color;
+                                  e.currentTarget.style.transform = 'translateX(4px)';
+                                }}
+                                onMouseLeave={e => {
+                                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.92)';
+                                  e.currentTarget.style.transform = 'translateX(0)';
+                                }}
+                              >
+                                <span>{sub.label}</span>
+                                {sub.badge && (
+                                  <span
+                                    style={{
+                                      fontSize: '0.62rem',
+                                      fontWeight: 800,
+                                      padding: '1px 6px',
+                                      borderRadius: '999px',
+                                      backgroundColor: `${sub.badgeColor || col.color}22`,
+                                      color: sub.badgeColor || col.color,
+                                      border: `1px solid ${sub.badgeColor || col.color}44`,
+                                      letterSpacing: '0.04em',
+                                    }}
+                                  >
+                                    {sub.badge}
+                                  </span>
+                                )}
+                              </a>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              /* STANDARD MENU FOR OTHER MEGA MENUS (HORIZONTAL ROW) */
+              <div
+                style={{
+                  maxWidth: '1280px',
+                  margin: '0 auto',
+                  padding: '22px 36px 24px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
                 <div
                   style={{
                     display: 'flex',
-                    flexDirection: 'column',
-                    gap: '12px',
-                    alignItems: 'flex-start',
-                    paddingLeft: '4px'
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    gap: '44px',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
                 >
-                  {activeCategoryData.items?.map((sub, sIdx) => (
-                    <a
-                      key={sIdx}
-                      href={sub.href}
-                      onClick={(e) => {
-                        if (sub.href && sub.href.startsWith('/')) {
-                          e.preventDefault();
-                          if (onNavigate) onNavigate(sub.href);
-                        }
-                        setActiveCategory(null);
-                      }}
-                      style={{
-                        fontSize: '1.02rem',
-                        fontWeight: '600',
-                        color: '#ffffff',
-                        textDecoration: 'none',
-                        transition: 'all 0.2s ease',
-                        padding: '4px 0',
-                        border: 'none',
-                        background: 'none',
-                        display: 'inline-flex',
-                        alignItems: 'center'
-                      }}
-                      onMouseEnter={e => {
-                        e.currentTarget.style.color = '#4ade80';
-                        e.currentTarget.style.transform = 'translateX(6px)';
-                      }}
-                      onMouseLeave={e => {
-                        e.currentTarget.style.color = '#ffffff';
-                        e.currentTarget.style.transform = 'translateX(0)';
-                      }}
-                    >
-                      {sub.label}
-                    </a>
-                  ))}
+                  {activeCategoryData.items?.map((sub, sIdx) => {
+                    return (
+                      <a
+                        key={sIdx}
+                        href={sub.href}
+                        onClick={(e) => {
+                          if (sub.href && sub.href.startsWith('/')) {
+                            e.preventDefault();
+                            if (onNavigate) onNavigate(sub.href);
+                          }
+                          setActiveCategory(null);
+                        }}
+                        style={{
+                          fontSize: '1.05rem',
+                          fontWeight: '600',
+                          color: '#ffffff',
+                          textDecoration: 'none',
+                          transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                          padding: '6px 0',
+                          background: 'transparent',
+                          border: 'none',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          letterSpacing: '-0.01em',
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.color = '#4ade80';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.color = '#ffffff';
+                          e.currentTarget.style.transform = 'none';
+                        }}
+                      >
+                        <span>{sub.label}</span>
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>
@@ -666,29 +883,76 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                   </button>
 
                   {mobileExpandedCat === cat.id && (
-                    <div style={{ padding: '0 0 14px 12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                      {cat.items?.map((sub, sIdx) => (
-                        <a
-                          key={sIdx}
-                          href={sub.href}
-                          onClick={() => setMobileMenuOpen(false)}
-                          style={{
-                            color: 'rgba(255,255,255,0.85)',
-                            textDecoration: 'none',
-                            fontSize: '0.92rem',
-                            display: 'block',
-                          }}
-                        >
-                          {sub.label}
-                        </a>
-                      ))}
+                    <div style={{ padding: '0 0 14px 10px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {cat.id === 'series-retreat' ? (
+                        SERIES_RETREAT_COLUMNS.map((col) => {
+                          return (
+                            <div key={col.id} style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '12px', padding: '12px', border: `1px solid ${col.borderColor}` }}>
+                              <div style={{ marginBottom: '8px', paddingBottom: '6px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                                <span style={{ fontWeight: 800, color: col.color, fontSize: '0.92rem' }}>{col.title}</span>
+                              </div>
+                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+                                {col.items.map((sub, sIdx) => (
+                                  <a
+                                    key={sIdx}
+                                    href={sub.href}
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      if (onNavigate) onNavigate(sub.href);
+                                      setMobileMenuOpen(false);
+                                    }}
+                                    style={{
+                                      color: 'rgba(255,255,255,0.85)',
+                                      textDecoration: 'none',
+                                      fontSize: '0.82rem',
+                                      padding: '4px 6px',
+                                      display: 'block',
+                                    }}
+                                  >
+                                    <span>{sub.label}</span>
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        cat.items?.map((sub, sIdx) => (
+                          <a
+                            key={sIdx}
+                            href={sub.href}
+                            onClick={(e) => {
+                              if (sub.href && sub.href.startsWith('/')) {
+                                e.preventDefault();
+                                if (onNavigate) onNavigate(sub.href);
+                              }
+                              setMobileMenuOpen(false);
+                            }}
+                            style={{
+                              color: 'rgba(255,255,255,0.85)',
+                              textDecoration: 'none',
+                              fontSize: '0.92rem',
+                              display: 'block',
+                              padding: '4px 0',
+                            }}
+                          >
+                            {sub.label}
+                          </a>
+                        ))
+                      )}
                     </div>
                   )}
                 </>
               ) : (
                 <a
                   href={cat.href}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={(e) => {
+                    if (cat.href && cat.href.startsWith('/')) {
+                      e.preventDefault();
+                      if (onNavigate) onNavigate(cat.href);
+                    }
+                    setMobileMenuOpen(false);
+                  }}
                   style={{
                     fontSize: '1.05rem',
                     fontWeight: '600',

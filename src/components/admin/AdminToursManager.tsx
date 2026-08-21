@@ -1134,6 +1134,19 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                     </div>
                   </div>
 
+                  <div>
+                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Phân Vùng Miền (Region)</label>
+                    <select
+                      value={tourDraft.region || 'bac'}
+                      onChange={(e) => setTourDraft({ ...tourDraft, region: e.target.value as any })}
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px', backgroundColor: '#ffffff', outline: 'none' }}
+                    >
+                      <option value="bac">🏔️ Miền Bắc</option>
+                      <option value="trung">🌊 Miền Trung</option>
+                      <option value="nam">🌴 Miền Nam</option>
+                    </select>
+                  </div>
+
                   {/* INTERACTIVE MAP PICKER COMPONENT */}
                   <div style={{ gridColumn: 'span 2', backgroundColor: '#f9faf7', padding: '20px', borderRadius: '16px', border: '1px solid rgba(8, 31, 19, 0.1)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>

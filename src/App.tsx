@@ -30,6 +30,7 @@ import RetreatHot from './pages/retreat/retreathot/RetreatHot';
 import KhongTheBoLoSection from './components/KhongTheBoLoSection';
 import UuDaiGioChotSection from './components/UuDaiGioChotSection';
 import KhamPhaDiemDenSection from './components/KhamPhaDiemDenSection';
+import KollectionSection from './components/KollectionSection';
 import DepartureCalendarModal from './components/DepartureCalendarModal';
 import AdminDashboard from './components/AdminDashboard';
 import AdminTourEditor from './components/AdminTourEditor';
@@ -151,7 +152,13 @@ export default function App() {
     currentPath === '/tours' ||
     currentPath === '/tours/' ||
     currentPath.startsWith('/tours?') ||
-    currentPath.startsWith('/series-retreat');
+    currentPath.startsWith('/series-retreat') ||
+    currentPath.startsWith('/chua-lanh') ||
+    currentPath.startsWith('/bao-ton') ||
+    currentPath.startsWith('/thien-nhien') ||
+    currentPath.startsWith('/thien-nguyen') ||
+    currentPath.startsWith('/diem-den') ||
+    currentPath.startsWith('/kham-pha-diem-den');
 
   const isBlogRoute =
     currentPath.startsWith('/101-dieu-hay/blog') ||
@@ -251,14 +258,17 @@ export default function App() {
         {/* Section 5: Ưu Đãi Giờ Chót */}
         <UuDaiGioChotSection onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />
 
-        {/* Section 6: Khám Phá Những Điểm Đến Tuyệt Vời */}
+        {/* Section 6: Khám Phá Những Điểm Đến Tuyệt Vời (5 Items) */}
         <KhamPhaDiemDenSection
           onNavigate={navigateTo}
           onOpenBooking={handleOpenBooking}
           onOpenCustomTour={handleOpenCustomTour}
         />
 
-        {/* Section 7: Đối Tác Doanh Nghiệp & Thương Hiệu Đồng Hành */}
+        {/* Section 7: Kollection 4U (Vật Phẩm Tĩnh Dưỡng Độc Bản) */}
+        <KollectionSection onNavigate={navigateTo} />
+
+        {/* Section 8: Đối Tác Doanh Nghiệp & Thương Hiệu Đồng Hành */}
         <PartnerLogos />
       </main>
     );

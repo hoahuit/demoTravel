@@ -28,6 +28,7 @@ export interface TourPackage {
   categories?: string[];
   country: string;
   city: string;
+  region?: 'bac' | 'trung' | 'nam' | string;
   duration: string;
   durationDays: number;
   departureDates: string[];

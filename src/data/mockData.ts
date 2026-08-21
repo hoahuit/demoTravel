@@ -18,9 +18,10 @@ export const MOCK_TOURS: TourPackage[] = [
     title: 'Hành Trình Tĩnh Dưỡng Zannier Bãi San Hô',
     subtitle: 'Nghỉ dưỡng biệt lập giữa 98 hecta thiên nhiên hoang sơ và liệu trình spa thảo mộc truyền thống.',
     category: 'Doc-Quyen',
-    categories: ['sap-khoi-hanh', 'khong-the-bo-lo', 'Doc-Quyen', 'Wellness'],
+    categories: ['chua-lanh', 'doc-quyen', 'hot', 'trung', 'last-minute', 'sap-khoi-hanh', 'khong-the-bo-lo', 'uu-dai-gio-chot', 'Wellness'],
     country: 'Việt Nam',
     city: 'Phú Yên',
+    region: 'trung',
     duration: '4 Ngày 3 Đêm',
     durationDays: 4,
     departureDates: ['15/09/2026', '01/10/2026', '20/10/2026'],
@@ -36,6 +37,7 @@ export const MOCK_TOURS: TourPackage[] = [
     isHot: true,
     isFeatured: true,
     isExclusive: true,
+    isPromotion: true,
     isAdminApproved: true,
     highlights: [
       'Nghỉ dưỡng tại Hill Pool Villa view biển trọn vẹn',
@@ -94,9 +96,10 @@ export const MOCK_TOURS: TourPackage[] = [
     title: 'Dấu Ấn Di Sản & Thiền Định Yên Tử',
     subtitle: 'Hành trình trở về cội nguồn tâm linh tại Legacy Yên Tử - Mgallery kiến trúc thời Trần thế kỷ 13.',
     category: 'Heritage',
-    categories: ['khong-the-bo-lo', 'Heritage', 'Wellness', 'sap-khoi-hanh'],
+    categories: ['chua-lanh', 'bao-ton', 'bac', 'hot', 'khong-the-bo-lo', 'Heritage', 'Wellness', 'sap-khoi-hanh'],
     country: 'Việt Nam',
     city: 'Yên Tử',
+    region: 'bac',
     duration: '3 Ngày 2 Đêm',
     durationDays: 3,
     departureDates: ['18/09/2026', '08/10/2026', '25/10/2026'],
@@ -109,7 +112,7 @@ export const MOCK_TOURS: TourPackage[] = [
     infantPrice: 0,
     rating: 4.9,
     reviewsCount: 38,
-    isHot: false,
+    isHot: true,
     isFeatured: true,
     isExclusive: true,
     isAdminApproved: true,
@@ -163,9 +166,10 @@ export const MOCK_TOURS: TourPackage[] = [
     title: 'Du Thuyền Siêu Sang & Tĩnh Lặng Vịnh Lan Hạ',
     subtitle: 'Nghỉ dưỡng thượng lưu trên du thuyền Boutique 6 sao giữa miền di sản kỳ vĩ.',
     category: 'Luxury',
-    categories: ['uu-dai-gio-chot', 'khong-the-bo-lo', 'Luxury'],
+    categories: ['thien-nhien', 'bao-ton', 'bac', 'last-minute', 'uu-dai-gio-chot', 'khong-the-bo-lo', 'Luxury', 'hot'],
     country: 'Việt Nam',
     city: 'Vịnh Hạ Long',
+    region: 'bac',
     duration: '3 Ngày 2 Đêm',
     durationDays: 3,
     departureDates: ['22/09/2026', '05/10/2026', '19/10/2026'],
@@ -181,6 +185,7 @@ export const MOCK_TOURS: TourPackage[] = [
     isHot: true,
     isFeatured: true,
     isExclusive: true,
+    isPromotion: true,
     isAdminApproved: true,
     highlights: [
       'Suite rộng 65m² với ban công riêng và bồn tắm hướng vịnh',
@@ -232,9 +237,10 @@ export const MOCK_TOURS: TourPackage[] = [
     title: 'Nghỉ Dưỡng Thảo Mộc Rừng Thông Đà Lạt',
     subtitle: 'Thanh lọc cơ thể và tìm lại sự cân bằng giữa rừng thông nguyên sinh bên hồ Tuyền Lâm.',
     category: 'Wellness',
-    categories: ['sap-khoi-hanh', 'Wellness', 'Nature'],
+    categories: ['chua-lanh', 'thien-nhien', 'nam', 'moi', 'sap-khoi-hanh', 'Wellness', 'Nature'],
     country: 'Việt Nam',
     city: 'Đà Lạt',
+    region: 'nam',
     duration: '3 Ngày 2 Đêm',
     durationDays: 3,
     departureDates: ['12/09/2026', '26/09/2026', '15/10/2026'],
@@ -248,6 +254,7 @@ export const MOCK_TOURS: TourPackage[] = [
     rating: 4.8,
     reviewsCount: 19,
     isHot: false,
+    isNew: true,
     isFeatured: true,
     isExclusive: false,
     isAdminApproved: true,
@@ -299,9 +306,10 @@ export const MOCK_TOURS: TourPackage[] = [
     title: 'Thiền Trà & Di Sản Sông Hoài Hội An',
     subtitle: 'Trải nghiệm không gian hoài cổ, chèo thuyền ngắm hoàng hôn và tĩnh dưỡng bên sông Thu Bồn.',
     category: 'Doc-Quyen',
-    categories: ['khong-the-bo-lo', 'sap-khoi-hanh', 'Doc-Quyen'],
+    categories: ['chua-lanh', 'thien-nguyen', 'trung', 'hot', 'khong-the-bo-lo', 'sap-khoi-hanh', 'Doc-Quyen'],
     country: 'Việt Nam',
     city: 'Hội An',
+    region: 'trung',
     duration: '4 Ngày 3 Đêm',
     durationDays: 4,
     departureDates: ['16/09/2026', '30/09/2026', '14/10/2026'],
@@ -372,9 +380,10 @@ export const MOCK_TOURS: TourPackage[] = [
     title: 'Ẩn Cư Biệt Lập Vịnh Vĩnh Hy',
     subtitle: 'Tuyệt tác nghỉ dưỡng giữa vườn quốc gia Núi Chúa và bờ vịnh san hô ngọc bích.',
     category: 'Luxury',
-    categories: ['Doc-Quyen', 'Luxury', 'uu-dai-gio-chot'],
+    categories: ['thien-nhien', 'bao-ton', 'trung', 'last-minute', 'hot', 'Doc-Quyen', 'Luxury', 'uu-dai-gio-chot'],
     country: 'Việt Nam',
     city: 'Vịnh Vĩnh Hy',
+    region: 'trung',
     duration: '4 Ngày 3 Đêm',
     durationDays: 4,
     departureDates: ['20/09/2026', '10/10/2026', '28/10/2026'],
@@ -390,6 +399,7 @@ export const MOCK_TOURS: TourPackage[] = [
     isHot: true,
     isFeatured: true,
     isExclusive: true,
+    isPromotion: true,
     isAdminApproved: true,
     highlights: [
       'Ocean Pool Pavilion với tầm nhìn 180 độ ôm trọn vịnh biển',
@@ -445,9 +455,10 @@ export const MOCK_TOURS: TourPackage[] = [
     title: 'Trị Liệu Khoáng Nóng Suối Nguồn Cố Đô',
     subtitle: 'Nghỉ dưỡng Onsen khoáng nóng tự nhiên kết hợp tinh hoa dưỡng sinh cung đình Huế.',
     category: 'Wellness',
-    categories: ['Wellness', 'khong-the-bo-lo', 'Heritage'],
+    categories: ['chua-lanh', 'trung', 'moi', 'last-minute', 'uu-dai-gio-chot', 'Wellness', 'khong-the-bo-lo', 'Heritage'],
     country: 'Việt Nam',
     city: 'Cố Đô Huế',
+    region: 'trung',
     duration: '3 Ngày 2 Đêm',
     durationDays: 3,
     departureDates: ['14/09/2026', '28/09/2026', '12/10/2026'],
@@ -461,6 +472,8 @@ export const MOCK_TOURS: TourPackage[] = [
     rating: 4.9,
     reviewsCount: 22,
     isHot: false,
+    isNew: true,
+    isPromotion: true,
     isFeatured: true,
     isExclusive: false,
     isAdminApproved: true,
@@ -512,9 +525,10 @@ export const MOCK_TOURS: TourPackage[] = [
     title: 'Thiên Nhiên Nguyên Bản & Spa Bên Biển Côn Đảo',
     subtitle: 'Nghỉ dưỡng Six Senses 5 sao tách biệt, nơi rùa biển đẻ trứng và thiên nhiên kỳ thú.',
     category: 'Doc-Quyen',
-    categories: ['uu-dai-gio-chot', 'Doc-Quyen', 'sap-khoi-hanh'],
+    categories: ['bao-ton', 'thien-nhien', 'thien-nguyen', 'nam', 'last-minute', 'uu-dai-gio-chot', 'Doc-Quyen', 'sap-khoi-hanh'],
     country: 'Việt Nam',
     city: 'Côn Đảo',
+    region: 'nam',
     duration: '4 Ngày 3 Đêm',
     durationDays: 4,
     departureDates: ['25/09/2026', '15/10/2026', '02/11/2026'],
@@ -530,6 +544,7 @@ export const MOCK_TOURS: TourPackage[] = [
     isHot: true,
     isFeatured: true,
     isExclusive: true,
+    isPromotion: true,
     isAdminApproved: true,
     highlights: [
       'Biệt thự gỗ mộc mạc hướng biển có hồ bơi vô cực riêng',
@@ -585,9 +600,10 @@ export const MOCK_TOURS: TourPackage[] = [
     title: 'Hương Sắc Mây Ngàn & Tĩnh Tâm Sa Pa',
     subtitle: 'Nghỉ dưỡng biệt lập trên đỉnh đồi nhìn ra thung lũng Mường Hoa và dãy Hoàng Liên Sơn.',
     category: 'Nature',
-    categories: ['sap-khoi-hanh', 'Nature', 'Wellness'],
+    categories: ['thien-nhien', 'thien-nguyen', 'bac', 'moi', 'sap-khoi-hanh', 'Nature', 'Wellness'],
     country: 'Việt Nam',
     city: 'Sa Pa',
+    region: 'bac',
     duration: '3 Ngày 2 Đêm',
     durationDays: 3,
     departureDates: ['17/09/2026', '01/10/2026', '16/10/2026'],
@@ -601,6 +617,7 @@ export const MOCK_TOURS: TourPackage[] = [
     rating: 4.9,
     reviewsCount: 35,
     isHot: false,
+    isNew: true,
     isFeatured: true,
     isExclusive: true,
     isAdminApproved: true,
@@ -652,9 +669,10 @@ export const MOCK_TOURS: TourPackage[] = [
     title: 'Tĩnh Dưỡng Miền Xanh Thung Lũng Pù Luông',
     subtitle: 'Hành trình chữa lành giữa núi rừng Tây Bắc, ruộng bậc thang tầng tầng lớp lớp và suối trong.',
     category: 'Nature',
-    categories: ['khong-the-bo-lo', 'uu-dai-gio-chot', 'Nature'],
+    categories: ['thien-nhien', 'chua-lanh', 'thien-nguyen', 'bac', 'hot', 'last-minute', 'khong-the-bo-lo', 'uu-dai-gio-chot', 'Nature'],
     country: 'Việt Nam',
     city: 'Pù Luông',
+    region: 'bac',
     duration: '3 Ngày 2 Đêm',
     durationDays: 3,
     departureDates: ['19/09/2026', '03/10/2026', '24/10/2026'],
@@ -667,9 +685,10 @@ export const MOCK_TOURS: TourPackage[] = [
     infantPrice: 0,
     rating: 4.8,
     reviewsCount: 20,
-    isHot: false,
+    isHot: true,
     isFeatured: true,
     isExclusive: false,
+    isPromotion: true,
     isAdminApproved: true,
     highlights: [
       'Khu nghỉ dưỡng sinh thái nhìn thẳng ra thung lũng Pù Luông hùng vĩ',
@@ -678,38 +697,38 @@ export const MOCK_TOURS: TourPackage[] = [
     ],
     included: [
       'Xe Limousine khứ hồi Hà Nội - Pù Luông',
-      '2 đêm tại Deluxe Suite view thung lũng',
-      'Trọn gói tất cả các bữa ăn bản địa đặc sắc',
-      'Trải nghiệm chèo bè tre và hướng dẫn viên bản địa'
+      '2 đêm nghỉ dưỡng tại Pù Luông Retreat',
+      'Toàn bộ các bữa ăn đặc sản vùng cao',
+      'Chèo bè tre suối Chàm và vé tham quan'
     ],
     excluded: [
-      'Chi tiêu cá nhân ngoài thực đơn'
+      'Chi tiêu cá nhân ngoài chương trình'
     ],
     notes: [
-      'Khí hậu trong lành, mát mẻ quanh năm rất tốt cho việc phục hồi sức khỏe'
+      'Không gian nguyên sơ thanh bình, rất thích hợp phục hồi năng lượng'
     ],
-    heroImage: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1600&auto=format&fit=crop',
+    heroImage: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600&auto=format&fit=crop',
     gallery: [
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1600&auto=format&fit=crop'
+      'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600&auto=format&fit=crop'
     ],
     itinerary: [
       {
         day: 1,
-        title: 'Hà Nội - Thung Lũng Xanh Pù Luông',
-        description: 'Khởi hành từ Hà Nội, qua đèo Thung Khe ngắm cảnh hùng vĩ về Pù Luông.',
-        activities: ['Đón tại Hà Nội', 'Dừng chân ngắm đèo Thung Khe', 'Bữa tối ẩm thực người Thái']
+        title: 'Hà Nội - Về Miền Thung Lũng Xanh',
+        description: 'Xe đón tại Hà Nội qua cung đường đèo Thung Khe tuyệt đẹp đến Pù Luông.',
+        activities: ['Đón tại Hà Nội', 'Check-in bungalow nhìn thung lũng', 'Thưởng thức mâm cỗ người Thái']
       },
       {
         day: 2,
-        title: 'Bản Đôn - Chèo Bè Tre Suối Chàm',
-        description: 'Đi bộ ngắm ruộng bậc thang bản Đôn và trải nghiệm chèo bè tre mộc mạc.',
-        activities: ['Đi bộ ngắm lúa chín', 'Chèo bè tre suối Chàm', 'Thưởng thức vịt Cổ Lũng']
+        title: 'Chèo Bè Tre Suối Chàm - Bản Đôn',
+        description: 'Trải nghiệm chèo bè tre ngắm cọn nước khổng lồ và dạo bước qua bản Đôn.',
+        activities: ['Chèo bè tre suối Chàm', 'Ngắm cọn nước truyền thống', 'Thư giãn hồ bơi vô cực']
       },
       {
         day: 3,
-        title: 'Chợ Phiên Phố Đoàn - Về Lại Hà Nội',
-        description: 'Khám phá chợ phiên dân tộc rực rỡ sắc màu trước khi lên xe về Hà Nội.',
-        activities: ['Dạo chợ phiên vùng cao', 'Mua mật ong rừng', 'Xe đưa về Hà Nội']
+        title: 'Bình Minh Ruộng Bậc Thang - Về Hà Nội',
+        description: 'Ngắm sương sớm lãng đãng trên ruộng bậc thang trước khi xe đưa về Hà Nội.',
+        activities: ['Ngắm bình minh thung lũng', 'Mua quà nếp nương', 'Xe đưa về Hà Nội']
       }
     ]
   }
@@ -880,15 +899,9 @@ export const MOCK_MENU_CATEGORIES = [
   { id: 13, name: 'Retreat Thiện Nguyện', slug: 'thien-nguyen', parentSlug: 'series-retreat', menuType: 'mega_menu', orderIndex: 4, icon: 'Sparkles', color: '#f472b6', description: 'Gắn kết yêu thương và sẻ chia cộng đồng' },
 
   // 4. Submenu Items for Khám Phá Điểm Đến
-  { id: 14, name: 'Phú Yên - Zannier Bãi San Hô', slug: 'phu-yen', parentSlug: 'diem-den', menuType: 'mega_menu', orderIndex: 1, icon: 'MapPin', color: '#4ade80', description: 'Miền biển tĩnh lặng hoang sơ' },
-  { id: 15, name: 'Yên Tử - Legacy Mgallery', slug: 'yen-tu', parentSlug: 'diem-den', menuType: 'mega_menu', orderIndex: 2, icon: 'MapPin', color: '#38bdf8', description: 'Cội nguồn tâm linh & thiền định' },
-  { id: 16, name: 'Hội An - Sông Hoài Di Sản', slug: 'hoi-an', parentSlug: 'diem-den', menuType: 'mega_menu', orderIndex: 3, icon: 'MapPin', color: '#facc15', description: 'Phố cổ an yên bên dòng sông Hoài' },
-  { id: 17, name: 'Vịnh Lan Hạ - Du Thuyền 6 Sao', slug: 'vinh-lan-ha', parentSlug: 'diem-den', menuType: 'mega_menu', orderIndex: 4, icon: 'MapPin', color: '#f472b6', description: 'Tuyệt tác thiên nhiên kỳ vĩ' },
-  { id: 18, name: 'Đà Lạt - Rừng Thông Nguyên Sinh', slug: 'da-lat', parentSlug: 'diem-den', menuType: 'mega_menu', orderIndex: 5, icon: 'MapPin', color: '#4ade80', description: 'Thanh lọc cơ thể giữa ngàn thông' },
-  { id: 19, name: 'Vịnh Vĩnh Hy - Amanoi Sanctuary', slug: 'vinh-vinh-hy', parentSlug: 'diem-den', menuType: 'mega_menu', orderIndex: 6, icon: 'MapPin', color: '#38bdf8', description: 'Ẩn cư biệt lập giữa vịnh ngọc' },
-  { id: 20, name: 'Côn Đảo - Six Senses Biển Vắng', slug: 'con-dao', parentSlug: 'diem-den', menuType: 'mega_menu', orderIndex: 7, icon: 'MapPin', color: '#facc15', description: 'Thiên nhiên thuần khiết biển ngọc' },
-  { id: 21, name: 'Sa Pa - Đỉnh Mây Hoàng Liên', slug: 'sa-pa', parentSlug: 'diem-den', menuType: 'mega_menu', orderIndex: 8, icon: 'MapPin', color: '#f472b6', description: 'Nghỉ dưỡng chạm biển mây bồng bềnh' },
-  { id: 22, name: 'Pù Luông - Thung Lũng Xanh', slug: 'pu-luong', parentSlug: 'diem-den', menuType: 'mega_menu', orderIndex: 9, icon: 'MapPin', color: '#4ade80', description: 'Tĩnh dưỡng giữa ruộng bậc thang' },
+  { id: 14, name: 'Miền Bắc', slug: 'bac', parentSlug: 'diem-den', menuType: 'mega_menu', orderIndex: 1, color: '#4ade80', description: 'Vẻ đẹp hùng vĩ ngút ngàn non nước miền Bắc' },
+  { id: 15, name: 'Miền Trung', slug: 'trung', parentSlug: 'diem-den', menuType: 'mega_menu', orderIndex: 2, color: '#38bdf8', description: 'Di sản cổ kính và bãi biển nguyên sơ miền Trung' },
+  { id: 16, name: 'Miền Nam', slug: 'nam', parentSlug: 'diem-den', menuType: 'mega_menu', orderIndex: 3, color: '#facc15', description: 'Miền sông nước thanh bình & đảo ngọc phương Nam' },
 
   // 5. Submenu Items for 101 Điều Hay
   { id: 23, name: 'Cẩm Nang Tĩnh Dưỡng & Thiền Trà', slug: 'cam-nang-tinh-duong', parentSlug: 'dieu-hay', menuType: 'mega_menu', orderIndex: 1, icon: 'BookOpen', color: '#38bdf8', description: 'Bí quyết phục hồi năng lượng thân tâm' },

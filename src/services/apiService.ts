@@ -237,7 +237,7 @@ export function parseTourJsonFields(tour: any) {
 export function sanitizeTourPayload(tourData: any, isUpdate = false) {
   const payload: any = {};
   const validKeys = [
-    'slug', 'title', 'subtitle', 'category', 'categories', 'country', 'city', 'duration', 'durationDays',
+    'slug', 'title', 'subtitle', 'category', 'categories', 'country', 'city', 'region', 'duration', 'durationDays',
     'heroImage', 'price', 'originalPrice', 'isHot', 'isFeatured', 'isExclusive', 'isCustomer', 'isAdminApproved', 'isAdminAprove',
     'departureDates', 'airline', 'hotel', 'transportation', 'rating', 'reviewsCount',
     'highlights', 'itinerary', 'gallery', 'included', 'excluded', 'notes', 'destinationMap',

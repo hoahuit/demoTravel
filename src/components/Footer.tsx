@@ -43,7 +43,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
             <div className="footer-brand-col">
               <div className="footer-logo-wrap">
                 <img
-                  src="/images/logo.png"
+                  src="/images/logo.svg"
                   alt="4U Tours Logo"
                   className="footer-logo-img"
                 />
