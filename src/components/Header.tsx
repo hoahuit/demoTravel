@@ -131,6 +131,51 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Bulletproof Lock body & window scroll when mega menu is hovered / open
+  useEffect(() => {
+    if (activeCategory || mobileMenuOpen) {
+      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      if (scrollBarWidth > 0) {
+        document.body.style.paddingRight = `${scrollBarWidth}px`;
+      }
+
+      const preventScroll = (e: Event) => {
+        const target = e.target as HTMLElement | null;
+        // Allow internal scrolling in mobile drawer if needed
+        if (mobileMenuOpen && target && target.closest('[data-mobile-drawer="true"]')) {
+          return;
+        }
+        e.preventDefault();
+      };
+
+      const preventKeyScroll = (e: KeyboardEvent) => {
+        const keys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '];
+        if (keys.includes(e.key)) {
+          e.preventDefault();
+        }
+      };
+
+      window.addEventListener('wheel', preventScroll, { passive: false });
+      window.addEventListener('touchmove', preventScroll, { passive: false });
+      window.addEventListener('keydown', preventKeyScroll, { passive: false });
+
+      return () => {
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+        window.removeEventListener('wheel', preventScroll);
+        window.removeEventListener('touchmove', preventScroll);
+        window.removeEventListener('keydown', preventKeyScroll);
+      };
+    } else {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    }
+  }, [activeCategory, mobileMenuOpen]);
+
   const fixedBadges = useMemo(() => {
     const fixedFromDb = liveCategories.filter((c) => c.menuType === 'fixed_top');
     if (fixedFromDb.length > 0) {
@@ -569,7 +614,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               top: '100%',
               left: 0,
               right: 0,
-              background: 'rgba(8, 20, 14, 0.88)',
+              background: 'rgba(8, 20, 14, 0.72)',
               border: 'none',
               borderTop: 'none',
               borderBottom: 'none',
