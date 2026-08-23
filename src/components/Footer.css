@@ -185,3 +185,29 @@
   font-size: 14px;
   color: #a3b899;
 }
+
+@media (max-width: 640px) {
+  .footer-card {
+    padding: 40px 16px 28px !important;
+  }
+  .footer-col-title {
+    font-size: 22px !important;
+    margin-bottom: 14px !important;
+  }
+  .footer-bio-text {
+    font-size: 15px !important;
+  }
+  .footer-nowrap {
+    white-space: normal !important;
+    word-break: break-word;
+  }
+  .footer-grid {
+    gap: 32px !important;
+    padding-bottom: 32px !important;
+  }
+  .footer-bottom-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}

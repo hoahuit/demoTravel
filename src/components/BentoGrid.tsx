@@ -232,30 +232,6 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
                   <div className="dest-editorial-img-wrap">
                     <img src={item.image} alt={item.title} loading="lazy" />
 
-                    {/* Minimalist Departure Badge */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '16px',
-                        left: '16px',
-                        background: 'rgba(16, 32, 27, 0.85)',
-                        backdropFilter: 'blur(8px)',
-                        color: '#ffffff',
-                        fontSize: '11px',
-                        fontWeight: 700,
-                        letterSpacing: '0.08em',
-                        padding: '6px 14px',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        textTransform: 'uppercase',
-                        borderRadius: '4px'
-                      }}
-                    >
-                      <Calendar size={13} color="#ffffff" />
-                      <span>{item.departureDates}</span>
-                    </div>
-
                     {/* Top Right Category Tag */}
                     <div
                       style={{
@@ -274,10 +250,40 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
                         border: '1px solid rgba(74, 222, 128, 0.45)',
                         boxShadow: '0 6px 20px rgba(0, 122, 61, 0.35)',
                         display: 'inline-flex',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        zIndex: 2
                       }}
                     >
                       Sắp Khởi Hành
+                    </div>
+
+                    {/* Bottom Left Minimalist Departure Badge */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: '16px',
+                        left: '16px',
+                        maxWidth: 'calc(100% - 32px)',
+                        background: 'rgba(16, 32, 27, 0.88)',
+                        backdropFilter: 'blur(8px)',
+                        color: '#ffffff',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        letterSpacing: '0.06em',
+                        padding: '6px 14px',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        textTransform: 'uppercase',
+                        borderRadius: '6px',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                        zIndex: 2
+                      }}
+                    >
+                      <Calendar size={13} color="#ffffff" style={{ flexShrink: 0 }} />
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {item.departureDates}
+                      </span>
                     </div>
                   </div>
 

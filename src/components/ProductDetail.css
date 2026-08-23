@@ -37,6 +37,7 @@
   text-align: left;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .pd-day-btn.inactive {
@@ -82,4 +83,77 @@
   padding: 12px 16px;
   border-radius: 14px;
   border: 1px solid rgba(45, 90, 54, 0.18);
+}
+
+/* ── RESPONSIVE MOBILE STYLES ── */
+@media (max-width: 1024px) {
+  .pd-summary-card {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .pd-days-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .pd-days-nav {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    padding-bottom: 8px;
+    gap: 8px !important;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pd-days-nav .pd-day-btn {
+    width: auto !important;
+    flex-shrink: 0;
+    padding: 10px 18px;
+  }
+
+  .pd-day-content-card {
+    padding: 24px !important;
+    min-height: auto !important;
+  }
+
+  .pd-main-grid-price {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pd-subnav-container {
+    padding: 0 16px !important;
+  }
+
+  .pd-subnav-tabs {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px !important;
+  }
+
+  .pd-subnav-price-box {
+    display: none !important;
+  }
+
+  .pd-mobile-bottom-bar {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .pd-day-content-card {
+    padding: 18px 16px !important;
+    border-radius: 18px !important;
+  }
+
+  .pd-summary-card {
+    border-radius: 18px !important;
+    padding: 16px !important;
+  }
+
+  .pd-editorial-wrapper {
+    padding: 0 !important;
+  }
 }

@@ -365,12 +365,21 @@ export default function DepartureCalendarModal({
           background: rgba(45, 90, 54, 0.6);
         }
         @media (max-width: 900px) {
+          .compact-calendar-modal {
+            padding: 18px 14px !important;
+            max-height: 94vh !important;
+            overflow-y: auto !important;
+          }
           .cal-main-layout {
             grid-template-columns: 1fr !important;
+            gap: 16px !important;
           }
           .cal-day-cell {
-            height: 40px;
-            padding: 2px 4px;
+            height: 38px !important;
+            padding: 2px 3px !important;
+          }
+          .cal-day-num {
+            font-size: 11px !important;
           }
         }
       `}</style>

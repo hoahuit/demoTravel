@@ -286,7 +286,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
   ];
   const videoFallback = defaultVideos[Math.abs(productSlug.length) % defaultVideos.length];
   const mediaSrc = videoFallback;
-  const bgImageSrc = pageData.heroImage;
+  const bgImageSrc = getImageUrl(pageData.heroImage);
 
   return (
     <div style={{ background: '#e5efe8', color: '#191c1c', minHeight: '100vh', fontFamily: '"Be Vietnam Pro", "Plus Jakarta Sans", -apple-system, sans-serif' }}>
@@ -295,7 +295,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
       <ScrollExpandMedia
         mediaType="video"
         mediaSrc={mediaSrc}
-        posterSrc={pageData.heroImage}
+        posterSrc={getImageUrl(pageData.heroImage)}
         bgImageSrc={bgImageSrc}
         title={pageData.title}
         date={pageData.duration}
@@ -503,18 +503,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                 <div style={{ width: '100%', maxWidth: '100%', margin: '0' }}>
 
                   {/* Top Cover & Summary Card (Rover Plan Style) */}
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'minmax(280px, 340px) 1fr',
-                    gap: '32px',
-                    background: '#dce7df',
-                    borderRadius: '24px',
-                    padding: '24px',
-                    border: '1px solid rgba(45, 90, 54, 0.18)',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
-                    marginBottom: '40px',
-                    alignItems: 'center'
-                  }}>
+                  <div className="pd-summary-card">
                     {/* Left Cover Image */}
                     <div style={{ width: '100%', height: '220px', borderRadius: '18px', overflow: 'hidden' }}>
                       <img
@@ -559,10 +548,10 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                   </div>
 
                   {/* Main Two-Column Days Navigation & Content Panel */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '48px', alignItems: 'start' }}>
+                  <div className="pd-days-grid" style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '36px', alignItems: 'start' }}>
 
                     {/* Left Days Sidebar */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div className="pd-days-nav" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#10201B', marginBottom: '8px', paddingLeft: '8px' }}>
                         Days
                       </div>
@@ -573,6 +562,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                           <button
                             key={idx}
                             onClick={() => setSelectedDayIndex(idx)}
+                            className="pd-day-btn"
                             style={{
                               width: '100%',
                               padding: '12px 20px',
@@ -596,6 +586,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                       {/* Tips Tab */}
                       <button
                         onClick={() => setSelectedDayIndex(pageData.itinerary ? pageData.itinerary.length : 99)}
+                        className="pd-day-btn"
                         style={{
                           width: '100%',
                           padding: '12px 20px',
@@ -998,6 +989,57 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
       {/* Khách Hàng Nói Gì Về Trải Nghiệm 4U Retreat */}
       {!hideTestimonials && <Testimonials />}
     </ScrollExpandMedia>
+
+      {/* Mobile Sticky Bottom Floating Booking Bar */}
+      <div
+        className="pd-mobile-bottom-bar"
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 999,
+          background: 'rgba(229, 239, 232, 0.96)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderTop: '1px solid rgba(45, 90, 54, 0.2)',
+          padding: '12px 18px',
+          display: 'none',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '12px',
+          boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.08)'
+        }}
+      >
+        <div>
+          <div style={{ fontSize: '10px', color: '#527059', textTransform: 'uppercase', fontWeight: 700 }}>Trọn gói từ</div>
+          <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#006d36' }}>{pageData.priceText}</div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button
+            type="button"
+            onClick={onOpenBooking}
+            style={{
+              background: '#062c23',
+              color: '#ffffff',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '999px',
+              fontWeight: 800,
+              fontSize: '0.88rem',
+              cursor: 'pointer',
+              boxShadow: '0 4px 14px rgba(6, 44, 35, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <span>Đặt Ngay</span>
+            <ArrowRight size={15} />
+          </button>
+        </div>
+      </div>
 
     </div>
   );

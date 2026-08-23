@@ -149,10 +149,10 @@ const ScrollExpandMedia: React.FC<ScrollExpandMediaProps> = ({
       ref={sectionRef}
       className='transition-colors duration-700 ease-in-out overflow-x-hidden'
     >
-      <section className='relative flex flex-col items-center justify-start min-h-[100dvh]'>
+      <section className='hero-section hero-full-bleed relative flex flex-col items-center justify-start min-h-[100dvh]'>
         <div className='relative w-full flex flex-col items-center min-h-[100dvh]'>
           <motion.div
-            className='absolute inset-0 z-0 h-full'
+            className='absolute inset-0 z-0 h-full w-full'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 - scrollProgress }}
             transition={{ duration: 0.1 }}
@@ -160,10 +160,12 @@ const ScrollExpandMedia: React.FC<ScrollExpandMediaProps> = ({
             <Image
               src={bgImageSrc}
               alt='Background'
-              className='w-screen h-screen'
+              className='w-full h-full'
               style={{
                 objectFit: 'cover',
                 objectPosition: 'center',
+                width: '100%',
+                height: '100%'
               }}
             />
             <div className='absolute inset-0 bg-black/40' />

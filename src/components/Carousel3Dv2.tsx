@@ -73,13 +73,13 @@ export default function Carousel3Dv2({ onOpenBooking, onNavigate }: Carousel3Dv2
   return (
     <div className="w-full bg-transparent text-[#142619]">
       {/* 3D Coverflow Carousel Component */}
-      <div className="my-2">
+      <div className="my-2" style={{ width: '100%', overflow: 'hidden' }}>
         <CoverflowCarousel
           slides={slides}
           rotate={32}
           depth={0.55}
           perspective={2.6}
-          cardWidth="clamp(220px, 25vw, 330px)"
+          cardWidth="clamp(240px, 68vw, 330px)"
           gap={0.06}
           loop={true}
           showCaption={false}
@@ -94,6 +94,7 @@ export default function Carousel3Dv2({ onOpenBooking, onNavigate }: Carousel3Dv2
         <div
           style={{
             margin: '20px auto 0',
+            maxWidth: '1200px',
             background: 'transparent',
             padding: '12px 16px',
             border: 'none',
@@ -101,11 +102,12 @@ export default function Carousel3Dv2({ onOpenBooking, onNavigate }: Carousel3Dv2
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '20px',
-            flexWrap: 'wrap'
+            gap: '16px',
+            flexWrap: 'wrap',
+            boxSizing: 'border-box'
           }}
         >
-          <div style={{ flex: 1, minWidth: '260px' }}>
+          <div style={{ flex: '1 1 280px', minWidth: '240px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
               <span style={{ background: 'rgba(45, 90, 54, 0.12)', color: '#1e4a3d', fontSize: '11px', fontWeight: 800, padding: '3px 12px', borderRadius: '999px', textTransform: 'uppercase' }}>
                 {activeTour.category || "Retreat"}
@@ -118,24 +120,24 @@ export default function Carousel3Dv2({ onOpenBooking, onNavigate }: Carousel3Dv2
               </span>
             </div>
 
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#142619', margin: '0 0 4px 0', lineHeight: 1.3 }}>
+            <h3 style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.35rem)', fontWeight: 800, color: '#142619', margin: '0 0 4px 0', lineHeight: 1.3 }}>
               {activeTour.title}
             </h3>
 
-            <p style={{ fontSize: '0.85rem', color: '#525a54', margin: 0, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+            <p style={{ fontSize: '0.88rem', color: '#525a54', margin: 0, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', lineHeight: 1.5 }}>
               {activeTour.subtitle || activeTour.highlights?.[0] || "Hành trình tĩnh dưỡng giữa thiên nhiên kiệt tác."}
             </p>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: 700 }}>Giá trọn gói từ</div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#006d36' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
+            <div>
+              <div style={{ fontSize: '10.5px', color: '#64748b', textTransform: 'uppercase', fontWeight: 700 }}>Giá trọn gói từ</div>
+              <div style={{ fontSize: 'clamp(1.15rem, 2vw, 1.35rem)', fontWeight: 800, color: '#006d36' }}>
                 {activeTour.price ? activeTour.price.toLocaleString("vi-VN") : "3.450.000"} VNĐ
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
               <button
                 type="button"
                 onClick={() => {
@@ -144,7 +146,7 @@ export default function Carousel3Dv2({ onOpenBooking, onNavigate }: Carousel3Dv2
                   }
                 }}
                 style={{
-                  padding: '9px 18px',
+                  padding: '9px 16px',
                   borderRadius: '12px',
                   background: '#f1f5f9',
                   color: '#081f13',
@@ -171,7 +173,7 @@ export default function Carousel3Dv2({ onOpenBooking, onNavigate }: Carousel3Dv2
                   }
                 }}
                 style={{
-                  padding: '9px 20px',
+                  padding: '9px 18px',
                   borderRadius: '12px',
                   background: '#1e4a3d',
                   color: '#ffffff',

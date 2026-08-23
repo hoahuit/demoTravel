@@ -198,15 +198,14 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
           left: 0,
           right: 0,
           zIndex: 10000,
-          background: activeCategory
-            ? 'rgba(13, 23, 16, 0.88)'
-            : (scrolled
-              ? 'rgba(13, 23, 16, 0.88)'
-              : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%)'),
-          backdropFilter: (activeCategory || scrolled) ? 'blur(24px) saturate(180%)' : 'none',
-          WebkitBackdropFilter: (activeCategory || scrolled) ? 'blur(24px) saturate(180%)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(74, 124, 89, 0.28)' : 'none',
-          boxShadow: scrolled ? '0 10px 30px rgba(0, 0, 0, 0.45)' : 'none',
+          background: mobileMenuOpen
+            ? 'transparent'
+            : ((activeCategory || scrolled)
+              ? 'rgba(8, 20, 14, 0.72)'
+              : 'transparent'),
+          border: 'none',
+          borderBottom: 'none',
+          boxShadow: 'none',
           padding: scrolled ? '12px 44px' : '16px 44px',
           fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans", sans-serif',
           transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -447,11 +446,10 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               gap: '10px',
             }}
           >
-            {/* Button Lịch Khởi Hành (Warm Amber Gold - Nổi Bật & Sang Trọng) */}
+            {/* 1. Lịch khởi hành CTA Button (Same Moss Green Style) */}
             <button
               type="button"
-              onClick={(e) => {
-                e.preventDefault();
+              onClick={() => {
                 if (onOpenCalendar) {
                   onOpenCalendar();
                 } else if (onNavigate) {
@@ -463,18 +461,18 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '7px',
+                gap: '8px',
                 height: '38px',
                 padding: '0 18px',
                 borderRadius: '999px',
-                background: 'linear-gradient(135deg, #c27803 0%, #854d0e 100%)',
+                background: 'linear-gradient(135deg, #436e55 0%, #284c39 100%)',
                 color: '#ffffff',
                 fontSize: '0.88rem',
                 fontWeight: '700',
                 letterSpacing: '0.01em',
                 textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
-                boxShadow: '0 6px 20px rgba(133, 77, 14, 0.45)',
-                border: '1px solid rgba(254, 240, 138, 0.45)',
+                boxShadow: '0 6px 20px rgba(40, 76, 57, 0.4)',
+                border: '1px solid rgba(163, 184, 153, 0.45)',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
@@ -482,23 +480,23 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               }}
               onMouseEnter={e => {
                 setActiveCategory(null);
-                e.currentTarget.style.background = 'linear-gradient(135deg, #d97706 0%, #9a3412 100%)';
-                e.currentTarget.style.borderColor = '#fef08a';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #4f8064 0%, #305842 100%)';
+                e.currentTarget.style.borderColor = '#86efac';
                 e.currentTarget.style.transform = 'scale(1.03)';
-                e.currentTarget.style.boxShadow = '0 8px 24px rgba(217, 119, 6, 0.55)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(67, 110, 85, 0.5)';
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, #c27803 0%, #854d0e 100%)';
-                e.currentTarget.style.borderColor = 'rgba(254, 240, 138, 0.45)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, #436e55 0%, #284c39 100%)';
+                e.currentTarget.style.borderColor = 'rgba(163, 184, 153, 0.45)';
                 e.currentTarget.style.transform = 'none';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(133, 77, 14, 0.45)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(40, 76, 57, 0.4)';
               }}
             >
-              <Calendar size={15} style={{ color: '#fef08a' }} />
-              <span>Lịch khởi hành</span>
+              <Calendar size={15} style={{ color: '#ffffff' }} />
+              <span style={{ whiteSpace: 'nowrap' }}>Lịch khởi hành</span>
             </button>
 
-            {/* Single Luxury CTA Button: Đặt Lịch & Tư Vấn (Moss Green - Xanh Rêu) */}
+            {/* 2. Đặt Lịch & Tư Vấn CTA Button (Same Moss Green Style) */}
             <button
               type="button"
               onClick={() => {
@@ -519,11 +517,11 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 fontSize: '0.88rem',
                 letterSpacing: '0.01em',
                 textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
-                boxShadow: '0 6px 20px rgba(40, 76, 57, 0.4)',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 border: '1px solid rgba(163, 184, 153, 0.45)',
                 cursor: 'pointer',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
+                flexShrink: 0
               }}
               onMouseEnter={e => {
                 setActiveCategory(null);
@@ -539,7 +537,7 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 e.currentTarget.style.boxShadow = '0 6px 20px rgba(40, 76, 57, 0.4)';
               }}
             >
-              <Sparkles size={15} style={{ color: '#fde047' }} />
+              <Sparkles size={15} style={{ color: '#ffffff' }} />
               <span style={{ whiteSpace: 'nowrap' }}>Đặt Lịch & Tư Vấn</span>
             </button>
 
@@ -571,13 +569,13 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
               top: '100%',
               left: 0,
               right: 0,
-              background: 'rgba(13, 23, 16, 0.94)',
-              backdropFilter: 'blur(28px) saturate(190%)',
-              WebkitBackdropFilter: 'blur(28px) saturate(190%)',
-              borderBottom: '1px solid rgba(74, 124, 89, 0.28)',
-              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.55)',
+              background: 'rgba(8, 20, 14, 0.88)',
+              border: 'none',
+              borderTop: 'none',
+              borderBottom: 'none',
+              boxShadow: 'none',
               zIndex: 9995,
-              animation: 'fadeInFlyout 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+              animation: 'fadeInFlyout 0.2s ease',
             }}
           >
             {activeCategory === 'series-retreat' ? (
@@ -778,9 +776,9 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0, 0, 0, 0.7)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
+            background: 'rgba(4, 10, 7, 0.45)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
             zIndex: 9990,
           }}
         />
@@ -792,17 +790,19 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
           style={{
             position: 'fixed',
             inset: 0,
-            top: '84px',
-            background: 'rgba(10, 15, 11, 0.98)',
-            backdropFilter: 'blur(24px)',
+            top: 0,
             zIndex: 9999,
-            padding: '24px 20px',
+            background: 'rgba(8, 20, 14, 0.72)',
+            backdropFilter: 'blur(36px) saturate(190%)',
+            WebkitBackdropFilter: 'blur(36px) saturate(190%)',
+            padding: scrolled ? '78px 20px 36px' : '88px 20px 36px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '8px',
+            gap: '12px',
             overflowY: 'auto',
           }}
         >
+          {/* Menu Categories Accordion */}
           {menuData.map((cat, idx) => (
             <div key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
               {cat.hasSubmenu ? (
@@ -818,8 +818,8 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                       background: 'none',
                       border: 'none',
                       color: '#ffffff',
-                      fontSize: '1.05rem',
-                      fontWeight: '600',
+                      fontSize: '1.02rem',
+                      fontWeight: '700',
                       cursor: 'pointer',
                     }}
                   >
@@ -906,8 +906,8 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                     setMobileMenuOpen(false);
                   }}
                   style={{
-                    fontSize: '1.05rem',
-                    fontWeight: '600',
+                    fontSize: '1.02rem',
+                    fontWeight: '700',
                     color: '#ffffff',
                     textDecoration: 'none',
                     padding: '14px 0',
@@ -920,8 +920,11 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
             </div>
           ))}
 
-          <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+          {/* 2 Luxury CTA Buttons on Mobile */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '18px' }}>
+            {/* Lịch khởi hành Button */}
             <button
+              type="button"
               onClick={() => {
                 setMobileMenuOpen(false);
                 if (onOpenCalendar) {
@@ -931,48 +934,80 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
                 }
               }}
               style={{
-                flex: 1,
+                width: '100%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '6px',
-                padding: '12px 16px',
+                gap: '8px',
+                padding: '14px 18px',
                 borderRadius: '999px',
-                background: 'rgba(255, 255, 255, 0.12)',
+                background: 'linear-gradient(135deg, #c27803 0%, #854d0e 100%)',
                 color: '#ffffff',
                 fontWeight: '700',
-                fontSize: '0.88rem',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                cursor: 'pointer'
+                fontSize: '0.95rem',
+                border: '1px solid rgba(254, 240, 138, 0.45)',
+                boxShadow: '0 6px 20px rgba(133, 77, 14, 0.45)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
               }}
             >
-              <Calendar size={16} style={{ color: '#4ade80' }} />
-              <span>Lịch khởi hành</span>
+              <Calendar size={18} style={{ color: '#fef08a', flexShrink: 0 }} />
+              <span style={{ color: '#ffffff' }}>Lịch khởi hành</span>
             </button>
 
+            {/* Đặt Lịch & Tư Vấn Button */}
             <button
+              type="button"
               onClick={() => {
                 setMobileMenuOpen(false);
                 if (onOpenBooking) onOpenBooking();
               }}
               style={{
-                flex: 1,
+                width: '100%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '6px',
-                padding: '12px 16px',
+                gap: '8px',
+                padding: '14px 18px',
                 borderRadius: '999px',
-                background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 100%)',
-                color: '#09150c',
-                fontWeight: '800',
-                fontSize: '0.88rem',
-                border: 'none',
-                cursor: 'pointer'
+                background: 'linear-gradient(135deg, #436e55 0%, #284c39 100%)',
+                color: '#ffffff',
+                fontWeight: '700',
+                fontSize: '0.95rem',
+                border: '1px solid rgba(163, 184, 153, 0.45)',
+                boxShadow: '0 6px 20px rgba(40, 76, 57, 0.4)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
               }}
             >
-              Nhận tư vấn
+              <Sparkles size={18} style={{ color: '#fde047', flexShrink: 0 }} />
+              <span style={{ color: '#ffffff' }}>Đặt Lịch & Tư Vấn</span>
             </button>
+
+            {/* Direct Phone Call Button */}
+            <a
+              href="tel:0912345678"
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                padding: '12px 18px',
+                borderRadius: '14px',
+                background: 'rgba(255, 255, 255, 0.04)',
+                color: '#ffffff',
+                fontWeight: '600',
+                fontSize: '0.88rem',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                textDecoration: 'none',
+                marginTop: '2px',
+                boxSizing: 'border-box'
+              }}
+            >
+              <Phone size={15} color="#4ade80" />
+              <span style={{ color: 'rgba(255, 255, 255, 0.92)' }}>Hotline Tư Vấn 24/7: <strong style={{ color: '#4ade80' }}>0912 345 678</strong></span>
+            </a>
           </div>
         </div>
       )}

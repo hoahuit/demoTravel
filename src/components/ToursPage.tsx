@@ -371,10 +371,10 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
           {/* Title: HIGH CONTRAST GOLDEN GRADIENT */}
           <h1 style={{
             fontWeight: 800,
-            fontSize: '40px',
+            fontSize: 'clamp(26px, 5vw, 44px)',
             letterSpacing: '-0.02em',
             lineHeight: 1.15,
-            margin: '0 0 20px 0',
+            margin: '0 0 16px 0',
             color: '#facc15',
             background: 'linear-gradient(135deg, #ffffff 0%, #ffe066 40%, #facc15 100%)',
             WebkitBackgroundClip: 'text',
@@ -385,7 +385,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
             {pageHeader.title}
           </h1>
 
-          <p style={{ fontSize: '17px', color: '#ffffff', margin: '0 auto 28px', fontWeight: 400, lineHeight: 1.7, maxWidth: '860px', textShadow: '0 2px 14px rgba(0,0,0,0.95)' }}>
+          <p style={{ fontSize: 'clamp(14px, 2vw, 17px)', color: '#ffffff', margin: '0 auto 28px', fontWeight: 400, lineHeight: 1.7, maxWidth: '860px', textShadow: '0 2px 14px rgba(0,0,0,0.95)' }}>
             {pageHeader.subtitle}
           </p>
 
@@ -393,7 +393,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       </section>
 
       {/* ── 100% FULL-WIDTH FILTER & NAVIGATION BAR ── */}
-      <div style={{ width: '100%', margin: '0', padding: '40px 48px 0', boxSizing: 'border-box' }}>
+      <div style={{ width: '100%', margin: '0', padding: 'clamp(20px, 4vw, 40px) clamp(16px, 4vw, 48px) 0', boxSizing: 'border-box' }}>
 
         {/* Sub-Filter Quick Selection Bar */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '24px', width: '100%' }}>

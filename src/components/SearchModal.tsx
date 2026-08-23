@@ -63,12 +63,14 @@ export default function SearchModal({ isOpen, onClose, onNavigate }: SearchModal
         zIndex: 99999,
         background: 'rgba(5, 12, 7, 0.65)',
         backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        paddingTop: '100px',
+        paddingTop: 'clamp(32px, 8vw, 90px)',
         paddingLeft: '16px',
-        paddingRight: '16px'
+        paddingRight: '16px',
+        boxSizing: 'border-box'
       }}
       onClick={onClose}
     >
@@ -80,7 +82,8 @@ export default function SearchModal({ isOpen, onClose, onNavigate }: SearchModal
           borderRadius: '24px',
           boxShadow: '0 25px 50px -12px rgba(22, 48, 29, 0.4)',
           overflow: 'hidden',
-          border: '1px solid rgba(74, 124, 89, 0.2)'
+          border: '1px solid rgba(74, 124, 89, 0.2)',
+          boxSizing: 'border-box'
         }}
         onClick={e => e.stopPropagation()}
       >
@@ -89,12 +92,13 @@ export default function SearchModal({ isOpen, onClose, onNavigate }: SearchModal
           style={{
             display: 'flex',
             alignItems: 'center',
-            padding: '20px 24px',
+            padding: '16px 20px',
             borderBottom: '1px solid rgba(74, 124, 89, 0.15)',
-            gap: '12px'
+            gap: '12px',
+            boxSizing: 'border-box'
           }}
         >
-          <Search size={22} color="#2d5a36" />
+          <Search size={20} color="#2d5a36" style={{ flexShrink: 0 }} />
           <input
             type="text"
             placeholder="Tìm kiếm Retreat, Combo, hoặc điểm đến..."

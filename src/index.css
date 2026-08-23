@@ -48,21 +48,37 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
+html,
+body,
+#root,
+.apple-app {
+  width: 100%;
+  max-width: 100vw;
   overflow-x: hidden;
-  line-height: 1.5;
 }
 
-/* --- Container (Full Width 100%) --- */
+body {
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* --- Container (Full Width 100% with Responsive Padding) --- */
 .apple-container {
   width: 100%;
   max-width: 100%;
   padding: 0 50px;
+  box-sizing: border-box;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .apple-container {
-    padding: 0 20px;
+    padding: 0 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .apple-container {
+    padding: 0 16px;
   }
 }
 
@@ -453,10 +469,16 @@ body {
     line-height: 1.25;
   }
 
-  /* Section Padding Reduction on Mobile */
-  section {
-    padding-top: 50px !important;
-    padding-bottom: 60px !important;
+  /* Full-bleed Hero Sections Reset */
+  .hero-section,
+  .hero-full-bleed,
+  section.hero-section,
+  section.hero-full-bleed {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-top: 0 !important;
   }
 
   .audience-section {
@@ -547,12 +569,9 @@ body {
 @keyframes fadeInFlyout {
   from {
     opacity: 0;
-    transform: translateY(-8px);
   }
-
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 

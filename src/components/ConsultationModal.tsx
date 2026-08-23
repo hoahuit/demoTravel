@@ -360,10 +360,32 @@ export default function ConsultationModal({
               font-weight: 700;
               margin-bottom: 4px;
             }
+            @media (max-width: 640px) {
+              .consult-modal-container {
+                width: calc(100vw - 20px) !important;
+                min-width: calc(100vw - 20px) !important;
+                max-height: calc(100vh - 24px) !important;
+                border-radius: 16px !important;
+              }
+              .consult-header-wrapper {
+                padding: 48px 18px 12px !important;
+              }
+              .consult-body-wrapper {
+                padding: 16px 18px !important;
+              }
+              .consult-footer-wrapper {
+                padding: 12px 18px !important;
+              }
+              .consult-tab-btn {
+                padding: 8px 6px !important;
+                font-size: 11.5px !important;
+              }
+            }
           `}</style>
 
           {/* MODAL CONTAINER (Fixed 650px Height) */}
           <div
+            className="consult-modal-container"
             style={{
               backgroundColor: '#e5efe8',
               color: '#10201B',
@@ -422,7 +444,7 @@ export default function ConsultationModal({
             {!submitted ? (
               <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
                 {/* ── SMART 2-TAB SWITCHER & TOP HEADER ── */}
-                <div style={{ padding: '56px 32px 14px', borderBottom: '1px solid rgba(16, 32, 27, 0.12)', width: '100%', boxSizing: 'border-box', flexShrink: 0 }}>
+                <div className="consult-header-wrapper" style={{ padding: '56px 32px 14px', borderBottom: '1px solid rgba(16, 32, 27, 0.12)', width: '100%', boxSizing: 'border-box', flexShrink: 0 }}>
                   {/* Tab Switcher (100% Full Width - 50% / 50% strictly equal) */}
                   <div style={{
                     display: 'grid',
@@ -438,6 +460,7 @@ export default function ConsultationModal({
                     <button
                       type="button"
                       onClick={() => setActiveTab('consultation')}
+                      className="consult-tab-btn"
                       style={{
                         width: '100%',
                         padding: '10px 14px',
@@ -464,6 +487,7 @@ export default function ConsultationModal({
                     <button
                       type="button"
                       onClick={() => setActiveTab('custom_tour')}
+                      className="consult-tab-btn"
                       style={{
                         width: '100%',
                         padding: '10px 14px',
@@ -526,7 +550,7 @@ export default function ConsultationModal({
                 {/* ── TAB 1: FORM TƯ VẤN NHANH ── */}
                 {activeTab === 'consultation' && (
                   <form onSubmit={handleConsultSubmit} style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, boxSizing: 'border-box' }}>
-                    <div style={{ padding: '20px 32px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '18px', width: '100%', boxSizing: 'border-box' }}>
+                    <div className="consult-body-wrapper" style={{ padding: '20px 32px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '18px', width: '100%', boxSizing: 'border-box' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px 24px', width: '100%', boxSizing: 'border-box' }}>
                         <div>
                           <label className="consult-journey-label">Họ và tên *</label>
@@ -578,7 +602,7 @@ export default function ConsultationModal({
                       </div>
 
                       <div>
-                        <label className="consult-journey-label">Khung giờ tiện nhận cuộc gọi</label>
+                        <label className="consult-journey-label">Khung giờ bạn thuận tiện nhận cuộc gọi</label>
                         <select
                           className="consult-journey-input"
                           value={formData.preferredTime}
@@ -606,6 +630,7 @@ export default function ConsultationModal({
                     </div>
 
                     <div
+                      className="consult-footer-wrapper"
                       style={{
                         backgroundColor: '#e5efe8',
                         borderTop: '1px solid rgba(16, 32, 27, 0.12)',
@@ -624,12 +649,13 @@ export default function ConsultationModal({
                         style={{
                           backgroundColor: '#1E4A3D',
                           color: '#ffffff',
-                          border: 'none',
-                          padding: '12px 28px',
-                          fontSize: '12px',
+                          fontFamily: "'Work Sans', sans-serif",
+                          fontSize: '13px',
                           fontWeight: 700,
-                          letterSpacing: '0.12em',
+                          letterSpacing: '0.1em',
                           textTransform: 'uppercase',
+                          padding: '12px 28px',
+                          border: 'none',
                           cursor: loading ? 'not-allowed' : 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
@@ -649,7 +675,7 @@ export default function ConsultationModal({
                 {/* ── TAB 2: FORM THIẾT KẾ RIÊNG ── */}
                 {activeTab === 'custom_tour' && (
                   <form onSubmit={handleCustomSubmit} style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, boxSizing: 'border-box' }}>
-                    <div style={{ padding: '20px 32px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '18px', width: '100%', boxSizing: 'border-box' }}>
+                    <div className="consult-body-wrapper" style={{ padding: '20px 32px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '18px', width: '100%', boxSizing: 'border-box' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px 24px', width: '100%', boxSizing: 'border-box' }}>
                         <div>
                           <label className="consult-journey-label">Họ và tên *</label>
@@ -734,6 +760,7 @@ export default function ConsultationModal({
                     </div>
 
                     <div
+                      className="consult-footer-wrapper"
                       style={{
                         backgroundColor: '#e5efe8',
                         borderTop: '1px solid rgba(16, 32, 27, 0.12)',
@@ -752,12 +779,13 @@ export default function ConsultationModal({
                         style={{
                           backgroundColor: '#1E4A3D',
                           color: '#ffffff',
-                          border: 'none',
-                          padding: '12px 28px',
-                          fontSize: '12px',
+                          fontFamily: "'Work Sans', sans-serif",
+                          fontSize: '13px',
                           fontWeight: 700,
-                          letterSpacing: '0.12em',
+                          letterSpacing: '0.1em',
                           textTransform: 'uppercase',
+                          padding: '12px 28px',
+                          border: 'none',
                           cursor: loading ? 'not-allowed' : 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',

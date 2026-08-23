@@ -23,6 +23,8 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
 
   return (
     <section
+      id="hero"
+      className="hero-section hero-full-bleed"
       style={{
         padding: 0,
         margin: 0,
@@ -42,8 +44,9 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
           display: 'flex',
           alignItems: 'flex-end',
           color: '#f5f5f7',
-          paddingBottom: '96px',
-          paddingTop: '120px'
+          paddingBottom: 'clamp(48px, 8vw, 96px)',
+          paddingTop: 'clamp(90px, 14vw, 130px)',
+          boxSizing: 'border-box'
         }}
       >
         {/* ── DESTINATION BACKGROUND IMAGE ── */}
@@ -74,7 +77,7 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
             position: 'absolute',
             inset: 0,
             zIndex: 1,
-            background: 'radial-gradient(ellipse at 25% 82%, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 80%)',
+            background: 'radial-gradient(ellipse at 25% 82%, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 85%)',
             pointerEvents: 'none'
           }}
         />
@@ -86,11 +89,12 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
             position: 'relative',
             zIndex: 2,
             maxWidth: '840px',
-            margin: '0 0 40px 64px',
+            margin: '0 clamp(16px, 4.5vw, 64px) clamp(20px, 4vw, 40px)',
             padding: '0',
             background: 'transparent',
             opacity: 1,
-            visibility: 'visible'
+            visibility: 'visible',
+            boxSizing: 'border-box'
           }}
         >
           {/* Micro-Tag */}
@@ -101,12 +105,12 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
               border: '1px solid rgba(74, 222, 128, 0.4)',
               backdropFilter: 'blur(10px)',
               color: '#4ade80',
-              fontSize: '12px',
+              fontSize: 'clamp(11px, 1.5vw, 12.5px)',
               fontWeight: 700,
               letterSpacing: '0.04em',
-              padding: '6px 18px',
+              padding: '5px 16px',
               borderRadius: '999px',
-              marginBottom: '18px',
+              marginBottom: '14px',
               fontFamily: "'Plus Jakarta Sans', sans-serif"
             }}
           >
@@ -116,12 +120,12 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
           {/* Main Headline */}
           <h1
             style={{
-              fontSize: 'clamp(48px, 6.4vw, 84px)',
+              fontSize: 'clamp(32px, 7vw, 84px)',
               fontWeight: 800,
-              lineHeight: 1.05,
+              lineHeight: 1.08,
               letterSpacing: '-0.03em',
               color: '#ffffff',
-              margin: '0 0 20px 0',
+              margin: '0 0 16px 0',
               fontFamily: "'Plus Jakarta Sans', sans-serif"
             }}
           >
@@ -144,10 +148,10 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
           {/* Subhead Paragraph */}
           <p
             style={{
-              fontSize: 'clamp(18px, 2.1vw, 23px)',
+              fontSize: 'clamp(14.5px, 2vw, 22px)',
               fontWeight: 500,
-              lineHeight: 1.65,
-              color: 'rgba(255, 255, 255, 0.96)',
+              lineHeight: 1.6,
+              color: 'rgba(255, 255, 255, 0.94)',
               maxWidth: '760px',
               margin: 0,
               fontFamily: "'Plus Jakarta Sans', sans-serif"
