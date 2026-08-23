@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, MapPin, Clock, ArrowRight, Sparkles, Filter } from 'lucide-react';
+import { X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, ArrowRight, Sparkles, Filter } from 'lucide-react';
 import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
-import { fetchToursApi } from '../services/apiService';
+import { fetchToursApi, getImageUrl } from '../services/apiService';
 
 export interface DepartureCalendarModalProps {
   isOpen: boolean;
@@ -13,9 +13,54 @@ export interface DepartureCalendarModalProps {
 interface DepartureEvent {
   dateStr: string; // 'DD/MM/YYYY'
   day: number;
-  month: number; // 8, 9, 10
-  year: number; // 2026
+  month: number; // 1-12
+  year: number;
   tour: TourPackage;
+}
+
+// Robust helper to parse various date formats (DD/MM/YYYY, YYYY-MM-DD, DD-MM-YYYY, etc.)
+function parseDateParts(dateInput: string): { day: number; month: number; year: number; formatted: string } | null {
+  if (!dateInput || typeof dateInput !== 'string') return null;
+  const trimmed = dateInput.trim();
+  if (!trimmed || trimmed.toLowerCase().includes('tuần') || trimmed.toLowerCase().includes('tuan')) {
+    return null; // Skip non-date labels like 'Hàng tuần'
+  }
+
+  // Format 1: DD/MM/YYYY or DD-MM-YYYY or DD.MM.YYYY
+  const dmyMatch = trimmed.match(/^(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})$/);
+  if (dmyMatch) {
+    const day = parseInt(dmyMatch[1], 10);
+    const month = parseInt(dmyMatch[2], 10);
+    const year = parseInt(dmyMatch[3], 10);
+    if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 2020 && year <= 2050) {
+      const pad = (n: number) => (n < 10 ? '0' + n : String(n));
+      return {
+        day,
+        month,
+        year,
+        formatted: `${pad(day)}/${pad(month)}/${year}`
+      };
+    }
+  }
+
+  // Format 2: YYYY-MM-DD or YYYY/MM/DD
+  const ymdMatch = trimmed.match(/^(\d{4})[/.-](\d{1,2})[/.-](\d{1,2})/);
+  if (ymdMatch) {
+    const year = parseInt(ymdMatch[1], 10);
+    const month = parseInt(ymdMatch[2], 10);
+    const day = parseInt(ymdMatch[3], 10);
+    if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 2020 && year <= 2050) {
+      const pad = (n: number) => (n < 10 ? '0' + n : String(n));
+      return {
+        day,
+        month,
+        year,
+        formatted: `${pad(day)}/${pad(month)}/${year}`
+      };
+    }
+  }
+
+  return null;
 }
 
 export default function DepartureCalendarModal({
@@ -25,8 +70,8 @@ export default function DepartureCalendarModal({
   onNavigate
 }: DepartureCalendarModalProps) {
   const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
-  const [currentMonth, setCurrentMonth] = useState<number>(9); // 9 = Sept 2026, 8 = Aug 2026
-  const [currentYear] = useState<number>(2026);
+  const [currentMonth, setCurrentMonth] = useState<number>(() => new Date().getMonth() + 1);
+  const [currentYear, setCurrentYear] = useState<number>(() => new Date().getFullYear());
   const [selectedDateFilter, setSelectedDateFilter] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
@@ -63,24 +108,51 @@ export default function DepartureCalendarModal({
   const allEvents: DepartureEvent[] = useMemo(() => {
     const events: DepartureEvent[] = [];
     tours.forEach((tour) => {
-      tour.departureDates?.forEach((dateStr) => {
-        const parts = dateStr.split('/');
-        if (parts.length === 3) {
-          const day = parseInt(parts[0], 10);
-          const month = parseInt(parts[1], 10);
-          const year = parseInt(parts[2], 10);
+      let datesArr: string[] = [];
+      if (Array.isArray(tour.departureDates)) {
+        datesArr = tour.departureDates;
+      } else if (typeof tour.departureDates === 'string') {
+        const rawStr = tour.departureDates as string;
+        if (rawStr.startsWith('[')) {
+          try {
+            datesArr = JSON.parse(rawStr);
+          } catch {
+            datesArr = rawStr.split(',').map((s) => s.trim()).filter(Boolean);
+          }
+        } else {
+          datesArr = rawStr.split(',').map((s) => s.trim()).filter(Boolean);
+        }
+      }
+
+      datesArr.forEach((dateStr) => {
+        const parsed = parseDateParts(dateStr);
+        if (parsed) {
           events.push({
-            dateStr,
-            day,
-            month,
-            year,
+            dateStr: parsed.formatted,
+            day: parsed.day,
+            month: parsed.month,
+            year: parsed.year,
             tour
           });
         }
       });
     });
     return events;
-  }, []);
+  }, [tours]);
+
+  // Smart auto-focus: if current month has 0 events but allEvents has data, focus on the first available event month
+  useEffect(() => {
+    if (allEvents.length > 0) {
+      const hasEventsInCurrent = allEvents.some((ev) => ev.month === currentMonth && ev.year === currentYear);
+      if (!hasEventsInCurrent) {
+        const firstEv = allEvents[0];
+        if (firstEv) {
+          setCurrentMonth(firstEv.month);
+          setCurrentYear(firstEv.year);
+        }
+      }
+    }
+  }, [allEvents]);
 
   if (!isOpen) return null;
 
@@ -104,10 +176,54 @@ export default function DepartureCalendarModal({
   const daysInMonthCount = getDaysInMonth(currentMonth, currentYear);
   const startOffset = getFirstDayIndex(currentMonth, currentYear);
 
+  // Category matching helper
+  const matchTourCategory = (tour: TourPackage, selectedCat: string): boolean => {
+    if (selectedCat === 'All') return true;
+    const tourCat = (tour.category || '').toLowerCase();
+    const cats = Array.isArray(tour.categories) ? tour.categories.map((c) => c.toLowerCase()) : [];
+
+    if (selectedCat === 'Wellness') {
+      return (
+        tourCat === 'wellness' ||
+        tourCat === 'healing' ||
+        tourCat === 'chua-lanh' ||
+        cats.includes('wellness') ||
+        cats.includes('chua-lanh') ||
+        cats.includes('healing')
+      );
+    }
+    if (selectedCat === 'Conservation') {
+      return (
+        tourCat === 'conservation' ||
+        tourCat === 'heritage' ||
+        tourCat === 'bao-ton' ||
+        cats.includes('conservation') ||
+        cats.includes('heritage') ||
+        cats.includes('bao-ton')
+      );
+    }
+    if (selectedCat === 'Nature') {
+      return tourCat === 'nature' || tourCat === 'thien-nhien' || cats.includes('nature') || cats.includes('thien-nhien');
+    }
+    if (selectedCat === 'Doc-Quyen') {
+      return (
+        tourCat === 'doc-quyen' ||
+        tourCat === 'exclusive' ||
+        tour.isExclusive === true ||
+        cats.includes('doc-quyen') ||
+        cats.includes('exclusive')
+      );
+    }
+    if (selectedCat === 'Luxury') {
+      return tourCat === 'luxury' || tourCat === 'cao-cap' || cats.includes('luxury') || cats.includes('cao-cap');
+    }
+    return tourCat.includes(selectedCat.toLowerCase()) || cats.includes(selectedCat.toLowerCase());
+  };
+
   // Filtered events for the active month & category
   const activeMonthEvents = allEvents.filter((ev) => {
     const matchMonth = ev.month === currentMonth && ev.year === currentYear;
-    const matchCat = selectedCategory === 'All' || ev.tour.category === selectedCategory;
+    const matchCat = matchTourCategory(ev.tour, selectedCategory);
     return matchMonth && matchCat;
   });
 
@@ -127,19 +243,21 @@ export default function DepartureCalendarModal({
 
   const handlePrevMonth = () => {
     setSelectedDateFilter(null);
-    if (currentMonth > 8) {
-      setCurrentMonth(currentMonth - 1);
+    if (currentMonth === 1) {
+      setCurrentMonth(12);
+      setCurrentYear((prev) => prev - 1);
     } else {
-      setCurrentMonth(10);
+      setCurrentMonth((prev) => prev - 1);
     }
   };
 
   const handleNextMonth = () => {
     setSelectedDateFilter(null);
-    if (currentMonth < 10) {
-      setCurrentMonth(currentMonth + 1);
+    if (currentMonth === 12) {
+      setCurrentMonth(1);
+      setCurrentYear((prev) => prev + 1);
     } else {
-      setCurrentMonth(8);
+      setCurrentMonth((prev) => prev + 1);
     }
   };
 
@@ -327,7 +445,7 @@ export default function DepartureCalendarModal({
               marginBottom: '6px'
             }}
           >
-            <CalendarIcon size={13} /> LỊCH KHỞI HÀNH 2026
+            <CalendarIcon size={13} /> LỊCH KHỞI HÀNH {currentYear}
           </div>
           <h2
             style={{
@@ -379,6 +497,7 @@ export default function DepartureCalendarModal({
                     color: '#1e4a3d',
                     fontWeight: 700
                   }}
+                  title="Tháng trước"
                 >
                   <ChevronLeft size={16} />
                 </button>
@@ -402,6 +521,7 @@ export default function DepartureCalendarModal({
                     color: '#1e4a3d',
                     fontWeight: 700
                   }}
+                  title="Tháng sau"
                 >
                   <ChevronRight size={16} />
                 </button>
@@ -427,6 +547,9 @@ export default function DepartureCalendarModal({
                 >
                   <option value="All">Tất cả loại hình</option>
                   <option value="Wellness">Retreat Chữa Lành</option>
+                  <option value="Conservation">Retreat Bảo Tồn</option>
+                  <option value="Nature">Retreat Thiên Nhiên</option>
+                  <option value="Doc-Quyen">Retreat Độc Quyền</option>
                   <option value="Luxury">Retreat Cao Cấp 5★</option>
                 </select>
               </div>
@@ -489,7 +612,7 @@ export default function DepartureCalendarModal({
                       {events.slice(0, 1).map((ev, eIdx) => (
                         <div key={eIdx} className="cal-event-pill">
                           <Sparkles size={8} />
-                          <span>{ev.tour.city.split(',')[0]}</span>
+                          <span>{(ev.tour.city || 'Việt Nam').split(',')[0]}</span>
                         </div>
                       ))}
                       {events.length > 1 && (
@@ -505,7 +628,7 @@ export default function DepartureCalendarModal({
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginTop: 'auto', paddingTop: '12px', fontSize: '11.5px', color: '#527059' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                 <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#1e4a3d' }} />
-                <span>Ngày có chuyến đi</span>
+                <span>Ngày có chuyến đi ({activeMonthEvents.length})</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                 <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#e11d48' }} />
@@ -519,14 +642,14 @@ export default function DepartureCalendarModal({
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', height: '100%', overflow: 'hidden' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid rgba(45, 90, 54, 0.14)', flexShrink: 0 }}>
               <h3 style={{ fontSize: '14.5px', fontWeight: 800, color: '#10201B', margin: 0 }}>
-                {selectedDateFilter ? `Khởi Hành Ngày ${selectedDateFilter}` : `Chuyến Trong ${monthNames[currentMonth]}`}
+                {selectedDateFilter ? `Khởi Hành Ngày ${selectedDateFilter}` : `Chuyến Trong ${monthNames[currentMonth]} (${displayedTours.length})`}
               </h3>
               {selectedDateFilter && (
                 <button
                   onClick={() => setSelectedDateFilter(null)}
                   style={{ background: 'none', border: 'none', color: '#2d5a36', fontSize: '11.5px', fontWeight: 700, cursor: 'pointer', textDecoration: 'underline' }}
                 >
-                  Xem tất cả
+                  Xem tất cả ({activeMonthEvents.length})
                 </button>
               )}
             </div>
@@ -535,8 +658,8 @@ export default function DepartureCalendarModal({
               {displayedTours.length === 0 ? (
                 <div style={{ padding: '30px 16px', textAlign: 'center', background: '#ffffff', borderRadius: '14px', border: '1px solid rgba(45, 90, 54, 0.12)' }}>
                   <CalendarIcon size={28} color="#738d7a" style={{ margin: '0 auto 8px' }} />
-                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#10201B' }}>Chưa có lịch khởi hành</div>
-                  <p style={{ fontSize: '11.5px', color: '#527059', margin: '4px 0 0' }}>Chọn ngày có điểm đỏ trên lịch để xem chuyến đi.</p>
+                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#10201B' }}>Chưa có lịch khởi hành trong tháng {currentMonth}/{currentYear}</div>
+                  <p style={{ fontSize: '11.5px', color: '#527059', margin: '4px 0 0' }}>Dùng mũi tên để chuyển tháng hoặc chọn loại hình khác.</p>
                 </div>
               ) : (
                 displayedTours.map((ev, idx) => (
@@ -553,7 +676,7 @@ export default function DepartureCalendarModal({
                     }}
                   >
                     <img
-                      src={ev.tour.heroImage}
+                      src={getImageUrl(ev.tour.heroImage)}
                       alt={ev.tour.title}
                       style={{ width: '76px', height: '68px', borderRadius: '10px', objectFit: 'cover', flexShrink: 0 }}
                     />
@@ -561,7 +684,7 @@ export default function DepartureCalendarModal({
                     <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10.5px', fontWeight: 700, color: '#2d5a36', marginBottom: '2px' }}>
                         <Clock size={11} />
-                        <span>{ev.dateStr} • {ev.tour.duration}</span>
+                        <span>{ev.dateStr} • {ev.tour.duration || '3N2Đ'}</span>
                       </div>
 
                       <h4 style={{ fontSize: '13px', fontWeight: 700, color: '#10201B', margin: '0 0 4px 0', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', wordBreak: 'break-word' }}>
@@ -570,7 +693,7 @@ export default function DepartureCalendarModal({
 
                       <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <span style={{ fontSize: '14px', fontWeight: 800, color: '#1e4a3d' }}>
-                          {ev.tour.price.toLocaleString('vi-VN')} ₫
+                          {(ev.tour.price || 0).toLocaleString('vi-VN')} ₫
                         </span>
 
                         <button
@@ -614,3 +737,4 @@ export default function DepartureCalendarModal({
     </div>
   );
 }
+

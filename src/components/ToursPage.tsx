@@ -269,11 +269,11 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       } else if (currentPath.includes('/retreat/retreathot') || currentPath.includes('/retreat-hot')) {
         matchesLegacy = tour.isHot === true || (Array.isArray(tour.categories) && (tour.categories.includes('retreat-hot') || tour.categories.includes('hot')));
       } else if (currentPath.includes('/retreat/sapkhoihanh') || currentPath.includes('/sap-khoi-hanh')) {
-        matchesLegacy = (Array.isArray(tour.departureDates) && tour.departureDates.length > 0) || (Array.isArray(tour.categories) && tour.categories.includes('sap-khoi-hanh'));
+        matchesLegacy = tour.isFeatured === true || (Array.isArray(tour.categories) && tour.categories.includes('sap-khoi-hanh'));
       } else if (currentPath.includes('/retreat/khongthebolo') || currentPath.includes('/khong-the-khong-co')) {
-        matchesLegacy = tour.isFeatured === true || (Array.isArray(tour.categories) && tour.categories.includes('khong-the-bo-lo'));
+        matchesLegacy = tour.isHot === true || (Array.isArray(tour.categories) && (tour.categories.includes('khong-the-bo-lo') || tour.categories.includes('hot')));
       } else if (currentPath.includes('/retreat/uudaigiochot') || currentPath.includes('/uu-dai-gio-chot') || currentPath.includes('/uu-dai') || currentPath.includes('/promotions')) {
-        matchesLegacy = tour.isPromotion === true || ((tour.originalPrice || 0) > (tour.price || 0)) || (Array.isArray(tour.categories) && tour.categories.includes('uu-dai-gio-chot'));
+        matchesLegacy = tour.isPromotion === true || ((tour.originalPrice || 0) > (tour.price || 0)) || (Array.isArray(tour.categories) && (tour.categories.includes('uu-dai-gio-chot') || tour.categories.includes('last-minute')));
       }
 
       const matchesCity = selectedCity === 'All' || (tour.city && tour.city.includes(selectedCity));

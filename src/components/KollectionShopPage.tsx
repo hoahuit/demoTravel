@@ -461,12 +461,35 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
       }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap');
 
         .font-headline {
           font-family: 'Be Vietnam Pro', sans-serif;
         }
 
+        .zannier-title-italic {
+          font-family: 'Libre Caslon Text', 'Playfair Display', Georgia, serif;
+          font-style: italic;
+          font-weight: 400;
+        }
+
+        .nomad-card {
+          background: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+        }
+        .nomad-card:hover {
+          background: transparent !important;
+          box-shadow: none !important;
+        }
+
+        .nomad-img-zoom {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+        }
         .nomad-card:hover .nomad-img-zoom {
           transform: scale(1.05);
         }
@@ -474,14 +497,14 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
         .kollection-grid-2col {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
-          gap: 24px;
+          gap: 64px 48px;
           width: 100%;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 992px) {
           .kollection-grid-2col {
             grid-template-columns: 1fr !important;
-            gap: 20px !important;
+            gap: 40px !important;
           }
           .kollection-full-padding {
             padding-left: 20px !important;
@@ -661,9 +684,9 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
           className="kollection-full-padding"
           style={{
             width: '100%',
-            maxWidth: '1280px',
+            maxWidth: '100%',
             margin: '0 auto 48px auto',
-            padding: '0 64px',
+            padding: '0 48px',
             boxSizing: 'border-box'
           }}
         >
@@ -716,10 +739,10 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                 style={{
                   position: 'relative',
                   height: '300px',
-                  borderRadius: '0.5rem',
+                  borderRadius: '16px',
                   overflow: 'hidden',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.06)'
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.06)'
                 }}
               >
                 <img
@@ -775,7 +798,8 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
           className="kollection-full-padding"
           style={{
             width: '100%',
-            padding: '0 64px',
+            maxWidth: '100%',
+            padding: '0 48px 120px',
             boxSizing: 'border-box'
           }}
         >
@@ -783,22 +807,22 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
           <div
             style={{
               backgroundColor: '#ffffff',
-              padding: '12px 20px',
-              borderRadius: '0.5rem',
+              padding: '16px 24px',
+              borderRadius: '20px',
               border: '1px solid rgba(190, 201, 194, 0.3)',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
               display: 'flex',
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
               flexWrap: 'wrap',
               gap: '16px',
-              marginBottom: '24px'
+              marginBottom: '40px'
             }}
           >
             {/* Filter Selects */}
             <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px' }}>
-              <span className="font-headline" style={{ fontSize: '18px', fontWeight: 600, color: '#191c1d' }}>
+              <span className="font-headline" style={{ fontSize: '16px', fontWeight: 700, color: '#191c1d' }}>
                 Bộ lọc:
               </span>
 
@@ -807,15 +831,15 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 style={{
-                  borderRadius: '0.25rem',
-                  border: '1px solid #bec9c2',
+                  borderRadius: '999px',
+                  border: '1px solid rgba(16, 32, 27, 0.15)',
                   backgroundColor: '#ffffff',
-                  fontSize: '15px',
+                  fontSize: '14px',
                   color: '#191c1d',
-                  padding: '8px 14px',
+                  padding: '9px 18px',
                   outline: 'none',
                   cursor: 'pointer',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.04)'
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.04)'
                 }}
               >
                 <option value="All">Danh mục: Tất cả</option>
@@ -831,15 +855,15 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                 value={selectedPriceRange}
                 onChange={(e) => setSelectedPriceRange(e.target.value)}
                 style={{
-                  borderRadius: '0.25rem',
-                  border: '1px solid #bec9c2',
+                  borderRadius: '999px',
+                  border: '1px solid rgba(16, 32, 27, 0.15)',
                   backgroundColor: '#ffffff',
-                  fontSize: '15px',
+                  fontSize: '14px',
                   color: '#191c1d',
-                  padding: '8px 14px',
+                  padding: '9px 18px',
                   outline: 'none',
                   cursor: 'pointer',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.04)'
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.04)'
                 }}
               >
                 <option value="All">Giá: Tất cả</option>
@@ -851,23 +875,23 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
 
             {/* Counter & Sort */}
             <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px' }}>
-              <p style={{ fontSize: '15px', color: '#555f6d', margin: 0 }}>
-                Hiển thị {filteredProducts.length} sản phẩm
+              <p style={{ fontSize: '14px', color: '#555f6d', margin: 0 }}>
+                Hiển thị <strong style={{ color: '#006d36' }}>{filteredProducts.length}</strong> sản phẩm tinh tuyển
               </p>
 
               <select
                 value={sortBy}
                 onChange={(e: any) => setSortBy(e.target.value)}
                 style={{
-                  borderRadius: '0.25rem',
-                  border: '1px solid #bec9c2',
+                  borderRadius: '999px',
+                  border: '1px solid rgba(16, 32, 27, 0.15)',
                   backgroundColor: '#ffffff',
-                  fontSize: '15px',
+                  fontSize: '14px',
                   color: '#191c1d',
-                  padding: '8px 14px',
+                  padding: '9px 18px',
                   outline: 'none',
                   cursor: 'pointer',
-                  boxShadow: '0 1px 2px rgba(0,0,0,0.04)'
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.04)'
                 }}
               >
                 <option value="newest">Mới nhất</option>
@@ -885,7 +909,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
               <p style={{ fontSize: '16px', color: '#555f6d' }}>Đang nạp danh mục sản phẩm...</p>
             </div>
           ) : filteredProducts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '80px 20px', backgroundColor: '#ffffff', borderRadius: '0.5rem', border: '1px solid rgba(190, 201, 194, 0.3)' }}>
+            <div style={{ textAlign: 'center', padding: '80px 20px', backgroundColor: '#ffffff', borderRadius: '24px', border: '1px solid rgba(190, 201, 194, 0.3)' }}>
               <ShoppingBag size={44} style={{ color: '#555f6d', opacity: 0.5, margin: '0 auto 14px auto' }} />
               <h3 className="font-headline" style={{ fontSize: '20px', fontWeight: 600, color: '#191c1d', margin: '0 0 6px 0' }}>
                 Không tìm thấy sản phẩm phù hợp
@@ -895,7 +919,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
               </p>
               <button
                 onClick={() => { setSelectedCategory('All'); setSelectedPriceRange('All'); setSearchQuery(''); }}
-                style={{ padding: '9px 22px', borderRadius: '0.25rem', backgroundColor: '#065f46', color: '#ffffff', fontWeight: 600, border: 'none', cursor: 'pointer' }}
+                style={{ padding: '10px 24px', borderRadius: '999px', backgroundColor: '#065f46', color: '#ffffff', fontWeight: 600, border: 'none', cursor: 'pointer' }}
               >
                 Xem tất cả sản phẩm
               </button>
@@ -911,198 +935,219 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                 const displayImage = getMerchandiseImage(product);
 
                 return (
-                  <ScrollReveal key={product.id || product.slug || pIdx} delay={pIdx * 60}>
+                  <ScrollReveal key={product.id || product.slug || pIdx} delay={(pIdx % 2) * 80}>
                     <div
                       className="nomad-card"
                       onClick={() => setActiveProduct({ ...product, title: displayTitle, heroImage: displayImage })}
                       style={{
-                        backgroundColor: '#ffffff',
-                        borderRadius: '0.5rem',
-                        border: '1px solid rgba(190, 201, 194, 0.3)',
-                        overflow: 'hidden',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
-                        transition: 'box-shadow 0.3s ease, transform 0.3s ease',
+                        background: 'transparent',
                         display: 'flex',
                         flexDirection: 'column',
-                        cursor: 'pointer',
-                        height: '100%'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.08)';
-                        e.currentTarget.style.transform = 'translateY(-3px)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
-                        e.currentTarget.style.transform = 'translateY(0)';
+                        justifyContent: 'space-between',
+                        height: '100%',
+                        cursor: 'pointer'
                       }}
                     >
-                      {/* Image Box: High 384px (h-96) */}
-                      <div
-                        style={{
-                          position: 'relative',
-                          height: '384px',
-                          width: '100%',
-                          backgroundColor: '#f3f4f5',
-                          overflow: 'hidden'
-                        }}
-                      >
-                        {/* Top Left Badges: Exclusive / Sale / Best Seller / New */}
-                        <div style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 10, display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                          {product.isExclusive && (
-                            <span
-                              style={{
-                                backgroundColor: '#004532',
-                                color: '#a6f2d1',
-                                border: '1px solid rgba(166, 242, 209, 0.4)',
-                                padding: '3px 8px',
-                                borderRadius: '0.25rem',
-                                fontSize: '12px',
-                                fontWeight: 700,
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '3px',
-                                boxShadow: '0 2px 8px rgba(0, 69, 50, 0.4)'
-                              }}
-                            >
-                              <Sparkles size={11} /> Độc quyền
-                            </span>
-                          )}
-                          {discountPercent > 0 && (
-                            <span style={{ backgroundColor: '#ba1a1a', color: '#ffffff', padding: '3px 8px', borderRadius: '0.25rem', fontSize: '12px', fontWeight: 700 }}>
-                              -{discountPercent}%
-                            </span>
-                          )}
-                          {product.isBestSeller && (
-                            <span style={{ backgroundColor: '#065f46', color: '#ffffff', padding: '3px 8px', borderRadius: '0.25rem', fontSize: '12px', fontWeight: 600 }}>
-                              Bán chạy
-                            </span>
-                          )}
-                          {product.isNewArrival && (
-                            <span style={{ backgroundColor: '#ffb960', color: '#563400', padding: '3px 8px', borderRadius: '0.25rem', fontSize: '12px', fontWeight: 700 }}>
-                              Mới
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Top Right Category Pill & Exclusive Pill */}
-                        <div style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 10, display: 'flex', gap: '6px' }}>
-                          {product.isExclusive && (
-                            <span
-                              style={{
-                                backgroundColor: '#004532',
-                                color: '#ffffff',
-                                padding: '4px 10px',
-                                borderRadius: '9999px',
-                                fontSize: '11.5px',
-                                fontWeight: 700,
-                                border: '1px solid rgba(166, 242, 209, 0.3)',
-                                boxShadow: '0 1px 4px rgba(0,0,0,0.1)'
-                              }}
-                            >
-                              Độc quyền
-                            </span>
-                          )}
-                          <span
-                            style={{
-                              backgroundColor: 'rgba(248, 249, 250, 0.92)',
-                              color: '#191c1d',
-                              backdropFilter: 'blur(4px)',
-                              padding: '4px 12px',
-                              borderRadius: '9999px',
-                              fontSize: '12px',
-                              fontWeight: 600,
-                              border: '1px solid rgba(190, 201, 194, 0.3)',
-                              boxShadow: '0 1px 3px rgba(0,0,0,0.06)'
-                            }}
-                          >
-                            {product.category || 'Retreat'}
-                          </span>
-                        </div>
-
-                        {/* Product Image with Zoom */}
-                        <img
-                          className="nomad-img-zoom"
-                          src={displayImage}
-                          alt={displayTitle}
-                          onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=1000&q=85';
-                          }}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                            transition: 'transform 0.5s ease'
-                          }}
-                        />
-                      </div>
-
-                      {/* Card Content Body */}
-                      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                        <h3
-                          className="font-headline"
-                          style={{
-                            fontSize: '24px',
-                            lineHeight: '32px',
-                            fontWeight: 600,
-                            color: '#191c1d',
-                            margin: '0 0 4px 0'
-                          }}
-                        >
-                          {displayTitle}
-                        </h3>
-
-                        <p
-                          style={{
-                            fontSize: '16px',
-                            lineHeight: '24px',
-                            color: '#555f6d',
-                            margin: '0 0 24px 0',
-                            flexGrow: 1
-                          }}
-                        >
-                          {product.subtitle || product.description}
-                        </p>
-
+                      <div>
+                        {/* Image Frame: Full-bleed clamp(440px, 52vh, 580px) */}
                         <div
                           style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            marginTop: 'auto',
-                            paddingTop: '8px'
+                            position: 'relative',
+                            width: '100%',
+                            height: 'clamp(440px, 52vh, 580px)',
+                            backgroundColor: '#f3f4f5',
+                            overflow: 'hidden',
+                            borderRadius: '24px',
+                            marginBottom: '26px',
+                            boxShadow: '0 20px 50px rgba(16, 32, 27, 0.12)'
                           }}
                         >
-                          <div>
-                            <span style={{ fontSize: '18px', lineHeight: '28px', fontWeight: 700, color: '#004532' }}>
-                              {formatVnd(product.price)}
-                            </span>
-                            {product.originalPrice && product.originalPrice > product.price && (
-                              <span style={{ fontSize: '14px', color: '#555f6d', textDecoration: 'line-through', marginLeft: '8px' }}>
-                                {formatVnd(product.originalPrice)}
+                          {/* Top Left Badges: Exclusive / Sale / Best Seller / New */}
+                          <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10, display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                            {product.isExclusive && (
+                              <span
+                                style={{
+                                  backgroundColor: '#004532',
+                                  color: '#a6f2d1',
+                                  border: '1px solid rgba(166, 242, 209, 0.4)',
+                                  padding: '6px 14px',
+                                  borderRadius: '999px',
+                                  fontSize: '12px',
+                                  fontWeight: 700,
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                  boxShadow: '0 2px 8px rgba(0, 69, 50, 0.4)'
+                                }}
+                              >
+                                <Sparkles size={12} /> Độc quyền
+                              </span>
+                            )}
+                            {discountPercent > 0 && (
+                              <span style={{ backgroundColor: '#ba1a1a', color: '#ffffff', padding: '6px 14px', borderRadius: '999px', fontSize: '12px', fontWeight: 700 }}>
+                                -{discountPercent}%
+                              </span>
+                            )}
+                            {product.isBestSeller && (
+                              <span style={{ backgroundColor: '#065f46', color: '#ffffff', padding: '6px 14px', borderRadius: '999px', fontSize: '12px', fontWeight: 600 }}>
+                                Bán chạy
+                              </span>
+                            )}
+                            {product.isNewArrival && (
+                              <span style={{ backgroundColor: '#ffb960', color: '#563400', padding: '6px 14px', borderRadius: '999px', fontSize: '12px', fontWeight: 700 }}>
+                                Mới
                               </span>
                             )}
                           </div>
 
+                          {/* Top Right Category Pill */}
+                          <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, display: 'flex', gap: '6px' }}>
+                            <span
+                              style={{
+                                backgroundColor: 'rgba(248, 249, 250, 0.92)',
+                                color: '#191c1d',
+                                backdropFilter: 'blur(8px)',
+                                padding: '6px 16px',
+                                borderRadius: '9999px',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                border: '1px solid rgba(190, 201, 194, 0.3)',
+                                boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+                              }}
+                            >
+                              {product.category || 'Retreat'}
+                            </span>
+                          </div>
+
+                          {/* Product Image with Zoom */}
+                          <img
+                            className="nomad-img-zoom"
+                            src={displayImage}
+                            alt={displayTitle}
+                            onError={(e) => {
+                              (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=1000&q=85';
+                            }}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover'
+                            }}
+                          />
+                        </div>
+
+                        {/* Card Content Body */}
+                        <div style={{ padding: '0 4px' }}>
+                          <span
+                            style={{
+                              display: 'block',
+                              fontSize: '12px',
+                              fontWeight: 700,
+                              letterSpacing: '0.12em',
+                              textTransform: 'uppercase',
+                              color: '#527059',
+                              marginBottom: '8px'
+                            }}
+                          >
+                            KOLLECTION 4U • {product.category || 'Thủ Công Tinh Tuyển'}
+                          </span>
+
+                          <h3
+                            className="zannier-title-italic"
+                            style={{
+                              fontSize: 'clamp(26px, 2.6vw, 36px)',
+                              color: '#10201B',
+                              margin: '0 0 10px 0',
+                              lineHeight: 1.25
+                            }}
+                          >
+                            {displayTitle}
+                          </h3>
+
+                          <p
+                            style={{
+                              fontSize: '15.5px',
+                              lineHeight: 1.75,
+                              color: '#405246',
+                              margin: '0 0 18px 0',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden'
+                            }}
+                          >
+                            {product.subtitle || product.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Price and Cart Button Action Row */}
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          paddingTop: '16px',
+                          borderTop: '1px solid rgba(16, 32, 27, 0.1)',
+                          marginTop: '12px'
+                        }}
+                      >
+                        <div>
+                          <span style={{ fontSize: '11px', color: '#527059', display: 'block', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                            Giá niêm yết
+                          </span>
+                          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                            <strong style={{ fontSize: '22px', fontWeight: 800, color: '#006d36' }}>
+                              {formatVnd(product.price)}
+                            </strong>
+                            {product.originalPrice && product.originalPrice > product.price && (
+                              <span style={{ fontSize: '14px', color: '#88988e', textDecoration: 'line-through' }}>
+                                {formatVnd(product.originalPrice)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveProduct({ ...product, title: displayTitle, heroImage: displayImage });
+                            }}
+                            style={{
+                              background: 'transparent',
+                              border: '1px solid rgba(16, 32, 27, 0.2)',
+                              color: '#10201B',
+                              padding: '10px 20px',
+                              borderRadius: '999px',
+                              fontSize: '13px',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              transition: 'all 0.2s ease'
+                            }}
+                          >
+                            Chi tiết
+                          </button>
                           <button
                             aria-label="Thêm vào giỏ hàng"
                             onClick={(e) => handleAddToCart({ ...product, title: displayTitle, heroImage: displayImage }, 1, e)}
                             style={{
-                              backgroundColor: '#065f46',
+                              backgroundColor: '#006d36',
                               color: '#ffffff',
-                              padding: '9px',
-                              borderRadius: '0.25rem',
+                              padding: '10px 22px',
+                              borderRadius: '999px',
                               border: 'none',
                               cursor: 'pointer',
-                              display: 'flex',
+                              display: 'inline-flex',
                               alignItems: 'center',
-                              justifyContent: 'center',
-                              boxShadow: '0 2px 6px rgba(6, 95, 70, 0.3)',
+                              gap: '8px',
+                              fontSize: '13px',
+                              fontWeight: 700,
+                              boxShadow: '0 4px 14px rgba(0, 109, 54, 0.25)',
                               transition: 'transform 0.2s ease'
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.08)'}
-                            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                           >
-                            <ShoppingCart size={19} />
+                            <ShoppingCart size={16} />
+                            <span>Chọn mua</span>
                           </button>
                         </div>
                       </div>

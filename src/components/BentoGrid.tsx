@@ -23,10 +23,10 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
     });
   }, []);
 
-  // Tours assigned to "Sắp Khởi Hành" or having departure dates appear here.
+  // Tours assigned to "Sắp Khởi Hành" (isFeatured = true or category 'sap-khoi-hanh')
   const featuredTours = tours.filter((t) =>
-    (Array.isArray(t.categories) && t.categories.includes('sap-khoi-hanh')) ||
-    (Array.isArray(t.departureDates) && t.departureDates.length > 0)
+    t.isFeatured === true ||
+    (Array.isArray(t.categories) && t.categories.includes('sap-khoi-hanh'))
   );
 
   const items = featuredTours.map((tour) => ({

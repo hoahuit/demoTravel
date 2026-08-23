@@ -23,10 +23,10 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
     });
   }, []);
 
-  // Tours assigned to "Không Thể Bỏ Lỡ" or marked as isFeatured appear here.
+  // Tours assigned to "Không Thể Bỏ Lỡ" (isHot = true or category 'khong-the-bo-lo' / 'hot')
   const unmissableTours = tours.filter((tour) =>
-    (Array.isArray(tour.categories) && tour.categories.includes('khong-the-bo-lo')) ||
-    tour.isFeatured === true
+    tour.isHot === true ||
+    (Array.isArray(tour.categories) && (tour.categories.includes('khong-the-bo-lo') || tour.categories.includes('hot')))
   );
   const visibleTours = showAll ? unmissableTours : unmissableTours.slice(0, 4);
 

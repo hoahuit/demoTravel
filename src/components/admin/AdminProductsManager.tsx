@@ -213,79 +213,99 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
   };
 
   return (
-    <div style={{ padding: '4px', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+    <div style={{ width: '100%', boxSizing: 'border-box', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       {/* Header & Metrics */}
       <div style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid #e2e8f0' }}>
           <div>
-            <h1 style={{ fontSize: '24px', fontWeight: 800, color: '#081f13', margin: '0 0 6px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <ShoppingBag size={26} style={{ color: '#006d36' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <span style={{ fontSize: '11px', fontWeight: 700, color: '#0f766e', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                KOLLECTION 4U • QUẢN LÝ SẢN PHẨM
+              </span>
+              <span style={{ height: '4px', width: '4px', borderRadius: '50%', backgroundColor: '#cbd5e1' }} />
+              <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748b' }}>
+                Gian hàng NomadStore
+              </span>
+            </div>
+            <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a', margin: '0 0 4px 0', letterSpacing: '-0.02em', lineHeight: 1.3 }}>
               Quản Lý Sản Phẩm (Kollection 4U)
             </h1>
-            <p style={{ fontSize: '14px', color: '#525a54', margin: 0 }}>
+            <p style={{ fontSize: '13.5px', color: '#64748b', margin: 0 }}>
               Quản lý các sản phẩm vật lý độc bản, trà thảo mộc, nến thơm & quà tặng lưu niệm của 4U Retreat.
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: '12px' }}>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
             {onNavigate && (
               <button
+                type="button"
                 onClick={() => onNavigate('/kollection-4u')}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: '10px 16px',
+                  padding: '8px 14px',
                   borderRadius: '8px',
                   background: '#f0fdf4',
                   border: '1px solid #bbf7d0',
                   color: '#166534',
-                  fontWeight: 700,
+                  fontWeight: 600,
                   fontSize: '13px',
                   cursor: 'pointer'
                 }}
               >
-                <Eye size={15} /> Xem Gian Hàng (NomadStore)
               </button>
             )}
 
             <button
+              type="button"
               onClick={() => loadProducts(true)}
               style={{
+                backgroundColor: '#ffffff',
+                color: '#334155',
+                border: '1px solid #cbd5e1',
+                borderRadius: '8px',
+                padding: '8px 14px',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '10px 16px',
-                borderRadius: '8px',
-                background: '#ffffff',
-                border: '1px solid #d1d5db',
-                color: '#374151',
-                fontWeight: 600,
-                fontSize: '13px',
-                cursor: 'pointer'
+                whiteSpace: 'nowrap',
+                transition: 'all 0.15s ease'
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f8fafc')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ffffff')}
             >
-              <RefreshCw size={15} /> Làm Mới
+              <RefreshCw size={14} color="#64748b" />
+              <span>Làm Mới</span>
             </button>
 
             <button
+              type="button"
               onClick={handleOpenCreate}
               style={{
+                backgroundColor: '#0f766e',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '8px 16px',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '8px',
-                padding: '10px 20px',
-                borderRadius: '8px',
-                background: 'linear-gradient(135deg, #006d36 0%, #081f13 100%)',
-                color: '#ffffff',
-                fontWeight: 700,
-                fontSize: '14px',
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(0, 109, 54, 0.25)'
+                gap: '6px',
+                whiteSpace: 'nowrap',
+                boxShadow: '0 1px 3px rgba(15, 118, 110, 0.2)',
+                transition: 'all 0.15s ease'
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#115e59')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#0f766e')}
             >
-              <Plus size={18} /> Thêm Sản Phẩm Mới
+              <Plus size={15} />
+              <span>Thêm Mới</span>
             </button>
           </div>
         </div>
@@ -554,7 +574,7 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
       {modalOpen && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10000, padding: '20px' }}>
           <div style={{ backgroundColor: '#ffffff', borderRadius: '18px', width: '100%', maxWidth: '780px', maxHeight: '92vh', display: 'flex', flexDirection: 'column', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', overflow: 'hidden' }}>
-            
+
             {/* Modal Header */}
             <div style={{ padding: '20px 28px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc' }}>
               <div>
@@ -572,7 +592,7 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
 
             {/* Modal Form Body */}
             <form onSubmit={handleSave} style={{ overflowY: 'auto', padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
-              
+
               {/* Row 1: Title & Slug */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>

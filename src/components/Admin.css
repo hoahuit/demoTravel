@@ -79,15 +79,13 @@
 
 /* LEFT SIDEBAR */
 .serene-sidebar {
-  position: fixed;
-  left: 0;
-  top: 68px;
-  bottom: 0;
-  width: 280px;
+  width: 260px;
+  min-width: 260px;
+  flex-shrink: 0;
   background-color: var(--admin-primary);
   color: #ffffff;
   z-index: 90;
-  padding: 28px 24px;
+  padding: 24px 16px;
   overflow-y: auto;
   border-right: 1px solid var(--admin-primary-light);
   box-sizing: border-box;
@@ -156,32 +154,33 @@
 
 /* MAIN WORKSPACE AREA */
 .serene-main {
-  margin-left: 280px;
-  padding-top: 68px;
-  min-height: 100vh;
+  margin-left: 0 !important;
+  padding: 28px 36px 120px 36px !important;
+  min-height: calc(100vh - 64px);
   background-color: var(--admin-bg);
-  box-sizing: border-box;
-  width: calc(100% - 280px);
+  box-sizing: border-box !important;
+  width: 100% !important;
+  flex: 1;
 }
 
 .serene-container-inner {
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 28px 40px 120px 40px;
-  box-sizing: border-box;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
 }
 
 /* STICKY TOP ACTION BAR */
 .serene-sticky-bar {
   position: sticky;
-  top: 68px;
+  top: 0;
   z-index: 80;
   background-color: rgba(248, 250, 247, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  padding: 18px 0;
-  margin-bottom: 28px;
+  padding: 16px 0;
+  margin-bottom: 24px;
   border-bottom: 1px solid rgba(6, 27, 14, 0.08);
   display: flex;
   justify-content: space-between;

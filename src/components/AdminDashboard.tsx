@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { LogOut, ShieldCheck, User as UserIcon, Lock, AlertTriangle } from 'lucide-react';
 import AdminToursManager from './admin/AdminToursManager';
 import AdminBookingsManager from './admin/AdminBookingsManager';
 import AdminConsultationsManager from './admin/AdminConsultationsManager';
@@ -15,6 +16,11 @@ import AdminTestimonialsManager from './admin/AdminTestimonialsManager';
 import AdminSettingsManager from './admin/AdminSettingsManager';
 import AdminCategoriesManager from './admin/AdminCategoriesManager';
 import AdminProductsManager from './admin/AdminProductsManager';
+import AdminUsersManager from './admin/AdminUsersManager';
+import AdminLoginPage from './admin/AdminLoginPage';
+
+import { useAuth } from '../context/AuthContext';
+import { ROLE_LABELS } from '../services/authService';
 
 import { BLOGS_DATA, BlogArticle } from '../data/blogsData';
 import { DESTINATIONS_DATA, Destination } from '../data/destinationsData';
@@ -39,6 +45,7 @@ export const ADMIN_SECTIONS = [
   { id: 'partners', label: 'Quản Lý Đối Tác Doanh Nghiệp' },
   { id: 'consultations', label: 'Quản Lý Lịch Hẹn Tư Vấn' },
   { id: 'categories', label: 'Danh Mục Menu' },
+  { id: 'users', label: 'Quản Lý Người Dùng & Phân Quyền' },
   // { id: 'bookings', label: 'Đơn Đặt Tour' },
   // { id: 'analytics', label: 'Thống Kê & Báo Cáo' },
   // { id: 'about', label: 'Giới Thiệu 4U' },
@@ -67,6 +74,8 @@ export default function AdminDashboard(props: AdminDashboardProps) {
 
 function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps) {
   const toast = useToast();
+  const { user, isAuthenticated, isLoading, logout, canAccess } = useAuth();
+
   const effectiveSection = useMemo<AdminSectionId>(() => {
     const match = currentPath.replace(/^\/admin\/?/, '').split('/')[0];
     const found = ADMIN_SECTIONS.find((item) => (item.id as string) === match || (match === 'destination' && item.id === 'destinations') || (match === 'partner' && item.id === 'partners'));
@@ -131,23 +140,6 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
 
     loadLiveData();
   }, [effectiveSection]);
-
-  const handleConsultationStatusUpdate = async (item: any, newStatus: string) => {
-    try {
-      await saveSectionItemApi('consultations', 'update', { ...item, status: newStatus });
-      setConsultationsList((prev) =>
-        prev.map((c) => (c.id === item.id ? { ...c, status: newStatus } : c))
-      );
-      toast.success(`Đã cập nhật trạng thái hẹn tư vấn thành "${newStatus}"!`);
-    } catch (err: any) {
-      toast.error(`Cập nhật thất bại: ${err?.message || err}`);
-    }
-  };
-
-  const handleSelectSection = (sectionId: AdminSectionId) => {
-    setActiveSection(sectionId);
-    onNavigate(`/admin/${sectionId}`);
-  };
 
   const openCreateModal = (section: AdminSectionId) => {
     let newItem: any = {};
@@ -310,42 +302,132 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
     }
   };
 
+  const permittedSections = useMemo(() => {
+    return ADMIN_SECTIONS.filter((sec) => canAccess(sec.id));
+  }, [canAccess]);
+
+  useEffect(() => {
+    if (permittedSections.length > 0 && !permittedSections.some(s => s.id === activeSection)) {
+      setActiveSection(permittedSections[0].id);
+    }
+  }, [permittedSections, activeSection]);
+
+  const handleConsultationStatusUpdate = async (item: any, newStatus: string) => {
+    try {
+      await saveSectionItemApi('consultations', 'update', { id: item.id, status: newStatus });
+      setConsultationsList(prev => prev.map(c => c.id === item.id ? { ...c, status: newStatus } : c));
+      toast.success(`Đã cập nhật trạng thái lịch tư vấn sang "${newStatus}"!`);
+    } catch (e: any) {
+      toast.error(`Cập nhật thất bại: ${e?.message || e}`);
+    }
+  };
+
+  const handleSelectSection = (secId: AdminSectionId) => {
+    if (!canAccess(secId)) {
+      toast.error('Bạn không có quyền truy cập mục này.');
+      return;
+    }
+    setActiveSection(secId);
+    onNavigate(`/admin/${secId}`);
+  };
+
+  const handleLogout = () => {
+    if (window.confirm('Bạn có chắc chắn muốn đăng xuất khỏi hệ thống quản trị không?')) {
+      logout();
+      toast.success('Đã đăng xuất an toàn.');
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#081f13', color: '#ffffff', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px' }}>
+          <div style={{ width: '36px', height: '36px', borderRadius: '50%', border: '3px solid #0f766e', borderTopColor: 'transparent', animation: 'spin 0.6s linear infinite' }} />
+          <span style={{ fontSize: '13.5px', color: '#94a3b8' }}>Đang xác thực quyền truy cập quản trị...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated || !user) {
+    return <AdminLoginPage onNavigateHome={() => onNavigate('/')} />;
+  }
+
+  const roleConfig = ROLE_LABELS[user.role] || ROLE_LABELS.consultant;
+
   return (
     <div className="serene-admin-layout">
       {/* UNIFIED TOP BRAND HEADER BAR */}
       <header className="serene-top-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 28px', backgroundColor: '#081f13', color: '#ffffff', height: '64px', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', fontWeight: 700, letterSpacing: '0.08em', color: '#ffffff' }}>
-            4U RETREAT ADMIN
+          <img
+            src="/Logo-4U-Wellness.png"
+            alt="4U Wellness Logo"
+            style={{ height: '34px', width: 'auto', objectFit: 'contain', display: 'block' }}
+          />
+          <span style={{ height: '16px', width: '1px', backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
+          <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '15px', fontWeight: 700, letterSpacing: '0.08em', color: '#ffffff' }}>
+            ADMIN CONSOLE
           </span>
-          <span style={{ fontSize: '11px', fontWeight: 800, backgroundColor: 'rgba(255,255,255,0.12)', color: '#d1fae5', padding: '4px 10px', borderRadius: '6px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-            Hệ Thống Quản Trị Trung Tâm
+          <span
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              color: '#34d399',
+              fontSize: '11px',
+              fontWeight: 700,
+              padding: '2px 8px',
+              borderRadius: '4px',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase'
+            }}
+          >
+            {roleConfig.label}
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <span style={{ fontSize: '13px', color: '#a1bfa9' }}>
-            Đang quản lý: <strong style={{ color: '#ffffff' }}>{ADMIN_SECTIONS.find(s => s.id === activeSection)?.label}</strong>
-          </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#e2e8f0', fontSize: '13px' }}>
+            <span style={{ color: '#94a3b8' }}>Xin chào,</span>
+            <strong style={{ color: '#ffffff' }}>{user.fullName}</strong>
+          </div>
+
           <button
-            onClick={() => onNavigate('/')}
-            style={{ border: '1px solid rgba(255,255,255,0.2)', backgroundColor: 'transparent', color: '#ffffff', padding: '6px 14px', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}
+            type="button"
+            onClick={handleLogout}
+            title="Đăng xuất khỏi hệ thống"
+            style={{
+              backgroundColor: 'rgba(239, 68, 68, 0.15)',
+              color: '#f87171',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+              borderRadius: '6px',
+              padding: '6px 12px',
+              fontSize: '12.5px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.15s ease'
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.25)')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.15)')}
           >
-            Về Trang Chủ Client
+            <LogOut size={13} />
+            <span>Đăng Xuất</span>
           </button>
         </div>
       </header>
 
       <div style={{ display: 'flex', flex: 1 }}>
         {/* UNIFIED SINGLE SIDEBAR MENU */}
-        <aside className="serene-sidebar" style={{ width: '250px', backgroundColor: '#06170e', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '6px', minHeight: 'calc(100vh - 64px)' }}>
+        <aside className="serene-sidebar" style={{ width: '260px', minWidth: '260px', flexShrink: 0, backgroundColor: '#06170e', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '6px', minHeight: 'calc(100vh - 64px)' }}>
           <div style={{ padding: '0 12px 16px 12px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '12px' }}>
             <p style={{ fontSize: '11px', fontWeight: 700, color: '#819986', textTransform: 'uppercase', letterSpacing: '0.1em', margin: 0 }}>
               Danh Mục Quản Trị
             </p>
           </div>
 
-          {ADMIN_SECTIONS.map((sec) => (
+          {permittedSections.map((sec) => (
             <button
               key={sec.id}
               onClick={() => handleSelectSection(sec.id)}
@@ -360,7 +442,7 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
                 border: 'none',
                 backgroundColor: activeSection === sec.id ? '#081f13' : 'transparent',
                 color: activeSection === sec.id ? '#ffffff' : '#a1bfa9',
-                fontSize: '14px',
+                fontSize: '13.5px',
                 fontWeight: activeSection === sec.id ? 700 : 500,
                 cursor: 'pointer',
                 textAlign: 'left',
@@ -371,29 +453,81 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
             </button>
           ))}
 
-          <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', color: '#a1bfa9', fontSize: '12px' }}>
-            Hệ Thống Quản Trị 4U Retreat v2.5
+          {/* USER INFO PROFILE CARD AT BOTTOM */}
+          <div
+            style={{
+              marginTop: 'auto',
+              paddingTop: '16px',
+              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '10px'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 8px', borderRadius: '8px', backgroundColor: 'rgba(255, 255, 255, 0.04)' }}>
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  backgroundColor: '#0f766e',
+                  color: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 700,
+                  fontSize: '13px',
+                  flexShrink: 0
+                }}
+              >
+                {user.fullName.charAt(0).toUpperCase()}
+              </div>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {user.fullName}
+                </div>
+                <div style={{ fontSize: '11px', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10b981' }} />
+                  <span>@{user.username}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </aside>
 
         {/* MAIN WORKSPACE AREA RENDERING MODULAR TSX COMPONENTS */}
-        <main className="serene-main" style={{ flex: 1, backgroundColor: '#f4f5f3', padding: '28px', minHeight: 'calc(100vh - 64px)' }}>
-          {activeSection === 'tours' && <AdminToursManager toast={toast} onNavigate={onNavigate} />}
-          {activeSection === 'products' && <AdminProductsManager toast={toast} onNavigate={onNavigate} />}
-          {activeSection === 'categories' && <AdminCategoriesManager toast={toast} />}
-          {activeSection === 'bookings' && <AdminBookingsManager bookingsList={bookingsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
-          {activeSection === 'consultations' && <AdminConsultationsManager consultationsList={consultationsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} handleStatusUpdate={handleConsultationStatusUpdate} />}
-          {activeSection === 'analytics' && <AdminAnalyticsManager />}
-          {activeSection === 'about' && <AdminAboutManager aboutState={aboutState} setAboutState={setAboutState} toast={toast} />}
-          {activeSection === 'blog' && <AdminBlogManager blogsList={blogsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
-          {activeSection === 'destinations' && <AdminDestinationsManager destinationsList={destinationsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
-          {activeSection === 'faq' && <AdminFaqManager faqList={faqList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
-          {activeSection === 'partners' && <AdminPartnersManager partnersList={partnersList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
-          {activeSection === 'promotions' && <AdminPromotionsManager promotionsList={promotionsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
-          {activeSection === 'services' && <AdminServicesManager servicesList={servicesList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
-          {activeSection === 'team' && <AdminTeamManager teamList={teamList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
-          {activeSection === 'testimonials' && <AdminTestimonialsManager testimonialsList={testimonialsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
-          {activeSection === 'settings' && <AdminSettingsManager settingsState={settingsState} setSettingsState={setSettingsState} toast={toast} />}
+        <main className="serene-main" style={{ flex: 1, minWidth: 0, backgroundColor: '#f4f5f3', padding: '28px 36px 120px 36px', minHeight: 'calc(100vh - 64px)', boxSizing: 'border-box' }}>
+          {!canAccess(activeSection) ? (
+            <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '32px', textAlign: 'center', border: '1px solid #fee2e2' }}>
+              <AlertTriangle size={36} color="#dc2626" style={{ margin: '0 auto 12px auto' }} />
+              <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#991b1b', margin: '0 0 8px 0' }}>
+                403 • Không Có Quyền Truy Cập
+              </h2>
+              <p style={{ fontSize: '13.5px', color: '#64748b', margin: 0 }}>
+                Vai trò của bạn ({roleConfig.label}) không được cấp quyền xem hoặc chỉnh sửa mục này.
+              </p>
+            </div>
+          ) : (
+            <>
+              {activeSection === 'tours' && <AdminToursManager toast={toast} onNavigate={onNavigate} />}
+              {activeSection === 'products' && <AdminProductsManager toast={toast} onNavigate={onNavigate} />}
+              {activeSection === 'categories' && <AdminCategoriesManager toast={toast} />}
+              {activeSection === 'users' && <AdminUsersManager toast={toast} />}
+              {activeSection === 'bookings' && <AdminBookingsManager bookingsList={bookingsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
+              {activeSection === 'consultations' && <AdminConsultationsManager consultationsList={consultationsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} handleStatusUpdate={handleConsultationStatusUpdate} />}
+              {activeSection === 'analytics' && <AdminAnalyticsManager />}
+              {activeSection === 'about' && <AdminAboutManager aboutState={aboutState} setAboutState={setAboutState} toast={toast} />}
+              {activeSection === 'blog' && <AdminBlogManager blogsList={blogsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
+              {activeSection === 'destinations' && <AdminDestinationsManager destinationsList={destinationsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
+              {activeSection === 'faq' && <AdminFaqManager faqList={faqList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
+              {activeSection === 'partners' && <AdminPartnersManager partnersList={partnersList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
+              {activeSection === 'promotions' && <AdminPromotionsManager promotionsList={promotionsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
+              {activeSection === 'services' && <AdminServicesManager servicesList={servicesList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
+              {activeSection === 'team' && <AdminTeamManager teamList={teamList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
+              {activeSection === 'testimonials' && <AdminTestimonialsManager testimonialsList={testimonialsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
+              {activeSection === 'settings' && <AdminSettingsManager settingsState={settingsState} setSettingsState={setSettingsState} toast={toast} />}
+            </>
+          )}
         </main>
       </div>
 
@@ -409,9 +543,81 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
                 const val = editingTarget.item[key];
                 if (typeof val === 'object' && val !== null) return null;
 
+                if (key === 'region') {
+                  const REGION_PRESETS = [
+                    { group: '🏔️ Miền Bắc', options: ['Đông Bắc Bộ', 'Tây Bắc Bộ', 'Đồng Bằng Sông Hồng', 'Miền Bắc'] },
+                    { group: '🏛️ Miền Trung', options: ['Bắc Trung Bộ', 'Duyên Hải Nam Trung Bộ', 'Miền Trung'] },
+                    { group: '🌲 Tây Nguyên', options: ['Tây Nguyên'] },
+                    { group: '🏝️ Miền Nam', options: ['Đông Nam Bộ', 'Đồng Bằng Sông Cửu Long', 'Miền Nam'] },
+                    { group: '🌏 Quốc Tế', options: ['Quốc Tế', 'Đông Nam Á', 'Châu Á', 'Châu Âu'] },
+                  ];
+
+                  return (
+                    <div key={key}>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#525a54', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                        Phân Vùng Miền (Region)
+                      </label>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <select
+                          value={val ?? ''}
+                          onChange={(e) => {
+                            setEditingTarget({
+                              ...editingTarget,
+                              item: { ...editingTarget.item, [key]: e.target.value }
+                            });
+                          }}
+                          style={{ flex: 1, padding: '10px 12px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.18)', fontSize: '14px', backgroundColor: '#ffffff' }}
+                        >
+                          <option value="">-- Chọn Phân Vùng Miền --</option>
+                          {REGION_PRESETS.map((group) => (
+                            <optgroup key={group.group} label={group.group}>
+                              {group.options.map((opt) => (
+                                <option key={opt} value={opt}>{opt}</option>
+                              ))}
+                            </optgroup>
+                          ))}
+                        </select>
+                        <input
+                          type="text"
+                          placeholder="Hoặc tự nhập tên vùng..."
+                          value={val ?? ''}
+                          onChange={(e) => {
+                            setEditingTarget({
+                              ...editingTarget,
+                              item: { ...editingTarget.item, [key]: e.target.value }
+                            });
+                          }}
+                          style={{ flex: 1, padding: '10px 12px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.18)', fontSize: '14px' }}
+                        />
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (['overview', 'history', 'description', 'content', 'culture', 'visaInfo', 'transportation', 'answer'].includes(key)) {
+                  return (
+                    <div key={key}>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#525a54', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                        {key}
+                      </label>
+                      <textarea
+                        rows={4}
+                        value={val ?? ''}
+                        onChange={(e) => {
+                          setEditingTarget({
+                            ...editingTarget,
+                            item: { ...editingTarget.item, [key]: e.target.value }
+                          });
+                        }}
+                        style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.18)', fontSize: '14px', fontFamily: 'inherit', resize: 'vertical' }}
+                      />
+                    </div>
+                  );
+                }
+
                 return (
                   <div key={key}>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#525a54', textTransform: 'uppercase', marginBottom: '4px', display: 'block' }}>{key}</label>
+                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#525a54', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>{key}</label>
                     <input
                       type="text"
                       value={val ?? ''}
@@ -421,7 +627,7 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
                           item: { ...editingTarget.item, [key]: e.target.value }
                         });
                       }}
-                      style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '14px' }}
+                      style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '14px' }}
                     />
                   </div>
                 );

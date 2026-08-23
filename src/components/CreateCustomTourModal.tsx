@@ -64,18 +64,22 @@ export default function CreateCustomTourModal({
 
     try {
       const targetPlace = formData.destination.trim() || formData.region;
+      const noteContent = `[THIẾT KẾ LỊCH TRÌNH RIÊNG]
+- Vùng miền: ${formData.region}
+- Điểm đến mong muốn: ${formData.destination.trim() || 'Theo tư vấn của 4U'}
+- Số lượng khách: ${formData.guestCount}
+- Nhu cầu cụ thể: ${formData.notes.trim() || 'Không có'}`;
+
       await saveSectionItemApi('consultations', 'create', {
         customerName: formData.name.trim(),
         customerPhone: formData.phone.trim(),
-        tour: `Thiết kế lịch trình riêng: ${targetPlace} (${formData.region})`,
-        message: `[THIẾT KẾ LỊCH TRÌNH RIÊNG]
-- Họ tên: ${formData.name.trim()}
-- Số điện thoại / Zalo: ${formData.phone.trim()}
-- Vùng miền muốn đi: ${formData.region}
-- Điểm đến mong muốn: ${formData.destination.trim() || 'Theo tư vấn của 4U'}
-- Số lượng người: ${formData.guestCount}
-- Thông tin / Nhu cầu chuyến đi: ${formData.notes.trim() || 'Không có'}`,
+        tour: `Thiết kế lịch trình riêng: ${targetPlace}`,
+        tourName: `Thiết kế lịch trình riêng: ${targetPlace}`,
+        message: noteContent,
+        note: noteContent,
         preferredTime: 'anytime',
+        preferredCallTime: 'Linh hoạt (Bất kỳ lúc nào)',
+        status: 'Chưa tư vấn',
         type: 'custom_tour_planner'
       });
 

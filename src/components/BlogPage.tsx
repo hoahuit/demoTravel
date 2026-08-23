@@ -167,11 +167,23 @@ export default function BlogPage({
         }
 
         .hover-lift {
-          transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.6s ease;
+          transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          background: transparent !important;
+          box-shadow: none !important;
         }
         .hover-lift:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 24px 60px rgba(16, 32, 27, 0.16) !important;
+          transform: translateY(-4px);
+          background: transparent !important;
+          box-shadow: none !important;
+        }
+
+        .zannier-card {
+          background: transparent !important;
+          box-shadow: none !important;
+        }
+        .zannier-card:hover {
+          background: transparent !important;
+          box-shadow: none !important;
         }
 
         .zannier-img-zoom {
@@ -182,7 +194,7 @@ export default function BlogPage({
           transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
         }
         .zannier-card:hover .zannier-img-zoom {
-          transform: scale(1.045);
+          transform: scale(1.05);
         }
 
         .zannier-underline-link {
@@ -590,8 +602,8 @@ export default function BlogPage({
                   className="zannier-2col-grid"
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-                    gap: '44px',
+                    gridTemplateColumns: 'repeat(2, 1fr)',
+                    gap: '64px 48px',
                     width: '100%'
                   }}
                 >
@@ -603,19 +615,20 @@ export default function BlogPage({
                         background: 'transparent',
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'space-between'
+                        justifyContent: 'space-between',
+                        height: '100%'
                       }}
                     >
                       <div>
                         <div
                           style={{
-                            height: 'clamp(280px, 38vh, 420px)',
+                            height: 'clamp(440px, 52vh, 580px)',
                             width: '100%',
                             overflow: 'hidden',
                             position: 'relative',
-                            borderRadius: '20px',
-                            marginBottom: '20px',
-                            boxShadow: '0 16px 40px rgba(16, 32, 27, 0.09)'
+                            borderRadius: '24px',
+                            marginBottom: '26px',
+                            boxShadow: '0 20px 50px rgba(16, 32, 27, 0.12)'
                           }}
                         >
                           <img
@@ -971,14 +984,14 @@ export default function BlogPage({
             </div>
           </section>
 
-          {/* 3. MAIN GALLERY GRID (100% Full Screen Width) */}
+          {/* 3. MAIN GALLERY GRID (100% Full Screen Width & 2 items per row) */}
           <main
             className="zannier-full-container"
             style={{
               width: '100%',
               maxWidth: '100%',
               margin: '0 auto',
-              padding: '0 48px 100px',
+              padding: '0 48px 120px',
               boxSizing: 'border-box'
             }}
           >
@@ -1025,13 +1038,13 @@ export default function BlogPage({
                 className="zannier-2col-grid"
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))',
-                  gap: '56px 44px',
+                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gap: '64px 48px',
                   width: '100%'
                 }}
               >
                 {filteredBlogs.map((b, bIdx) => (
-                  <ScrollReveal key={b.slug || b.id || bIdx} delay={bIdx * 60}>
+                  <ScrollReveal key={b.slug || b.id || bIdx} delay={(bIdx % 2) * 80}>
                     <div
                       className="hover-lift zannier-card"
                       style={{
@@ -1053,11 +1066,11 @@ export default function BlogPage({
                           style={{
                             position: 'relative',
                             width: '100%',
-                            height: 'clamp(280px, 38vh, 420px)',
-                            borderRadius: '20px',
+                            height: 'clamp(440px, 52vh, 580px)',
+                            borderRadius: '24px',
                             overflow: 'hidden',
-                            marginBottom: '22px',
-                            boxShadow: '0 16px 40px rgba(16, 32, 27, 0.08)'
+                            marginBottom: '26px',
+                            boxShadow: '0 20px 50px rgba(16, 32, 27, 0.12)'
                           }}
                         >
                           <img
@@ -1069,13 +1082,13 @@ export default function BlogPage({
                           <div
                             style={{
                               position: 'absolute',
-                              top: '18px',
-                              left: '18px',
+                              top: '20px',
+                              left: '20px',
                               background: '#006d36',
                               color: '#ffffff',
                               fontSize: '11.5px',
                               fontWeight: 800,
-                              padding: '6px 16px',
+                              padding: '7px 18px',
                               borderRadius: '999px',
                               letterSpacing: '0.06em',
                               textTransform: 'uppercase'
@@ -1086,14 +1099,14 @@ export default function BlogPage({
                           <div
                             style={{
                               position: 'absolute',
-                              bottom: '18px',
-                              right: '18px',
+                              bottom: '20px',
+                              right: '20px',
                               background: 'rgba(0, 0, 0, 0.75)',
                               backdropFilter: 'blur(8px)',
                               color: '#ffffff',
                               fontSize: '12px',
                               fontWeight: 600,
-                              padding: '5px 14px',
+                              padding: '6px 16px',
                               borderRadius: '999px',
                               display: 'flex',
                               alignItems: 'center',
@@ -1124,7 +1137,7 @@ export default function BlogPage({
                           <h3
                             className="zannier-title-italic"
                             style={{
-                              fontSize: 'clamp(24px, 2.5vw, 32px)',
+                              fontSize: 'clamp(26px, 2.6vw, 36px)',
                               color: '#10201B',
                               margin: '0 0 12px 0',
                               lineHeight: 1.25
@@ -1135,9 +1148,9 @@ export default function BlogPage({
 
                           <p
                             style={{
-                              fontSize: '15px',
+                              fontSize: '15.5px',
                               color: '#405246',
-                              lineHeight: 1.7,
+                              lineHeight: 1.75,
                               margin: '0 0 18px 0',
                               display: '-webkit-box',
                               WebkitLineClamp: 2,
@@ -1151,7 +1164,7 @@ export default function BlogPage({
                       </div>
 
                       {/* Underline Link Action */}
-                      <div style={{ padding: '8px 4px 0 4px' }}>
+                      <div style={{ padding: '14px 4px 0 4px', borderTop: '1px solid rgba(16, 32, 27, 0.1)' }}>
                         <span className="zannier-underline-link">
                           <span>Đọc Bài Viết</span>
                           <ArrowRight size={14} />

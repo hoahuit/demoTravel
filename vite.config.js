@@ -12,6 +12,32 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    open: false
-  }
+    open: false,
+    proxy: {
+      '/auth': {
+        target: 'http://127.0.0.1:3001',
+        changeOrigin: true,
+      },
+      '/users': {
+        target: 'http://127.0.0.1:3001',
+        changeOrigin: true,
+      },
+      '/tours': {
+        target: 'http://127.0.0.1:3001',
+        changeOrigin: true,
+      },
+      '/sections': {
+        target: 'http://127.0.0.1:3001',
+        changeOrigin: true,
+      },
+      '/uploads': {
+        target: 'http://127.0.0.1:3001',
+        changeOrigin: true,
+      },
+      '/files': {
+        target: 'http://127.0.0.1:3001',
+        changeOrigin: true,
+      },
+    },
+  },
 });

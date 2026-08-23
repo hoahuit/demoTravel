@@ -18,8 +18,14 @@ import {
   updateMockTour,
   deleteMockTour
 } from '../data/mockData';
+import { getStoredToken } from './authService';
 
 export const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://127.0.0.1:3001';
+
+export function getAuthHeader(): string {
+  const token = getStoredToken();
+  return token ? `Bearer ${token}` : '';
+}
 
 // Toggle mock data mode via .env (VITE_USE_MOCK_DATA=true)
 export const USE_MOCK_DATA = String((import.meta as any).env?.VITE_USE_MOCK_DATA || '').toLowerCase() === 'true';
@@ -260,6 +266,43 @@ export function sanitizeTourPayload(tourData: any, isUpdate = false) {
   return payload;
 }
 
+export function sanitizeConsultationPayload(data: any, isUpdate = false) {
+  const payload: any = {};
+  if (isUpdate && data.id !== undefined) {
+    payload.id = Number(data.id) || data.id;
+  }
+
+  payload.customerName = String(data.customerName || data.fullName || data.name || 'Khách hàng').trim();
+  payload.customerPhone = String(data.customerPhone || data.phone || '').trim();
+
+  if (data.customerEmail || data.email) {
+    payload.customerEmail = String(data.customerEmail || data.email).trim();
+  }
+
+  const callTime = data.preferredCallTime || data.preferredTime;
+  if (callTime) {
+    const timeMap: Record<string, string> = {
+      morning: 'Sáng (8h - 12h)',
+      afternoon: 'Chiều (13h30 - 17h30)',
+      evening: 'Tối (18h - 21h)',
+      anytime: 'Linh hoạt (Bất kỳ lúc nào)'
+    };
+    payload.preferredCallTime = timeMap[callTime] || String(callTime);
+  } else {
+    payload.preferredCallTime = 'Sáng (8h - 12h)';
+  }
+
+  payload.tourName = String(data.tourName || data.tour || data.tourTitle || 'Tư vấn hành trình').trim();
+  payload.note = String(data.note || data.message || data.notes || '').trim();
+  payload.status = String(data.status || 'Chưa tư vấn');
+
+  if (data.createdAt) {
+    payload.createdAt = String(data.createdAt);
+  }
+
+  return payload;
+}
+
 // --------------------------------------------------------------------------
 // QUERY CACHE ENGINE (Memory TTL & Smart Invalidation System)
 // --------------------------------------------------------------------------
@@ -348,14 +391,6 @@ export async function fetchToursApi(forceRefresh = false) {
   })();
 
   return inflightToursPromise;
-}
-
-export function getAuthHeader(): string {
-  const stored = typeof window !== 'undefined' ? localStorage.getItem('4u_admin_jwt_token') : null;
-  if (stored) {
-    return stored.startsWith('Bearer ') ? stored : `Bearer ${stored}`;
-  }
-  return '';
 }
 
 export async function saveTourApi(identifier: string | number, tourData: any) {
@@ -567,6 +602,11 @@ export async function saveSectionItemApi(
   let payload: any;
   if (section === 'tours') {
     payload = sanitizeTourPayload(data, action === 'update');
+  } else if (section === 'consultations') {
+    payload = sanitizeConsultationPayload(data, action === 'update');
+    if (action === 'create') {
+      delete payload.id;
+    }
   } else {
     payload = { ...data };
     if (action === 'create') {

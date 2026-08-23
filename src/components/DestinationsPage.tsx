@@ -21,17 +21,36 @@ interface RegionCategory {
 
 const REGION_CATEGORIES: RegionCategory[] = [
   { id: 'all', label: 'Tất Cả Điểm Đến', icon: '🌐' },
-  { id: 'north', label: 'Bắc Bộ & Tây Bắc', icon: '⛰️', match: ['Đông Bắc Bộ', 'Tây Bắc Bộ', 'Đồng Bằng Sông Hồng', 'Hòa Bình', 'Thanh Hóa'] },
-  { id: 'central', label: 'Miền Trung Di Sản', icon: '🏛️', match: ['Bắc Trung Bộ', 'Duyên Hải Nam Trung Bộ', 'Quảng Bình', 'Bình Định', 'Ninh Thuận'] },
-  { id: 'highland', label: 'Tây Nguyên Đại Ngàn', icon: '🌲', match: ['Tây Nguyên', 'Đắk Lắk'] },
-  { id: 'south', label: 'Nam Bộ & Biển Đảo', icon: '🏝️', match: ['Đồng Bằng Sông Cửu Long', 'Kiên Giang', 'Bà Rịa - Vũng Tàu'] },
+  { id: 'north', label: 'Bắc Bộ & Tây Bắc', icon: '⛰️', match: ['Đông Bắc Bộ', 'Tây Bắc Bộ', 'Đồng Bằng Sông Hồng', 'Hòa Bình', 'Thanh Hóa', 'Bắc', 'bac', 'Miền Bắc', 'North', 'Sa Pa', 'Lào Cai', 'Hà Giang', 'Ninh Bình', 'Yên Tử', 'Quảng Ninh', 'Hạ Long'] },
+  { id: 'central', label: 'Miền Trung Di Sản', icon: '🏛️', match: ['Bắc Trung Bộ', 'Duyên Hải Nam Trung Bộ', 'Quảng Bình', 'Bình Định', 'Ninh Thuận', 'Trung', 'trung', 'Miền Trung', 'Central', 'Đà Lạt', 'Phú Yên', 'Huế', 'Hội An', 'Nha Trang', 'Đà Nẵng'] },
+  { id: 'highland', label: 'Tây Nguyên Đại Ngàn', icon: '🌲', match: ['Tây Nguyên', 'Đắk Lắk', 'Gia Lai', 'Kon Tum', 'Lâm Đồng', 'Buôn Ma Thuột'] },
+  { id: 'south', label: 'Nam Bộ & Biển Đảo', icon: '🏝️', match: ['Đồng Bằng Sông Cửu Long', 'Kiên Giang', 'Bà Rịa - Vũng Tàu', 'Nam', 'nam', 'Miền Nam', 'South', 'Phú Quốc', 'Côn Đảo', 'Cần Thơ', 'Bến Tre', 'Sóc Trăng', 'Tiền Giang'] },
 ];
 
 export default function DestinationsPage({ currentPath = '/diem-den', onNavigate, onOpenBooking, onOpenCustomTour }: DestinationsPageProps) {
   const [destinations, setDestinations] = useState<Destination[]>(DESTINATIONS_DATA);
   const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  // Auto-detect region from URL if path is /diem-den/bac, /diem-den/trung, /diem-den/nam
+  const initialCategory = useMemo(() => {
+    const clean = currentPath.split('?')[0].replace(/^\/+|\/+$/g, '');
+    const parts = clean.split('/');
+    if (parts.length > 1 && (parts[0] === 'diem-den' || parts[0] === 'destinations')) {
+      const slug = parts[1].toLowerCase().trim();
+      if (slug === 'bac' || slug === 'north' || slug === 'mien-bac') return 'north';
+      if (slug === 'trung' || slug === 'central' || slug === 'mien-trung') return 'central';
+      if (slug === 'nam' || slug === 'south' || slug === 'mien-nam') return 'south';
+      if (slug === 'tay-nguyen' || slug === 'highland') return 'highland';
+    }
+    return 'all';
+  }, [currentPath]);
+
+  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory);
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  useEffect(() => {
+    setSelectedCategory(initialCategory);
+  }, [initialCategory]);
 
   useEffect(() => {
     // Fetch destinations
@@ -133,15 +152,22 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
     if (!activeSingleDestination) return [];
     const destName = (activeSingleDestination.name || '').toLowerCase();
     const destSlug = (activeSingleDestination.slug || '').toLowerCase();
+    const destClean = destName.replace(/^(vịnh|núi|đảo|thành phố|tỉnh|huyện|thị xã)\s+/i, '').trim();
+
     return tours.filter((t) => {
       const city = (t.city || '').toLowerCase();
       const title = (t.title || '').toLowerCase();
       const subtitle = (t.subtitle || '').toLowerCase();
       const slug = (t.slug || '').toLowerCase();
+      const cityClean = city.replace(/^(vịnh|núi|đảo|thành phố|tỉnh|huyện|thị xã)\s+/i, '').trim();
+
       return (
         city.includes(destName) ||
         destName.includes(city) ||
+        (cityClean.length >= 2 && destClean.includes(cityClean)) ||
+        (destClean.length >= 2 && cityClean.includes(destClean)) ||
         title.includes(destName) ||
+        title.includes(destClean) ||
         subtitle.includes(destName) ||
         slug.includes(destSlug)
       );
@@ -167,11 +193,23 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
         }
 
         .hover-lift {
-          transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.6s ease;
+          transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          background: transparent !important;
+          box-shadow: none !important;
         }
         .hover-lift:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 24px 60px rgba(16, 32, 27, 0.16) !important;
+          transform: translateY(-4px);
+          background: transparent !important;
+          box-shadow: none !important;
+        }
+
+        .zannier-card {
+          background: transparent !important;
+          box-shadow: none !important;
+        }
+        .zannier-card:hover {
+          background: transparent !important;
+          box-shadow: none !important;
         }
 
         .zannier-img-zoom {
@@ -182,7 +220,7 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
           transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
         }
         .zannier-card:hover .zannier-img-zoom {
-          transform: scale(1.045);
+          transform: scale(1.05);
         }
 
         .zannier-underline-link {
@@ -283,38 +321,6 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                 boxSizing: 'border-box'
               }}
             >
-              {/* Back to All Breadcrumb */}
-              <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#ffffff' }}>
-                <button
-                  onClick={() => onNavigate('/diem-den')}
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.22)',
-                    backdropFilter: 'blur(12px)',
-                    border: '1px solid rgba(255, 255, 255, 0.35)',
-                    color: '#ffffff',
-                    padding: '8px 18px',
-                    borderRadius: '999px',
-                    fontSize: '12.5px',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.38)'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.22)'}
-                >
-                  <ArrowLeft size={14} />
-                  <span>Tất Cả Điểm Đến</span>
-                </button>
-                <span style={{ opacity: 0.6, color: '#ffffff' }}>/</span>
-                <span style={{ color: '#e2e8f0', fontWeight: 500 }}>{activeSingleDestination.region}</span>
-                <span style={{ opacity: 0.6, color: '#ffffff' }}>/</span>
-                <span style={{ fontWeight: 800, color: '#4ade80', textShadow: '0 1px 8px rgba(0,0,0,0.5)' }}>{activeSingleDestination.name}</span>
-              </div>
-
               <ScrollReveal>
                 <div style={{ maxWidth: '880px' }}>
                   <span
@@ -367,60 +373,14 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                     {activeSingleDestination.overview}
                   </p>
 
-                  {/* Highlights Strip */}
-                  <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center' }}>
-                    <div style={{ background: 'rgba(255, 255, 255, 0.95)', border: '1px solid rgba(255, 255, 255, 0.4)', padding: '10px 22px', borderRadius: '999px', fontSize: '13px', fontWeight: 700, color: '#10201B', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)' }}>
-                      <span>🗓️ Mùa đẹp nhất:</span>
-                      <strong style={{ color: '#006d36' }}>{activeSingleDestination.bestTime || 'Quanh năm'}</strong>
-                    </div>
-                    <div style={{ background: 'rgba(255, 255, 255, 0.95)', border: '1px solid rgba(255, 255, 255, 0.4)', padding: '10px 22px', borderRadius: '999px', fontSize: '13px', fontWeight: 700, color: '#10201B', display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)' }}>
-                      <span>📍 Danh thắng tiêu biểu:</span>
-                      <strong style={{ color: '#006d36' }}>{activeSingleDestination.popularAttractions?.length || 4} Điểm</strong>
-                    </div>
-                    <button
-                      onClick={() => handleDestinationAction(activeSingleDestination)}
-                      style={{
-                        background: '#006d36',
-                        color: '#ffffff',
-                        border: 'none',
-                        padding: '12px 28px',
-                        borderRadius: '999px',
-                        fontSize: '13.5px',
-                        fontWeight: 800,
-                        cursor: 'pointer',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        boxShadow: '0 8px 25px rgba(0, 109, 54, 0.45)',
-                        transition: 'all 0.25s ease'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
-                      onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                    >
-                      <span>Thiết Kế Tour Riêng</span>
-                      <ArrowRight size={15} />
-                    </button>
-                  </div>
+
                 </div>
               </ScrollReveal>
             </div>
           </section>
 
           {/* Section 1: Danh Lam Thắng Cảnh Tại Điểm Đến (Full Screen & 2 items per row) */}
-          <section style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box', padding: '80px 48px' }}>
-            <ScrollReveal>
-              <div style={{ marginBottom: '48px', maxWidth: '900px' }}>
-                <span style={{ color: '#006d36', fontSize: '12px', fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', display: 'block', marginBottom: '10px' }}>
-                  EXPLORE ATTRACTIONS
-                </span>
-                <h2 className="zannier-title-italic" style={{ fontSize: 'clamp(32px, 3.8vw, 48px)', color: '#10201B', margin: '0 0 14px 0', lineHeight: 1.2 }}>
-                  Các Điểm Danh Thắng & Kỳ Quan Tại {activeSingleDestination.name}
-                </h2>
-                <p style={{ fontSize: '16px', color: '#405246', lineHeight: 1.7, margin: 0 }}>
-                  Những địa danh thiên nhiên nguyên sơ và di sản văn hóa không thể bỏ qua trong chuyến hành trình tĩnh dưỡng.
-                </p>
-              </div>
-            </ScrollReveal>
+          <section style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box', padding: '90px 48px' }}>
 
             {Array.isArray(activeSingleDestination.popularAttractions) && activeSingleDestination.popularAttractions.length > 0 ? (
               <div
@@ -428,7 +388,7 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                 style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(2, 1fr)',
-                  gap: '56px 44px',
+                  gap: '64px 48px',
                   width: '100%'
                 }}
               >
@@ -453,16 +413,16 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                           else if (onOpenBooking) onOpenBooking({ city: activeSingleDestination.name, name: `Khám phá ${attName}` });
                         }}
                       >
-                        {/* Large Full-Bleed Image Frame */}
+                        {/* Large Full-Bleed Image Frame - Expanded Height */}
                         <div
                           style={{
                             width: '100%',
-                            height: 'clamp(280px, 38vh, 420px)',
-                            borderRadius: '20px',
+                            height: 'clamp(440px, 52vh, 580px)',
+                            borderRadius: '24px',
                             overflow: 'hidden',
                             position: 'relative',
-                            marginBottom: '22px',
-                            boxShadow: '0 16px 40px rgba(16, 32, 27, 0.09)'
+                            marginBottom: '26px',
+                            boxShadow: '0 20px 50px rgba(16, 32, 27, 0.12)'
                           }}
                         >
                           <img
@@ -473,15 +433,15 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                           <div
                             style={{
                               position: 'absolute',
-                              top: '18px',
-                              left: '18px',
-                              background: 'rgba(16, 32, 27, 0.8)',
-                              backdropFilter: 'blur(10px)',
+                              top: '20px',
+                              left: '20px',
+                              background: 'rgba(16, 32, 27, 0.85)',
+                              backdropFilter: 'blur(12px)',
                               color: '#ffffff',
-                              fontSize: '11.5px',
+                              fontSize: '12px',
                               fontWeight: 800,
-                              letterSpacing: '0.1em',
-                              padding: '6px 16px',
+                              letterSpacing: '0.12em',
+                              padding: '8px 20px',
                               borderRadius: '999px'
                             }}
                           >
@@ -495,22 +455,22 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                             <h3
                               className="zannier-title-italic"
                               style={{
-                                fontSize: 'clamp(24px, 2.5vw, 32px)',
+                                fontSize: 'clamp(26px, 2.6vw, 36px)',
                                 color: '#10201B',
-                                margin: '0 0 12px 0',
+                                margin: '0 0 14px 0',
                                 lineHeight: 1.25
                               }}
                             >
                               {attName}
                             </h3>
-                            <p style={{ fontSize: '15px', color: '#405246', lineHeight: 1.7, margin: '0 0 20px 0' }}>
+                            <p style={{ fontSize: '16px', color: '#405246', lineHeight: 1.75, margin: '0 0 22px 0' }}>
                               {attDesc}
                             </p>
                           </div>
 
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', paddingTop: '14px', borderTop: '1px solid rgba(16, 32, 27, 0.1)' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', paddingTop: '16px', borderTop: '1px solid rgba(16, 32, 27, 0.12)' }}>
                             <span className="zannier-underline-link">
-                              Thêm vào lịch trình tour <ArrowRight size={13} />
+                              Thêm vào lịch trình tour <ArrowRight size={14} />
                             </span>
                             <button
                               onClick={(e) => {
@@ -522,9 +482,9 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                                 background: '#006d36',
                                 color: '#ffffff',
                                 border: 'none',
-                                padding: '9px 22px',
+                                padding: '10px 24px',
                                 borderRadius: '999px',
-                                fontSize: '12.5px',
+                                fontSize: '13px',
                                 fontWeight: 700,
                                 cursor: 'pointer',
                                 transition: 'all 0.2s ease'
@@ -543,9 +503,9 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
           </section>
 
           {/* Section 2: Gói Tour Tĩnh Dưỡng Tuyển Chọn Tại Điểm Đến (Full Screen & 2 items per row, No White BG) */}
-          <section style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box', padding: '80px 48px', borderTop: '1px solid rgba(16,32,27,0.1)' }}>
+          <section style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box', padding: '90px 48px', borderTop: '1px solid rgba(16,32,27,0.12)' }}>
             <ScrollReveal>
-              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '48px', flexWrap: 'wrap', gap: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '52px', flexWrap: 'wrap', gap: '20px' }}>
                 <div>
                   <span style={{ color: '#006d36', fontSize: '12px', fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', display: 'block', marginBottom: '10px' }}>
                     CURATED EXPERIENCES
@@ -595,7 +555,7 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                 style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(2, 1fr)',
-                  gap: '56px 44px',
+                  gap: '64px 48px',
                   width: '100%'
                 }}
               >
@@ -612,16 +572,16 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                       }}
                     >
                       <div>
-                        {/* Large Full-Bleed Image Frame */}
+                        {/* Large Full-Bleed Image Frame - Expanded Height */}
                         <div
                           style={{
                             position: 'relative',
                             width: '100%',
-                            height: 'clamp(280px, 38vh, 420px)',
-                            borderRadius: '20px',
+                            height: 'clamp(440px, 52vh, 580px)',
+                            borderRadius: '24px',
                             overflow: 'hidden',
-                            marginBottom: '22px',
-                            boxShadow: '0 16px 40px rgba(16, 32, 27, 0.09)'
+                            marginBottom: '26px',
+                            boxShadow: '0 20px 50px rgba(16, 32, 27, 0.12)'
                           }}
                         >
                           <img
@@ -630,11 +590,11 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                             alt={t.title}
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                           />
-                          <div style={{ position: 'absolute', top: '18px', left: '18px', background: '#006d36', color: '#ffffff', fontSize: '11.5px', fontWeight: 800, padding: '6px 16px', borderRadius: '999px' }}>
+                          <div style={{ position: 'absolute', top: '20px', left: '20px', background: '#006d36', color: '#ffffff', fontSize: '12px', fontWeight: 800, padding: '7px 18px', borderRadius: '999px' }}>
                             {t.duration}
                           </div>
-                          <div style={{ position: 'absolute', bottom: '18px', right: '18px', background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(8px)', color: '#facc15', fontSize: '12px', fontWeight: 800, padding: '5px 14px', borderRadius: '999px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <Star size={13} fill="#facc15" color="#facc15" />
+                          <div style={{ position: 'absolute', bottom: '20px', right: '20px', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(10px)', color: '#facc15', fontSize: '12.5px', fontWeight: 800, padding: '6px 16px', borderRadius: '999px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <Star size={14} fill="#facc15" color="#facc15" />
                             <span>{t.rating || 5.0} ({t.reviewsCount || 18})</span>
                           </div>
                         </div>
@@ -647,7 +607,7 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                           <h3
                             className="zannier-title-italic"
                             style={{
-                              fontSize: 'clamp(24px, 2.5vw, 32px)',
+                              fontSize: 'clamp(26px, 2.6vw, 36px)',
                               color: '#10201B',
                               margin: '0 0 12px 0',
                               lineHeight: 1.25
@@ -655,7 +615,7 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                           >
                             {t.title}
                           </h3>
-                          <p style={{ fontSize: '15px', color: '#405246', lineHeight: 1.7, margin: '0 0 18px 0', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                          <p style={{ fontSize: '15.5px', color: '#405246', lineHeight: 1.7, margin: '0 0 18px 0', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                             {t.subtitle}
                           </p>
 
@@ -673,10 +633,10 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                         </div>
                       </div>
 
-                      <div style={{ padding: '16px 4px 0 4px', borderTop: '1px solid rgba(16,32,27,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px' }}>
+                      <div style={{ padding: '16px 4px 0 4px', borderTop: '1px solid rgba(16,32,27,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px' }}>
                         <div>
                           <span style={{ fontSize: '11px', color: '#527059', display: 'block', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>Giá trọn gói / khách</span>
-                          <span style={{ fontSize: '22px', fontWeight: 800, color: '#006d36' }}>
+                          <span style={{ fontSize: '24px', fontWeight: 800, color: '#006d36' }}>
                             {typeof t.price === 'number' ? `${t.price.toLocaleString('vi-VN')} VNĐ` : 'Liên hệ'}
                           </span>
                         </div>
@@ -687,7 +647,7 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                               background: '#10201B',
                               color: '#ffffff',
                               border: 'none',
-                              padding: '10px 22px',
+                              padding: '11px 24px',
                               borderRadius: '999px',
                               fontSize: '13px',
                               fontWeight: 700,
@@ -706,7 +666,7 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                               background: '#006d36',
                               color: '#ffffff',
                               border: 'none',
-                              padding: '10px 24px',
+                              padding: '11px 26px',
                               borderRadius: '999px',
                               fontSize: '13px',
                               fontWeight: 700,
@@ -725,12 +685,12 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
               </div>
             ) : (
               /* Fallback showcase card */
-              <div style={{ background: 'transparent', borderRadius: '24px', padding: '56px 36px', textAlign: 'center', border: '1px dashed rgba(16,32,27,0.2)' }}>
-                <Compass size={44} style={{ color: '#006d36', margin: '0 auto 16px' }} />
-                <h3 className="zannier-title-italic" style={{ fontSize: '30px', color: '#10201B', margin: '0 0 12px 0' }}>
+              <div style={{ background: 'transparent', borderRadius: '24px', padding: '64px 40px', textAlign: 'center', border: '1px dashed rgba(16,32,27,0.2)' }}>
+                <Compass size={48} style={{ color: '#006d36', margin: '0 auto 18px' }} />
+                <h3 className="zannier-title-italic" style={{ fontSize: '32px', color: '#10201B', margin: '0 0 14px 0' }}>
                   Hành Trình Tĩnh Dưỡng Signature Tại {activeSingleDestination.name}
                 </h3>
-                <p style={{ fontSize: '15.5px', color: '#405246', maxWidth: '640px', margin: '0 auto 28px auto', lineHeight: 1.7 }}>
+                <p style={{ fontSize: '16px', color: '#405246', maxWidth: '680px', margin: '0 auto 30px auto', lineHeight: 1.7 }}>
                   Các hành trình tĩnh dưỡng riêng biệt tại {activeSingleDestination.name} đang được thiết kế độc quyền theo yêu cầu của từng du khách. Hãy để đội ngũ 4U đồng hành cùng bạn.
                 </p>
                 <button
@@ -739,14 +699,14 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                     background: '#006d36',
                     color: '#ffffff',
                     border: 'none',
-                    padding: '15px 36px',
+                    padding: '16px 40px',
                     borderRadius: '999px',
-                    fontSize: '14px',
+                    fontSize: '14.5px',
                     fontWeight: 800,
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '8px',
+                    gap: '10px',
                     boxShadow: '0 6px 22px rgba(0, 109, 54, 0.35)'
                   }}
                 >
@@ -758,13 +718,13 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
           </section>
 
           {/* Section 3: Gợi ý các điểm đến lân cận (Full Screen & 2 items per row) */}
-          <section style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box', padding: '80px 48px', borderTop: '1px solid rgba(16,32,27,0.1)' }}>
+          <section style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box', padding: '90px 48px 120px', borderTop: '1px solid rgba(16,32,27,0.12)' }}>
             <ScrollReveal>
-              <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+              <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                 <span style={{ color: '#006d36', fontSize: '12px', fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', display: 'block', marginBottom: '10px' }}>
                   MORE TO EXPLORE
                 </span>
-                <h2 className="zannier-title-italic" style={{ fontSize: 'clamp(30px, 3.5vw, 44px)', color: '#10201B', margin: 0 }}>
+                <h2 className="zannier-title-italic" style={{ fontSize: 'clamp(32px, 3.8vw, 48px)', color: '#10201B', margin: 0 }}>
                   Khám Phá Các Miền Danh Thắng Tuyệt Mỹ Khác
                 </h2>
               </div>
@@ -775,52 +735,62 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '48px 40px',
+                gap: '64px 48px',
                 width: '100%'
               }}
             >
               {destinations
                 .filter((d) => d.slug !== activeSingleDestination.slug)
-                .slice(0, 2)
+                .slice(0, 4)
                 .map((otherDest, oIdx) => (
                   <ScrollReveal key={otherDest.slug || oIdx} delay={oIdx * 60}>
                     <div
                       className="hover-lift zannier-card"
                       style={{
                         background: 'transparent',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '100%',
+                        justifyContent: 'space-between'
                       }}
                       onClick={() => onNavigate(`/diem-den/${otherDest.slug}`)}
                     >
-                      <div
-                        style={{
-                          height: 'clamp(260px, 34vh, 380px)',
-                          width: '100%',
-                          overflow: 'hidden',
-                          borderRadius: '20px',
-                          marginBottom: '20px',
-                          boxShadow: '0 16px 40px rgba(16, 32, 27, 0.08)'
-                        }}
-                      >
-                        <img
-                          className="zannier-img-zoom"
-                          src={getImageUrl(otherDest.heroImage || '')}
-                          alt={otherDest.name}
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        />
+                      <div>
+                        {/* Large Elevated Image Frame */}
+                        <div
+                          style={{
+                            height: 'clamp(440px, 52vh, 580px)',
+                            width: '100%',
+                            overflow: 'hidden',
+                            borderRadius: '24px',
+                            marginBottom: '26px',
+                            boxShadow: '0 20px 50px rgba(16, 32, 27, 0.12)'
+                          }}
+                        >
+                          <img
+                            className="zannier-img-zoom"
+                            src={getImageUrl(otherDest.heroImage || '')}
+                            alt={otherDest.name}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                        </div>
+                        <div style={{ padding: '0 4px' }}>
+                          <span style={{ fontSize: '11px', fontWeight: 700, color: '#527059', textTransform: 'uppercase', letterSpacing: '0.12em', display: 'block', marginBottom: '8px' }}>
+                            {otherDest.region}
+                          </span>
+                          <h3 className="zannier-title-italic" style={{ fontSize: 'clamp(26px, 2.6vw, 36px)', color: '#10201B', margin: '0 0 10px 0', lineHeight: 1.25 }}>
+                            {otherDest.name}
+                          </h3>
+                          <p style={{ fontSize: '15.5px', color: '#405246', lineHeight: 1.75, margin: '0 0 18px 0', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                            {otherDest.overview}
+                          </p>
+                        </div>
                       </div>
-                      <div style={{ padding: '0 4px' }}>
-                        <span style={{ fontSize: '11px', fontWeight: 700, color: '#527059', textTransform: 'uppercase', letterSpacing: '0.12em', display: 'block', marginBottom: '6px' }}>
-                          {otherDest.region}
-                        </span>
-                        <h3 className="zannier-title-italic" style={{ fontSize: '26px', color: '#10201B', margin: '0 0 10px 0' }}>
-                          {otherDest.name}
-                        </h3>
-                        <p style={{ fontSize: '14.5px', color: '#405246', lineHeight: 1.7, margin: '0 0 16px 0', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                          {otherDest.overview}
-                        </p>
+
+                      <div style={{ padding: '14px 4px 0', borderTop: '1px solid rgba(16, 32, 27, 0.1)' }}>
                         <span className="zannier-underline-link">
-                          Khám phá {otherDest.name} <ArrowRight size={12} />
+                          Khám phá {otherDest.name} <ArrowRight size={13} />
                         </span>
                       </div>
                     </div>
@@ -938,9 +908,10 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
           {/* 2. FILTER & SEARCH CONTROL BAR */}
           <section
             style={{
-              maxWidth: '1380px',
-              margin: '0 auto',
-              padding: '0 32px 48px',
+              width: '100%',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
+              padding: '0 48px 48px',
               position: 'relative',
               zIndex: 15
             }}
@@ -1069,15 +1040,13 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
             </div>
           </section>
 
-          {/* 3. MAIN GALLERY GRID */}
+          {/* 3. MAIN GALLERY GRID (Full Screen & 2 items per row) */}
           <main
-            className="zannier-container"
             style={{
               width: '100%',
-              maxWidth: '1380px',
-              margin: '0 auto',
-              padding: '0 32px 100px',
-              boxSizing: 'border-box'
+              maxWidth: '100%',
+              boxSizing: 'border-box',
+              padding: '0 48px 120px'
             }}
           >
             {filteredDestinations.length === 0 ? (
@@ -1118,506 +1087,193 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
                 </button>
               </div>
             ) : (
-              <div>
-                {/* Intro philosophy on home gallery */}
-                {selectedCategory === 'all' && !searchQuery && (
-                  <div style={{ padding: '40px 0 100px' }}>
-                    <ScrollReveal>
-                      <div
-                        className="zannier-grid-2col"
-                        style={{
-                          display: 'grid',
-                          gridTemplateColumns: '1fr 1.25fr',
-                          gap: '64px',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <div>
-                          <span
+              <div
+                className="zannier-2col-grid"
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gap: '64px 48px',
+                  width: '100%'
+                }}
+              >
+                {filteredDestinations.map((dest, idx) => (
+                  <ScrollReveal key={dest.slug || dest.id || idx} delay={(idx % 2) * 80}>
+                    <div
+                      className="zannier-card hover-lift"
+                      style={{
+                        background: 'transparent',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        height: '100%',
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => onNavigate(`/diem-den/${dest.slug}`)}
+                    >
+                      <div>
+                        {/* Full-Bleed Tall Image Frame */}
+                        <div
+                          style={{
+                            position: 'relative',
+                            width: '100%',
+                            height: 'clamp(440px, 52vh, 580px)',
+                            overflow: 'hidden',
+                            borderRadius: '24px',
+                            marginBottom: '26px',
+                            boxShadow: '0 20px 50px rgba(16, 32, 27, 0.12)'
+                          }}
+                        >
+                          <img
+                            className="zannier-img-zoom"
+                            src={getImageUrl(dest.heroImage || '')}
+                            alt={dest.name}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                          <div
                             style={{
-                              display: 'inline-block',
-                              fontSize: '12px',
-                              fontWeight: 700,
-                              letterSpacing: '0.14em',
-                              textTransform: 'uppercase',
-                              color: '#006d36',
-                              marginBottom: '12px'
+                              position: 'absolute',
+                              top: '20px',
+                              left: '20px',
+                              background: 'rgba(16, 32, 27, 0.85)',
+                              backdropFilter: 'blur(12px)',
+                              color: '#ffffff',
+                              fontSize: '11.5px',
+                              fontWeight: 800,
+                              letterSpacing: '0.12em',
+                              padding: '7px 18px',
+                              borderRadius: '999px',
+                              textTransform: 'uppercase'
                             }}
                           >
-                            4U TRAVEL PHILOSOPHY
+                            {dest.region} • {dest.country}
+                          </div>
+                          <div
+                            style={{
+                              position: 'absolute',
+                              bottom: '20px',
+                              right: '20px',
+                              background: '#006d36',
+                              color: '#ffffff',
+                              fontSize: '12px',
+                              fontWeight: 800,
+                              padding: '7px 18px',
+                              borderRadius: '999px',
+                              boxShadow: '0 4px 16px rgba(0,0,0,0.2)'
+                            }}
+                          >
+                            ✨ {dest.tourCount || 3} Hành Trình Độc Bản
+                          </div>
+                        </div>
+
+                        {/* Destination Info */}
+                        <div style={{ padding: '0 4px' }}>
+                          <span
+                            style={{
+                              display: 'block',
+                              fontSize: '12px',
+                              fontWeight: 700,
+                              letterSpacing: '0.12em',
+                              textTransform: 'uppercase',
+                              color: '#527059',
+                              marginBottom: '8px'
+                            }}
+                          >
+                            🗓️ Mùa đẹp nhất: <strong style={{ color: '#006d36' }}>{dest.bestTime || 'Quanh năm'}</strong>
                           </span>
+
                           <h2
                             className="zannier-title-italic"
                             style={{
-                              fontSize: 'clamp(32px, 3.6vw, 48px)',
+                              fontSize: 'clamp(28px, 2.8vw, 38px)',
                               color: '#10201B',
-                              lineHeight: 1.2,
-                              margin: '0 0 24px 0'
+                              margin: '0 0 12px 0',
+                              lineHeight: 1.25
                             }}
                           >
-                            Thiết Kế Để Đánh Thức Tâm Hồn
+                            {dest.name}
                           </h2>
 
                           <p
                             style={{
-                              fontSize: '16px',
-                              lineHeight: 1.8,
+                              fontSize: '15.5px',
+                              lineHeight: 1.75,
                               color: '#405246',
-                              margin: '0 0 24px 0',
-                              fontWeight: 400
+                              margin: '0 0 18px 0',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden'
                             }}
                           >
-                            Kể từ khi khởi dựng những hành trình tĩnh dưỡng đầu tiên, đội ngũ nghệ nhân của 4U đã chu du khắp các miền danh thắng để kiến tạo nên những không gian nghỉ dưỡng biệt lập. Nơi thiên nhiên nguyên sơ, di sản văn hóa ngàn năm và tinh thần chăm sóc Thân - Tâm - Trí hòa quyện làm một.
+                            {dest.overview}
                           </p>
 
-                          <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 700, color: '#10201B' }}>
-                              <CheckCircle2 size={18} style={{ color: '#006d36' }} />
-                              <span>100% Resort Biệt Lập 5 Sao</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 700, color: '#10201B' }}>
-                              <CheckCircle2 size={18} style={{ color: '#006d36' }} />
-                              <span>Liệu Trình Thiền Định Riêng Biệt</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="hover-lift" style={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 16px 45px rgba(16,32,27,0.1)' }}>
-                          <div style={{ width: '100%', aspectRatio: '16 / 10', overflow: 'hidden' }}>
-                            <img
-                              src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=85&w=1600&auto=format&fit=crop"
-                              alt="Thiết kế để đánh thức tâm hồn"
-                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </ScrollReveal>
-                  </div>
-                )}
-
-                {/* Staggered Destination Cards */}
-                {(() => {
-                  const elements: React.ReactNode[] = [];
-                  let i = 0;
-                  let pairIndex = 0;
-
-                  while (i < filteredDestinations.length) {
-                    // Every 3rd block: render a GRAND PANORAMA CARD
-                    if (pairIndex % 3 === 2 || (filteredDestinations.length - i === 1 && pairIndex > 0)) {
-                      const grandDest = filteredDestinations[i];
-                      elements.push(
-                        <div key={`grand-${grandDest.slug || grandDest.id || i}`} style={{ paddingBottom: '100px' }}>
-                          <ScrollReveal>
-                            <div
-                              className="zannier-card"
-                              style={{ cursor: 'pointer' }}
-                              onClick={() => onNavigate(`/diem-den/${grandDest.slug}`)}
-                            >
-                              <div
-                                className="hover-lift"
-                                style={{
-                                  position: 'relative',
-                                  width: '100%',
-                                  height: 'clamp(380px, 60vh, 640px)',
-                                  overflow: 'hidden',
-                                  borderRadius: '20px',
-                                  marginBottom: '32px',
-                                  boxShadow: '0 20px 55px rgba(16,32,27,0.12)'
-                                }}
-                              >
-                                <img
-                                  className="zannier-img-zoom"
-                                  src={getImageUrl(grandDest.heroImage || '')}
-                                  alt={grandDest.name}
-                                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                />
-                                <div style={{ position: 'absolute', top: '24px', left: '24px', background: 'rgba(16, 32, 27, 0.75)', backdropFilter: 'blur(8px)', color: '#ffffff', fontSize: '11px', fontWeight: 800, letterSpacing: '0.12em', padding: '6px 18px', borderRadius: '999px', textTransform: 'uppercase' }}>
-                                  {grandDest.region} • {grandDest.country}
-                                </div>
-                                <div style={{ position: 'absolute', bottom: '24px', right: '24px', background: 'rgba(0, 109, 54, 0.9)', backdropFilter: 'blur(10px)', color: '#ffffff', fontSize: '12px', fontWeight: 800, padding: '8px 20px', borderRadius: '999px', boxShadow: '0 6px 20px rgba(0,0,0,0.25)' }}>
-                                  ✨ {grandDest.tourCount || 4} Hành Trình Độc Bản
-                                </div>
-                              </div>
-
-                              <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto' }}>
-                                <span
-                                  style={{
-                                    display: 'block',
-                                    fontSize: '12px',
-                                    fontWeight: 700,
-                                    letterSpacing: '0.14em',
-                                    textTransform: 'uppercase',
-                                    color: '#527059',
-                                    marginBottom: '12px'
-                                  }}
-                                >
-                                  🗓️ Mùa Đẹp Nhất: <strong style={{ color: '#006d36' }}>{grandDest.bestTime || 'Quanh năm'}</strong>
-                                </span>
-
-                                <h2
-                                  className="zannier-title-italic"
-                                  style={{
-                                    fontSize: 'clamp(34px, 4vw, 52px)',
-                                    color: '#10201B',
-                                    margin: '0 0 16px 0',
-                                    lineHeight: 1.2
-                                  }}
-                                >
-                                  {grandDest.name}
-                                </h2>
-
-                                <p
-                                  style={{
-                                    fontSize: '16px',
-                                    lineHeight: 1.75,
-                                    color: '#405246',
-                                    margin: '0 auto 20px auto',
-                                    fontWeight: 400
-                                  }}
-                                >
-                                  {grandDest.overview}
-                                </p>
-
-                                {/* Popular Attractions Pills */}
-                                {Array.isArray(grandDest.popularAttractions) && grandDest.popularAttractions.length > 0 && (
-                                  <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '24px' }}>
-                                    {grandDest.popularAttractions.map((att: any, aIdx: number) => {
-                                      const attName = typeof att === 'string' ? att : att?.name || '';
-                                      if (!attName) return null;
-                                      return (
-                                        <span
-                                          key={aIdx}
-                                          style={{
-                                            background: '#ffffff',
-                                            color: '#334155',
-                                            fontSize: '12px',
-                                            fontWeight: 600,
-                                            padding: '5px 14px',
-                                            borderRadius: '999px',
-                                            border: '1px solid rgba(16, 32, 27, 0.1)',
-                                            boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
-                                          }}
-                                        >
-                                          📍 {attName}
-                                        </span>
-                                      );
-                                    })}
-                                  </div>
-                                )}
-
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', flexWrap: 'wrap' }}>
-                                  <span className="zannier-underline-link">
-                                    Khám phá thắng cảnh {grandDest.name} <ArrowRight size={13} />
-                                  </span>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleDestinationAction(grandDest);
-                                    }}
-                                    style={{
-                                      background: '#006d36',
-                                      border: 'none',
-                                      color: '#ffffff',
-                                      padding: '9px 24px',
-                                      borderRadius: '999px',
-                                      fontSize: '12.5px',
-                                      fontWeight: 700,
-                                      cursor: 'pointer',
-                                      transition: 'all 0.2s ease'
-                                    }}
-                                  >
-                                    Thiết Kế Tour Riêng
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </ScrollReveal>
-                        </div>
-                      );
-                      i += 1;
-                      pairIndex += 1;
-                      continue;
-                    }
-
-                    // Render 2-COLUMN PAIR
-                    const destLeft = filteredDestinations[i];
-                    const destRight = filteredDestinations[i + 1] || null;
-
-                    elements.push(
-                      <div key={`pair-${i}`} style={{ paddingBottom: '100px' }}>
-                        <div
-                          className="zannier-grid-2col"
-                          style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(2, 1fr)',
-                            gap: '64px 48px'
-                          }}
-                        >
-                          {/* Left Destination */}
-                          <ScrollReveal>
-                            <div
-                              className="zannier-card"
-                              style={{ cursor: 'pointer' }}
-                              onClick={() => onNavigate(`/diem-den/${destLeft.slug}`)}
-                            >
-                              <div
-                                className="hover-lift"
-                                style={{
-                                  position: 'relative',
-                                  width: '100%',
-                                  aspectRatio: '4 / 3',
-                                  overflow: 'hidden',
-                                  borderRadius: '16px',
-                                  marginBottom: '24px',
-                                  boxShadow: '0 14px 40px rgba(16,32,27,0.08)'
-                                }}
-                              >
-                                <img
-                                  className="zannier-img-zoom"
-                                  src={getImageUrl(destLeft.heroImage || '')}
-                                  alt={destLeft.name}
-                                />
-                                <div style={{ position: 'absolute', top: '16px', left: '16px', background: 'rgba(16, 32, 27, 0.75)', backdropFilter: 'blur(8px)', color: '#ffffff', fontSize: '10.5px', fontWeight: 800, letterSpacing: '0.12em', padding: '5px 14px', borderRadius: '999px', textTransform: 'uppercase' }}>
-                                  {destLeft.region}
-                                </div>
-                                <div style={{ position: 'absolute', bottom: '16px', right: '16px', background: 'rgba(0, 109, 54, 0.9)', backdropFilter: 'blur(8px)', color: '#ffffff', fontSize: '11px', fontWeight: 800, padding: '6px 14px', borderRadius: '999px' }}>
-                                  {destLeft.tourCount || 3} Tour Độc Bản
-                                </div>
-                              </div>
-
-                              <div style={{ padding: '0 4px' }}>
-                                <span
-                                  style={{
-                                    display: 'block',
-                                    fontSize: '12px',
-                                    fontWeight: 700,
-                                    letterSpacing: '0.12em',
-                                    textTransform: 'uppercase',
-                                    color: '#527059',
-                                    marginBottom: '10px'
-                                  }}
-                                >
-                                  🗓️ Mùa đẹp nhất: <strong style={{ color: '#006d36' }}>{destLeft.bestTime || 'Quanh năm'}</strong>
-                                </span>
-
-                                <h3
-                                  className="zannier-title-italic"
-                                  style={{
-                                    fontSize: '32px',
-                                    color: '#10201B',
-                                    margin: '0 0 12px 0',
-                                    lineHeight: 1.25
-                                  }}
-                                >
-                                  {destLeft.name}
-                                </h3>
-
-                                <p
-                                  style={{
-                                    fontSize: '15px',
-                                    lineHeight: 1.65,
-                                    color: '#405246',
-                                    margin: '0 0 16px 0',
-                                    fontWeight: 400
-                                  }}
-                                >
-                                  {destLeft.overview}
-                                </p>
-
-                                {/* Attractions Pills */}
-                                {Array.isArray(destLeft.popularAttractions) && destLeft.popularAttractions.length > 0 && (
-                                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '18px' }}>
-                                    {destLeft.popularAttractions.map((att: any, aIdx: number) => {
-                                      const attName = typeof att === 'string' ? att : att?.name || '';
-                                      if (!attName) return null;
-                                      return (
-                                        <span
-                                          key={aIdx}
-                                          style={{
-                                            background: '#ffffff',
-                                            color: '#475569',
-                                            fontSize: '11px',
-                                            fontWeight: 600,
-                                            padding: '4px 10px',
-                                            borderRadius: '6px',
-                                            border: '1px solid rgba(16, 32, 27, 0.08)'
-                                          }}
-                                        >
-                                          📍 {attName}
-                                        </span>
-                                      );
-                                    })}
-                                  </div>
-                                )}
-
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', paddingTop: '12px', borderTop: '1px solid rgba(16, 32, 27, 0.08)' }}>
-                                  <span className="zannier-underline-link">
-                                    Xem chi tiết {destLeft.name}
-                                  </span>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleDestinationAction(destLeft);
-                                    }}
-                                    style={{
-                                      background: 'transparent',
-                                      border: 'none',
-                                      color: '#006d36',
-                                      fontSize: '12px',
-                                      fontWeight: 800,
-                                      cursor: 'pointer',
-                                      display: 'inline-flex',
-                                      alignItems: 'center',
-                                      gap: '4px'
-                                    }}
-                                  >
-                                    Tạo Tour Riêng <ArrowRight size={13} />
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </ScrollReveal>
-
-                          {/* Right Destination (Staggered Down) */}
-                          {destRight && (
-                            <ScrollReveal delay={120}>
-                              <div
-                                className="zannier-card zannier-stagger-col"
-                                style={{
-                                  cursor: 'pointer',
-                                  marginTop: '80px'
-                                }}
-                                onClick={() => onNavigate(`/diem-den/${destRight.slug}`)}
-                              >
-                                <div
-                                  className="hover-lift"
-                                  style={{
-                                    position: 'relative',
-                                    width: '100%',
-                                    aspectRatio: '4 / 3',
-                                    overflow: 'hidden',
-                                    borderRadius: '16px',
-                                    marginBottom: '24px',
-                                    boxShadow: '0 14px 40px rgba(16,32,27,0.08)'
-                                  }}
-                                >
-                                  <img
-                                    className="zannier-img-zoom"
-                                    src={getImageUrl(destRight.heroImage || '')}
-                                    alt={destRight.name}
-                                  />
-                                  <div style={{ position: 'absolute', top: '16px', left: '16px', background: 'rgba(16, 32, 27, 0.75)', backdropFilter: 'blur(8px)', color: '#ffffff', fontSize: '10.5px', fontWeight: 800, letterSpacing: '0.12em', padding: '5px 14px', borderRadius: '999px', textTransform: 'uppercase' }}>
-                                    {destRight.region}
-                                  </div>
-                                  <div style={{ position: 'absolute', bottom: '16px', right: '16px', background: 'rgba(0, 109, 54, 0.9)', backdropFilter: 'blur(8px)', color: '#ffffff', fontSize: '11px', fontWeight: 800, padding: '6px 14px', borderRadius: '999px' }}>
-                                    {destRight.tourCount || 3} Tour Độc Bản
-                                  </div>
-                                </div>
-
-                                <div style={{ padding: '0 4px' }}>
+                          {/* Popular Attractions Pills */}
+                          {Array.isArray(dest.popularAttractions) && dest.popularAttractions.length > 0 && (
+                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                              {dest.popularAttractions.slice(0, 4).map((att: any, aIdx: number) => {
+                                const attName = typeof att === 'string' ? att : att?.name || '';
+                                if (!attName) return null;
+                                return (
                                   <span
+                                    key={aIdx}
                                     style={{
-                                      display: 'block',
-                                      fontSize: '12px',
-                                      fontWeight: 700,
-                                      letterSpacing: '0.12em',
-                                      textTransform: 'uppercase',
-                                      color: '#527059',
-                                      marginBottom: '10px'
+                                      background: 'rgba(255, 255, 255, 0.9)',
+                                      color: '#334155',
+                                      fontSize: '11.5px',
+                                      fontWeight: 600,
+                                      padding: '5px 12px',
+                                      borderRadius: '999px',
+                                      border: '1px solid rgba(16, 32, 27, 0.08)'
                                     }}
                                   >
-                                    🗓️ Mùa đẹp nhất: <strong style={{ color: '#006d36' }}>{destRight.bestTime || 'Quanh năm'}</strong>
+                                    📍 {attName}
                                   </span>
-
-                                  <h3
-                                    className="zannier-title-italic"
-                                    style={{
-                                      fontSize: '32px',
-                                      color: '#10201B',
-                                      margin: '0 0 12px 0',
-                                      lineHeight: 1.25
-                                    }}
-                                  >
-                                    {destRight.name}
-                                  </h3>
-
-                                  <p
-                                    style={{
-                                      fontSize: '15px',
-                                      lineHeight: 1.65,
-                                      color: '#405246',
-                                      margin: '0 0 16px 0',
-                                      fontWeight: 400
-                                    }}
-                                  >
-                                    {destRight.overview}
-                                  </p>
-
-                                  {/* Attractions Pills */}
-                                  {Array.isArray(destRight.popularAttractions) && destRight.popularAttractions.length > 0 && (
-                                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '18px' }}>
-                                      {destRight.popularAttractions.map((att: any, aIdx: number) => {
-                                        const attName = typeof att === 'string' ? att : att?.name || '';
-                                        if (!attName) return null;
-                                        return (
-                                          <span
-                                            key={aIdx}
-                                            style={{
-                                              background: '#ffffff',
-                                              color: '#475569',
-                                              fontSize: '11px',
-                                              fontWeight: 600,
-                                              padding: '4px 10px',
-                                              borderRadius: '6px',
-                                              border: '1px solid rgba(16, 32, 27, 0.08)'
-                                            }}
-                                          >
-                                            📍 {attName}
-                                          </span>
-                                        );
-                                      })}
-                                    </div>
-                                  )}
-
-                                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', paddingTop: '12px', borderTop: '1px solid rgba(16, 32, 27, 0.08)' }}>
-                                    <span className="zannier-underline-link">
-                                      Xem chi tiết {destRight.name}
-                                    </span>
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDestinationAction(destRight);
-                                      }}
-                                      style={{
-                                        background: 'transparent',
-                                        border: 'none',
-                                        color: '#006d36',
-                                        fontSize: '12px',
-                                        fontWeight: 800,
-                                        cursor: 'pointer',
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '4px'
-                                      }}
-                                    >
-                                      Tạo Tour Riêng <ArrowRight size={13} />
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </ScrollReveal>
+                                );
+                              })}
+                            </div>
                           )}
                         </div>
                       </div>
-                    );
 
-                    i += 2;
-                    pairIndex += 1;
-                  }
-
-                  return elements;
-                })()}
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: '12px',
+                          flexWrap: 'wrap',
+                          paddingTop: '16px',
+                          borderTop: '1px solid rgba(16, 32, 27, 0.1)'
+                        }}
+                      >
+                        <span className="zannier-underline-link">
+                          Khám phá {dest.name} <ArrowRight size={13} />
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDestinationAction(dest);
+                          }}
+                          style={{
+                            background: '#006d36',
+                            border: 'none',
+                            color: '#ffffff',
+                            padding: '10px 24px',
+                            borderRadius: '999px',
+                            fontSize: '13px',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            boxShadow: '0 4px 14px rgba(0, 109, 54, 0.25)'
+                          }}
+                        >
+                          Thiết Kế Tour Riêng
+                        </button>
+                      </div>
+                    </div>
+                  </ScrollReveal>
+                ))}
               </div>
             )}
           </main>

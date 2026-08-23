@@ -46,11 +46,11 @@ export default function UuDaiGioChotSection({ onOpenBooking, onNavigate }: UuDai
     return () => clearInterval(timer);
   }, []);
 
-  // Filter tours for Ưu Đãi Giờ Chót
+  // Filter tours for Ưu Đãi Giờ Chót (isPromotion = true, discount, or category 'uu-dai-gio-chot' / 'last-minute')
   const promoTours = tours.filter((tour) =>
-    (Array.isArray(tour.categories) && tour.categories.includes('uu-dai-gio-chot')) ||
-    ((tour.originalPrice || 0) > (tour.price || 0)) ||
-    tour.isHot === true
+    tour.isPromotion === true ||
+    (Array.isArray(tour.categories) && (tour.categories.includes('uu-dai-gio-chot') || tour.categories.includes('last-minute'))) ||
+    ((tour.originalPrice || 0) > (tour.price || 0))
   );
 
   const visiblePromoTours = showAll ? promoTours : promoTours.slice(0, 4);

@@ -35,6 +35,8 @@ import DepartureCalendarModal from './components/DepartureCalendarModal';
 import AdminDashboard from './components/AdminDashboard';
 import AdminTourEditor from './components/AdminTourEditor';
 import { fetchToursApi, fetchSectionItemsApi } from './services/apiService';
+import { ToastProvider } from './components/ui/Toast';
+import { AuthProvider } from './context/AuthContext';
 import { syncToursDataFromApi } from './data/toursData';
 import { syncBlogsDataFromApi } from './data/blogsData';
 import { syncDestinationsDataFromApi } from './data/destinationsData';
@@ -276,54 +278,56 @@ export default function App() {
   };
 
   return (
-    <div className="apple-app" style={{ minHeight: '100vh', background: 'var(--apple-bg)' }}>
-      {/* Search Modal */}
-      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} onNavigate={navigateTo} />
+    <AuthProvider>
+      <div className="apple-app" style={{ minHeight: '100vh', background: 'var(--apple-bg)' }}>
+        {/* Search Modal */}
+        <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} onNavigate={navigateTo} />
 
-      {/* PayPal Checkout Modal — only for "Đặt Ngay" */}
-      <BookingModal
-        externalOpen={bookingState.open}
-        onExternalClose={handleCloseBooking}
-        selectedTour={bookingState.tour}
-      />
-
-      {/* Consultation Lead Form Modal — for "Nhận tư vấn" + Floating button */}
-      <ConsultationModal
-        externalOpen={consultationOpen}
-        onExternalClose={handleCloseConsultation}
-      />
-
-      {/* Interactive Departure Calendar Modal — opened by "Lịch khởi hành" button */}
-      <DepartureCalendarModal
-        isOpen={calendarOpen}
-        onClose={() => setCalendarOpen(false)}
-        onOpenBooking={handleOpenBooking}
-        onNavigate={navigateTo}
-      />
-
-      {/* Create Custom Tour Modal — opened by "Tạo Lịch Trình Đến ... Ngay" button */}
-      <CreateCustomTourModal
-        isOpen={customTourState.open}
-        onClose={handleCloseCustomTour}
-        initialDestination={customTourState.destination}
-      />
-
-      {/* Header — "Nhận tư vấn" opens Consultation Modal, "Lịch khởi hành" opens Departure Calendar */}
-      {!isAdminRoute && (
-        <Header
-          onOpenSearch={() => setSearchOpen(true)}
-          onNavigate={navigateTo}
-          onOpenBooking={handleOpenConsultation}
-          onOpenCalendar={() => setCalendarOpen(true)}
-          onOpenCustomTour={handleOpenCustomTour}
+        {/* PayPal Checkout Modal — only for "Đặt Ngay" */}
+        <BookingModal
+          externalOpen={bookingState.open}
+          onExternalClose={handleCloseBooking}
+          selectedTour={bookingState.tour}
         />
-      )}
 
-      {/* Conditional Route Rendering */}
-      {renderCurrentRoute()}
+        {/* Consultation Lead Form Modal — for "Nhận tư vấn" + Floating button */}
+        <ConsultationModal
+          externalOpen={consultationOpen}
+          onExternalClose={handleCloseConsultation}
+        />
 
-      {/* Footer */}
-      {!isAdminRoute && <Footer onNavigate={navigateTo} />}
-    </div>
+        {/* Interactive Departure Calendar Modal — opened by "Lịch khởi hành" button */}
+        <DepartureCalendarModal
+          isOpen={calendarOpen}
+          onClose={() => setCalendarOpen(false)}
+          onOpenBooking={handleOpenBooking}
+          onNavigate={navigateTo}
+        />
+
+        {/* Create Custom Tour Modal — opened by "Tạo Lịch Trình Đến ... Ngay" button */}
+        <CreateCustomTourModal
+          isOpen={customTourState.open}
+          onClose={handleCloseCustomTour}
+          initialDestination={customTourState.destination}
+        />
+
+        {/* Header — "Nhận tư vấn" opens Consultation Modal, "Lịch khởi hành" opens Departure Calendar */}
+        {!isAdminRoute && (
+          <Header
+            onOpenSearch={() => setSearchOpen(true)}
+            onNavigate={navigateTo}
+            onOpenBooking={handleOpenConsultation}
+            onOpenCalendar={() => setCalendarOpen(true)}
+            onOpenCustomTour={handleOpenCustomTour}
+          />
+        )}
+
+        {/* Conditional Route Rendering */}
+        {renderCurrentRoute()}
+
+        {/* Footer */}
+        {!isAdminRoute && <Footer onNavigate={navigateTo} />}
+      </div>
+    </AuthProvider>
   );
 }

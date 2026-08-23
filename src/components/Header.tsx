@@ -246,8 +246,8 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
             onMouseLeave={e => e.currentTarget.style.opacity = '0.92'}
           >
             <img
-              src="/images/logo.svg"
-              alt="4U Tours Logo"
+              src="/Logo-4U-Wellness.png"
+              alt="4U Wellness Logo"
               style={{
                 height: '46px',
                 width: 'auto',
