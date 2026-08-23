@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshCw, Plus } from 'lucide-react';
+import { RefreshCw, Plus, Edit2, Trash2 } from 'lucide-react';
 
 interface AdminPartnersManagerProps {
   partnersList: any[];
@@ -102,8 +102,42 @@ export default function AdminPartnersManager({
             <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#081f13', margin: '0 0 6px 0' }}>{partner.name}</h3>
             <span style={{ fontSize: '12px', color: '#525a54' }}>{partner.category}</span>
             <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center', gap: '8px' }}>
-              <button onClick={() => openEditModal('partners', partner)} style={{ backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '6px', padding: '4px 10px', fontSize: '12px', cursor: 'pointer' }}>Edit</button>
-              <button onClick={() => handleDeleteItem('partners', partner.id)} style={{ backgroundColor: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5', borderRadius: '6px', padding: '4px 10px', fontSize: '12px', cursor: 'pointer' }}>Delete</button>
+              <button
+                onClick={() => openEditModal('partners', partner)}
+                style={{
+                  width: '50px',
+                  height: '32px',
+                  backgroundColor: '#081f13',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Chỉnh sửa"
+              >
+                <Edit2 size={14} />
+              </button>
+              <button
+                onClick={() => handleDeleteItem('partners', partner.id)}
+                style={{
+                  width: '50px',
+                  height: '32px',
+                  backgroundColor: '#fee2e2',
+                  color: '#dc2626',
+                  border: '1px solid #fca5a5',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Xóa"
+              >
+                <Trash2 size={14} />
+              </button>
             </div>
           </div>
         ))}

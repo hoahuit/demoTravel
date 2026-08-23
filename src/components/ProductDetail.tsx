@@ -30,16 +30,58 @@ const parseArrayField = (val: any): string[] => {
   return [];
 };
 
+const getMapEmbedUrl = (destinationMap?: string, city?: string, country?: string): string => {
+  if (destinationMap && destinationMap.trim().length > 0) {
+    const trimmed = destinationMap.trim();
+    // If user pasted an iframe tag
+    if (trimmed.includes('<iframe') && trimmed.includes('src=')) {
+      const match = trimmed.match(/src=["']([^"']+)["']/);
+      if (match && match[1]) {
+        return match[1];
+      }
+    }
+    // If it's already an embed URL or Google Maps URL
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      if (trimmed.includes('output=embed') || trimmed.includes('/embed')) {
+        return trimmed;
+      }
+      if (trimmed.includes('google.com/maps')) {
+        return trimmed.includes('?') ? `${trimmed}&output=embed` : `${trimmed}?output=embed`;
+      }
+      return trimmed;
+    }
+    // If it's a location text / address
+    return `https://maps.google.com/maps?q=${encodeURIComponent(trimmed)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+  }
+
+  // Fallback to city and country
+  const locationQuery = [city, country || 'Việt Nam'].filter(Boolean).join(', ');
+  return `https://maps.google.com/maps?q=${encodeURIComponent(locationQuery || 'Việt Nam')}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+};
+
 export default function ProductDetail({ productSlug = 'retreat-chua-lanh', customTourData, hideTestimonials = false, onBackHome, onOpenBooking }: ProductDetailProps) {
   const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
+  const [isLoading, setIsLoading] = useState<boolean>(!customTourData);
 
   useEffect(() => {
-    fetchToursApi().then((data) => {
-      if (Array.isArray(data) && data.length > 0) {
-        syncToursDataFromApi(data);
-        setTours([...data]);
-      }
-    });
+    let isMounted = true;
+    fetchToursApi()
+      .then((data) => {
+        if (isMounted && Array.isArray(data) && data.length > 0) {
+          syncToursDataFromApi(data);
+          setTours([...data]);
+        }
+      })
+      .catch((err) => {
+        console.error('Error loading tours:', err);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const [activeTab, setActiveTab] = useState<string>('Highlight');
@@ -61,13 +103,74 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
     tours.find(t => t.slug === normalizedSlug || t.id === normalizedSlug) ||
     tours.find(t => (t.slug && normalizedSlug && (t.slug.includes(normalizedSlug) || normalizedSlug.includes(t.slug))));
 
-  const product = customTourData || tourFound || tours[0] || null;
+  // If data is still loading from API and we don't have customTourData or cached tour, show loading spinner
+  if (isLoading && !customTourData && !tourFound) {
+    return (
+      <div style={{
+        minHeight: '80vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#dce7df',
+        padding: '60px 20px',
+        gap: '18px'
+      }}>
+        <div style={{
+          width: '52px',
+          height: '52px',
+          borderRadius: '50%',
+          border: '4px solid rgba(8, 31, 19, 0.12)',
+          borderTopColor: '#081f13',
+          animation: 'spin 0.8s linear infinite'
+        }} />
+        <div style={{ textAlign: 'center' }}>
+          <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: '0 0 6px 0', fontWeight: 600 }}>
+            Đang tải dữ liệu tour...
+          </h3>
+          <p style={{ fontSize: '13px', color: '#4d6453', margin: 0 }}>
+            4U Retreat • Vui lòng đợi trong giây lát
+          </p>
+        </div>
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  const product = customTourData || tourFound || null;
   if (!product) {
     return (
-      <div style={{ minHeight: '100vh', background: '#f4f5f3', color: '#1b1b1a', padding: '40px 24px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <h1 style={{ fontSize: 28, marginBottom: 16 }}>Tour không tồn tại</h1>
-          <p>Không tìm thấy tour với slug: <strong>{normalizedSlug}</strong></p>
+      <div style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#dce7df', padding: '60px 20px', textAlign: 'center' }}>
+        <div style={{ maxWidth: 480, backgroundColor: '#ffffff', borderRadius: '24px', padding: '36px 28px', boxShadow: '0 8px 30px rgba(8, 31, 19, 0.08)', border: '1px solid rgba(8, 31, 19, 0.08)' }}>
+          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '22px', color: '#081f13', marginBottom: 12 }}>
+            Tour Chưa Sẵn Sàng Hoặc Không Tồn Tại
+          </h2>
+          <p style={{ fontSize: '13px', color: '#4d6453', lineHeight: 1.6, marginBottom: 24 }}>
+            Không tìm thấy thông tin tour với định danh: <strong style={{ color: '#081f13' }}>{normalizedSlug}</strong>
+          </p>
+          {onBackHome && (
+            <button
+              onClick={onBackHome}
+              style={{
+                backgroundColor: '#081f13',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '10px',
+                padding: '10px 24px',
+                fontSize: '13px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              Về Trang Chủ
+            </button>
+          )}
         </div>
       </div>
     );
@@ -122,6 +225,8 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
       ],
     mapLocation: product.destinationMap || product.city,
     mapCoords: product.destinationMap || product.city,
+    mapEmbedUrl: getMapEmbedUrl(product.destinationMap, product.city, product.country),
+    destinationMap: product.destinationMap,
     reviewScore: `${product.rating} / 5.0`,
     reviewCount: product.reviewsCount,
     reviewQuote: product.reviews?.[0]?.comment || product.blogStorySnippet || 'Hành trình đánh thức cảm giác an yên giữa thiên nhiên hoang sơ.'
@@ -483,7 +588,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                               transition: 'all 0.2s ease',
                             }}
                           >
-                            Day {idx + 1}
+                            Ngày {idx + 1}
                           </button>
                         );
                       })}
@@ -506,7 +611,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                           transition: 'all 0.2s ease',
                         }}
                       >
-                        Tips
+                        Lưu Ý & Mẹo
                       </button>
                     </div>
 
@@ -515,94 +620,90 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                       {selectedDayIndex < (pageData.itinerary ? pageData.itinerary.length : 0) ? (
                         (() => {
                           const currentDay = pageData.itinerary[selectedDayIndex];
-                          const dayMoments = (currentDay.image && currentDay.image.trim().length > 0
+                          const rawImages = (currentDay.image && currentDay.image.trim().length > 0 && currentDay.image !== '--'
                             ? [currentDay.image]
-                            : (pageData.galleryImages && pageData.galleryImages.length > 0
-                              ? pageData.galleryImages
-                              : [])).filter((img: string) => img && img.trim().length > 0 && img !== '--');
+                            : (Array.isArray((currentDay as any).images) && (currentDay as any).images.length > 0
+                              ? (currentDay as any).images
+                              : []));
+
+                          const dayMoments = rawImages
+                            .map((img: string) => getImageUrl(img))
+                            .filter((img: string) => img && img.trim().length > 0);
 
                           return (
                             <div>
                               {/* Day Title */}
                               <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: '0 0 18px 0' }}>
-                                {currentDay.title || '--'}
+                                {currentDay.title || `Ngày ${selectedDayIndex + 1}`}
                               </h3>
 
                               {/* Day Overview Paragraph */}
                               <div style={{ fontSize: '0.98rem', color: '#475569', lineHeight: 1.85, marginBottom: '24px' }}>
-                                {currentDay.description ? (
+                                {currentDay.description && (
                                   <p style={{ margin: '0 0 18px 0' }}>
                                     {currentDay.description}
                                   </p>
-                                ) : (
-                                  <p style={{ margin: '0 0 18px 0', color: '#64748b' }}>--</p>
                                 )}
-                                {currentDay.activities && currentDay.activities.length > 0 ? (
+                                {currentDay.activities && currentDay.activities.length > 0 && (
                                   currentDay.activities.map((activity: string, activityIdx: number) => (
                                     <p key={activityIdx} style={{ margin: '0 0 12px 0' }}>
                                       • {activity}
                                     </p>
                                   ))
-                                ) : null}
+                                )}
                               </div>
 
-                              {/* Moments Section */}
-                              <div style={{ marginBottom: '36px' }}>
-                                <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 16px 0' }}>
-                                  Moments
-                                </h4>
-                                {dayMoments.length > 0 ? (
+                              {/* Moments Section - Only shown when images exist */}
+                              {dayMoments.length > 0 && (
+                                <div style={{ marginBottom: '36px' }}>
+                                  <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 16px 0' }}>
+                                    Khoảnh Khắc Trong Ngày
+                                  </h4>
                                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
                                     {dayMoments.slice(0, 6).map((imgUrl: string, imgIdx: number) => (
                                       <div key={imgIdx} style={{ width: '100%', height: '88px', borderRadius: '14px', overflow: 'hidden', background: '#f1f5f9' }}>
                                         <img
                                           src={imgUrl}
-                                          alt={`Moment ${imgIdx + 1}`}
+                                          alt={`Khoảnh khắc ${imgIdx + 1}`}
                                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                         />
                                       </div>
                                     ))}
                                   </div>
-                                ) : (
-                                  <div style={{ fontSize: '0.88rem', color: '#64748b', fontWeight: 600 }}>--</div>
-                                )}
-                              </div>
+                                </div>
+                              )}
 
-                              {/* Transport Section */}
-                              <div style={{ marginBottom: '28px' }}>
-                                <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#10201B', margin: '0 0 12px 0' }}>
-                                  Transport & Culinary
-                                </h4>
-                                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                  {currentDay.transportAndCulinary && currentDay.transportAndCulinary.length > 0 ? (
-                                    currentDay.transportAndCulinary.map((tag: string, tagIdx: number) => (
+                              {/* Transport Section - Only shown when transport/culinary tags exist */}
+                              {currentDay.transportAndCulinary && currentDay.transportAndCulinary.length > 0 && (
+                                <div style={{ marginBottom: '28px' }}>
+                                  <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#10201B', margin: '0 0 12px 0' }}>
+                                    Phương Tiện & Ẩm Thực
+                                  </h4>
+                                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                    {currentDay.transportAndCulinary.map((tag: string, tagIdx: number) => (
                                       <span key={tagIdx} style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
                                         {tag}
                                       </span>
-                                    ))
-                                  ) : (
-                                    <div style={{ fontSize: '0.88rem', color: '#64748b', fontWeight: 600 }}>--</div>
-                                  )}
+                                    ))}
+                                  </div>
                                 </div>
-                              </div>
+                              )}
 
-                              {/* Attractions Section */}
-                              <div>
-                                <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#10201B', margin: '0 0 12px 0' }}>
-                                  Attractions
-                                </h4>
-                                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                  {currentDay.attractions && currentDay.attractions.length > 0 ? (
-                                    currentDay.attractions.map((attraction: string, attractionIdx: number) => (
+                              {/* Attractions Section - Only shown when attractions exist */}
+                              {currentDay.attractions && currentDay.attractions.length > 0 && (
+                                <div>
+                                  <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#10201B', margin: '0 0 12px 0' }}>
+                                    Điểm Đến Nổi Bật
+                                  </h4>
+                                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                    {currentDay.attractions.map((attraction: string, attractionIdx: number) => (
                                       <span key={attractionIdx} style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
                                         {attraction}
                                       </span>
-                                    ))
-                                  ) : (
-                                    <div style={{ fontSize: '0.88rem', color: '#64748b', fontWeight: 600 }}>--</div>
-                                  )}
+                                    ))}
+                                  </div>
                                 </div>
-                              </div>
+                              )}
 
                             </div>
                           );
@@ -611,7 +712,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                         /* Tips Panel */
                         <div>
                           <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: '0 0 18px 0' }}>
-                            Tips & Lưu Ý Cho Chuyến Đi
+                            Lưu Ý & Mẹo Cho Chuyến Đi
                           </h3>
                           <div style={{ fontSize: '0.98rem', color: '#475569', lineHeight: 1.85, marginBottom: '24px' }}>
                             <p style={{ marginBottom: '12px' }}>• <strong>Trang phục:</strong> Quý khách nên chuẩn bị quần áo rộng rãi, thoáng mát (vải lanh hoặc cotton) thích hợp cho các buổi tập thiền định & yoga.</p>
@@ -686,22 +787,83 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
 
               {/* TAB 4: BẢN ĐỒ & VỊ TRÍ KHU VỰC NGHỈ DƯỠNG */}
               {activeTab === 'MapsArea' && (
-                <div className="pd-map-card">
-                  <h3 style={{ fontSize: '1.7rem', fontWeight: '800', color: '#191c1c', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <MapPin size={28} style={{ color: '#006d36' }} />
-                    Bản đồ & vị trí khu vực nghỉ dưỡng
-                  </h3>
-                  <p style={{ fontSize: '1.08rem', color: '#5b6561', marginBottom: '32px', lineHeight: '1.7' }}>
-                    {pageData.location} — Tọa độ biệt lập giữa thiên nhiên nguyên sơ, cách trung tâm thành phố khoảng 45 phút di chuyển bằng xe VIP Limousine.
-                  </p>
+                <div style={{ width: '100%', maxWidth: '100%', margin: 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+                    <div>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', backgroundColor: '#cbe0d0', color: '#1e4a3d', padding: '4px 14px', borderRadius: '20px', fontSize: '0.78rem', fontWeight: 800, marginBottom: '12px' }}>
+                        <Compass size={14} /> TỌA ĐỘ NGHỈ DƯỠNG
+                      </div>
+                      <h3 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#10201B', margin: '0 0 8px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <MapPin size={28} style={{ color: '#1e4a3d' }} />
+                        Vị Trí & Bản Đồ Tọa Độ {pageData.location}
+                      </h3>
+                      <p style={{ fontSize: '1rem', color: '#415a47', margin: 0, lineHeight: '1.6', fontWeight: 500 }}>
+                        {pageData.title} — {pageData.location} ({product.country || 'Việt Nam'}). Di chuyển thuận tiện với xe đưa đón VIP riêng biệt.
+                      </p>
+                    </div>
 
-                  <div className="pd-map-viewport">
-                    <img src={getImageUrl(pageData.heroImage)} alt="Location Map Preview" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.82)' }} />
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(pageData.destinationMap && !pageData.destinationMap.startsWith('http') ? pageData.destinationMap : `${pageData.location}, ${product.country || 'Việt Nam'}`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        backgroundColor: '#10201B',
+                        color: '#ffffff',
+                        padding: '12px 22px',
+                        borderRadius: '30px',
+                        fontSize: '0.88rem',
+                        fontWeight: 700,
+                        textDecoration: 'none',
+                        boxShadow: '0 4px 14px rgba(16, 32, 27, 0.25)',
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      <Navigation size={16} color="#4ade80" />
+                      <span>Mở Chỉ Đường Google Maps</span>
+                    </a>
+                  </div>
 
-                    <div style={{ position: 'absolute', background: 'rgba(6, 44, 35, 0.92)', backdropFilter: 'blur(16px)', color: '#ffffff', padding: '28px 40px', borderRadius: '22px', textAlign: 'center', maxWidth: '440px', boxShadow: '0 20px 50px rgba(0,0,0,0.3)' }}>
-                      <Navigation size={40} style={{ margin: '0 auto 14px', color: '#4ade80' }} />
-                      <div style={{ fontWeight: '800', fontSize: '1.35rem', marginBottom: '8px' }}>{pageData.location}</div>
-                      <div style={{ fontSize: '0.95rem', opacity: 0.9, lineHeight: '1.6' }}>Tọa độ tĩnh lặng riêng tư dành riêng cho khách hàng 4U Retreat</div>
+                  {/* Interactive Google Maps Iframe */}
+                  <div
+                    style={{
+                      position: 'relative',
+                      width: '100%',
+                      height: '520px',
+                      borderRadius: '24px',
+                      overflow: 'hidden',
+                      border: '1px solid rgba(45, 90, 54, 0.18)',
+                      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.04)',
+                      backgroundColor: '#dce7df'
+                    }}
+                  >
+                    <iframe
+                      title={`Bản đồ ${pageData.location}`}
+                      src={pageData.mapEmbedUrl}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0, display: 'block' }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    />
+                  </div>
+
+                  {/* Location Quick Facts Info Box */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginTop: '24px' }}>
+                    <div style={{ background: '#dce7df', padding: '18px 22px', borderRadius: '20px', border: '1px solid rgba(45, 90, 54, 0.18)' }}>
+                      <div style={{ fontSize: '0.78rem', color: '#527059', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>Điểm đến</div>
+                      <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#10201B' }}>{pageData.location}</div>
+                    </div>
+                    <div style={{ background: '#dce7df', padding: '18px 22px', borderRadius: '20px', border: '1px solid rgba(45, 90, 54, 0.18)' }}>
+                      <div style={{ fontSize: '0.78rem', color: '#527059', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>Phương tiện vận chuyển</div>
+                      <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#10201B' }}>{product.transportation || 'Xe VIP Limousine 4U'}</div>
+                    </div>
+                    <div style={{ background: '#dce7df', padding: '18px 22px', borderRadius: '20px', border: '1px solid rgba(45, 90, 54, 0.18)' }}>
+                      <div style={{ fontSize: '0.78rem', color: '#527059', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>Khách sạn / Resort</div>
+                      <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#10201B' }}>{product.hotel || 'Resort 5 Sao Cao Cấp'}</div>
                     </div>
                   </div>
                 </div>

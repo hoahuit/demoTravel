@@ -91,6 +91,23 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  position: sticky;
+  top: 64px;
+  height: calc(100vh - 64px);
+  align-self: flex-start;
+}
+
+.serene-sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.serene-sidebar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.serene-sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 .serene-sidebar-select {
@@ -346,3 +363,143 @@
     padding: 20px 16px 80px 16px;
   }
 }
+
+/* ============================================
+   ADMIN PRICE INPUT COMPONENT
+   ============================================ */
+.serene-price-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.serene-price-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.serene-price-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #4d6453;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.serene-price-badge-preview {
+  font-size: 11px;
+  font-weight: 700;
+  color: #006d36;
+  background-color: rgba(0, 109, 54, 0.08);
+  border: 1px solid rgba(0, 109, 54, 0.15);
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.serene-price-badge-preview.zero {
+  color: #64748b;
+  background-color: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
+.serene-price-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.serene-price-input {
+  width: 100%;
+  padding: 10px 58px 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(8, 31, 19, 0.18);
+  font-size: 15px;
+  font-weight: 700;
+  color: #081f13;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.serene-price-input:focus {
+  outline: none;
+  border-color: #006d36;
+  box-shadow: 0 0 0 3px rgba(0, 109, 54, 0.12);
+  background-color: #ffffff;
+}
+
+.serene-price-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.serene-price-unit-tag {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  font-weight: 800;
+  color: #475569;
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 3px 7px;
+  border-radius: 6px;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: 0.03em;
+}
+
+.serene-price-presets {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.serene-price-preset-btn {
+  font-size: 11px;
+  font-weight: 600;
+  color: #334155;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1.2;
+}
+
+.serene-price-preset-btn:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+.serene-price-preset-btn.reset {
+  color: #dc2626;
+  background-color: #fff1f2;
+  border-color: #fecdd3;
+}
+
+.serene-price-preset-btn.reset:hover {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.serene-price-hint {
+  font-size: 11px;
+  color: #64748b;
+  margin: 2px 0 0 0;
+  line-height: 1.4;
+}
+

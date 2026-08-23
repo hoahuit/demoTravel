@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshCw, Plus } from 'lucide-react';
+import { RefreshCw, Plus, Edit2, Trash2 } from 'lucide-react';
 import EmptyState from '../ui/EmptyState';
 
 interface AdminFaqManagerProps {
@@ -126,9 +126,43 @@ export default function AdminFaqManager({
                 <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#081f13', margin: '4px 0 8px 0' }}>{item.question}</h3>
                 <p style={{ fontSize: '14px', color: '#525a54', margin: 0 }}>{item.answer}</p>
               </div>
-              <div style={{ display: 'flex', gap: '8px', minWidth: '140px', justifyContent: 'flex-end' }}>
-                <button onClick={() => openEditModal('faq', item)} style={{ backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '6px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>Chỉnh Sửa</button>
-                <button onClick={() => handleDeleteItem('faq', item.id)} style={{ backgroundColor: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5', borderRadius: '6px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>Xóa</button>
+              <div style={{ display: 'flex', gap: '8px', minWidth: '110px', justifyContent: 'flex-end' }}>
+                <button
+                  onClick={() => openEditModal('faq', item)}
+                  style={{
+                    width: '50px',
+                    height: '32px',
+                    backgroundColor: '#081f13',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                  title="Chỉnh sửa"
+                >
+                  <Edit2 size={14} />
+                </button>
+                <button
+                  onClick={() => handleDeleteItem('faq', item.id)}
+                  style={{
+                    width: '50px',
+                    height: '32px',
+                    backgroundColor: '#fee2e2',
+                    color: '#dc2626',
+                    border: '1px solid #fca5a5',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                  title="Xóa"
+                >
+                  <Trash2 size={14} />
+                </button>
               </div>
             </div>
           ))}

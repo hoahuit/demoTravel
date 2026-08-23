@@ -19,7 +19,11 @@ import {
   Plus,
   ChevronDown,
   Sparkles,
-  RefreshCw
+  RefreshCw,
+  ShoppingBag,
+  CreditCard,
+  Package,
+  MapPin
 } from 'lucide-react';
 
 interface AdminConsultationsManagerProps {
@@ -53,21 +57,62 @@ export default function AdminConsultationsManager({
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
-  // Structured parser for custom trip consultation notes
+  // Structured parser for consultation, custom tour design, and shop orders
   const parseConsultationData = (item: any) => {
     const rawNote = String(item.note || item.message || '').trim();
     const tourTitle = String(item.tourName || item.tour || '').trim();
-    const isCustomPlanner =
-      rawNote.includes('[THIẾT KẾ LỊCH TRÌNH RIÊNG]') ||
-      tourTitle.toLowerCase().includes('thiết kế lịch trình') ||
-      item.type === 'custom_tour_planner';
 
+    // 1. Check if Shop Order (Đơn Hàng Mua Sắm Kollection)
+    const isShopOrder =
+      rawNote.includes('[ĐƠN HÀNG KOLLECTION') ||
+      tourTitle.toLowerCase().includes('đơn hàng kollection') ||
+      rawNote.includes('KOLLECTION 4U') ||
+      item.type === 'shop_order';
+
+    // 2. Check if Custom Planner (Thiết Kế Lịch Trình Riêng)
+    const isCustomPlanner =
+      !isShopOrder &&
+      (rawNote.includes('[THIẾT KẾ LỊCH TRÌNH RIÊNG]') ||
+       tourTitle.toLowerCase().includes('thiết kế lịch trình') ||
+       tourTitle.toLowerCase().includes('thiết kế tour') ||
+       item.type === 'custom_tour_planner');
+
+    // 3. Tour Consultation (Tư Vấn Tour Retreat)
+    const isTourConsultation = !isShopOrder && !isCustomPlanner;
+
+    // QR Payment Status for Shop Orders
+    const isQrPaid =
+      rawNote.includes('ĐÃ CHUYỂN KHOẢN QR') ||
+      rawNote.includes('ĐÃ QUÉT QR') ||
+      rawNote.includes('CHUYỂN TIỀN THÀNH CÔNG');
+
+    // Parse Shop Order Details
+    let orderProducts = '';
+    let orderTotal = '';
+    let orderAddress = '';
+    let orderCustomerNote = '';
+
+    if (isShopOrder) {
+      const productMatch = rawNote.match(/Sản phẩm:\s*([^.]+?)(?=\.\s*Tổng tiền:|$)/i);
+      if (productMatch) orderProducts = productMatch[1].trim();
+
+      const totalMatch = rawNote.match(/Tổng tiền:\s*([^.]+?)(?=\.\s*Địa chỉ|$)/i);
+      if (totalMatch) orderTotal = totalMatch[1].trim();
+
+      const addressMatch = rawNote.match(/Địa chỉ(?: nhận hàng)?:\s*([^.]+?)(?=\.\s*Ghi chú:|\.\s*\[|$)/i);
+      if (addressMatch) orderAddress = addressMatch[1].trim();
+
+      const noteMatch = rawNote.match(/Ghi chú(?: khách)?:\s*([^.]+?)(?=\.|\s*\[|$)/i);
+      if (noteMatch && noteMatch[1].trim() !== 'Không') orderCustomerNote = noteMatch[1].trim();
+    }
+
+    // Parse Custom Planner Specifics
     let region = '';
     let destination = '';
     let guests = '';
     let requirements = '';
 
-    if (rawNote) {
+    if (isCustomPlanner && rawNote) {
       const lines = rawNote.split('\n');
       lines.forEach((line) => {
         const trimmed = line.trim();
@@ -83,18 +128,32 @@ export default function AdminConsultationsManager({
 
     // Clean display title
     let displayTitle = tourTitle;
-    if (isCustomPlanner) {
+    let requestType = 'tour_consultation';
+
+    if (isShopOrder) {
+      requestType = 'shop_order';
+      displayTitle = tourTitle || 'Đơn Hàng Kollection 4U';
+    } else if (isCustomPlanner) {
+      requestType = 'custom_planner';
       const cleanDest = destination || tourTitle.replace(/^Thiết kế lịch trình riêng:\s*/i, '');
       displayTitle = cleanDest ? `Thiết kế lịch trình: ${cleanDest}` : 'Thiết kế lịch trình riêng';
     }
 
     return {
+      requestType,
+      isShopOrder,
       isCustomPlanner,
+      isTourConsultation,
+      isQrPaid,
       displayTitle,
+      orderProducts,
+      orderTotal,
+      orderAddress,
+      orderCustomerNote,
       region,
       destination,
       guests,
-      requirements: requirements || (!region && !destination ? rawNote : ''),
+      requirements: requirements || (!region && !destination && !isShopOrder ? rawNote : ''),
       rawNote
     };
   };
@@ -106,12 +165,34 @@ export default function AdminConsultationsManager({
     const pending = list.filter((c) => (c.status || 'Chưa tư vấn') === 'Chưa tư vấn').length;
     const completed = list.filter((c) => c.status === 'Đã tư vấn').length;
     const callback = list.filter((c) => c.status === 'Hẹn gọi lại' || c.status === 'Không nghe máy').length;
-    const customPlanner = list.filter((c) => {
-      const parsed = parseConsultationData(c);
-      return parsed.isCustomPlanner;
-    }).length;
 
-    return { total, pending, completed, callback, customPlanner };
+    let shopOrders = 0;
+    let shopQrPaid = 0;
+    let customPlanner = 0;
+    let tourConsultation = 0;
+
+    list.forEach((item) => {
+      const parsed = parseConsultationData(item);
+      if (parsed.isShopOrder) {
+        shopOrders++;
+        if (parsed.isQrPaid) shopQrPaid++;
+      } else if (parsed.isCustomPlanner) {
+        customPlanner++;
+      } else {
+        tourConsultation++;
+      }
+    });
+
+    return {
+      total,
+      pending,
+      completed,
+      callback,
+      shopOrders,
+      shopQrPaid,
+      customPlanner,
+      tourConsultation
+    };
   }, [consultationsList]);
 
   // Filtered entries
@@ -135,8 +216,10 @@ export default function AdminConsultationsManager({
       if (!matchesSearch) return false;
 
       if (selectedStatusTab === 'all') return true;
-      if (selectedStatusTab === 'pending') return (item.status || 'Chưa tư vấn') === 'Chưa tư vấn';
+      if (selectedStatusTab === 'shop_order') return parsed.isShopOrder;
       if (selectedStatusTab === 'custom') return parsed.isCustomPlanner;
+      if (selectedStatusTab === 'tour') return parsed.isTourConsultation;
+      if (selectedStatusTab === 'pending') return (item.status || 'Chưa tư vấn') === 'Chưa tư vấn';
       if (selectedStatusTab === 'completed') return item.status === 'Đã tư vấn';
       if (selectedStatusTab === 'callback') return item.status === 'Hẹn gọi lại' || item.status === 'Không nghe máy';
 
@@ -314,7 +397,7 @@ export default function AdminConsultationsManager({
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
           gap: '16px',
           marginBottom: '24px',
           width: '100%',
@@ -336,7 +419,7 @@ export default function AdminConsultationsManager({
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
             <span style={{ fontSize: '12px', fontWeight: 600, color: '#64748b', whiteSpace: 'nowrap' }}>
-              Tổng Yêu Cầu
+              Tổng Yêu Cầu & Đơn
             </span>
             <FileText size={16} color="#64748b" />
           </div>
@@ -348,30 +431,30 @@ export default function AdminConsultationsManager({
           </div>
         </div>
 
-        {/* Tile 2: Pending Contact */}
+        {/* Tile 2: Shop Orders */}
         <div
-          onClick={() => setSelectedStatusTab('pending')}
+          onClick={() => setSelectedStatusTab('shop_order')}
           style={{
             backgroundColor: '#ffffff',
             borderRadius: '10px',
             padding: '16px 20px',
-            border: selectedStatusTab === 'pending' ? '1.5px solid #d97706' : '1px solid #e2e8f0',
+            border: selectedStatusTab === 'shop_order' ? '1.5px solid #7e22ce' : '1px solid #e2e8f0',
             boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
             cursor: 'pointer',
             transition: 'all 0.15s ease'
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: '#b45309', whiteSpace: 'nowrap' }}>
-              Chờ Liên Hệ
+            <span style={{ fontSize: '12px', fontWeight: 600, color: '#7e22ce', whiteSpace: 'nowrap' }}>
+              🛍️ Đơn Mua Hàng
             </span>
-            <AlertCircle size={16} color="#d97706" />
+            <ShoppingBag size={16} color="#7e22ce" />
           </div>
-          <div style={{ fontSize: '26px', fontWeight: 700, color: '#d97706', lineHeight: 1.2 }}>
-            {stats.pending}
+          <div style={{ fontSize: '26px', fontWeight: 700, color: '#7e22ce', lineHeight: 1.2 }}>
+            {stats.shopOrders}
           </div>
-          <div style={{ fontSize: '11.5px', color: '#b45309', marginTop: '3px', whiteSpace: 'nowrap' }}>
-            Cần xử lý trong ngày
+          <div style={{ fontSize: '11.5px', color: '#9333ea', marginTop: '3px', whiteSpace: 'nowrap' }}>
+            {stats.shopQrPaid > 0 ? `${stats.shopQrPaid} đơn đã quét QR` : 'Đơn hàng Kollection 4U'}
           </div>
         </div>
 
@@ -390,7 +473,7 @@ export default function AdminConsultationsManager({
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
             <span style={{ fontSize: '12px', fontWeight: 600, color: '#0f766e', whiteSpace: 'nowrap' }}>
-              Thiết Kế Riêng
+              ✏️ Thiết Kế Riêng
             </span>
             <Compass size={16} color="#0f766e" />
           </div>
@@ -402,30 +485,30 @@ export default function AdminConsultationsManager({
           </div>
         </div>
 
-        {/* Tile 4: Completed */}
+        {/* Tile 4: Tour Consultation */}
         <div
-          onClick={() => setSelectedStatusTab('completed')}
+          onClick={() => setSelectedStatusTab('tour')}
           style={{
             backgroundColor: '#ffffff',
             borderRadius: '10px',
             padding: '16px 20px',
-            border: selectedStatusTab === 'completed' ? '1.5px solid #16a34a' : '1px solid #e2e8f0',
+            border: selectedStatusTab === 'tour' ? '1.5px solid #2563eb' : '1px solid #e2e8f0',
             boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
             cursor: 'pointer',
             transition: 'all 0.15s ease'
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: '#166534', whiteSpace: 'nowrap' }}>
-              Đã Tư Vấn
+            <span style={{ fontSize: '12px', fontWeight: 600, color: '#1d4ed8', whiteSpace: 'nowrap' }}>
+              🌿 Tư Vấn Tour
             </span>
-            <CheckCircle2 size={16} color="#16a34a" />
+            <PhoneCall size={16} color="#2563eb" />
           </div>
-          <div style={{ fontSize: '26px', fontWeight: 700, color: '#16a34a', lineHeight: 1.2 }}>
-            {stats.completed}
+          <div style={{ fontSize: '26px', fontWeight: 700, color: '#1d4ed8', lineHeight: 1.2 }}>
+            {stats.tourConsultation}
           </div>
-          <div style={{ fontSize: '11.5px', color: '#15803d', marginTop: '3px', whiteSpace: 'nowrap' }}>
-            Đã hoàn tất chăm sóc
+          <div style={{ fontSize: '11.5px', color: '#2563eb', marginTop: '3px', whiteSpace: 'nowrap' }}>
+            Tour retreat tiêu chuẩn
           </div>
         </div>
       </div>
@@ -451,11 +534,13 @@ export default function AdminConsultationsManager({
         }}
       >
         {/* Segmented Status Filters */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'nowrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
           {[
             { id: 'all', label: 'Tất cả', count: stats.total },
-            { id: 'pending', label: 'Chờ tư vấn', count: stats.pending },
-            { id: 'custom', label: 'Thiết kế riêng', count: stats.customPlanner },
+            { id: 'shop_order', label: '🛍️ Đơn Mua Hàng', count: stats.shopOrders },
+            { id: 'custom', label: '✏️ Thiết Kế Riêng', count: stats.customPlanner },
+            { id: 'tour', label: '🌿 Tư Vấn Tour', count: stats.tourConsultation },
+            { id: 'pending', label: 'Chờ xử lý', count: stats.pending },
             { id: 'completed', label: 'Đã tư vấn', count: stats.completed },
             { id: 'callback', label: 'Hẹn gọi lại / Khác', count: stats.callback }
           ].map((tab) => {
@@ -732,12 +817,69 @@ export default function AdminConsultationsManager({
                         </div>
                       </td>
 
-                      {/* 3. Journey & Trip Specifications */}
+                      {/* 3. Journey, Requirements or Shop Order */}
                       <td style={{ padding: '14px 14px' }}>
                         <div>
                           {/* Classification Pill + Title */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', flexWrap: 'wrap' }}>
-                            {parsed.isCustomPlanner ? (
+                            {parsed.isShopOrder ? (
+                              <>
+                                <span
+                                  style={{
+                                    backgroundColor: '#f3e8ff',
+                                    color: '#7e22ce',
+                                    border: '1px solid #e9d5ff',
+                                    fontSize: '10px',
+                                    fontWeight: 700,
+                                    letterSpacing: '0.04em',
+                                    padding: '1px 6px',
+                                    borderRadius: '4px',
+                                    textTransform: 'uppercase',
+                                    whiteSpace: 'nowrap',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '3px',
+                                    flexShrink: 0
+                                  }}
+                                >
+                                  <ShoppingBag size={10} /> Đơn Mua Hàng
+                                </span>
+                                {parsed.isQrPaid ? (
+                                  <span
+                                    style={{
+                                      backgroundColor: '#dcfce7',
+                                      color: '#15803d',
+                                      border: '1px solid #bbf7d0',
+                                      fontSize: '9.5px',
+                                      fontWeight: 700,
+                                      padding: '1px 5px',
+                                      borderRadius: '4px',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '3px',
+                                      whiteSpace: 'nowrap'
+                                    }}
+                                  >
+                                    <CheckCircle2 size={10} /> ĐÃ QUÉT QR
+                                  </span>
+                                ) : (
+                                  <span
+                                    style={{
+                                      backgroundColor: '#fef3c7',
+                                      color: '#b45309',
+                                      border: '1px solid #fde68a',
+                                      fontSize: '9.5px',
+                                      fontWeight: 600,
+                                      padding: '1px 5px',
+                                      borderRadius: '4px',
+                                      whiteSpace: 'nowrap'
+                                    }}
+                                  >
+                                    ⏳ CHỜ THANH TOÁN
+                                  </span>
+                                )}
+                              </>
+                            ) : parsed.isCustomPlanner ? (
                               <span
                                 style={{
                                   backgroundColor: '#f0fdf4',
@@ -750,27 +892,33 @@ export default function AdminConsultationsManager({
                                   borderRadius: '4px',
                                   textTransform: 'uppercase',
                                   whiteSpace: 'nowrap',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '3px',
                                   flexShrink: 0
                                 }}
                               >
-                                Thiết kế riêng
+                                <Compass size={10} /> Thiết kế riêng
                               </span>
                             ) : (
                               <span
                                 style={{
-                                  backgroundColor: '#f1f5f9',
-                                  color: '#475569',
-                                  border: '1px solid #e2e8f0',
+                                  backgroundColor: '#eff6ff',
+                                  color: '#1d4ed8',
+                                  border: '1px solid #bfdbfe',
                                   fontSize: '10px',
-                                  fontWeight: 600,
+                                  fontWeight: 700,
                                   padding: '1px 6px',
                                   borderRadius: '4px',
                                   textTransform: 'uppercase',
                                   whiteSpace: 'nowrap',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '3px',
                                   flexShrink: 0
                                 }}
                               >
-                                Tour tiêu chuẩn
+                                <PhoneCall size={10} /> Tư vấn tour
                               </span>
                             )}
 
@@ -780,7 +928,43 @@ export default function AdminConsultationsManager({
                           </div>
 
                           {/* Structured Detail Snippets */}
-                          {parsed.isCustomPlanner ? (
+                          {parsed.isShopOrder ? (
+                            <div
+                              style={{
+                                backgroundColor: '#faf5ff',
+                                border: '1px solid #f3e8ff',
+                                borderRadius: '6px',
+                                padding: '6px 10px',
+                                fontSize: '11.5px',
+                                color: '#475569',
+                                lineHeight: 1.4
+                              }}
+                            >
+                              {parsed.orderProducts && (
+                                <div style={{ fontWeight: 600, color: '#0f172a', display: 'flex', alignItems: 'flex-start', gap: '4px' }}>
+                                  <Package size={12} style={{ color: '#7e22ce', flexShrink: 0, marginTop: '2px' }} />
+                                  <span>{parsed.orderProducts}</span>
+                                </div>
+                              )}
+                              <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px 14px', marginTop: '3px' }}>
+                                {parsed.orderTotal && (
+                                  <span style={{ color: '#065f46', fontWeight: 700 }}>
+                                    Tổng: {parsed.orderTotal}
+                                  </span>
+                                )}
+                                {parsed.orderAddress && (
+                                  <span style={{ color: '#64748b', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                                    <MapPin size={10} /> {parsed.orderAddress}
+                                  </span>
+                                )}
+                              </div>
+                              {parsed.orderCustomerNote && (
+                                <div style={{ color: '#9333ea', marginTop: '2px', fontSize: '11px' }}>
+                                  Ghi chú: {parsed.orderCustomerNote}
+                                </div>
+                              )}
+                            </div>
+                          ) : parsed.isCustomPlanner ? (
                             <div
                               style={{
                                 backgroundColor: '#f8fafc',
@@ -917,17 +1101,19 @@ export default function AdminConsultationsManager({
                             title="Chỉnh sửa thông tin"
                             onClick={() => openEditModal('consultations', item)}
                             style={{
-                              backgroundColor: '#ffffff',
+                              width: '50px',
+                              height: '32px',
+                              backgroundColor: '#f1f5f9',
                               color: '#475569',
-                              border: '1px solid #e2e8f0',
-                              borderRadius: '6px',
-                              padding: '4px 6px',
+                              border: '1px solid #cbd5e1',
+                              borderRadius: '8px',
                               cursor: 'pointer',
                               display: 'inline-flex',
-                              alignItems: 'center'
+                              alignItems: 'center',
+                              justifyContent: 'center'
                             }}
                           >
-                            <Edit2 size={11} />
+                            <Edit2 size={13} />
                           </button>
 
                           <button
@@ -935,17 +1121,19 @@ export default function AdminConsultationsManager({
                             title="Xóa yêu cầu"
                             onClick={() => handleDeleteItem('consultations', item.id)}
                             style={{
-                              backgroundColor: '#ffffff',
+                              width: '50px',
+                              height: '32px',
+                              backgroundColor: '#fee2e2',
                               color: '#dc2626',
-                              border: '1px solid #fee2e2',
-                              borderRadius: '6px',
-                              padding: '4px 6px',
+                              border: '1px solid #fecdd3',
+                              borderRadius: '8px',
                               cursor: 'pointer',
                               display: 'inline-flex',
-                              alignItems: 'center'
+                              alignItems: 'center',
+                              justifyContent: 'center'
                             }}
                           >
-                            <Trash2 size={11} />
+                            <Trash2 size={13} />
                           </button>
                         </div>
                       </td>
@@ -1135,14 +1323,144 @@ export default function AdminConsultationsManager({
                 </div>
               </div>
 
-              {/* Trip & Requirement Specifications */}
+              {/* Trip, Custom Planner or Shop Order Specifications */}
               <div>
                 <h3 style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em', margin: '0 0 10px 0' }}>
-                  Chi Tiết Yêu Cầu Hành Trình
+                  Chi Tiết Yêu Cầu / Đơn Hàng
                 </h3>
 
                 {(() => {
                   const parsed = parseConsultationData(selectedDetailItem);
+
+                  if (parsed.isShopOrder) {
+                    return (
+                      <div
+                        style={{
+                          backgroundColor: '#faf5ff',
+                          border: '1px solid #e9d5ff',
+                          borderRadius: '8px',
+                          padding: '16px'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ backgroundColor: '#7e22ce', color: '#ffffff', fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '4px', textTransform: 'uppercase' }}>
+                              🛍️ Đơn Mua Hàng
+                            </span>
+                            <strong style={{ fontSize: '15px', color: '#0f172a' }}>{parsed.displayTitle}</strong>
+                          </div>
+
+                          {parsed.isQrPaid ? (
+                            <span style={{ backgroundColor: '#dcfce7', color: '#15803d', border: '1px solid #bbf7d0', fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '4px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                              <CheckCircle2 size={12} /> ĐÃ QUÉT QR THANH TOÁN
+                            </span>
+                          ) : (
+                            <span style={{ backgroundColor: '#fef3c7', color: '#b45309', border: '1px solid #fde68a', fontSize: '11px', fontWeight: 600, padding: '3px 8px', borderRadius: '4px' }}>
+                              ⏳ CHỜ THANH TOÁN
+                            </span>
+                          )}
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px', color: '#334155' }}>
+                          {parsed.orderProducts && (
+                            <div>
+                              <span style={{ color: '#64748b', minWidth: '130px', display: 'inline-block' }}>Sản phẩm đã chọn:</span>
+                              <strong style={{ color: '#0f172a' }}>{parsed.orderProducts}</strong>
+                            </div>
+                          )}
+                          {parsed.orderTotal && (
+                            <div>
+                              <span style={{ color: '#64748b', minWidth: '130px', display: 'inline-block' }}>Tổng tiền thanh toán:</span>
+                              <strong style={{ color: '#065f46', fontSize: '14px' }}>{parsed.orderTotal}</strong>
+                            </div>
+                          )}
+                          {parsed.orderAddress && (
+                            <div>
+                              <span style={{ color: '#64748b', minWidth: '130px', display: 'inline-block' }}>Địa chỉ giao hàng:</span>
+                              <strong style={{ color: '#0f172a' }}>{parsed.orderAddress}</strong>
+                            </div>
+                          )}
+                          {parsed.orderCustomerNote && (
+                            <div style={{ marginTop: '6px', paddingTop: '8px', borderTop: '1px solid #e9d5ff' }}>
+                              <span style={{ color: '#64748b', display: 'block', marginBottom: '4px' }}>Ghi chú đơn hàng:</span>
+                              <div
+                                style={{
+                                  backgroundColor: '#ffffff',
+                                  border: '1px solid #e9d5ff',
+                                  borderRadius: '6px',
+                                  padding: '8px 12px',
+                                  color: '#1e293b'
+                                }}
+                              >
+                                {parsed.orderCustomerNote}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  if (parsed.isCustomPlanner) {
+                    return (
+                      <div
+                        style={{
+                          backgroundColor: '#ffffff',
+                          border: '1px solid #e2e8f0',
+                          borderRadius: '8px',
+                          padding: '16px'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
+                          <span style={{ backgroundColor: '#0f766e', color: '#ffffff', fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '4px', textTransform: 'uppercase' }}>
+                            ✏️ Thiết Kế Riêng
+                          </span>
+                          <strong style={{ fontSize: '14.5px', color: '#0f172a' }}>{parsed.displayTitle}</strong>
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px', color: '#334155' }}>
+                          {parsed.region && (
+                            <div>
+                              <span style={{ color: '#64748b', minWidth: '130px', display: 'inline-block' }}>Vùng miền:</span>
+                              <strong style={{ color: '#0f172a' }}>{parsed.region}</strong>
+                            </div>
+                          )}
+                          {parsed.destination && (
+                            <div>
+                              <span style={{ color: '#64748b', minWidth: '130px', display: 'inline-block' }}>Điểm đến:</span>
+                              <strong style={{ color: '#0f172a' }}>{parsed.destination}</strong>
+                            </div>
+                          )}
+                          {parsed.guests && (
+                            <div>
+                              <span style={{ color: '#64748b', minWidth: '130px', display: 'inline-block' }}>Số lượng khách:</span>
+                              <strong style={{ color: '#0f172a' }}>{parsed.guests}</strong>
+                            </div>
+                          )}
+                          {parsed.requirements && (
+                            <div style={{ marginTop: '6px', paddingTop: '8px', borderTop: '1px solid #f1f5f9' }}>
+                              <span style={{ color: '#64748b', display: 'block', marginBottom: '4px' }}>Nhu cầu cụ thể & Ghi chú:</span>
+                              <div
+                                style={{
+                                  backgroundColor: '#f8fafc',
+                                  border: '1px solid #e2e8f0',
+                                  borderRadius: '6px',
+                                  padding: '10px 12px',
+                                  whiteSpace: 'pre-line',
+                                  lineHeight: 1.5,
+                                  color: '#1e293b'
+                                }}
+                              >
+                                {parsed.requirements}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // Default Tour Consultation
                   return (
                     <div
                       style={{
@@ -1152,48 +1470,31 @@ export default function AdminConsultationsManager({
                         padding: '16px'
                       }}
                     >
-                      <div style={{ fontWeight: 600, color: '#0f172a', fontSize: '14.5px', marginBottom: '10px' }}>
-                        {parsed.displayTitle}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
+                        <span style={{ backgroundColor: '#1d4ed8', color: '#ffffff', fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '4px', textTransform: 'uppercase' }}>
+                          🌿 Tư Vấn Tour
+                        </span>
+                        <strong style={{ fontSize: '14.5px', color: '#0f172a' }}>{parsed.displayTitle}</strong>
                       </div>
 
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px', color: '#334155' }}>
-                        {parsed.region && (
-                          <div>
-                            <span style={{ color: '#64748b', minWidth: '120px', display: 'inline-block' }}>Vùng miền:</span>
-                            <strong style={{ color: '#0f172a' }}>{parsed.region}</strong>
+                      {parsed.rawNote && (
+                        <div style={{ marginTop: '6px', paddingTop: '8px', borderTop: '1px solid #f1f5f9' }}>
+                          <span style={{ color: '#64748b', display: 'block', marginBottom: '4px' }}>Nội dung tư vấn & Ghi chú:</span>
+                          <div
+                            style={{
+                              backgroundColor: '#f8fafc',
+                              border: '1px solid #e2e8f0',
+                              borderRadius: '6px',
+                              padding: '10px 12px',
+                              whiteSpace: 'pre-line',
+                              lineHeight: 1.5,
+                              color: '#1e293b'
+                            }}
+                          >
+                            {parsed.rawNote}
                           </div>
-                        )}
-                        {parsed.destination && (
-                          <div>
-                            <span style={{ color: '#64748b', minWidth: '120px', display: 'inline-block' }}>Điểm đến:</span>
-                            <strong style={{ color: '#0f172a' }}>{parsed.destination}</strong>
-                          </div>
-                        )}
-                        {parsed.guests && (
-                          <div>
-                            <span style={{ color: '#64748b', minWidth: '120px', display: 'inline-block' }}>Số lượng khách:</span>
-                            <strong style={{ color: '#0f172a' }}>{parsed.guests}</strong>
-                          </div>
-                        )}
-                        {parsed.requirements && (
-                          <div style={{ marginTop: '6px', paddingTop: '8px', borderTop: '1px solid #f1f5f9' }}>
-                            <span style={{ color: '#64748b', display: 'block', marginBottom: '4px' }}>Nhu cầu cụ thể & Ghi chú:</span>
-                            <div
-                              style={{
-                                backgroundColor: '#f8fafc',
-                                border: '1px solid #e2e8f0',
-                                borderRadius: '6px',
-                                padding: '10px 12px',
-                                whiteSpace: 'pre-line',
-                                lineHeight: 1.5,
-                                color: '#1e293b'
-                              }}
-                            >
-                              {parsed.requirements}
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })()}

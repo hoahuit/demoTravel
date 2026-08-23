@@ -420,7 +420,25 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
 
       <div style={{ display: 'flex', flex: 1 }}>
         {/* UNIFIED SINGLE SIDEBAR MENU */}
-        <aside className="serene-sidebar" style={{ width: '260px', minWidth: '260px', flexShrink: 0, backgroundColor: '#06170e', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '6px', minHeight: 'calc(100vh - 64px)' }}>
+        <aside
+          className="serene-sidebar"
+          style={{
+            width: '260px',
+            minWidth: '260px',
+            flexShrink: 0,
+            backgroundColor: '#06170e',
+            padding: '24px 16px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '6px',
+            position: 'sticky',
+            top: '64px',
+            height: 'calc(100vh - 64px)',
+            alignSelf: 'flex-start',
+            overflowY: 'auto',
+            boxSizing: 'border-box'
+          }}
+        >
           <div style={{ padding: '0 12px 16px 12px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '12px' }}>
             <p style={{ fontSize: '11px', fontWeight: 700, color: '#819986', textTransform: 'uppercase', letterSpacing: '0.1em', margin: 0 }}>
               Danh Mục Quản Trị

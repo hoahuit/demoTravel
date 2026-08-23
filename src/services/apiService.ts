@@ -243,22 +243,46 @@ export function parseTourJsonFields(tour: any) {
 export function sanitizeTourPayload(tourData: any, isUpdate = false) {
   const payload: any = {};
   const validKeys = [
-    'slug', 'title', 'subtitle', 'category', 'categories', 'country', 'city', 'region', 'duration', 'durationDays',
-    'heroImage', 'price', 'originalPrice', 'isHot', 'isFeatured', 'isExclusive', 'isCustomer', 'isAdminApproved', 'isAdminAprove',
+    'slug', 'title', 'subtitle', 'category', 'categories', 'country', 'city', 'duration', 'durationDays',
+    'heroImage', 'price', 'originalPrice', 'childPrice', 'infantPrice',
+    'adultNote', 'childNote', 'infantNote', 'bookingPolicyNotes',
+    'isHot', 'isFeatured', 'isExclusive', 'isCustomer', 'isAdminApproved', 'isAdminAprove',
     'departureDates', 'airline', 'hotel', 'transportation', 'rating', 'reviewsCount',
     'highlights', 'itinerary', 'gallery', 'included', 'excluded', 'notes', 'destinationMap',
     'travelTips', 'faq', 'reviews'
   ];
 
+  // If region is specified in draft, ensure it is added to categories
+  let categoriesArr: string[] = [];
+  if (Array.isArray(tourData.categories)) {
+    categoriesArr = [...tourData.categories];
+  } else if (typeof tourData.categories === 'string') {
+    try {
+      const parsed = JSON.parse(tourData.categories);
+      if (Array.isArray(parsed)) categoriesArr = parsed;
+      else categoriesArr = [tourData.categories];
+    } catch {
+      categoriesArr = tourData.categories ? [tourData.categories] : [];
+    }
+  }
+  if (tourData.region && !categoriesArr.includes(tourData.region)) {
+    categoriesArr.push(tourData.region);
+  }
+
+  const mergedData = {
+    ...tourData,
+    categories: categoriesArr.length > 0 ? categoriesArr : tourData.categories
+  };
+
   validKeys.forEach((key) => {
-    if (tourData[key] !== undefined) {
-      if (Array.isArray(tourData[key]) || (typeof tourData[key] === 'object' && tourData[key] !== null)) {
-        payload[key] = JSON.stringify(tourData[key]);
-      } else if (typeof tourData[key] === 'string' && (key === 'departureDates' || key === 'highlights' || key === 'gallery' || key === 'included') && tourData[key].includes(',')) {
-        const arr = tourData[key].split(',').map((s: string) => s.trim()).filter(Boolean);
+    if (mergedData[key] !== undefined) {
+      if (Array.isArray(mergedData[key]) || (typeof mergedData[key] === 'object' && mergedData[key] !== null)) {
+        payload[key] = JSON.stringify(mergedData[key]);
+      } else if (typeof mergedData[key] === 'string' && (key === 'departureDates' || key === 'highlights' || key === 'gallery' || key === 'included') && mergedData[key].includes(',')) {
+        const arr = mergedData[key].split(',').map((s: string) => s.trim()).filter(Boolean);
         payload[key] = JSON.stringify(arr);
       } else {
-        payload[key] = tourData[key];
+        payload[key] = mergedData[key];
       }
     }
   });

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Edit2, Trash2 } from 'lucide-react';
 
 interface AdminPromotionsManagerProps {
   promotionsList: any[];
@@ -49,8 +50,42 @@ export default function AdminPromotionsManager({
             <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '18px', color: '#081f13', margin: '10px 0 4px 0' }}>{promo.title}</h3>
             <p style={{ fontSize: '13px', color: '#525a54', margin: '0 0 12px 0' }}>Mã: <strong style={{ color: '#081f13', fontFamily: 'monospace' }}>{promo.code}</strong></p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-              <button onClick={() => openEditModal('promotions', promo)} style={{ backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '6px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>Sửa</button>
-              <button onClick={() => handleDeleteItem('promotions', promo.id)} style={{ backgroundColor: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5', borderRadius: '6px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>Xóa</button>
+              <button
+                onClick={() => openEditModal('promotions', promo)}
+                style={{
+                  width: '50px',
+                  height: '32px',
+                  backgroundColor: '#081f13',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Chỉnh sửa"
+              >
+                <Edit2 size={14} />
+              </button>
+              <button
+                onClick={() => handleDeleteItem('promotions', promo.id)}
+                style={{
+                  width: '50px',
+                  height: '32px',
+                  backgroundColor: '#fee2e2',
+                  color: '#dc2626',
+                  border: '1px solid #fca5a5',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                title="Xóa"
+              >
+                <Trash2 size={14} />
+              </button>
             </div>
           </div>
         ))}

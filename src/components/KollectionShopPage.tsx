@@ -28,7 +28,10 @@ import {
   Eye,
   Plus,
   Minus,
-  ShoppingCart
+  ShoppingCart,
+  QrCode,
+  CreditCard,
+  Copy
 } from 'lucide-react';
 import { useToast } from './ui/Toast';
 
@@ -198,6 +201,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
   const [checkoutModalOpen, setCheckoutModalOpen] = useState<boolean>(false);
   const [orderSubmitting, setOrderSubmitting] = useState<boolean>(false);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
+  const [hasTransferred, setHasTransferred] = useState<boolean>(false);
   const [orderForm, setOrderForm] = useState({
     fullName: '',
     phone: '',
@@ -420,7 +424,11 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
         .join(', ');
       const totalVal = cartTotalPrice;
 
-      const notesCombined = `[ĐƠN HÀNG KOLLECTION 4U] Sản phẩm: ${itemsListStr}. Tổng tiền: ${formatVnd(totalVal)}. Địa chỉ nhận hàng: ${orderForm.address || 'Chưa cung cấp'}. Ghi chú: ${orderForm.notes || 'Không'}`;
+      const transferTag = hasTransferred
+        ? ' [TRẠNG THÁI: KHÁCH ĐÃ QUÉT QR & BÁO CHUYỂN TIỀN THÀNH CÔNG]'
+        : ' [TRẠNG THÁI: KHÁCH CHƯA XÁC NHẬN CHUYỂN TIỀN / THANH TOÁN SAU]';
+
+      const notesCombined = `[ĐƠN HÀNG KOLLECTION 4U] Sản phẩm: ${itemsListStr}. Tổng tiền: ${formatVnd(totalVal)}. Địa chỉ nhận hàng: ${orderForm.address || 'Chưa cung cấp'}. Ghi chú: ${orderForm.notes || 'Không'}.${transferTag}`;
 
       await createConsultationApi({
         fullName: orderForm.fullName,
@@ -434,6 +442,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
 
       setOrderSuccess(true);
       setCartItems([]);
+      setHasTransferred(false);
       toast?.show?.('Đặt hàng thành công! Đội ngũ 4U sẽ liên hệ xác nhận đơn hàng.', 'success');
     } catch (err: any) {
       toast?.show?.('Gửi đơn hàng thất bại: ' + (err?.message || err), 'error');
@@ -1489,6 +1498,122 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                       <span>Tổng thanh toán:</span>
                       <span>{formatVnd(cartTotalPrice)}</span>
                     </div>
+                  </div>
+
+                  {/* QR PAYMENT SECTION */}
+                  <div style={{
+                    backgroundColor: '#f4f7f5',
+                    border: '1px solid #cce3d4',
+                    borderRadius: '12px',
+                    padding: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <QrCode size={18} style={{ color: '#065f46' }} />
+                        <span style={{ fontSize: '13px', fontWeight: 700, color: '#081f13', textTransform: 'uppercase' }}>
+                          Quét Mã QR Chuyển Khoản Nhanh
+                        </span>
+                      </div>
+                      <span style={{ fontSize: '11px', fontWeight: 700, backgroundColor: '#dcfce7', color: '#15803d', padding: '2px 8px', borderRadius: '999px', border: '1px solid #bbf7d0' }}>
+                        VietQR 24/7
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+                      {/* QR Image */}
+                      <div style={{
+                        width: '130px',
+                        height: '130px',
+                        backgroundColor: '#ffffff',
+                        borderRadius: '8px',
+                        border: '1px solid #cbd5e1',
+                        padding: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                        flexShrink: 0
+                      }}>
+                        <img
+                          src={`https://api.vietqr.io/image/970422-0987654321-compact.png?amount=${cartTotalPrice}&addInfo=${encodeURIComponent('4U ' + (orderForm.phone ? orderForm.phone.replace(/\s+/g, '') : 'KOLLECTION'))}&accountName=4U%20WELLNESS%20RETREAT`}
+                          alt="Mã QR Chuyển Khoản"
+                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                        />
+                      </div>
+
+                      {/* Bank Transfer Info */}
+                      <div style={{ flex: 1, minWidth: '180px', fontSize: '12px', color: '#334155', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                        <div>
+                          <span style={{ color: '#64748b' }}>Ngân hàng:</span>{' '}
+                          <strong style={{ color: '#081f13' }}>MB Bank (Quân Đội)</strong>
+                        </div>
+                        <div>
+                          <span style={{ color: '#64748b' }}>Số tài khoản:</span>{' '}
+                          <strong style={{ color: '#065f46', fontFamily: 'monospace', fontSize: '13px' }}>0987 654 321</strong>
+                        </div>
+                        <div>
+                          <span style={{ color: '#64748b' }}>Chủ tài khoản:</span>{' '}
+                          <strong style={{ color: '#081f13' }}>4U WELLNESS & RETREAT</strong>
+                        </div>
+                        <div>
+                          <span style={{ color: '#64748b' }}>Số tiền:</span>{' '}
+                          <strong style={{ color: '#065f46', fontSize: '13px' }}>{formatVnd(cartTotalPrice)}</strong>
+                        </div>
+                        <div>
+                          <span style={{ color: '#64748b' }}>Nội dung CK:</span>{' '}
+                          <code style={{ backgroundColor: '#ffffff', padding: '2px 6px', borderRadius: '4px', border: '1px solid #cbd5e1', fontWeight: 700, color: '#081f13' }}>
+                            4U {orderForm.phone ? orderForm.phone.replace(/\s+/g, '') : 'KOLLECTION'}
+                          </code>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Button to confirm transfer */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const nextState = !hasTransferred;
+                        setHasTransferred(nextState);
+                        const transferTag = `[ĐÃ CHUYỂN KHOẢN QR ${formatVnd(cartTotalPrice)}]`;
+                        if (nextState) {
+                          if (!orderForm.notes.includes(transferTag)) {
+                            setOrderForm(prev => ({
+                              ...prev,
+                              notes: prev.notes ? `${prev.notes} - ${transferTag}` : transferTag
+                            }));
+                          }
+                          toast?.show?.('Đã ghi nhận: Bạn đã chuyển tiền thành công!', 'success');
+                        } else {
+                          setOrderForm(prev => ({
+                            ...prev,
+                            notes: prev.notes.replace(` - ${transferTag}`, '').replace(transferTag, '').trim()
+                          }));
+                        }
+                      }}
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        borderRadius: '8px',
+                        border: hasTransferred ? '2px solid #059669' : '1px solid #94a3b8',
+                        backgroundColor: hasTransferred ? '#ecfdf5' : '#ffffff',
+                        color: hasTransferred ? '#065f46' : '#1e293b',
+                        fontWeight: 700,
+                        fontSize: '13px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        transition: 'all 0.2s ease',
+                        boxShadow: hasTransferred ? '0 0 0 2px rgba(5, 150, 105, 0.2)' : 'none'
+                      }}
+                    >
+                      {hasTransferred ? <CheckCircle2 size={16} color="#059669" /> : <CreditCard size={16} />}
+                      {hasTransferred ? '✓ Tôi Đã Chuyển Tiền Thành Công (Đã lưu vào đơn hàng)' : '👉 Bấm vào đây sau khi bạn ĐÃ CHUYỂN TIỀN'}
+                    </button>
                   </div>
 
                   <button

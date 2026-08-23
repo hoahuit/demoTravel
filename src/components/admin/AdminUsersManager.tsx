@@ -722,30 +722,27 @@ export default function AdminUsersManager({ toast }: AdminUsersManagerProps) {
                             <span>Đổi MK</span>
                           </button>
 
-                          {/* Edit User Button */}
                           <button
                             type="button"
-                            title="Chỉnh sửa thông tin & quyền"
+                            title="Chỉnh sửa thông tin"
                             onClick={() => {
                               setEditingUser({ ...u });
                               setEditNewPassword('');
                             }}
                             style={{
-                              backgroundColor: '#ffffff',
+                              width: '50px',
+                              height: '32px',
+                              backgroundColor: '#f1f5f9',
                               color: '#334155',
                               border: '1px solid #cbd5e1',
-                              borderRadius: '6px',
-                              padding: '5px 8px',
+                              borderRadius: '8px',
                               cursor: 'pointer',
                               display: 'inline-flex',
                               alignItems: 'center',
-                              gap: '4px',
-                              fontSize: '12px',
-                              fontWeight: 600,
+                              justifyContent: 'center'
                             }}
                           >
-                            <Edit2 size={12} />
-                            <span>Sửa</span>
+                            <Edit2 size={13} />
                           </button>
 
                           {/* Delete Button */}
@@ -755,17 +752,19 @@ export default function AdminUsersManager({ toast }: AdminUsersManagerProps) {
                               title="Xóa tài khoản"
                               onClick={() => handleDelete(u)}
                               style={{
-                                backgroundColor: '#ffffff',
+                                width: '50px',
+                                height: '32px',
+                                backgroundColor: '#fee2e2',
                                 color: '#dc2626',
-                                border: '1px solid #fecaca',
-                                borderRadius: '6px',
-                                padding: '5px 7px',
+                                border: '1px solid #fecdd3',
+                                borderRadius: '8px',
                                 cursor: 'pointer',
                                 display: 'inline-flex',
                                 alignItems: 'center',
+                                justifyContent: 'center'
                               }}
                             >
-                              <Trash2 size={12} />
+                              <Trash2 size={13} />
                             </button>
                           )}
                         </div>

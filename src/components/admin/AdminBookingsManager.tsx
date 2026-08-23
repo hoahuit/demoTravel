@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshCw, Plus } from 'lucide-react';
+import { RefreshCw, Plus, Edit2, Trash2 } from 'lucide-react';
 import EmptyState from '../ui/EmptyState';
 
 interface AdminBookingsManagerProps {
@@ -178,8 +178,44 @@ export default function AdminBookingsManager({
                       </span>
                     </td>
                     <td style={{ padding: '14px 18px', textAlign: 'right' }}>
-                      <button onClick={() => openEditModal('bookings', b)} style={{ border: 'none', background: 'transparent', color: '#081f13', fontWeight: 700, cursor: 'pointer', marginRight: '12px' }}>Chỉnh Sửa</button>
-                      <button onClick={() => handleDeleteItem('bookings', b.id)} style={{ border: 'none', background: 'transparent', color: '#dc2626', fontWeight: 700, cursor: 'pointer' }}>Xóa</button>
+                      <div style={{ display: 'inline-flex', gap: '6px', justifyContent: 'flex-end' }}>
+                        <button
+                          onClick={() => openEditModal('bookings', b)}
+                          style={{
+                            width: '50px',
+                            height: '32px',
+                            backgroundColor: '#f1f5f9',
+                            color: '#334155',
+                            border: '1px solid #cbd5e1',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                          title="Chỉnh sửa"
+                        >
+                          <Edit2 size={13} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteItem('bookings', b.id)}
+                          style={{
+                            width: '50px',
+                            height: '32px',
+                            backgroundColor: '#fee2e2',
+                            color: '#dc2626',
+                            border: '1px solid #fecdd3',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                          title="Xóa"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );

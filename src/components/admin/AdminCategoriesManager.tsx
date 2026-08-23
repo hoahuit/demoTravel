@@ -469,42 +469,42 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                         </td>
                         <td style={{ padding: '12px 14px', color: '#4d6453' }}>{item.orderIndex || 0}</td>
                         <td style={{ padding: '12px 14px', textAlign: 'right' }}>
-                          <div style={{ display: 'inline-flex', gap: '8px' }}>
+                          <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
                             <button
                               onClick={() => handleOpenEdit(item)}
                               style={{
-                                background: '#f0f5f2',
-                                border: 'none',
+                                width: '50px',
+                                height: '32px',
+                                background: '#e8ece9',
+                                border: '1px solid rgba(8, 31, 19, 0.12)',
                                 color: '#081f13',
-                                padding: '6px 10px',
-                                borderRadius: '6px',
+                                borderRadius: '8px',
                                 cursor: 'pointer',
-                                display: 'flex',
+                                display: 'inline-flex',
                                 alignItems: 'center',
-                                gap: '4px',
-                                fontSize: '12px',
-                                fontWeight: 600
+                                justifyContent: 'center'
                               }}
+                              title="Chỉnh sửa"
                             >
-                              <Edit2 size={13} /> Sửa
+                              <Edit2 size={14} />
                             </button>
                             <button
                               onClick={() => handleDelete(item)}
                               style={{
+                                width: '50px',
+                                height: '32px',
                                 background: '#fee2e2',
-                                border: 'none',
+                                border: '1px solid #fecdd3',
                                 color: '#dc2626',
-                                padding: '6px 10px',
-                                borderRadius: '6px',
+                                borderRadius: '8px',
                                 cursor: 'pointer',
-                                display: 'flex',
+                                display: 'inline-flex',
                                 alignItems: 'center',
-                                gap: '4px',
-                                fontSize: '12px',
-                                fontWeight: 600
+                                justifyContent: 'center'
                               }}
+                              title="Xóa"
                             >
-                              <Trash2 size={13} /> Xóa
+                              <Trash2 size={14} />
                             </button>
                           </div>
                         </td>
@@ -635,19 +635,18 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                               <div style={{ display: 'inline-flex', gap: '8px' }}>
                                 <button
                                   onClick={() => handleOpenCreate(parent.slug, 'mega_menu')}
-                                  title="Thêm danh mục con"
                                   style={{
-                                    background: '#e0f2fe',
-                                    border: 'none',
-                                    color: '#0369a1',
-                                    padding: '6px 10px',
+                                    background: '#dcfce7',
+                                    border: '1px solid #bbf7d0',
+                                    color: '#15803d',
+                                    padding: '6px 12px',
                                     borderRadius: '6px',
                                     cursor: 'pointer',
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '4px',
                                     fontSize: '12px',
-                                    fontWeight: 600
+                                    fontWeight: 700
                                   }}
                                 >
                                   <Plus size={13} /> Thêm Con
@@ -655,38 +654,38 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                                 <button
                                   onClick={() => handleOpenEdit(parent)}
                                   style={{
-                                    background: '#f0f5f2',
-                                    border: 'none',
+                                    width: '50px',
+                                    height: '32px',
+                                    background: '#e8ece9',
+                                    border: '1px solid rgba(8, 31, 19, 0.12)',
                                     color: '#081f13',
-                                    padding: '6px 10px',
-                                    borderRadius: '6px',
+                                    borderRadius: '8px',
                                     cursor: 'pointer',
-                                    display: 'flex',
+                                    display: 'inline-flex',
                                     alignItems: 'center',
-                                    gap: '4px',
-                                    fontSize: '12px',
-                                    fontWeight: 600
+                                    justifyContent: 'center'
                                   }}
+                                  title="Chỉnh sửa"
                                 >
-                                  <Edit2 size={13} /> Sửa
+                                  <Edit2 size={14} />
                                 </button>
                                 <button
                                   onClick={() => handleDelete(parent)}
                                   style={{
+                                    width: '50px',
+                                    height: '32px',
                                     background: '#fee2e2',
-                                    border: 'none',
+                                    border: '1px solid #fecdd3',
                                     color: '#dc2626',
-                                    padding: '6px 10px',
-                                    borderRadius: '6px',
+                                    borderRadius: '8px',
                                     cursor: 'pointer',
-                                    display: 'flex',
+                                    display: 'inline-flex',
                                     alignItems: 'center',
-                                    gap: '4px',
-                                    fontSize: '12px',
-                                    fontWeight: 600
+                                    justifyContent: 'center'
                                   }}
+                                  title="Xóa"
                                 >
-                                  <Trash2 size={13} /> Xóa
+                                  <Trash2 size={14} />
                                 </button>
                               </div>
                             </td>
@@ -737,38 +736,38 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                                   <button
                                     onClick={() => handleOpenEdit(sub)}
                                     style={{
+                                      width: '50px',
+                                      height: '32px',
                                       background: '#f1f5f9',
-                                      border: 'none',
+                                      border: '1px solid #cbd5e1',
                                       color: '#334155',
-                                      padding: '5px 8px',
-                                      borderRadius: '6px',
+                                      borderRadius: '8px',
                                       cursor: 'pointer',
-                                      display: 'flex',
+                                      display: 'inline-flex',
                                       alignItems: 'center',
-                                      gap: '3px',
-                                      fontSize: '11px',
-                                      fontWeight: 600
+                                      justifyContent: 'center'
                                     }}
+                                    title="Chỉnh sửa"
                                   >
-                                    <Edit2 size={12} /> Sửa
+                                    <Edit2 size={13} />
                                   </button>
                                   <button
                                     onClick={() => handleDelete(sub)}
                                     style={{
+                                      width: '50px',
+                                      height: '32px',
                                       background: '#fee2e2',
-                                      border: 'none',
+                                      border: '1px solid #fecdd3',
                                       color: '#dc2626',
-                                      padding: '5px 8px',
-                                      borderRadius: '6px',
+                                      borderRadius: '8px',
                                       cursor: 'pointer',
-                                      display: 'flex',
+                                      display: 'inline-flex',
                                       alignItems: 'center',
-                                      gap: '3px',
-                                      fontSize: '11px',
-                                      fontWeight: 600
+                                      justifyContent: 'center'
                                     }}
+                                    title="Xóa"
                                   >
-                                    <Trash2 size={12} /> Xóa
+                                    <Trash2 size={13} />
                                   </button>
                                 </div>
                               </td>
@@ -784,428 +783,6 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
           </div>
         </div>
       )}
-
-      {/* LIVE HEADER THEME PREVIEW SECTION */}
-      <div
-        style={{
-          marginTop: '36px',
-          backgroundColor: '#ffffff',
-          borderRadius: '20px',
-          padding: '24px',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
-          border: '1px solid rgba(8, 31, 19, 0.08)'
-        }}
-      >
-        {/* Header toolbar */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', boxShadow: '0 4px 12px rgba(16,185,129,0.25)' }}>
-              <Eye size={22} />
-            </div>
-            <div>
-              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#081f13', fontFamily: "'Playfair Display', Georgia, serif" }}>
-                Theme Live Preview (Xem Trước Giao Diện Menu)
-              </h3>
-              <p style={{ margin: '2px 0 0', fontSize: '13px', color: '#64748b' }}>
-                Mô phỏng trực quan cách danh mục hiển thị trên thanh Navigation Header thực tế trên website.
-              </p>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-            {/* Viewport switch: Desktop vs Mobile */}
-            <div style={{ display: 'flex', background: '#f1f5f9', padding: '3px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-              <button
-                onClick={() => setPreviewMode('desktop')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  background: previewMode === 'desktop' ? '#ffffff' : 'transparent',
-                  color: previewMode === 'desktop' ? '#081f13' : '#64748b',
-                  boxShadow: previewMode === 'desktop' ? '0 1px 4px rgba(0,0,0,0.1)' : 'none'
-                }}
-              >
-                <Monitor size={14} /> Desktop
-              </button>
-              <button
-                onClick={() => setPreviewMode('mobile')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  background: previewMode === 'mobile' ? '#ffffff' : 'transparent',
-                  color: previewMode === 'mobile' ? '#081f13' : '#64748b',
-                  boxShadow: previewMode === 'mobile' ? '0 1px 4px rgba(0,0,0,0.1)' : 'none'
-                }}
-              >
-                <Smartphone size={14} /> Mobile
-              </button>
-            </div>
-
-            {/* Theme switcher: Dark Luxury / Light Modern / Emerald */}
-            <div style={{ display: 'flex', background: '#f1f5f9', padding: '3px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-              <button
-                onClick={() => setPreviewTheme('dark')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  background: previewTheme === 'dark' ? '#0a0f0b' : 'transparent',
-                  color: previewTheme === 'dark' ? '#4ade80' : '#64748b'
-                }}
-              >
-                <Moon size={13} /> Dark Lux
-              </button>
-              <button
-                onClick={() => setPreviewTheme('light')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  background: previewTheme === 'light' ? '#ffffff' : 'transparent',
-                  color: previewTheme === 'light' ? '#0f172a' : '#64748b',
-                  boxShadow: previewTheme === 'light' ? '0 1px 4px rgba(0,0,0,0.1)' : 'none'
-                }}
-              >
-                <Sun size={13} /> Light
-              </button>
-              <button
-                onClick={() => setPreviewTheme('emerald')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  background: previewTheme === 'emerald' ? '#064e3b' : 'transparent',
-                  color: previewTheme === 'emerald' ? '#a7f3d0' : '#64748b'
-                }}
-              >
-                <Sparkles size={13} /> Emerald
-              </button>
-            </div>
-
-            <button
-              onClick={() => loadCategories(true)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '7px 12px',
-                borderRadius: '10px',
-                border: '1px solid rgba(8,31,19,0.15)',
-                background: '#ffffff',
-                color: '#4d6453',
-                fontSize: '12px',
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}
-            >
-              <RefreshCw size={13} /> Làm Mới
-            </button>
-          </div>
-        </div>
-
-        {/* PREVIEW CONTAINER */}
-        {(() => {
-          const isDark = previewTheme === 'dark';
-          const isEmerald = previewTheme === 'emerald';
-
-          const themeStyle = {
-            bg: isDark ? '#0a0f0b' : isEmerald ? '#064e3b' : '#ffffff',
-            topBarBg: isDark ? '#050805' : isEmerald ? '#022c22' : '#f8fafc',
-            text: isDark || isEmerald ? '#ffffff' : '#0f172a',
-            subtext: isDark ? '#a3b899' : isEmerald ? '#a7f3d0' : '#64748b',
-            border: isDark ? 'rgba(255,255,255,0.1)' : isEmerald ? 'rgba(255,255,255,0.15)' : '#e2e8f0',
-            dropdownBg: isDark ? '#121d15' : isEmerald ? '#047857' : '#f8fafc',
-            hoverBg: isDark ? 'rgba(255,255,255,0.08)' : isEmerald ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.04)'
-          };
-
-          if (previewMode === 'mobile') {
-            return (
-              <div style={{ display: 'flex', justifyContent: 'center', padding: '20px 0', background: isDark ? '#050805' : isEmerald ? '#022c22' : '#f1f5f9', borderRadius: '16px' }}>
-                <div
-                  style={{
-                    width: '100%',
-                    maxWidth: '380px',
-                    borderRadius: '28px',
-                    border: '8px solid #1e293b',
-                    overflow: 'hidden',
-                    backgroundColor: themeStyle.bg,
-                    boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
-                    color: themeStyle.text
-                  }}
-                >
-                  {/* Mobile Header Bar */}
-                  <div style={{ padding: '14px 18px', borderBottom: `1px solid ${themeStyle.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: themeStyle.topBarBg }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800, fontSize: '15px', color: themeStyle.text }}>
-                      <Leaf size={18} style={{ color: '#4ade80' }} />
-                      <span>4U RETREATS</span>
-                    </div>
-                    <button
-                      onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                      style={{ background: 'transparent', border: 'none', color: themeStyle.text, cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-                    >
-                      {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-                    </button>
-                  </div>
-
-                  {/* Mobile Content */}
-                  <div style={{ padding: '16px', minHeight: '340px' }}>
-                    {/* Fixed top badges */}
-                    <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '12px', borderBottom: `1px solid ${themeStyle.border}` }}>
-                      {headerPreviewData.fixedTop.map((item) => (
-                        <span
-                          key={item.id || item.slug}
-                          style={{
-                            padding: '6px 12px',
-                            borderRadius: '20px',
-                            fontSize: '11px',
-                            fontWeight: 700,
-                            whiteSpace: 'nowrap',
-                            backgroundColor: themeStyle.hoverBg,
-                            color: item.color || '#4ade80',
-                            border: `1px solid ${item.color || '#4ade80'}40`,
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '5px'
-                          }}
-                        >
-                          {renderCategoryIcon(item.icon, item.color, 12)} {item.name}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Category Accordion */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      {headerPreviewData.parentsWithChildren.map((parent) => {
-                        const isExpanded = mobileExpandedSlug === parent.slug;
-                        return (
-                          <div key={parent.id || parent.slug} style={{ borderRadius: '10px', overflow: 'hidden', border: `1px solid ${themeStyle.border}`, backgroundColor: themeStyle.hoverBg }}>
-                            <div
-                              onClick={() => setMobileExpandedSlug(isExpanded ? null : parent.slug)}
-                              style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', fontWeight: 700, fontSize: '13px', color: parent.color || themeStyle.text }}
-                            >
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                {renderCategoryIcon(parent.icon, parent.color, 14)}
-                                <span>{parent.name}</span>
-                              </div>
-                              {parent.children.length > 0 && (
-                                <ChevronRight size={14} style={{ transform: isExpanded ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s ease' }} />
-                              )}
-                            </div>
-
-                            {/* Children */}
-                            {isExpanded && parent.children.length > 0 && (
-                              <div style={{ padding: '8px 14px 12px 28px', borderTop: `1px solid ${themeStyle.border}`, backgroundColor: themeStyle.dropdownBg, display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                {parent.children.map((child) => (
-                                  <div key={child.id || child.slug} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: themeStyle.text, padding: '4px 0' }}>
-                                    {renderCategoryIcon(child.icon, child.color, 13)}
-                                    <span>{child.name}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          }
-
-          // Desktop Mode Header Simulator
-          return (
-            <div style={{ overflow: 'hidden', borderRadius: '16px', border: `1px solid ${themeStyle.border}`, backgroundColor: themeStyle.bg, color: themeStyle.text, transition: 'all 0.3s ease' }}>
-              {/* Row 1: Fixed Top Badges Bar */}
-              <div
-                style={{
-                  minHeight: '42px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '24px',
-                  padding: '8px 20px',
-                  borderBottom: `1px solid ${themeStyle.border}`,
-                  backgroundColor: themeStyle.topBarBg,
-                  flexWrap: 'wrap'
-                }}
-              >
-                <span style={{ fontSize: '11px', color: themeStyle.subtext, fontWeight: 600 }}>Cố định hàng trên:</span>
-                {headerPreviewData.fixedTop.length > 0 ? (
-                  headerPreviewData.fixedTop.map((item) => (
-                    <span
-                      key={item.id || item.slug}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        color: item.color || '#4ade80',
-                        fontSize: '12px',
-                        fontWeight: 700,
-                        padding: '4px 10px',
-                        borderRadius: '20px',
-                        backgroundColor: themeStyle.hoverBg
-                      }}
-                    >
-                      {renderCategoryIcon(item.icon, item.color, 13)} {item.name}
-                    </span>
-                  ))
-                ) : (
-                  <span style={{ fontSize: '12px', color: themeStyle.subtext }}>Chưa tạo danh mục "fixed_top".</span>
-                )}
-              </div>
-
-              {/* Row 2: Main Desktop Nav Header */}
-              <div
-                style={{
-                  padding: '14px 28px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '20px',
-                  position: 'relative'
-                }}
-              >
-                {/* Brand Logo */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 900, fontSize: '18px', letterSpacing: '0.05em', color: themeStyle.text, fontFamily: "'Playfair Display', Georgia, serif" }}>
-                  <Leaf size={22} style={{ color: '#4ade80' }} />
-                  <span>4U RETREATS</span>
-                </div>
-
-                {/* Main Navigation items */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '22px', flexWrap: 'wrap' }}>
-                  {headerPreviewData.parentsWithChildren.length > 0 ? (
-                    headerPreviewData.parentsWithChildren.map((parent) => {
-                      const isHovered = activeHoverSlug === parent.slug;
-                      return (
-                        <div
-                          key={parent.id || parent.slug}
-                          onMouseEnter={() => setActiveHoverSlug(parent.slug)}
-                          onClick={() => setActiveHoverSlug(isHovered ? null : parent.slug)}
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '6px',
-                            color: parent.color || themeStyle.text,
-                            fontSize: '13px',
-                            fontWeight: 700,
-                            cursor: 'pointer',
-                            padding: '6px 12px',
-                            borderRadius: '8px',
-                            backgroundColor: isHovered ? themeStyle.hoverBg : 'transparent',
-                            transition: 'all 0.2s ease'
-                          }}
-                        >
-                          {renderCategoryIcon(parent.icon, parent.color, 14)}
-                          <span>{parent.name}</span>
-                          {parent.children.length > 0 && (
-                            <ChevronDown size={14} style={{ transform: isHovered ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease', opacity: 0.8 }} />
-                          )}
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <span style={{ fontSize: '13px', color: themeStyle.subtext }}>Chưa có danh mục Mega Menu.</span>
-                  )}
-                </div>
-
-                {/* Search & Action mock */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', backgroundColor: themeStyle.hoverBg, padding: '6px 12px', borderRadius: '20px', border: `1px solid ${themeStyle.border}`, fontSize: '12px', color: themeStyle.subtext }}>
-                    <Search size={14} />
-                    <span>Tìm tour...</span>
-                  </div>
-                  <div style={{ backgroundColor: '#059669', color: '#ffffff', padding: '6px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Phone size={13} /> Hotline
-                  </div>
-                </div>
-              </div>
-
-              {/* Dynamic Interactive Mega Menu Panel */}
-              {(() => {
-                const activeParent = headerPreviewData.parentsWithChildren.find(
-                  (p) => p.slug === activeHoverSlug
-                ) || headerPreviewData.parentsWithChildren.find((p) => p.children.length > 0);
-
-                if (!activeParent || activeParent.children.length === 0) return null;
-
-                return (
-                  <div
-                    style={{
-                      borderTop: `1px solid ${themeStyle.border}`,
-                      backgroundColor: themeStyle.dropdownBg,
-                      padding: '20px 28px',
-                      transition: 'all 0.3s ease'
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-                      <div style={{ fontSize: '11px', fontWeight: 800, color: themeStyle.subtext, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                        Mega Menu Dropdown Preview: <span style={{ color: activeParent.color || '#4ade80' }}>{activeParent.name}</span>
-                      </div>
-                      <span style={{ fontSize: '11px', color: themeStyle.subtext }}>Rê chuột vào menu cha ở trên để xem danh mục khác</span>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
-                      {activeParent.children.map((child) => (
-                        <div
-                          key={child.id || child.slug}
-                          style={{
-                            padding: '12px 14px',
-                            borderRadius: '12px',
-                            backgroundColor: themeStyle.hoverBg,
-                            border: `1px solid ${themeStyle.border}`,
-                            display: 'flex',
-                            alignItems: 'flex-start',
-                            gap: '10px'
-                          }}
-                        >
-                          <div style={{ marginTop: '2px' }}>{renderCategoryIcon(child.icon, child.color, 16)}</div>
-                          <div>
-                            <div style={{ fontSize: '13px', fontWeight: 700, color: child.color || themeStyle.text }}>{child.name}</div>
-                            <div style={{ fontSize: '11px', color: themeStyle.subtext, marginTop: '2px' }}>{child.description || `Xem danh sách tour thuộc ${child.name}`}</div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })()}
-            </div>
-          );
-        })()}
-      </div>
 
       {/* CREATE / EDIT MODAL */}
       {modalOpen && (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshCw, Plus } from 'lucide-react';
+import { RefreshCw, Plus, Edit2, Trash2 } from 'lucide-react';
 import { getImageUrl } from '../../services/apiService';
 import EmptyState from '../ui/EmptyState';
 
@@ -61,12 +61,8 @@ export default function AdminDestinationsManager({
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.15s ease'
+              gap: '6px'
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f8fafc')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ffffff')}
           >
             <RefreshCw size={14} color="#64748b" />
             <span>Làm Mới</span>
@@ -87,12 +83,8 @@ export default function AdminDestinationsManager({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
-              whiteSpace: 'nowrap',
-              boxShadow: '0 1px 3px rgba(15, 118, 110, 0.2)',
-              transition: 'all 0.15s ease'
+              boxShadow: '0 1px 3px rgba(15, 118, 110, 0.2)'
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#115e59')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#0f766e')}
           >
             <Plus size={15} />
             <span>Thêm Mới</span>
@@ -132,8 +124,8 @@ export default function AdminDestinationsManager({
                   <p style={{ fontSize: '13px', color: '#525a54', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{dest.overview}</p>
                 </div>
                 <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-                  <button onClick={() => openEditModal('destinations', dest)} style={{ backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '6px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>Chỉnh Sửa</button>
-                  <button onClick={() => handleDeleteItem('destinations', dest.slug)} style={{ backgroundColor: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5', borderRadius: '6px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>Xóa</button>
+                  <button onClick={() => openEditModal('destinations', dest)} style={{ width: '50px', height: '32px', backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '6px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} title="Chỉnh sửa"><Edit2 size={14} /></button>
+                  <button onClick={() => handleDeleteItem('destinations', dest.slug)} style={{ width: '50px', height: '32px', backgroundColor: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5', borderRadius: '6px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} title="Xóa"><Trash2 size={14} /></button>
                 </div>
               </div>
             </div>

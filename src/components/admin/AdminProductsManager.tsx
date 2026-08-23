@@ -28,6 +28,7 @@ import {
   Layers,
   X
 } from 'lucide-react';
+import AdminPriceInput from './AdminPriceInput';
 
 interface AdminProductsManagerProps {
   toast?: any;
@@ -527,39 +528,39 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
                       <button
                         onClick={() => handleOpenEdit(p)}
                         style={{
-                          padding: '6px 12px',
-                          borderRadius: '6px',
-                          border: '1px solid #d1d5db',
-                          background: '#ffffff',
+                          width: '50px',
+                          height: '32px',
+                          borderRadius: '8px',
+                          border: '1px solid #e5e7eb',
+                          background: '#f9fafb',
                           color: '#374151',
-                          fontSize: '12px',
-                          fontWeight: 700,
                           cursor: 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '4px'
+                          justifyContent: 'center'
                         }}
+                        title="Chỉnh sửa"
                       >
-                        <Edit2 size={13} /> Sửa
+                        <Edit2 size={14} />
                       </button>
 
                       <button
                         onClick={() => handleDelete(p)}
                         style={{
-                          padding: '6px 12px',
-                          borderRadius: '6px',
+                          width: '50px',
+                          height: '32px',
+                          borderRadius: '8px',
                           border: '1px solid #fecaca',
                           background: '#fff1f2',
                           color: '#b91c1c',
-                          fontSize: '12px',
-                          fontWeight: 700,
                           cursor: 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '4px'
+                          justifyContent: 'center'
                         }}
+                        title="Xóa"
                       >
-                        <Trash2 size={13} /> Xóa
+                        <Trash2 size={14} />
                       </button>
                     </div>
                   </td>
@@ -673,32 +674,24 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
 
               {/* Row 4: Price & Original Price */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 700, color: '#374151', display: 'block', marginBottom: '6px' }}>Giá Bán (VNĐ) *</label>
-                  <input
-                    type="number"
-                    required
-                    min="0"
-                    step="10000"
-                    placeholder="850000"
-                    value={editingItem.price ?? ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, price: Number(e.target.value) })}
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', boxSizing: 'border-box', fontWeight: 700, color: '#006d36' }}
-                  />
-                </div>
+                <AdminPriceInput
+                  id="prod-price"
+                  label="Giá Bán (VNĐ)"
+                  value={editingItem.price}
+                  onChange={(val) => setEditingItem({ ...editingItem, price: val })}
+                  placeholder="Ví dụ: 850.000"
+                  presets={[100000, 200000, 500000, 1000000]}
+                  required
+                />
 
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 700, color: '#374151', display: 'block', marginBottom: '6px' }}>Giá Gốc Niêm Yết (VNĐ)</label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="10000"
-                    placeholder="1100000"
-                    value={editingItem.originalPrice ?? ''}
-                    onChange={(e) => setEditingItem({ ...editingItem, originalPrice: Number(e.target.value) })}
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', boxSizing: 'border-box' }}
-                  />
-                </div>
+                <AdminPriceInput
+                  id="prod-original-price"
+                  label="Giá Gốc Niêm Yết (VNĐ)"
+                  value={editingItem.originalPrice}
+                  onChange={(val) => setEditingItem({ ...editingItem, originalPrice: val })}
+                  placeholder="Ví dụ: 1.100.000"
+                  presets={[100000, 200000, 500000, 1000000]}
+                />
               </div>
 
               {/* Row 5: Hero Image & Upload */}
