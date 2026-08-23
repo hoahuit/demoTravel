@@ -55,6 +55,9 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
 
               <div className="footer-license-info">
                 <div className="footer-nowrap">
+                  <strong className="footer-white-bold">Công ty TNHH THƯƠNG MẠI DU LỊCH BỐN TIỆN ÍCH</strong>
+                </div>
+                <div className="footer-nowrap">
                   Giấy phép: <strong className="footer-white-bold">79-367 / 2012</strong> (Lữ hành quốc tế)
                 </div>
                 <div className="footer-nowrap">
@@ -69,7 +72,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                 Về 4U Retreat
               </h4>
               <ul className="footer-links-list">
-                {['Lịch Sử Phát Triển', 'Đội Ngũ Chuyên Gia', 'Giấy Phép Quốc Tế', 'Khách hàng nói gì về chúng tôi', 'Cơ Hội Nghề Nghiệp'].map((item, i) => (
+                {['Lịch Sử Phát Triển', 'Đội Ngũ Chuyên Gia', 'Giấy Phép Quốc Tế'].map((item, i) => (
                   <li key={i}>
                     <a href="#" className="footer-link-item">
                       {item}
@@ -91,9 +94,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
                 <li>
                   <a href="#" className="footer-link-item">Series & Deal Mới</a>
                 </li>
-                <li>
-                  <a href="#" className="footer-link-item">Tư Vấn Thiết Kế 1:1</a>
-                </li>
+
                 <li className="footer-status-pill">
                   <a href="#" className="footer-link-item">Hỗ Trợ Trực Tuyến 24/7</a>
                   <span className="footer-online-dot"></span>
@@ -115,8 +116,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
 
                 <li className="footer-contact-row">
                   <div>
-                    <div><a href="tel:0764886877" className="footer-link-white" style={{ fontWeight: '600' }}>076 488 6877</a></div>
-                    <div><a href="tel:+842871028048" className="footer-link-white" style={{ fontWeight: '600' }}>(+84.28) 7102 8048</a> (Ext: 1)</div>
+                    <div><a href="tel:0896472601" className="footer-link-white" style={{ fontWeight: '600' }}>076 488 6877</a></div>
                   </div>
                 </li>
 
@@ -128,27 +128,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
 
           </div>
 
-          {/* Accordion Partner Directory */}
-          <div className="footer-directory-section">
-            <button
-              onClick={() => setShowPartners(!showPartners)}
-              className="footer-accordion-btn"
-            >
-              <span>Đối Tác & Mạng Lưới Điểm Đến Retreat</span>
-              <span style={{ fontWeight: 'bold' }}>{showPartners ? '[-]' : '[+]'}</span>
-            </button>
 
-            {showPartners && (
-              <div className="footer-directory-grid">
-                {seoLinks.map((item, idx) => (
-                  <div key={idx} className="footer-directory-card">
-                    <div style={{ fontSize: '14px', fontWeight: '600', color: '#ffffff' }}>{item.title}</div>
-                    <div style={{ fontSize: '14px', color: '#a3b899' }}>{item.desc}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
 
           {/* Divider Line */}
           <div className="footer-divider"></div>
