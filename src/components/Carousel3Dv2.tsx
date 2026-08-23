@@ -6,10 +6,11 @@ import { fetchToursApi, getImageUrl } from "../services/apiService";
 
 export interface Carousel3Dv2Props {
   onOpenBooking?: (tourData?: any) => void;
+  onOpenConsultation?: (tab?: 'consultation' | 'custom_tour', tourOrDest?: any) => void;
   onNavigate?: (path: string) => void;
 }
 
-export default function Carousel3Dv2({ onOpenBooking, onNavigate }: Carousel3Dv2Props) {
+export default function Carousel3Dv2({ onOpenBooking, onOpenConsultation, onNavigate }: Carousel3Dv2Props) {
   const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
   const [activeTourIndex, setActiveTourIndex] = useState<number>(0);
 
@@ -161,7 +162,9 @@ export default function Carousel3Dv2({ onOpenBooking, onNavigate }: Carousel3Dv2
               <button
                 type="button"
                 onClick={() => {
-                  if (onOpenBooking) {
+                  if (onOpenConsultation) {
+                    onOpenConsultation('consultation', activeTour.title || activeTour.city);
+                  } else if (onOpenBooking) {
                     onOpenBooking({
                       title: activeTour.title,
                       price: activeTour.price,

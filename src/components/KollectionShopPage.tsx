@@ -1397,22 +1397,41 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 10000,
-          padding: '20px'
+          padding: 'clamp(10px, 2vh, 20px)',
+          boxSizing: 'border-box'
         }}>
           <div style={{
             backgroundColor: '#ffffff',
-            borderRadius: '0.5rem',
+            borderRadius: '20px',
             width: '100%',
-            maxWidth: '540px',
-            maxHeight: '90vh',
+            maxWidth: '560px',
+            maxHeight: '96vh',
             overflowY: 'auto',
-            boxShadow: '0 25px 60px rgba(0,0,0,0.25)',
-            padding: '32px',
-            position: 'relative'
+            boxShadow: '0 30px 70px rgba(0, 0, 0, 0.35)',
+            padding: 'clamp(20px, 3vh, 32px) clamp(18px, 3vw, 30px)',
+            position: 'relative',
+            boxSizing: 'border-box',
+            fontFamily: "'Work Sans', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif"
           }}>
             <button
               onClick={() => { setCheckoutModalOpen(false); setOrderSuccess(false); }}
-              style={{ position: 'absolute', top: '16px', right: '16px', background: '#f3f4f5', border: 'none', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+              style={{
+                position: 'absolute',
+                top: 'clamp(14px, 2vh, 20px)',
+                right: 'clamp(14px, 2vw, 20px)',
+                background: '#f3f4f5',
+                border: 'none',
+                borderRadius: '50%',
+                width: '34px',
+                height: '34px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: '#4b5563',
+                transition: 'all 0.2s ease',
+                zIndex: 10
+              }}
             >
               <X size={18} />
             </button>
@@ -1420,81 +1439,84 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
             {orderSuccess ? (
               <div style={{ textAlign: 'center', padding: '24px 0' }}>
                 <CheckCircle2 size={60} style={{ color: '#065f46', margin: '0 auto 16px auto' }} />
-                <h3 className="font-headline" style={{ fontSize: '26px', fontWeight: 700, color: '#191c1d', margin: '0 0 10px 0' }}>
+                <h3 className="font-headline" style={{ fontSize: '24px', fontWeight: 700, color: '#191c1d', margin: '0 0 10px 0' }}>
                   Đặt hàng thành công!
                 </h3>
-                <p style={{ fontSize: '15px', color: '#555f6d', lineHeight: 1.6, margin: '0 0 24px 0' }}>
+                <p style={{ fontSize: '14.5px', color: '#555f6d', lineHeight: 1.6, margin: '0 0 24px 0' }}>
                   Cảm ơn bạn đã tin chọn sản phẩm từ Kollection 4U. Chúng tôi sẽ liên hệ sớm nhất để xác nhận và đóng gói giao hàng.
                 </p>
                 <button
                   onClick={() => { setCheckoutModalOpen(false); setOrderSuccess(false); }}
-                  style={{ padding: '12px 32px', borderRadius: '0.25rem', backgroundColor: '#065f46', color: '#ffffff', fontWeight: 600, border: 'none', cursor: 'pointer' }}
+                  style={{ padding: '12px 32px', borderRadius: '8px', backgroundColor: '#065f46', color: '#ffffff', fontWeight: 600, border: 'none', cursor: 'pointer' }}
                 >
                   Tiếp tục mua sắm
                 </button>
               </div>
             ) : (
               <div>
-                <h2 className="font-headline" style={{ fontSize: '24px', fontWeight: 700, color: '#191c1d', margin: '0 0 6px 0' }}>
+                <h2 className="font-headline" style={{ fontSize: 'clamp(20px, 2.6vh, 24px)', fontWeight: 800, color: '#111827', margin: '0 0 4px 0', letterSpacing: '-0.01em' }}>
                   Xác nhận đơn hàng
                 </h2>
-                <p style={{ fontSize: '14px', color: '#555f6d', margin: '0 0 20px 0' }}>
+                <p style={{ fontSize: 'clamp(12px, 1.5vh, 13.5px)', color: '#64748b', margin: '0 0 clamp(10px, 1.6vh, 16px) 0', lineHeight: 1.4 }}>
                   Vui lòng cung cấp thông tin để 4U giao hàng tận nơi cho bạn.
                 </p>
 
-                <form onSubmit={handleSubmitOrder} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '6px' }}>Họ và tên *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Nguyễn Văn A"
-                      value={orderForm.fullName}
-                      onChange={e => setOrderForm({ ...orderForm, fullName: e.target.value })}
-                      style={{ width: '100%', padding: '10px 12px', borderRadius: '0.25rem', border: '1px solid #bec9c2', fontSize: '14px', boxSizing: 'border-box', outline: 'none' }}
-                    />
+                <form onSubmit={handleSubmitOrder} style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(10px, 1.4vh, 14px)' }}>
+                  {/* 2-Column Responsive Inputs: Họ tên + Số điện thoại */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'clamp(8px, 1.2vh, 14px)' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>Họ và tên *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Nguyễn Văn A"
+                        value={orderForm.fullName}
+                        onChange={e => setOrderForm({ ...orderForm, fullName: e.target.value })}
+                        style={{ width: '100%', padding: 'clamp(8px, 1.2vh, 11px) 12px', borderRadius: '6px', border: '1px solid #bec9c2', fontSize: '13.5px', boxSizing: 'border-box', outline: 'none' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>Số điện thoại nhận hàng *</label>
+                      <input
+                        type="tel"
+                        required
+                        placeholder="0987 654 321"
+                        value={orderForm.phone}
+                        onChange={e => setOrderForm({ ...orderForm, phone: e.target.value })}
+                        style={{ width: '100%', padding: 'clamp(8px, 1.2vh, 11px) 12px', borderRadius: '6px', border: '1px solid #bec9c2', fontSize: '13.5px', boxSizing: 'border-box', outline: 'none' }}
+                      />
+                    </div>
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '6px' }}>Số điện thoại nhận hàng *</label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="0987 654 321"
-                      value={orderForm.phone}
-                      onChange={e => setOrderForm({ ...orderForm, phone: e.target.value })}
-                      style={{ width: '100%', padding: '10px 12px', borderRadius: '0.25rem', border: '1px solid #bec9c2', fontSize: '14px', boxSizing: 'border-box', outline: 'none' }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '6px' }}>Địa chỉ nhận hàng chi tiết</label>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>Địa chỉ nhận hàng chi tiết</label>
                     <input
                       type="text"
                       placeholder="Số nhà, Tên đường, Phường/Xã, Tỉnh/Thành"
                       value={orderForm.address}
                       onChange={e => setOrderForm({ ...orderForm, address: e.target.value })}
-                      style={{ width: '100%', padding: '10px 12px', borderRadius: '0.25rem', border: '1px solid #bec9c2', fontSize: '14px', boxSizing: 'border-box', outline: 'none' }}
+                      style={{ width: '100%', padding: 'clamp(8px, 1.2vh, 11px) 12px', borderRadius: '6px', border: '1px solid #bec9c2', fontSize: '13.5px', boxSizing: 'border-box', outline: 'none' }}
                     />
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '6px' }}>Ghi chú đơn hàng</label>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>Ghi chú đơn hàng</label>
                     <textarea
                       rows={2}
                       placeholder="Ghi chú thêm về thời gian nhận hàng hoặc đóng gói..."
                       value={orderForm.notes}
                       onChange={e => setOrderForm({ ...orderForm, notes: e.target.value })}
-                      style={{ width: '100%', padding: '10px 12px', borderRadius: '0.25rem', border: '1px solid #bec9c2', fontSize: '14px', boxSizing: 'border-box', outline: 'none', resize: 'vertical' }}
+                      style={{ width: '100%', padding: 'clamp(7px, 1vh, 10px) 12px', borderRadius: '6px', border: '1px solid #bec9c2', fontSize: '13.5px', boxSizing: 'border-box', outline: 'none', resize: 'vertical' }}
                     />
                   </div>
 
-                  <div style={{ backgroundColor: '#f8f9fa', padding: '14px 16px', borderRadius: '0.25rem', border: '1px solid #edeeef', margin: '4px 0' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#555f6d', marginBottom: '4px' }}>
+                  <div style={{ backgroundColor: '#f8f9fa', padding: 'clamp(10px, 1.5vh, 14px) 16px', borderRadius: '6px', border: '1px solid #edeeef' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', color: '#555f6d', marginBottom: '3px' }}>
                       <span>Tổng số lượng:</span>
                       <strong>{cartTotalItems} sản phẩm</strong>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '16px', fontWeight: 700, color: '#004532' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'clamp(15px, 2vh, 17px)', fontWeight: 700, color: '#004532' }}>
                       <span>Tổng thanh toán:</span>
                       <span>{formatVnd(cartTotalPrice)}</span>
                     </div>
@@ -1505,15 +1527,15 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                     backgroundColor: '#f4f7f5',
                     border: '1px solid #cce3d4',
                     borderRadius: '12px',
-                    padding: '16px',
+                    padding: 'clamp(10px, 1.5vh, 14px) 16px',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '12px'
+                    gap: 'clamp(6px, 1vh, 10px)'
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <QrCode size={18} style={{ color: '#065f46' }} />
-                        <span style={{ fontSize: '13px', fontWeight: 700, color: '#081f13', textTransform: 'uppercase' }}>
+                        <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#081f13', textTransform: 'uppercase' }}>
                           Quét Mã QR Chuyển Khoản Nhanh
                         </span>
                       </div>
@@ -1522,11 +1544,11 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
                       {/* QR Image */}
                       <div style={{
-                        width: '130px',
-                        height: '130px',
+                        width: 'clamp(100px, 13vh, 120px)',
+                        height: 'clamp(100px, 13vh, 120px)',
                         backgroundColor: '#ffffff',
                         borderRadius: '8px',
                         border: '1px solid #cbd5e1',
@@ -1545,7 +1567,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                       </div>
 
                       {/* Bank Transfer Info */}
-                      <div style={{ flex: 1, minWidth: '180px', fontSize: '12px', color: '#334155', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                      <div style={{ flex: 1, minWidth: '170px', fontSize: '12px', color: '#334155', display: 'flex', flexDirection: 'column', gap: '3px' }}>
                         <div>
                           <span style={{ color: '#64748b' }}>Ngân hàng:</span>{' '}
                           <strong style={{ color: '#081f13' }}>MB Bank (Quân Đội)</strong>
@@ -1595,19 +1617,20 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                       }}
                       style={{
                         width: '100%',
-                        padding: '10px 14px',
+                        padding: 'clamp(7px, 1.1vh, 10px) 12px',
                         borderRadius: '8px',
                         border: hasTransferred ? '2px solid #059669' : '1px solid #94a3b8',
                         backgroundColor: hasTransferred ? '#ecfdf5' : '#ffffff',
                         color: hasTransferred ? '#065f46' : '#1e293b',
                         fontWeight: 700,
-                        fontSize: '13px',
+                        fontSize: '12px',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        gap: '8px',
+                        gap: '6px',
                         transition: 'all 0.2s ease',
+                        marginTop: '2px',
                         boxShadow: hasTransferred ? '0 0 0 2px rgba(5, 150, 105, 0.2)' : 'none'
                       }}
                     >
@@ -1621,19 +1644,20 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                     disabled={orderSubmitting}
                     style={{
                       width: '100%',
-                      padding: '12px',
-                      borderRadius: '0.25rem',
-                      backgroundColor: '#065f46',
+                      padding: 'clamp(11px, 1.6vh, 14px) 20px',
+                      borderRadius: '8px',
+                      backgroundColor: '#004532',
                       color: '#ffffff',
-                      fontSize: '15px',
-                      fontWeight: 600,
+                      fontSize: 'clamp(13.5px, 1.6vh, 15px)',
+                      fontWeight: 700,
                       border: 'none',
                       cursor: orderSubmitting ? 'not-allowed' : 'pointer',
-                      boxShadow: '0 4px 14px rgba(6, 95, 70, 0.3)',
+                      boxShadow: '0 4px 14px rgba(0, 69, 50, 0.25)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '8px'
+                      gap: '8px',
+                      transition: 'all 0.2s ease'
                     }}
                   >
                     {orderSubmitting ? <RefreshCw size={18} className="spin" /> : <ShieldCheck size={18} />}

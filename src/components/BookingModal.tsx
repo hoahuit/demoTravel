@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import './BookingModal.css';
-import { ShieldCheck, PhoneCall, CheckCircle, Zap } from 'lucide-react';
+import { QrCode, ShieldCheck, CheckCircle, X } from 'lucide-react';
 
 export interface BookingModalProps {
   externalOpen?: boolean;
@@ -12,22 +11,22 @@ export interface BookingModalProps {
     city?: string;
     slug?: string;
     duration?: string;
+    selectedDate?: string;
+    guests?: any;
   } | null;
 }
 
-interface FormDataState {
-  name: string;
+interface OrderFormState {
+  fullName: string;
   phone: string;
-  email: string;
-  tour: string;
-  guests: number;
-  date: string;
+  address: string;
+  notes: string;
 }
 
 export default function BookingModal({ externalOpen, onExternalClose, selectedTour }: BookingModalProps) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const [paymentReceipt, setPaymentReceipt] = useState<any>(null);
+  const [hasTransferred, setHasTransferred] = useState<boolean>(false);
 
   useEffect(() => {
     if (externalOpen !== undefined) {
@@ -40,21 +39,18 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
       document.documentElement.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
-      document.body.style.touchAction = '';
       document.documentElement.style.overflow = '';
     }
     return () => {
       document.body.style.overflow = '';
-      document.body.style.touchAction = '';
       document.documentElement.style.overflow = '';
     };
   }, [isOpen]);
 
-  const defaultTourTitle = selectedTour?.title || 'Retreat Chữa Lành Thân Tâm Trí (Nam Cát Tiên)';
+  const defaultTourTitle = selectedTour?.title || 'Retreat May Đo Tĩnh Dưỡng Độc Bản';
 
   const parsePrice = (priceVal: any): number => {
     if (typeof priceVal === 'number' && !isNaN(priceVal)) return priceVal;
@@ -63,379 +59,493 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
       const parsed = parseInt(cleaned, 10);
       if (!isNaN(parsed) && parsed > 0) return parsed;
     }
-    return 3450000;
+    return 1850000;
   };
 
   const tourPriceVND = parsePrice(selectedTour?.price);
 
-  const [formData, setFormData] = useState<FormDataState>({
-    name: '',
+  const [orderForm, setOrderForm] = useState<OrderFormState>({
+    fullName: '',
     phone: '',
-    email: '',
-    tour: defaultTourTitle,
-    guests: 1,
-    date: new Date().toISOString().split('T')[0],
+    address: '',
+    notes: '',
   });
 
-  useEffect(() => {
-    if (selectedTour?.title) {
-      setFormData(prev => ({ ...prev, tour: selectedTour.title || prev.tour }));
-    }
-  }, [selectedTour]);
-
-  const totalPriceVND = tourPriceVND * formData.guests;
-  const totalPriceUSD = Math.max(1, Math.round(totalPriceVND / 25000));
-
-  const handlePayPalSuccess = (details: any) => {
-    setPaymentReceipt(details);
-    setSubmitted(true);
+  const formatVnd = (price: number) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
   };
 
   const resetAndClose = () => {
     setModalOpen(false);
     setSubmitted(false);
-    setPaymentReceipt(null);
+    setHasTransferred(false);
     document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
     if (onExternalClose) onExternalClose();
-    setFormData({
-      name: '',
+    setOrderForm({
+      fullName: '',
       phone: '',
-      email: '',
-      tour: defaultTourTitle,
-      guests: 1,
-      date: new Date().toISOString().split('T')[0],
+      address: '',
+      notes: '',
     });
   };
 
+  const handleSubmitOrder = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!orderForm.fullName.trim() || !orderForm.phone.trim()) {
+      alert('Vui lòng nhập họ tên và số điện thoại liên hệ!');
+      return;
+    }
+
+    try {
+      const currentBookings = JSON.parse(localStorage.getItem('4u_tour_bookings') || '[]');
+      currentBookings.push({
+        id: 'BK-' + Date.now(),
+        tour: defaultTourTitle,
+        price: tourPriceVND,
+        customer: orderForm,
+        hasTransferred,
+        createdAt: new Date().toISOString(),
+      });
+      localStorage.setItem('4u_tour_bookings', JSON.stringify(currentBookings));
+    } catch {
+      // ignore
+    }
+
+    setSubmitted(true);
+  };
+
+  const cleanPhone = orderForm.phone ? orderForm.phone.replace(/\s+/g, '') : 'TOUR';
+
   return (
     <>
-      {/* PAYPAL CHECKOUT MODAL OVERLAY */}
       {isOpen && (
         <div
           className="bm-overlay"
           onClick={(e) => {
             if (e.target === e.currentTarget) resetAndClose();
           }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 'clamp(10px, 2vh, 20px)',
+            overflowY: 'auto',
+            boxSizing: 'border-box'
+          }}
         >
           <div
-            className="bm-modal"
             style={{
-              maxWidth: '920px',
-              width: '92vw',
-              maxHeight: '90vh',
-              overflow: 'hidden',
-              display: 'grid',
-              gridTemplateColumns: '310px 1fr'
+              backgroundColor: '#ffffff',
+              borderRadius: '20px',
+              maxWidth: '560px',
+              width: '100%',
+              padding: 'clamp(20px, 3vh, 32px) clamp(18px, 3vw, 30px)',
+              position: 'relative',
+              boxShadow: '0 30px 70px rgba(0, 0, 0, 0.35)',
+              fontFamily: "'Work Sans', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+              color: '#191c1d',
+              maxHeight: '96vh',
+              overflowY: 'auto',
+              boxSizing: 'border-box',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              gap: 'clamp(10px, 1.6vh, 18px)'
             }}
           >
-            {/* Close Button */}
-            <button className="bm-close-btn" onClick={resetAndClose} aria-label="Đóng">
-              ✕
+            {/* Close Button X */}
+            <button
+              onClick={resetAndClose}
+              type="button"
+              style={{
+                position: 'absolute',
+                top: 'clamp(14px, 2vh, 20px)',
+                right: 'clamp(14px, 2vw, 20px)',
+                width: '34px',
+                height: '34px',
+                borderRadius: '50%',
+                backgroundColor: '#f3f4f6',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: '#4b5563',
+                transition: 'all 0.2s ease',
+                zIndex: 10
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#e5e7eb';
+                e.currentTarget.style.color = '#111827';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#f3f4f6';
+                e.currentTarget.style.color = '#4b5563';
+              }}
+            >
+              <X size={18} />
             </button>
 
             {!submitted ? (
-              <>
-                {/* LEFT PANEL: COMPACT PRODUCT SUMMARY & ORDER DETAILS */}
-                <div
-                  className="bm-panel-left"
-                  style={{
-                    background: 'linear-gradient(165deg, #0C2620 0%, #1E4A3D 100%)',
-                    color: '#ffffff',
-                    padding: '24px 22px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between'
-                  }}
-                >
+              <form onSubmit={handleSubmitOrder} style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(10px, 1.4vh, 16px)', margin: 0 }}>
+                {/* Header Title */}
+                <div>
+                  <h2 style={{ fontSize: 'clamp(20px, 2.6vh, 24px)', fontWeight: 800, color: '#111827', margin: '0 0 4px 0', letterSpacing: '-0.01em' }}>
+                    Xác nhận đơn hàng
+                  </h2>
+                  <p style={{ fontSize: 'clamp(12px, 1.5vh, 13.5px)', color: '#64748b', margin: 0, lineHeight: 1.4 }}>
+                    Vui lòng cung cấp thông tin để 4U giao hàng tận nơi cho bạn.
+                  </p>
+                </div>
+
+                {/* 2-Column Responsive Inputs: Họ và tên + Số điện thoại */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'clamp(8px, 1.2vh, 14px)' }}>
+                  {/* Họ và tên */}
                   <div>
-                    <span className="bm-panel-eyebrow" style={{ color: '#4ade80', letterSpacing: '0.12em', fontSize: '10.5px', marginBottom: '4px' }}>
-                      THANH TOÁN AN TOÀN
-                    </span>
-                    <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#ffffff', margin: '0 0 12px 0', lineHeight: 1.3 }}>
-                      Xác Nhận Đặt Gói Retreat
-                    </h3>
-
-                    {/* SELECTED PACKAGE CARD */}
-                    <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: '12px', padding: '12px 14px', marginBottom: '12px', border: '1px solid rgba(255,255,255,0.12)' }}>
-                      <div style={{ fontSize: '10.5px', color: 'rgba(255,255,255,0.65)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '3px' }}>Gói Đã Chọn</div>
-                      <div style={{ fontSize: '14.5px', fontWeight: 700, color: '#ffffff', marginBottom: '4px', lineHeight: 1.3 }}>
-                        {formData.tour}
-                      </div>
-                      {selectedTour?.city && (
-                        <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.85)' }}>{selectedTour.city} • {selectedTour.duration || '3D2N'}</div>
-                      )}
-                    </div>
-
-                    {/* PRICE SUMMARY BOX */}
-                    <div style={{ background: 'rgba(0,0,0,0.22)', borderRadius: '12px', padding: '12px 14px', marginBottom: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', marginBottom: '6px', color: 'rgba(255,255,255,0.85)' }}>
-                        <span>Đơn giá / Khách:</span>
-                        <strong>{tourPriceVND.toLocaleString('vi-VN')} ₫</strong>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', marginBottom: '8px', color: 'rgba(255,255,255,0.85)' }}>
-                        <span>Số lượng tham gia:</span>
-                        <strong>{formData.guests} Người</strong>
-                      </div>
-                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.12)', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                        <span style={{ fontSize: '13px', fontWeight: 700, color: '#ffffff' }}>Tổng Cộng:</span>
-                        <div style={{ textAlign: 'right' }}>
-                          <div style={{ fontSize: '19px', fontWeight: 800, color: '#4ade80' }}>
-                            {totalPriceVND.toLocaleString('vi-VN')} ₫
-                          </div>
-                          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.65)' }}>
-                            (~ ${totalPriceUSD} USD)
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* PERKS LIST */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '12px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'rgba(255,255,255,0.9)' }}>
-                        <ShieldCheck size={14} color="#4ade80" />
-                        <span>Xác nhận giữ chỗ tức thì qua PayPal</span>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'rgba(255,255,255,0.9)' }}>
-                        <CheckCircle size={14} color="#4ade80" />
-                        <span>Đổi ngày linh hoạt miễn phí trước 7 ngày</span>
-                      </div>
-                    </div>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>
+                      Họ và tên *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Nguyễn Văn A"
+                      value={orderForm.fullName}
+                      onChange={(e) => setOrderForm({ ...orderForm, fullName: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: 'clamp(8px, 1.2vh, 11px) 12px',
+                        borderRadius: '6px',
+                        border: '1px solid #bec9c2',
+                        fontSize: '13.5px',
+                        boxSizing: 'border-box',
+                        outline: 'none',
+                        transition: 'border-color 0.2s ease'
+                      }}
+                    />
                   </div>
 
-                  {/* HOTLINE BOX */}
-                  <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '10px', padding: '10px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: 'rgba(255,255,255,0.8)' }}>
-                      <PhoneCall size={13} color="#4ade80" />
-                      <span>Hotline 24/7:</span>
-                    </div>
-                    <a href="tel:0764886877" style={{ color: '#ffffff', fontWeight: 800, fontSize: '13px', textDecoration: 'none' }}>
-                      0764.886.877
-                    </a>
+                  {/* Số điện thoại */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>
+                      Số điện thoại nhận hàng *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="0987 654 321"
+                      value={orderForm.phone}
+                      onChange={(e) => setOrderForm({ ...orderForm, phone: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: 'clamp(8px, 1.2vh, 11px) 12px',
+                        borderRadius: '6px',
+                        border: '1px solid #bec9c2',
+                        fontSize: '13.5px',
+                        boxSizing: 'border-box',
+                        outline: 'none',
+                        transition: 'border-color 0.2s ease'
+                      }}
+                    />
                   </div>
                 </div>
 
-                {/* RIGHT PANEL: COMPACT FORM & PAYPAL ACTIONS */}
-                <div className="bm-panel-right" style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', background: '#ffffff' }}>
-                  <div>
-                    <div style={{ marginBottom: '14px' }}>
-                      <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', margin: '0 0 2px 0' }}>
-                        Thanh toán & đặt tour
-                      </h2>
-                      <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>
-                        Nhập thông tin du khách và chọn hình thức thanh toán PayPal.
-                      </p>
+                {/* Địa chỉ */}
+                <div>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>
+                    Địa chỉ nhận hàng chi tiết
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Số nhà, Tên đường, Phường/Xã, Tỉnh/Thành"
+                    value={orderForm.address}
+                    onChange={(e) => setOrderForm({ ...orderForm, address: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: 'clamp(8px, 1.2vh, 11px) 12px',
+                      borderRadius: '6px',
+                      border: '1px solid #bec9c2',
+                      fontSize: '13.5px',
+                      boxSizing: 'border-box',
+                      outline: 'none'
+                    }}
+                  />
+                </div>
+
+                {/* Ghi chú */}
+                <div>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>
+                    Ghi chú đơn hàng
+                  </label>
+                  <textarea
+                    rows={2}
+                    placeholder="Ghi chú thêm về thời gian nhận hàng hoặc đóng gói..."
+                    value={orderForm.notes}
+                    onChange={(e) => setOrderForm({ ...orderForm, notes: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: 'clamp(7px, 1vh, 10px) 12px',
+                      borderRadius: '6px',
+                      border: '1px solid #bec9c2',
+                      fontSize: '13.5px',
+                      boxSizing: 'border-box',
+                      outline: 'none',
+                      resize: 'vertical'
+                    }}
+                  />
+                </div>
+
+                {/* Price Summary Box */}
+                <div style={{ backgroundColor: '#f8f9fa', padding: 'clamp(10px, 1.5vh, 14px) 16px', borderRadius: '6px', border: '1px solid #edeeef' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', color: '#555f6d', marginBottom: '3px' }}>
+                    <span>Tổng số lượng:</span>
+                    <strong>1 sản phẩm</strong>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'clamp(15px, 2vh, 17px)', fontWeight: 700, color: '#004532' }}>
+                    <span>Tổng thanh toán:</span>
+                    <span>{formatVnd(tourPriceVND)}</span>
+                  </div>
+                </div>
+
+                {/* QR Code VietQR Section */}
+                <div
+                  style={{
+                    backgroundColor: '#f4f7f5',
+                    border: '1px solid #cce3d4',
+                    borderRadius: '12px',
+                    padding: 'clamp(10px, 1.5vh, 14px) 16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 'clamp(6px, 1vh, 10px)'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <QrCode size={18} style={{ color: '#065f46' }} />
+                      <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#081f13', textTransform: 'uppercase' }}>
+                        QUÉT MÃ QR CHUYỂN KHOẢN NHANH
+                      </span>
                     </div>
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                      {/* FULL NAME */}
-                      <div className="bm-field" style={{ marginBottom: 0 }}>
-                        <label htmlFor="fullName" style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginBottom: '3px', display: 'block' }}>
-                          Họ & Tên Du Khách <span style={{ color: '#e11d48' }}>*</span>
-                        </label>
-                        <input
-                          id="fullName"
-                          type="text"
-                          placeholder="Ví dụ: Nguyễn Văn A"
-                          required
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          style={{ width: '100%', padding: '8px 12px', fontSize: '13px', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', boxSizing: 'border-box' }}
-                        />
-                      </div>
-
-                      {/* PHONE & EMAIL */}
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                        <div className="bm-field" style={{ marginBottom: 0 }}>
-                          <label htmlFor="phone" style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginBottom: '3px', display: 'block' }}>
-                            Số Điện Thoại / Zalo <span style={{ color: '#e11d48' }}>*</span>
-                          </label>
-                          <input
-                            id="phone"
-                            type="tel"
-                            placeholder="0901 234 567"
-                            required
-                            value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                            style={{ width: '100%', padding: '8px 12px', fontSize: '13px', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', boxSizing: 'border-box' }}
-                          />
-                        </div>
-
-                        <div className="bm-field" style={{ marginBottom: 0 }}>
-                          <label htmlFor="email" style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginBottom: '3px', display: 'block' }}>
-                            Email Nhận Mã Vé
-                          </label>
-                          <input
-                            id="email"
-                            type="email"
-                            placeholder="client@gmail.com"
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            style={{ width: '100%', padding: '8px 12px', fontSize: '13px', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', boxSizing: 'border-box' }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* GUESTS & DATE */}
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                        <div className="bm-field" style={{ marginBottom: 0 }}>
-                          <label htmlFor="guestsSelect" style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginBottom: '3px', display: 'block' }}>
-                            Số Lượng Khách
-                          </label>
-                          <select
-                            id="guestsSelect"
-                            value={formData.guests}
-                            onChange={(e) => setFormData({ ...formData, guests: Number(e.target.value) })}
-                            style={{ width: '100%', padding: '8px 12px', fontSize: '13px', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', boxSizing: 'border-box', background: '#ffffff' }}
-                          >
-                            <option value={1}>1 Khách (${Math.round(tourPriceVND / 25000)})</option>
-                            <option value={2}>2 Khách (${Math.round((tourPriceVND * 2) / 25000)})</option>
-                            <option value={3}>3 Khách (${Math.round((tourPriceVND * 3) / 25000)})</option>
-                            <option value={4}>4 Khách (${Math.round((tourPriceVND * 4) / 25000)})</option>
-                            <option value={5}>5 Khách (${Math.round((tourPriceVND * 5) / 25000)})</option>
-                          </select>
-                        </div>
-
-                        <div className="bm-field" style={{ marginBottom: 0 }}>
-                          <label htmlFor="dateSelect" style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginBottom: '3px', display: 'block' }}>
-                            Ngày Khởi Hành
-                          </label>
-                          <input
-                            id="dateSelect"
-                            type="date"
-                            value={formData.date}
-                            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                            style={{ width: '100%', padding: '8px 12px', fontSize: '13px', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', boxSizing: 'border-box' }}
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    <span
+                      style={{
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        backgroundColor: '#dcfce7',
+                        color: '#15803d',
+                        padding: '2px 8px',
+                        borderRadius: '999px',
+                        border: '1px solid #bbf7d0'
+                      }}
+                    >
+                      VietQR 24/7
+                    </span>
                   </div>
 
-                  {/* PAYPAL PAYMENT & DEMO TEST BUTTON */}
-                  <div style={{ marginTop: '12px' }}>
-                    <div style={{ fontSize: '11.5px', color: '#64748b', marginBottom: '8px', fontWeight: 600 }}>
-                      Thanh toán an toàn qua cổng PayPal (Visa, Mastercard, AMEX):
-                    </div>
-
-                    <div style={{ maxHeight: '110px', overflow: 'hidden' }}>
-                      <PayPalScriptProvider options={{ clientId: 'test', currency: 'USD' }}>
-                        <PayPalButtons
-                          style={{ layout: 'vertical', color: 'gold', shape: 'rect', label: 'pay', height: 38 }}
-                          createOrder={(data, actions) => {
-                            return actions.order.create({
-                              intent: 'CAPTURE',
-                              purchase_units: [
-                                {
-                                  description: `Đặt tour ${formData.tour}`,
-                                  amount: {
-                                    currency_code: 'USD',
-                                    value: totalPriceUSD.toString()
-                                  }
-                                }
-                              ]
-                            });
-                          }}
-                          onApprove={async (data, actions) => {
-                            if (actions.order) {
-                              const details = await actions.order.capture();
-                              handlePayPalSuccess(details);
-                            }
-                          }}
-                          onError={(err) => {
-                            if ((import.meta as any).env?.DEV) {
-                              // Debug log for sandbox testing mode
-                            }
-                            handlePayPalSuccess({
-                              id: 'PAYPAL-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
-                              payer: { name: { given_name: formData.name || 'Du Khách' } },
-                              status: 'COMPLETED'
-                            });
-                          }}
-                        />
-                      </PayPalScriptProvider>
-                    </div>
-
-                    {/* Quick Demo Test Button */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (!formData.name || !formData.phone) {
-                          alert('Vui lòng điền Họ tên và Số điện thoại trước khi bấm thanh toán!');
-                          return;
-                        }
-                        handlePayPalSuccess({
-                          id: 'PP-DEMO-' + Math.floor(100000 + Math.random() * 900000),
-                          payer: { name: { given_name: formData.name } },
-                          status: 'COMPLETED'
-                        });
-                      }}
+                  <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    {/* QR Image */}
+                    <div
                       style={{
-                        width: '100%',
-                        marginTop: '8px',
-                        padding: '8px 12px',
-                        background: '#f8fafc',
-                        border: '1px dashed #cbd5e1',
+                        width: 'clamp(100px, 13vh, 120px)',
+                        height: 'clamp(100px, 13vh, 120px)',
+                        backgroundColor: '#ffffff',
                         borderRadius: '8px',
-                        fontSize: '12px',
-                        fontWeight: 700,
-                        color: '#334155',
-                        cursor: 'pointer',
+                        border: '1px solid #cbd5e1',
+                        padding: '4px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        gap: '6px'
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                        flexShrink: 0
                       }}
                     >
-                      <Zap size={14} color="#e11d48" />
-                      <span>Xác Nhận Đặt & Thanh Toán Sandbox Demo</span>
-                    </button>
+                      <img
+                        src={`https://api.vietqr.io/image/970422-0987654321-compact.png?amount=${tourPriceVND}&addInfo=${encodeURIComponent('4U ' + cleanPhone)}&accountName=4U%20WELLNESS%20RETREAT`}
+                        alt="Mã QR Chuyển Khoản"
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                      />
+                    </div>
+
+                    {/* Bank Transfer Info */}
+                    <div style={{ flex: 1, minWidth: '170px', fontSize: '12px', color: '#334155', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                      <div>
+                        <span style={{ color: '#64748b' }}>Ngân hàng:</span>{' '}
+                        <strong style={{ color: '#081f13' }}>MB Bank (Quân Đội)</strong>
+                      </div>
+                      <div>
+                        <span style={{ color: '#64748b' }}>Số tài khoản:</span>{' '}
+                        <strong style={{ color: '#065f46', fontFamily: 'monospace', fontSize: '13px' }}>0987 654 321</strong>
+                      </div>
+                      <div>
+                        <span style={{ color: '#64748b' }}>Chủ tài khoản:</span>{' '}
+                        <strong style={{ color: '#081f13' }}>4U WELLNESS & RETREAT</strong>
+                      </div>
+                      <div>
+                        <span style={{ color: '#64748b' }}>Số tiền:</span>{' '}
+                        <strong style={{ color: '#065f46', fontSize: '13px' }}>{formatVnd(tourPriceVND)}</strong>
+                      </div>
+                      <div>
+                        <span style={{ color: '#64748b' }}>Nội dung CK:</span>{' '}
+                        <code style={{ backgroundColor: '#ffffff', padding: '2px 6px', borderRadius: '4px', border: '1px solid #cbd5e1', fontWeight: 700, color: '#081f13' }}>
+                          4U {cleanPhone}
+                        </code>
+                      </div>
+                    </div>
                   </div>
 
+                  {/* Button to confirm transfer */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const nextState = !hasTransferred;
+                      setHasTransferred(nextState);
+                      const transferTag = `[ĐÃ CHUYỂN KHOẢN QR ${formatVnd(tourPriceVND)}]`;
+                      if (nextState) {
+                        if (!orderForm.notes.includes(transferTag)) {
+                          setOrderForm((prev) => ({
+                            ...prev,
+                            notes: prev.notes ? `${prev.notes} - ${transferTag}` : transferTag
+                          }));
+                        }
+                      } else {
+                        setOrderForm((prev) => ({
+                          ...prev,
+                          notes: prev.notes.replace(` - ${transferTag}`, '').replace(transferTag, '').trim()
+                        }));
+                      }
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: 'clamp(7px, 1.1vh, 10px) 12px',
+                      borderRadius: '8px',
+                      border: hasTransferred ? '2px solid #059669' : '1px solid #94a3b8',
+                      backgroundColor: hasTransferred ? '#ecfdf5' : '#ffffff',
+                      color: hasTransferred ? '#065f46' : '#1e293b',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      transition: 'all 0.2s ease',
+                      marginTop: '2px'
+                    }}
+                  >
+                    {hasTransferred ? (
+                      <>
+                        <CheckCircle size={15} style={{ color: '#059669' }} />
+                        <span>ĐÃ XÁC NHẬN: BẠN ĐÃ CHUYỂN KHOẢN THÀNH CÔNG!</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>💳</span>
+                        <span>👉 Bấm vào đây sau khi bạn ĐÃ CHUYỂN TIỀN</span>
+                      </>
+                    )}
+                  </button>
                 </div>
-              </>
-            ) : (
-              /* SUCCESS RECEIPT VIEW */
-              <div style={{ padding: '40px 30px', textAlign: 'center', width: '100%', gridColumn: '1 / -1' }}>
-                <h3
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
                   style={{
-                    fontSize: '26px',
-                    color: '#0f172a',
-                    marginBottom: '8px',
-                    fontWeight: 800
+                    width: '100%',
+                    padding: 'clamp(11px, 1.6vh, 14px) 20px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    backgroundColor: '#004532',
+                    color: '#ffffff',
+                    fontSize: 'clamp(13.5px, 1.6vh, 15px)',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    boxShadow: '0 4px 14px rgba(0, 69, 50, 0.25)',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#005a41')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#004532')}
+                >
+                  <ShieldCheck size={18} />
+                  <span>Hoàn tất đặt hàng</span>
+                </button>
+              </form>
+            ) : (
+              /* Success confirmation */
+              <div style={{ textAlign: 'center', padding: '24px 10px' }}>
+                <div
+                  style={{
+                    width: '64px',
+                    height: '64px',
+                    borderRadius: '50%',
+                    backgroundColor: '#dcfce7',
+                    color: '#15803d',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 16px'
                   }}
                 >
-                  Thanh Toán Thành Công!
+                  <CheckCircle size={36} />
+                </div>
+                <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#111827', margin: '0 0 8px 0' }}>
+                  Đặt Hàng Thành Công!
                 </h3>
-                <p style={{ fontSize: '15px', color: '#475569', lineHeight: 1.5, maxWidth: '480px', margin: '0 auto 20px' }}>
-                  Cảm ơn <strong>{formData.name}</strong>. Giao dịch đặt gói <strong>{formData.tour}</strong> đã được ghi nhận an toàn trên hệ thống.
+                <p style={{ fontSize: '13.5px', color: '#4b5563', lineHeight: 1.5, margin: '0 0 20px 0' }}>
+                  Cảm ơn <strong>{orderForm.fullName}</strong>. Đơn hàng của bạn đã được tiếp nhận. Đội ngũ 4U Wellness sẽ liên hệ xác nhận trong ít phút!
                 </p>
 
-                {/* PAYMENT RECEIPT CARD */}
-                <div style={{ maxWidth: '460px', margin: '0 auto 24px', background: '#f8fafc', borderRadius: '14px', padding: '20px', border: '1px solid #e2e8f0', textAlign: 'left' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#64748b', marginBottom: '6px' }}>
-                    <span>Mã Giao Dịch PayPal:</span>
-                    <strong style={{ color: '#0f172a' }}>{paymentReceipt?.id || 'PP-' + Math.floor(Math.random() * 1000000)}</strong>
+                <div
+                  style={{
+                    backgroundColor: '#f8fafc',
+                    borderRadius: '10px',
+                    padding: '14px 16px',
+                    border: '1px solid #e2e8f0',
+                    textAlign: 'left',
+                    fontSize: '12.5px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    marginBottom: '20px'
+                  }}
+                >
+                  <div>
+                    <span style={{ color: '#64748b' }}>Sản phẩm / Gói:</span>{' '}
+                    <strong style={{ color: '#0f172a' }}>{defaultTourTitle}</strong>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#64748b', marginBottom: '6px' }}>
-                    <span>Trạng Thái:</span>
-                    <span style={{ color: '#166534', fontWeight: 700, background: '#dcfce7', padding: '2px 8px', borderRadius: '10px' }}>ĐÃ THANH TOÁN</span>
+                  <div>
+                    <span style={{ color: '#64748b' }}>Tổng tiền:</span>{' '}
+                    <strong style={{ color: '#004532', fontSize: '14px' }}>{formatVnd(tourPriceVND)}</strong>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#64748b', marginBottom: '6px' }}>
-                    <span>Số Tiền Thanh Toán:</span>
-                    <strong style={{ color: '#006d36', fontSize: '15px' }}>{totalPriceVND.toLocaleString('vi-VN')} ₫ (${totalPriceUSD} USD)</strong>
-                  </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#64748b' }}>
-                    <span>Số Điện Thoại / Email:</span>
-                    <strong style={{ color: '#0f172a' }}>{formData.phone} {formData.email && `(${formData.email})`}</strong>
+                  <div>
+                    <span style={{ color: '#64748b' }}>Số điện thoại:</span>{' '}
+                    <strong style={{ color: '#0f172a' }}>{orderForm.phone}</strong>
                   </div>
                 </div>
 
                 <button
+                  type="button"
                   onClick={resetAndClose}
-                  className="bm-submit-btn"
-                  style={{ maxWidth: '240px', margin: '0 auto', background: '#1E4A3D', padding: '10px 20px', borderRadius: '99px', color: '#fff', border: 'none', fontWeight: 700, cursor: 'pointer' }}
+                  style={{
+                    padding: '12px 28px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    backgroundColor: '#004532',
+                    color: '#ffffff',
+                    fontSize: '13.5px',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
                 >
-                  Hoàn Tất & Đóng Cửa Sổ
+                  Đóng & Hoàn Tất
                 </button>
               </div>
             )}

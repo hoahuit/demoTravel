@@ -83,3 +83,19 @@
   border-radius: 14px;
   border: 1px solid rgba(45, 90, 54, 0.18);
 }
+
+@media (max-width: 768px) {
+  .pd-mobile-floating-bar {
+    display: flex !important;
+  }
+
+  .pd-summary-card {
+    grid-template-columns: 1fr !important;
+    padding: 18px !important;
+    gap: 20px !important;
+  }
+
+  .pd-day-content-card {
+    padding: 20px 16px !important;
+  }
+}

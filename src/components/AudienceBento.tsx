@@ -4,10 +4,11 @@ import ScrollReveal from './ScrollReveal';
 
 export interface AudienceBentoProps {
   onOpenBooking?: (tourData?: any) => void;
+  onOpenConsultation?: (tab?: 'consultation' | 'custom_tour', destination?: string) => void;
   onNavigate?: (path: string) => void;
 }
 
-export default function AudienceBento({ onOpenBooking, onNavigate }: AudienceBentoProps) {
+export default function AudienceBento({ onOpenBooking, onOpenConsultation, onNavigate }: AudienceBentoProps) {
   return (
     <section className="audience-section" style={{ background: '#e5efe8', overflow: 'hidden', position: 'relative', zIndex: 5, padding: '90px 0 100px 0' }} id="audience">
       <div className="apple-container">
@@ -48,7 +49,7 @@ export default function AudienceBento({ onOpenBooking, onNavigate }: AudienceBen
       {/* NEW 3D CAROUSEL COMPONENT — FULL SCREEN WIDTH */}
       <ScrollReveal delay={150}>
         <div style={{ width: '100%', overflow: 'hidden' }}>
-          <Carousel3Dv2 onOpenBooking={onOpenBooking} onNavigate={onNavigate} />
+          <Carousel3Dv2 onOpenBooking={onOpenBooking} onOpenConsultation={onOpenConsultation} onNavigate={onNavigate} />
         </div>
       </ScrollReveal>
 

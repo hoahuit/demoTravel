@@ -249,7 +249,7 @@ export default function App() {
         />
 
         {/* Section 2: Sản Phẩm Retreat Độc Quyền (3D Carousel) */}
-        <AudienceBento onOpenBooking={handleOpenBooking} onNavigate={navigateTo} />
+        <AudienceBento onOpenBooking={handleOpenBooking} onOpenConsultation={handleOpenConsultation} onNavigate={navigateTo} />
 
         {/* Section 3: Sản Phẩm Sắp Khởi Hành (Bento Grid) */}
         <BentoGrid onNavigate={navigateTo} onOpenBooking={handleOpenBooking} />

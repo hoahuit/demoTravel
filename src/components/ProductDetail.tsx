@@ -187,6 +187,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
     location: product.city,
     heroImage: getImageUrl(product.heroImage),
     duration: product.duration,
+    departureDates: product.departureDates || [],
     rating: `${product.rating} / 5.0 (${product.reviewsCount} Đánh giá)`,
     ratingValue: product.rating,
     type: product.category,
@@ -932,21 +933,24 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                     </div>
                   </div>
 
-                  {/* Submit Booking Button */}
+                  {/* Submit Booking Button — Opens BookingModal (Xác Nhận Đơn Hàng) */}
                   <button
+                    type="button"
                     onClick={() => {
                       if (onOpenBooking) {
                         onOpenBooking({
                           title: pageData.title,
                           price: pageData.priceAdult,
                           city: pageData.location,
-                          duration: pageData.duration
+                          duration: pageData.duration,
+                          selectedDate: selectedDate || (pageData.departureDates && pageData.departureDates[0]),
+                          guests: guests
                         });
                       }
                     }}
                     style={{
                       width: '100%',
-                      background: '#062c23',
+                      background: 'linear-gradient(135deg, #062c23 0%, #006d36 100%)',
                       color: '#ffffff',
                       border: 'none',
                       padding: '16px',
@@ -954,17 +958,17 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                       fontWeight: '800',
                       fontSize: '1rem',
                       cursor: 'pointer',
-                      boxShadow: '0 6px 20px rgba(6, 44, 35, 0.3)',
+                      boxShadow: '0 6px 20px rgba(6, 44, 35, 0.35)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: '8px',
-                      transition: 'all 0.2s ease',
+                      transition: 'all 0.25s ease',
                     }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#006d36'}
-                    onMouseLeave={e => e.currentTarget.style.background = '#062c23'}
+                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
+                    onMouseLeave={e => e.currentTarget.style.transform = 'none'}
                   >
-                    <span>Đặt Hành Trình Ngay</span>
+                    <span>Đặt Ngay</span>
                     <ArrowRight size={18} />
                   </button>
 
@@ -998,6 +1002,64 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
       {/* Khách Hàng Nói Gì Về Trải Nghiệm 4U Retreat */}
       {!hideTestimonials && <Testimonials />}
     </ScrollExpandMedia>
+
+      {/* Mobile Floating Sticky Bar */}
+      <div
+        className="pd-mobile-floating-bar"
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 9000,
+          background: 'rgba(255, 255, 255, 0.96)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderTop: '1px solid rgba(45, 90, 54, 0.15)',
+          padding: '12px 20px',
+          display: 'none',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          boxShadow: '0 -6px 25px rgba(0, 0, 0, 0.08)'
+        }}
+      >
+        <div>
+          <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Giá trọn gói từ</div>
+          <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#006d36' }}>{pageData.priceAdult}</div>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            if (onOpenBooking) {
+              onOpenBooking({
+                title: pageData.title,
+                price: pageData.priceAdult,
+                city: pageData.location,
+                duration: pageData.duration,
+                selectedDate: selectedDate || (pageData.departureDates && pageData.departureDates[0]),
+                guests: guests
+              });
+            }
+          }}
+          style={{
+            padding: '12px 26px',
+            borderRadius: '999px',
+            background: 'linear-gradient(135deg, #062c23 0%, #006d36 100%)',
+            color: '#ffffff',
+            fontWeight: 800,
+            fontSize: '0.92rem',
+            border: 'none',
+            cursor: 'pointer',
+            boxShadow: '0 4px 14px rgba(0, 109, 54, 0.35)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}
+        >
+          <span>Đặt Ngay</span>
+          <ArrowRight size={16} />
+        </button>
+      </div>
 
     </div>
   );
