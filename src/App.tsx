@@ -52,8 +52,11 @@ export default function App() {
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
   const [calendarOpen, setCalendarOpen] = useState<boolean>(false);
   const [bookingState, setBookingState] = useState<{ open: boolean; tour: any }>({ open: false, tour: null });
-  const [consultationOpen, setConsultationOpen] = useState<boolean>(false);
-  const [customTourState, setCustomTourState] = useState<{ open: boolean; destination?: string }>({ open: false });
+  const [consultationState, setConsultationState] = useState<{
+    open: boolean;
+    tab: 'consultation' | 'custom_tour';
+    destination?: string;
+  }>({ open: false, tab: 'consultation' });
   const [currentPath, setCurrentPath] = useState<string>(window.location.pathname);
 
   // PayPal Booking Modal — triggered by "Đặt Ngay" buttons
@@ -65,22 +68,18 @@ export default function App() {
     setBookingState({ open: false, tour: null });
   };
 
-  // Custom Tour Builder Modal — triggered by "Tạo lịch trình đến [Điểm đến] ngay"
-  const handleOpenCustomTour = (destination?: string) => {
-    setCustomTourState({ open: true, destination });
-  };
-
-  const handleCloseCustomTour = () => {
-    setCustomTourState({ open: false });
-  };
-
-  // Consultation Modal — triggered by "Nhận tư vấn" button & floating button
-  const handleOpenConsultation = () => {
-    setConsultationOpen(true);
+  // Consultation & Custom Tour Modal — 2-in-1 Smart Advisory
+  const handleOpenConsultation = (tab: 'consultation' | 'custom_tour' = 'consultation', destination?: string) => {
+    setConsultationState({ open: true, tab, destination });
   };
 
   const handleCloseConsultation = () => {
-    setConsultationOpen(false);
+    setConsultationState({ open: false, tab: 'consultation' });
+  };
+
+  // Custom Tour Builder Modal trigger
+  const handleOpenCustomTour = (destination?: string) => {
+    handleOpenConsultation('custom_tour', destination);
   };
 
   useEffect(() => {
@@ -290,10 +289,12 @@ export default function App() {
           selectedTour={bookingState.tour}
         />
 
-        {/* Consultation Lead Form Modal — for "Nhận tư vấn" + Floating button */}
+        {/* Consultation & Custom Tour Lead Form Modal (2-in-1 Dual Tabs) */}
         <ConsultationModal
-          externalOpen={consultationOpen}
+          externalOpen={consultationState.open}
           onExternalClose={handleCloseConsultation}
+          initialTab={consultationState.tab}
+          initialDestination={consultationState.destination}
         />
 
         {/* Interactive Departure Calendar Modal — opened by "Lịch khởi hành" button */}
@@ -304,21 +305,14 @@ export default function App() {
           onNavigate={navigateTo}
         />
 
-        {/* Create Custom Tour Modal — opened by "Tạo Lịch Trình Đến ... Ngay" button */}
-        <CreateCustomTourModal
-          isOpen={customTourState.open}
-          onClose={handleCloseCustomTour}
-          initialDestination={customTourState.destination}
-        />
-
-        {/* Header — "Nhận tư vấn" opens Consultation Modal, "Lịch khởi hành" opens Departure Calendar */}
+        {/* Header — "Đặt Lịch & Tư Vấn" opens Consultation Modal, "Lịch khởi hành" opens Departure Calendar */}
         {!isAdminRoute && (
           <Header
             onOpenSearch={() => setSearchOpen(true)}
             onNavigate={navigateTo}
-            onOpenBooking={handleOpenConsultation}
+            onOpenBooking={() => handleOpenConsultation('consultation')}
             onOpenCalendar={() => setCalendarOpen(true)}
-            onOpenCustomTour={handleOpenCustomTour}
+            onOpenCustomTour={() => handleOpenConsultation('custom_tour')}
           />
         )}
 

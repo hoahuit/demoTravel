@@ -437,177 +437,129 @@ export default function Header({ onOpenSearch, onNavigate, onOpenBooking, onOpen
             </div>
           </div>
 
-          {/* 3. Right Column: Action Buttons (2 Rows stacked on the right) */}
+          {/* 3. Right Column: Action Buttons (1 Luxury Button + 1 Calendar Icon) */}
           <div
             style={{
               display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-end',
-              justifyContent: 'center',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
               flexShrink: 0,
-              gap: '6px',
+              gap: '10px',
             }}
           >
-            {/* Row 1 Right: Button "Lịch khởi hành" + Mobile toggle */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minHeight: '34px' }}>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (onOpenCalendar) {
-                    onOpenCalendar();
-                  } else if (onNavigate) {
-                    onNavigate('/retreat/sapkhoihanh');
-                  }
-                }}
-                className="hide-mobile"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  height: '32px',
-                  padding: '0 14px',
-                  borderRadius: '999px',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  color: '#ffffff',
-                  fontSize: '0.84rem',
-                  fontWeight: '700',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  backdropFilter: 'blur(10px)',
-                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap'
-                }}
-                onMouseEnter={e => {
-                  setActiveCategory(null);
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
-                  e.currentTarget.style.borderColor = '#4ade80';
-                  e.currentTarget.style.color = '#4ade80';
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                  e.currentTarget.style.color = '#ffffff';
-                  e.currentTarget.style.transform = 'none';
-                }}
-              >
-                <Calendar size={14} style={{ color: '#4ade80' }} />
-                <span>Lịch khởi hành</span>
-              </button>
-
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                style={{
-                  display: 'none',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: '4px',
-                  color: '#ffffff',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                className="mobile-toggle-btn"
-              >
-                {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-              </button>
-            </div>
-
-            {/* Row 2 Right: Buttons "Thiết kế lịch trình" & "Nhận tư vấn" */}
-            <div
+            {/* Button Lịch Khởi Hành (Warm Amber Gold - Nổi Bật & Sang Trọng) */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                if (onOpenCalendar) {
+                  onOpenCalendar();
+                } else if (onNavigate) {
+                  onNavigate('/retreat/sapkhoihanh');
+                }
+              }}
+              className="hide-mobile"
               style={{
-                maxHeight: row2Visible ? '48px' : '0px',
-                opacity: row2Visible ? 1 : 0,
-                overflow: 'hidden',
-                pointerEvents: row2Visible ? 'auto' : 'none',
-                transition: 'max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                gap: '10px',
-                minHeight: row2Visible ? '34px' : '0px',
+                justifyContent: 'center',
+                gap: '7px',
+                height: '38px',
+                padding: '0 18px',
+                borderRadius: '999px',
+                background: 'linear-gradient(135deg, #c27803 0%, #854d0e 100%)',
+                color: '#ffffff',
+                fontSize: '0.88rem',
+                fontWeight: '700',
+                letterSpacing: '0.01em',
+                textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
+                boxShadow: '0 6px 20px rgba(133, 77, 14, 0.45)',
+                border: '1px solid rgba(254, 240, 138, 0.45)',
+                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                flexShrink: 0
+              }}
+              onMouseEnter={e => {
+                setActiveCategory(null);
+                e.currentTarget.style.background = 'linear-gradient(135deg, #d97706 0%, #9a3412 100%)';
+                e.currentTarget.style.borderColor = '#fef08a';
+                e.currentTarget.style.transform = 'scale(1.03)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(217, 119, 6, 0.55)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, #c27803 0%, #854d0e 100%)';
+                e.currentTarget.style.borderColor = 'rgba(254, 240, 138, 0.45)';
+                e.currentTarget.style.transform = 'none';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(133, 77, 14, 0.45)';
               }}
             >
-              {/* Thiết Kế Lịch Trình Button */}
-              <button
-                onClick={() => {
-                  if (onOpenCustomTour) onOpenCustomTour();
-                }}
-                className="hide-mobile"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '34px',
-                  padding: '0 16px',
-                  borderRadius: '999px',
-                  background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(6, 78, 59, 0.7) 100%)',
-                  color: '#ffffff',
-                  fontWeight: '700',
-                  fontSize: '0.86rem',
-                  letterSpacing: '0.01em',
-                  border: '1px solid rgba(74, 222, 128, 0.45)',
-                  backdropFilter: 'blur(10px)',
-                  boxShadow: '0 4px 15px rgba(6, 78, 59, 0.35)',
-                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap'
-                }}
-                onMouseEnter={e => {
-                  setActiveCategory(null);
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.4) 0%, rgba(6, 78, 59, 0.9) 100%)';
-                  e.currentTarget.style.borderColor = '#4ade80';
-                  e.currentTarget.style.boxShadow = '0 6px 18px rgba(74, 222, 128, 0.35)';
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(6, 78, 59, 0.7) 100%)';
-                  e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.45)';
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(6, 78, 59, 0.35)';
-                  e.currentTarget.style.transform = 'none';
-                }}
-              >
-                <span style={{ whiteSpace: 'nowrap' }}>Thiết kế lịch trình</span>
-              </button>
+              <Calendar size={15} style={{ color: '#fef08a' }} />
+              <span>Lịch khởi hành</span>
+            </button>
 
-              {/* Nhận tư vấn Button */}
-              <button
-                onClick={() => {
-                  if (onOpenBooking) onOpenBooking();
-                }}
-                className="hide-mobile"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '34px',
-                  padding: '0 18px',
-                  borderRadius: '999px',
-                  background: 'linear-gradient(135deg, #22c55e 0%, #15803d 100%)',
-                  color: '#ffffff',
-                  fontWeight: '800',
-                  fontSize: '0.88rem',
-                  letterSpacing: '0.01em',
-                  textShadow: '0 1px 2px rgba(0, 0, 0, 0.25)',
-                  boxShadow: '0 6px 22px rgba(34, 197, 94, 0.45)',
-                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                  border: 'none',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap'
-                }}
-                onMouseEnter={e => {
-                  setActiveCategory(null);
-                  e.currentTarget.style.transform = 'scale(1.04)';
-                  e.currentTarget.style.boxShadow = '0 8px 26px rgba(34, 197, 94, 0.6)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.transform = 'scale(1)';
-                  e.currentTarget.style.boxShadow = '0 6px 22px rgba(34, 197, 94, 0.45)';
-                }}
-              >
-                <span style={{ whiteSpace: 'nowrap' }}>Nhận tư vấn</span>
-              </button>
-            </div>
+            {/* Single Luxury CTA Button: Đặt Lịch & Tư Vấn (Moss Green - Xanh Rêu) */}
+            <button
+              type="button"
+              onClick={() => {
+                if (onOpenBooking) onOpenBooking();
+              }}
+              className="hide-mobile"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                height: '38px',
+                padding: '0 20px',
+                borderRadius: '999px',
+                background: 'linear-gradient(135deg, #436e55 0%, #284c39 100%)',
+                color: '#ffffff',
+                fontWeight: '700',
+                fontSize: '0.88rem',
+                letterSpacing: '0.01em',
+                textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
+                boxShadow: '0 6px 20px rgba(40, 76, 57, 0.4)',
+                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                border: '1px solid rgba(163, 184, 153, 0.45)',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap'
+              }}
+              onMouseEnter={e => {
+                setActiveCategory(null);
+                e.currentTarget.style.background = 'linear-gradient(135deg, #4f8064 0%, #305842 100%)';
+                e.currentTarget.style.borderColor = '#86efac';
+                e.currentTarget.style.transform = 'scale(1.03)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(67, 110, 85, 0.5)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, #436e55 0%, #284c39 100%)';
+                e.currentTarget.style.borderColor = 'rgba(163, 184, 153, 0.45)';
+                e.currentTarget.style.transform = 'none';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(40, 76, 57, 0.4)';
+              }}
+            >
+              <Sparkles size={15} style={{ color: '#fde047' }} />
+              <span style={{ whiteSpace: 'nowrap' }}>Đặt Lịch & Tư Vấn</span>
+            </button>
+
+            {/* Mobile Toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              style={{
+                display: 'none',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '4px',
+                color: '#ffffff',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              className="mobile-toggle-btn"
+            >
+              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
           </div>
         </div>
 
