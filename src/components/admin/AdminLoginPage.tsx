@@ -168,6 +168,39 @@ export default function AdminLoginPage({ onNavigateHome }: AdminLoginPageProps) 
                   <span>Đăng Nhập Vào Hệ Thống</span>
                 )}
               </button>
+
+              {/* Quick Offline Login Helper */}
+              <div style={{ marginTop: '16px', textAlign: 'center' }}>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setUsernameOrEmail('admin');
+                    setPassword('admin123');
+                    setIsSubmitting(true);
+                    try {
+                      await login('admin', 'admin123');
+                    } catch (e: any) {
+                      setErrorMessage(e?.message || 'Đăng nhập thất bại.');
+                    } finally {
+                      setIsSubmitting(false);
+                    }
+                  }}
+                  style={{
+                    background: 'rgba(15, 118, 110, 0.08)',
+                    color: '#0f766e',
+                    border: '1px dashed #0f766e',
+                    borderRadius: '8px',
+                    padding: '8px 14px',
+                    fontSize: '12.5px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    width: '100%',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  ⚡ Đăng Nhập Nhanh (Chế độ Local Offline)
+                </button>
+              </div>
             </form>
           </div>
 

@@ -69,6 +69,8 @@ export interface TourPackage {
   blogAuthor?: string;
   blogAuthorRole?: string;
   blogStorySnippet?: string;
+  landingSectionTemplateId?: string;
+  yoga3dTemplateId?: string;
 }
 
 // 100% REAL DATA STORE (EMPTY UNTIL LOADED FROM LOOPBACK 4 / SQL SERVER)

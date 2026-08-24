@@ -168,20 +168,13 @@ export default function ConsultationModal({
 
     try {
       const targetPlace = customData.destination.trim() || customData.region;
-      const noteContent = `[THIẾT KẾ LỊCH TRÌNH RIÊNG]
-- Vùng miền: ${customData.region}
-- Điểm đến mong muốn: ${customData.destination.trim() || 'Theo tư vấn của 4U'}
-- Số lượng khách: ${customData.guestCount}
-- Nhu cầu cụ thể: ${customData.notes.trim() || 'Không có'}`;
-
-      await saveSectionItemApi('consultations', 'create', {
+      await saveSectionItemApi('custom-tours', 'create', {
+        requestCode: `CTR-${Date.now().toString().slice(-6)}`,
         customerName: customData.name.trim(),
         customerPhone: customData.phone.trim(),
-        tour: `Thiết kế lịch trình riêng: ${targetPlace}`,
-        tourName: `Thiết kế lịch trình riêng: ${targetPlace}`,
-        message: noteContent,
-        note: noteContent,
-        preferredTime: 'Bất kỳ lúc nào',
+        destination: targetPlace,
+        numberOfGuests: Number(customData.guestCount) || 2,
+        specialRequests: customData.notes.trim() || '',
         preferredCallTime: 'Bất kỳ lúc nào',
         status: 'Chưa tư vấn',
         createdAt: new Date().toISOString()

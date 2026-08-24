@@ -51,6 +51,7 @@ export default function SearchModal({ isOpen, onClose, onNavigate }: SearchModal
           (t.title && t.title.toLowerCase().includes(query.toLowerCase())) ||
           (t.city && t.city.toLowerCase().includes(query.toLowerCase())) ||
           (t.category && t.category.toLowerCase().includes(query.toLowerCase())) ||
+          (Array.isArray(t.categories) && t.categories.some((c: string) => c.toLowerCase().includes(query.toLowerCase()))) ||
           (t.subtitle && t.subtitle.toLowerCase().includes(query.toLowerCase()))
       )
     : tours.slice(0, 6);

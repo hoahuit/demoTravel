@@ -47,7 +47,7 @@ export default function Carousel3D({ onOpenBooking, onNavigate }: Carousel3DProp
   const CARDS: CardItem[] = useMemo(() => {
     // Only tours assigned to the "Retreats Độc Quyền" category appear here.
     const exclusiveTours = tours.filter((t) =>
-      Array.isArray(t.categories) && t.categories.includes('doc-quyen')
+      t.isExclusive === true || (Array.isArray(t.categories) && (t.categories.includes('doc-quyen') || t.categories.includes('Doc-Quyen')))
     );
 
     if (exclusiveTours.length > 0) {
@@ -56,7 +56,7 @@ export default function Carousel3D({ onOpenBooking, onNavigate }: Carousel3DProp
         slug: t.slug,
         tag: "RETREAT ĐỘC QUYỀN",
         title: t.title,
-        subtitle: `${t.city} • ${t.category}`,
+        subtitle: `${t.city} • ${(t.categories && t.categories[0]) || t.category || 'Độc Quyền'}`,
         footer: "4U Wellness Signature",
         img: t.heroImage || "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2560&auto=format&fit=crop",
         accent: "#f2b632",

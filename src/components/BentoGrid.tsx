@@ -34,7 +34,7 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
     slug: tour.slug,
     image: getImageUrl(tour.heroImage),
     location: tour.city,
-    category: tour.category,
+    category: (tour.categories && tour.categories[0]) || tour.category || 'Retreat',
     title: tour.title,
     desc: tour.subtitle,
     price: `${tour.price?.toLocaleString('vi-VN')} ₫`,

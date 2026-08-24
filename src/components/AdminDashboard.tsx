@@ -3,6 +3,8 @@ import { LogOut, ShieldCheck, User as UserIcon, Lock, AlertTriangle } from 'luci
 import AdminToursManager from './admin/AdminToursManager';
 import AdminBookingsManager from './admin/AdminBookingsManager';
 import AdminConsultationsManager from './admin/AdminConsultationsManager';
+import AdminCustomToursManager from './admin/AdminCustomToursManager';
+import AdminShopOrdersManager from './admin/AdminShopOrdersManager';
 import AdminAnalyticsManager from './admin/AdminAnalyticsManager';
 import AdminAboutManager from './admin/AdminAboutManager';
 import AdminBlogManager from './admin/AdminBlogManager';
@@ -17,6 +19,7 @@ import AdminSettingsManager from './admin/AdminSettingsManager';
 import AdminCategoriesManager from './admin/AdminCategoriesManager';
 import AdminProductsManager from './admin/AdminProductsManager';
 import AdminUsersManager from './admin/AdminUsersManager';
+import AdminLandingSectionManager from './admin/AdminLandingSectionManager';
 import AdminLoginPage from './admin/AdminLoginPage';
 
 import { useAuth } from '../context/AuthContext';
@@ -39,21 +42,17 @@ import './Admin.css';
 
 export const ADMIN_SECTIONS = [
   { id: 'tours', label: 'Quản Lý Tour' },
+  { id: 'bookings', label: 'Quản Lý Đơn Đặt Tour' },
+  { id: 'landing-page', label: 'Quản Lý Section Landing Page' },
   { id: 'products', label: 'Sản Phẩm (Kollection 4U)' },
   { id: 'blog', label: 'Quản Lý Bài Viết' },
   { id: 'destinations', label: 'Quản Lý Điểm Đến' },
   { id: 'partners', label: 'Quản Lý Đối Tác Doanh Nghiệp' },
   { id: 'consultations', label: 'Quản Lý Lịch Hẹn Tư Vấn' },
+  { id: 'custom-tours', label: 'Thiết Kế Lịch Trình Riêng' },
+  { id: 'shop-orders', label: 'Đơn Hàng Kollection 4U' },
   { id: 'categories', label: 'Danh Mục Menu' },
   { id: 'users', label: 'Quản Lý Người Dùng & Phân Quyền' },
-  // { id: 'bookings', label: 'Đơn Đặt Tour' },
-  // { id: 'analytics', label: 'Thống Kê & Báo Cáo' },
-  // { id: 'about', label: 'Giới Thiệu 4U' },
-  // { id: 'faq', label: 'Câu Hỏi Thường Gặp' },
-  // { id: 'promotions', label: 'Mã Ưu Đãi & Voucher' },
-  // { id: 'services', label: 'Dịch Vụ Retreat' },
-  // { id: 'team', label: 'Đội Ngũ Nhân Sự' },
-  // { id: 'testimonials', label: 'Đánh Giá Khách Hàng' },
   { id: 'settings', label: 'Cấu Hình Hệ Thống' },
 ] as const;
 
@@ -78,7 +77,14 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
 
   const effectiveSection = useMemo<AdminSectionId>(() => {
     const match = currentPath.replace(/^\/admin\/?/, '').split('/')[0];
-    const found = ADMIN_SECTIONS.find((item) => (item.id as string) === match || (match === 'destination' && item.id === 'destinations') || (match === 'partner' && item.id === 'partners'));
+    const found = ADMIN_SECTIONS.find(
+      (item) =>
+        (item.id as string) === match ||
+        (match === 'destination' && item.id === 'destinations') ||
+        (match === 'partner' && item.id === 'partners') ||
+        (match === 'yoga3d' && item.id === 'landing-page') ||
+        (match === 'landing-section' && item.id === 'landing-page')
+    );
     return (found?.id ?? 'tours') as AdminSectionId;
   }, [currentPath]);
 
@@ -105,6 +111,8 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
     { id: 'BK-178903', customer: 'Trần Thị Mai', phone: '0988776655', email: 'mai.tran@gmail.com', tour: 'Retreat Bảo Tồn Rừng Nguyên Sinh 4D3N', date: '20/08/2026', guests: 4, amount: 26000000, status: 'Pending' }
   ]);
   const [consultationsList, setConsultationsList] = useState<any[]>([]);
+  const [customToursList, setCustomToursList] = useState<any[]>([]);
+  const [shopOrdersList, setShopOrdersList] = useState<any[]>([]);
 
   // MODAL EDITING STATE
   const [modalOpen, setModalOpen] = useState(false);
@@ -123,6 +131,8 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
           switch (effectiveSection) {
             case 'bookings': setBookingsList(liveItems); break;
             case 'consultations': setConsultationsList(liveItems); break;
+            case 'custom-tours': setCustomToursList(liveItems); break;
+            case 'shop-orders': setShopOrdersList(liveItems); break;
             case 'blog': setBlogsList(liveItems); break;
             case 'destinations': setDestinationsList(liveItems); break;
             case 'faq': setFaqList(liveItems); break;
@@ -275,6 +285,12 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
       case 'consultations':
         setConsultationsList(consultationsList.filter(c => c.id !== identifier));
         break;
+      case 'custom-tours':
+        setCustomToursList(customToursList.filter(c => c.id !== identifier));
+        break;
+      case 'shop-orders':
+        setShopOrdersList(shopOrdersList.filter(s => s.id !== identifier));
+        break;
       case 'blog':
         setBlogsList(blogsList.filter(b => b.id !== identifier));
         break;
@@ -312,11 +328,73 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
     }
   }, [permittedSections, activeSection]);
 
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+  const refreshSectionData = async (section?: AdminSectionId) => {
+    const target = section || activeSection;
+    if (['analytics', 'about', 'settings'].includes(target)) return;
+    setIsRefreshing(true);
+    try {
+      const liveItems = await fetchSectionItemsApi(target, true);
+      if (Array.isArray(liveItems)) {
+        switch (target) {
+          case 'bookings': setBookingsList(liveItems); break;
+          case 'consultations': setConsultationsList(liveItems); break;
+          case 'custom-tours': setCustomToursList(liveItems); break;
+          case 'shop-orders': setShopOrdersList(liveItems); break;
+          case 'blog': setBlogsList(liveItems); break;
+          case 'destinations': setDestinationsList(liveItems); break;
+          case 'faq': setFaqList(liveItems); break;
+          case 'partners': setPartnersList(liveItems); break;
+          case 'promotions': setPromotionsList(liveItems); break;
+          case 'services': setServicesList(liveItems); break;
+          case 'team': setTeamList(liveItems); break;
+          case 'testimonials': setTestimonialsList(liveItems); break;
+        }
+        toast.success('Đã làm mới dữ liệu thành công!');
+      }
+    } catch (err: any) {
+      toast.error(`Làm mới thất bại: ${err?.message || err}`);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  const handleBookingStatusUpdate = async (item: any, newStatus: string) => {
+    try {
+      await saveSectionItemApi('bookings', 'update', { id: item.id, status: newStatus });
+      setBookingsList(prev => prev.map(b => b.id === item.id ? { ...b, status: newStatus } : b));
+      toast.success(`Đã cập nhật trạng thái đơn đặt tour sang "${newStatus}"!`);
+    } catch (e: any) {
+      toast.error(`Cập nhật thất bại: ${e?.message || e}`);
+    }
+  };
+
   const handleConsultationStatusUpdate = async (item: any, newStatus: string) => {
     try {
       await saveSectionItemApi('consultations', 'update', { id: item.id, status: newStatus });
       setConsultationsList(prev => prev.map(c => c.id === item.id ? { ...c, status: newStatus } : c));
       toast.success(`Đã cập nhật trạng thái lịch tư vấn sang "${newStatus}"!`);
+    } catch (e: any) {
+      toast.error(`Cập nhật thất bại: ${e?.message || e}`);
+    }
+  };
+
+  const handleCustomTourStatusUpdate = async (item: any, newStatus: string) => {
+    try {
+      await saveSectionItemApi('custom-tours', 'update', { id: item.id, status: newStatus });
+      setCustomToursList(prev => prev.map(c => c.id === item.id ? { ...c, status: newStatus } : c));
+      toast.success(`Đã cập nhật trạng thái yêu cầu thiết kế sang "${newStatus}"!`);
+    } catch (e: any) {
+      toast.error(`Cập nhật thất bại: ${e?.message || e}`);
+    }
+  };
+
+  const handleShopOrderStatusUpdate = async (item: any, newStatus: string) => {
+    try {
+      await saveSectionItemApi('shop-orders', 'update', { id: item.id, status: newStatus });
+      setShopOrdersList(prev => prev.map(s => s.id === item.id ? { ...s, status: newStatus } : s));
+      toast.success(`Đã cập nhật trạng thái đơn hàng sang "${newStatus}"!`);
     } catch (e: any) {
       toast.error(`Cập nhật thất bại: ${e?.message || e}`);
     }
@@ -528,11 +606,14 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
           ) : (
             <>
               {activeSection === 'tours' && <AdminToursManager toast={toast} onNavigate={onNavigate} />}
+              {(activeSection === 'landing-page' || activeSection === 'yoga3d') && <AdminLandingSectionManager toast={toast} />}
               {activeSection === 'products' && <AdminProductsManager toast={toast} onNavigate={onNavigate} />}
               {activeSection === 'categories' && <AdminCategoriesManager toast={toast} />}
               {activeSection === 'users' && <AdminUsersManager toast={toast} />}
-              {activeSection === 'bookings' && <AdminBookingsManager bookingsList={bookingsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}
-              {activeSection === 'consultations' && <AdminConsultationsManager consultationsList={consultationsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} handleStatusUpdate={handleConsultationStatusUpdate} />}
+              {activeSection === 'bookings' && <AdminBookingsManager bookingsList={bookingsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} handleStatusUpdate={handleBookingStatusUpdate} onReload={() => refreshSectionData('bookings')} isReloading={isRefreshing} />}
+              {activeSection === 'consultations' && <AdminConsultationsManager consultationsList={consultationsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} handleStatusUpdate={handleConsultationStatusUpdate} onReload={() => refreshSectionData('consultations')} isReloading={isRefreshing} />}
+              {activeSection === 'custom-tours' && <AdminCustomToursManager customToursList={customToursList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} handleStatusUpdate={handleCustomTourStatusUpdate} onReload={() => refreshSectionData('custom-tours')} isReloading={isRefreshing} />}
+              {activeSection === 'shop-orders' && <AdminShopOrdersManager shopOrdersList={shopOrdersList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} handleStatusUpdate={handleShopOrderStatusUpdate} onReload={() => refreshSectionData('shop-orders')} isReloading={isRefreshing} />}
               {activeSection === 'analytics' && <AdminAnalyticsManager />}
               {activeSection === 'about' && <AdminAboutManager aboutState={aboutState} setAboutState={setAboutState} toast={toast} />}
               {activeSection === 'blog' && <AdminBlogManager blogsList={blogsList} searchFilter={searchFilter} setSearchFilter={setSearchFilter} openCreateModal={openCreateModal} openEditModal={openEditModal} handleDeleteItem={handleDeleteItem} />}

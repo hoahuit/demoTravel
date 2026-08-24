@@ -23,9 +23,8 @@
   --apple-shadow-card: 0 12px 32px rgba(22, 48, 29, 0.08);
   --apple-shadow-hover: 0 20px 48px rgba(22, 48, 29, 0.15);
   --apple-radius-squircle: 28px;
-  --apple-radius-pill: 999px;
-  --font-main: 'Be Vietnam Pro', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-editorial: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-main: 'Be Vietnam Pro', 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-editorial: 'Playfair Display', 'Lora', Georgia, serif;
 }
 
 

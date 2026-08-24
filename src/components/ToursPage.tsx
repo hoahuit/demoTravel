@@ -53,25 +53,39 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
     return SOUTH_CITIES.some(c => city.toLowerCase().includes(c.toLowerCase()));
   };
 
-  // Parse structured URL segments (e.g. /series-retreat/chua-lanh/hot, /series-retreat/bao-ton/bac, etc.)
+  // Parse structured URL segments (e.g. /series-retreat/chua-lanh/hot, /series-retreat/bac/hot, etc.)
   const parsedRoute = useMemo(() => {
     const cleanPath = currentPath.split(/[?#]/)[0].replace(/\/+$/, '');
     const segments = cleanPath.split('/').filter(Boolean);
 
     let series = 'All';
     let subFilter = 'all';
+    let region = 'all';
 
     if (segments[0] === 'series-retreat') {
       if (segments.length >= 2) {
-        series = segments[1]; // 'chua-lanh' | 'bao-ton' | 'thien-nhien' | 'thien-nguyen'
-      }
-      if (segments.length >= 3) {
-        subFilter = segments[2]; // 'hot' | 'moi' | 'last-minute' | 'bac' | 'trung' | 'nam'
+        if (['bac', 'trung', 'nam'].includes(segments[1])) {
+          region = segments[1];
+          series = 'All';
+          if (segments.length >= 3) {
+            subFilter = segments[2]; // 'hot' | 'moi' | 'last-minute'
+          }
+        } else {
+          series = segments[1]; // 'chua-lanh' | 'bao-ton' | 'thien-nhien' | 'thien-nguyen'
+          if (segments.length >= 3) {
+            subFilter = segments[2]; // 'hot' | 'moi' | 'last-minute' | 'bac' | 'trung' | 'nam'
+          }
+        }
       }
     } else if (segments[0] === 'diem-den' || segments[0] === 'kham-pha-diem-den') {
       series = 'All';
       if (segments.length >= 2) {
-        subFilter = segments[1]; // 'bac' | 'trung' | 'nam'
+        region = segments[1]; // 'bac' | 'trung' | 'nam'
+        if (segments.length >= 3) {
+          subFilter = segments[2]; // 'hot' | 'moi' | 'last-minute'
+        } else {
+          subFilter = segments[1];
+        }
       }
     } else if (segments.length >= 2 && ['chua-lanh', 'bao-ton', 'thien-nhien', 'thien-nguyen'].includes(segments[0])) {
       series = segments[0];
@@ -80,12 +94,12 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       series = segments[0];
     }
 
-    return { series, subFilter, segments };
+    return { series, subFilter, region, segments };
   }, [currentPath]);
 
   // Compute Page Header details dynamically based on active route path
   const pageHeader = useMemo(() => {
-    const { series, subFilter } = parsedRoute;
+    const { series, subFilter, region } = parsedRoute;
 
     const SERIES_NAMES: Record<string, { name: string; hero: string; desc: string }> = {
       'chua-lanh': {
@@ -120,6 +134,44 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       'trung': { label: 'Khu Vực Miền Trung', tag: 'MIỀN TRUNG' },
       'nam': { label: 'Khu Vực Miền Nam', tag: 'MIỀN NAM' },
     };
+
+    const REGION_NAMES: Record<string, { label: string; tag: string; hero: string }> = {
+      'bac': {
+        label: 'Miền Bắc',
+        tag: 'MIỀN BẮC',
+        hero: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=85&w=2560&auto=format&fit=crop'
+      },
+      'trung': {
+        label: 'Miền Trung',
+        tag: 'MIỀN TRUNG',
+        hero: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=85&w=2560&auto=format&fit=crop'
+      },
+      'nam': {
+        label: 'Miền Nam',
+        tag: 'MIỀN NAM',
+        hero: 'https://images.unsplash.com/photo-1511497584788-876761c119ef?q=85&w=2560&auto=format&fit=crop'
+      }
+    };
+
+    // Region + SubFilter (e.g. /series-retreat/bac/hot or /diem-den/bac/hot)
+    if (region !== 'all' && REGION_NAMES[region]) {
+      const regInfo = REGION_NAMES[region];
+      if (subFilter !== 'all' && SUB_NAMES[subFilter]) {
+        const subInfo = SUB_NAMES[subFilter];
+        return {
+          badge: `KHÁM PHÁ ĐIỂM ĐẾN · ${regInfo.tag} · ${subInfo.tag}`,
+          title: `Retreat ${subInfo.tag} — ${regInfo.label}`,
+          subtitle: `Tuyển tập các hành trình nghỉ dưỡng ${subInfo.label.toLowerCase()} tại các tọa độ danh thắng ${regInfo.label}.`,
+          heroImage: regInfo.hero
+        };
+      }
+      return {
+        badge: `KHÁM PHÁ ĐIỂM ĐẾN · ${regInfo.tag}`,
+        title: `Điểm Đến Retreat — ${regInfo.label}`,
+        subtitle: `Tuyển tập các tọa độ nghỉ dưỡng & tĩnh dưỡng chữa lành độc bản tại ${regInfo.label}.`,
+        heroImage: regInfo.hero
+      };
+    }
 
     if (series !== 'All' && SERIES_NAMES[series]) {
       const sInfo = SERIES_NAMES[series];
@@ -237,14 +289,26 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
   // Filtered & Sorted Tours
   const filteredTours = useMemo(() => {
-    const { series: routeSeries, subFilter } = parsedRoute;
+    const { series: routeSeries, subFilter, region } = parsedRoute;
     const targetSeries = selectedSeries !== 'All' ? selectedSeries : routeSeries;
 
     const list = tours.filter(tour => {
       // 1. Match Series
       const matchesSeries = matchSeriesType(tour, targetSeries);
 
-      // 2. Match Sub Filter
+      // 2. Match Region
+      let matchesRegion = true;
+      if (region && region !== 'all') {
+        if (region === 'bac') {
+          matchesRegion = tour.region === 'bac' || isNorthCity(tour.city) || (Array.isArray(tour.categories) && (tour.categories.includes('bac') || tour.categories.includes('mien-bac')));
+        } else if (region === 'trung') {
+          matchesRegion = tour.region === 'trung' || isCentralCity(tour.city) || (Array.isArray(tour.categories) && (tour.categories.includes('trung') || tour.categories.includes('mien-trung')));
+        } else if (region === 'nam') {
+          matchesRegion = tour.region === 'nam' || isSouthCity(tour.city) || (Array.isArray(tour.categories) && (tour.categories.includes('nam') || tour.categories.includes('mien-nam')));
+        }
+      }
+
+      // 3. Match Sub Filter
       let matchesSub = true;
       if (subFilter !== 'all' && subFilter !== 'All') {
         if (subFilter === 'hot') {
@@ -492,7 +556,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '44px', padding: '0 48px 18px 48px', borderBottom: '1px solid rgba(26,23,20,0.1)' }}>
           <div>
-            <h2 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 400, fontSize: 'clamp(30px, 3.2vw, 44px)', color: '#1a1714', margin: 0, letterSpacing: '-0.01em' }}>
+            <h2 style={{ fontFamily: "'Playfair Display', 'Lora', Georgia, serif", fontWeight: 600, fontSize: 'clamp(30px, 3.2vw, 44px)', color: '#1a1714', margin: 0, letterSpacing: '-0.01em' }}>
               {selectedSeries === 'All' ? 'Tất cả bài viết danh lam Series Retreat' : `Danh sách — ${seriesCategories.find(s => s.id === selectedSeries)?.label}`}
             </h2>
             <p style={{ fontSize: '14px', color: '#7a6f63', margin: '6px 0 0 0', fontWeight: 300 }}>

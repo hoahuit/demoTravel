@@ -15,8 +15,8 @@
   --bm-mist: #EAF0E7;
 }
 
-/* ---------- OVERLAY ---------- */
-.bm-overlay {
+/* ---------- DRAWER OVERLAY & CONTAINER ---------- */
+.bm-drawer-overlay {
   position: fixed;
   inset: 0;
   z-index: 99999;
@@ -24,10 +24,8 @@
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  animation: bmFadeIn 0.3s ease forwards;
+  justify-content: flex-end;
+  animation: bmFadeIn 0.25s ease forwards;
 }
 
 @keyframes bmFadeIn {
@@ -35,20 +33,33 @@
   to { opacity: 1; }
 }
 
-/* ---------- MODAL ---------- */
-.bm-modal {
-  width: 100%;
-  max-width: 880px;
-  background: var(--bm-sand);
-  border-radius: 22px;
-  overflow: hidden;
-  display: grid;
-  grid-template-columns: 310px 1fr;
-  box-shadow: 0 40px 90px -20px rgba(0, 0, 0, 0.5);
+.bm-drawer-container {
+  width: clamp(380px, 40vw, 680px);
+  height: 100vh;
+  max-height: 100vh;
+  background: #ffffff;
+  box-shadow: -10px 0 50px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
   position: relative;
-  max-height: 92vh;
-  animation: bmModalSlide 0.4s cubic-bezier(.22, .61, .36, 1) forwards;
+  box-sizing: border-box;
+  animation: bmDrawerSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+@keyframes bmDrawerSlideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .bm-drawer-container {
+    width: 100vw;
+  }
 }
 
 @keyframes bmModalSlide {

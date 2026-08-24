@@ -1,0 +1,739 @@
+/* ==========================================================================
+   SECTION LANDING PAGE - LUXURY RETREAT BENTO & EDITORIAL DESIGN SYSTEM
+   ========================================================================== */
+
+:root {
+  --y3d-bg: #e5efe8;
+  --y3d-bg-alt: #dbe7de;
+  --y3d-bg-card: rgba(255, 255, 255, 0.92);
+  --y3d-bg-card-elevated: #ffffff;
+  --y3d-primary: #1b4d32;
+  --y3d-primary-emerald: #006d36;
+  --y3d-primary-deep: #062c23;
+  --y3d-primary-dark: #081f13;
+  --y3d-primary-bg: rgba(45, 90, 54, 0.08);
+  --y3d-primary-border: rgba(45, 90, 54, 0.18);
+  --y3d-sage-italic: #2d5a36;
+  --y3d-text-main: #081f13;
+  --y3d-text-muted: #415a47;
+  --y3d-text-light: #607966;
+  --y3d-card-border: rgba(74, 124, 89, 0.18);
+  --y3d-card-shadow: 0 10px 30px -4px rgba(8, 31, 19, 0.06), 0 4px 12px -2px rgba(8, 31, 19, 0.03);
+  --y3d-card-shadow-hover: 0 20px 44px -6px rgba(8, 31, 19, 0.12), 0 8px 18px -3px rgba(8, 31, 19, 0.06);
+  --y3d-radius-xl: 28px;
+  --y3d-radius-lg: 22px;
+  --y3d-radius-pill: 999px;
+  --y3d-font-serif: 'Playfair Display', 'Lora', Georgia, serif;
+  --y3d-font-sans: 'Be Vietnam Pro', 'Inter', 'Plus Jakarta Sans', -apple-system, sans-serif;
+}
+
+.y3d-root {
+  width: 100%;
+  font-family: var(--y3d-font-sans);
+  color: var(--y3d-text-main);
+  background-color: var(--y3d-bg);
+  line-height: 1.65;
+  overflow: hidden;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.y3d-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 36px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .y3d-container {
+    padding: 0 20px;
+  }
+}
+
+/* ── Typography & Accents ── */
+.y3d-font-serif {
+  font-family: var(--y3d-font-serif);
+}
+
+.y3d-italic-sage {
+  font-family: var(--y3d-font-serif);
+  font-style: italic;
+  color: var(--y3d-sage-italic);
+}
+
+.y3d-eyebrow {
+  display: inline-block;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--y3d-primary-emerald);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.y3d-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 24px;
+  background: rgba(0, 109, 54, 0.1);
+  color: var(--y3d-primary-emerald);
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: var(--y3d-radius-pill);
+  border: 1px solid rgba(0, 109, 54, 0.25);
+  letter-spacing: 0.03em;
+}
+
+/* ── Section Dividers & Backgrounds ── */
+.y3d-section {
+  width: 100%;
+  padding: 96px 0;
+  position: relative;
+  background-color: var(--y3d-bg);
+}
+
+.y3d-section-alt {
+  background-color: var(--y3d-bg-alt);
+}
+
+.y3d-section-header {
+  max-width: 860px;
+  margin: 0 auto 56px;
+  text-align: center;
+}
+
+.y3d-section-header h2 {
+  font-family: var(--y3d-font-serif);
+  font-size: clamp(28px, 4.2vw, 50px);
+  line-height: 1.15;
+  color: var(--y3d-primary-dark);
+  margin: 0 0 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.y3d-section-header p {
+  font-size: clamp(15.5px, 1.25vw, 17.5px);
+  color: var(--y3d-text-muted);
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ── Hero Banner Section ── */
+.y3d-hero-banner {
+  position: relative;
+  width: 100%;
+  padding: 88px 24px 72px;
+  text-align: center;
+  overflow: hidden;
+  background: var(--y3d-bg);
+  color: var(--y3d-text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.y3d-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.y3d-hero-content .y3d-badge-pill {
+  margin-bottom: 24px;
+}
+
+.y3d-hero-title {
+  font-family: var(--y3d-font-serif);
+  font-size: clamp(34px, 5.2vw, 64px);
+  font-weight: 700;
+  line-height: 1.06;
+  color: var(--y3d-primary-dark);
+  margin: 0 0 20px;
+  letter-spacing: -0.02em;
+}
+
+.y3d-hero-title-italic {
+  display: block;
+  font-family: var(--y3d-font-serif);
+  font-style: italic;
+  color: var(--y3d-primary);
+  margin-top: 8px;
+  font-size: clamp(32px, 4.8vw, 58px);
+}
+
+.y3d-hero-desc {
+  font-size: clamp(15.5px, 1.35vw, 19px);
+  color: var(--y3d-text-muted);
+  line-height: 1.75;
+  max-width: 660px;
+  margin: 0 auto 36px;
+}
+
+.y3d-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+}
+
+.y3d-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #062c23;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 16px 40px;
+  border-radius: var(--y3d-radius-pill);
+  border: 1px solid rgba(6, 44, 35, 0.4);
+  box-shadow: 0 6px 20px rgba(6, 44, 35, 0.28);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.y3d-btn-primary:hover {
+  background: #006d36;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 109, 54, 0.4);
+  color: #ffffff;
+}
+
+.y3d-hero-subinfo {
+  margin-top: 36px;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--y3d-text-muted);
+}
+
+/* ── Card System (Spacious & Clean) ── */
+.y3d-card-soft {
+  background: var(--y3d-bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--y3d-card-border);
+  border-radius: var(--y3d-radius-lg);
+  padding: 38px 32px;
+  box-shadow: var(--y3d-card-shadow);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+  position: relative;
+}
+
+.y3d-card-soft:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--y3d-card-shadow-hover);
+  border-color: rgba(45, 90, 54, 0.35);
+}
+
+.y3d-icon-tile {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: var(--y3d-primary-bg);
+  border: 1px solid var(--y3d-primary-border);
+  color: var(--y3d-primary-emerald);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.y3d-card-soft:hover .y3d-icon-tile {
+  transform: scale(1.08) rotate(3deg);
+  background-color: rgba(45, 90, 54, 0.16);
+}
+
+/* ── Grid Layouts with Generous Gaps ── */
+.y3d-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.y3d-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+.y3d-grid-6 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+/* ── 4U LUXURY TRUST SECTION (STAT STRIP & EDITORIAL CARDS) ── */
+.y3d-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--y3d-card-border);
+  border-radius: var(--y3d-radius-lg);
+  padding: 36px 20px;
+  box-shadow: var(--y3d-card-shadow);
+  margin-bottom: 36px;
+}
+
+.y3d-stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px;
+  position: relative;
+}
+
+.y3d-stat-box:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 15%;
+  height: 70%;
+  width: 1px;
+  background-color: rgba(74, 124, 89, 0.2);
+}
+
+.y3d-stat-icon-wrap {
+  color: var(--y3d-primary-emerald);
+  margin-bottom: 12px;
+}
+
+.y3d-stat-number {
+  font-family: var(--y3d-font-serif);
+  font-size: clamp(38px, 3.8vw, 52px);
+  font-weight: 700;
+  color: var(--y3d-primary-dark);
+  line-height: 1;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+}
+
+.y3d-stat-label {
+  font-size: 0.92rem;
+  color: var(--y3d-text-muted);
+  line-height: 1.5;
+  white-space: pre-line;
+  font-weight: 500;
+}
+
+/* ── 4 Feature Highlight Cards Grid (Horizontal Left-Aligned) ── */
+.y3d-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.y3d-feature-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  background: var(--y3d-bg-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--y3d-card-border);
+  border-radius: var(--y3d-radius-lg);
+  padding: 28px 24px;
+  box-shadow: var(--y3d-card-shadow);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
+}
+
+.y3d-feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--y3d-card-shadow-hover);
+  border-color: rgba(0, 109, 54, 0.35);
+}
+
+.y3d-feature-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: rgba(0, 109, 54, 0.1);
+  border: 1px solid rgba(0, 109, 54, 0.22);
+  color: var(--y3d-primary-emerald);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.y3d-feature-content h4 {
+  font-family: var(--y3d-font-serif);
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: var(--y3d-primary-dark);
+  margin: 0 0 8px;
+  line-height: 1.35;
+}
+
+.y3d-feature-content p {
+  font-size: 0.92rem;
+  color: var(--y3d-text-muted);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ── 2 Master Profile Cards Grid (Separated with Generous Gap) ── */
+.y3d-master-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  margin-top: 36px;
+  padding-top: 8px;
+}
+
+.y3d-master-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: #ffffff;
+  border: 1px solid var(--y3d-card-border);
+  border-radius: var(--y3d-radius-lg);
+  padding: 28px;
+  box-shadow: var(--y3d-card-shadow);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
+}
+
+.y3d-master-profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--y3d-card-shadow-hover);
+  border-color: rgba(0, 109, 54, 0.35);
+}
+
+.y3d-profile-image-wrap {
+  width: 100px;
+  height: 100px;
+  min-width: 100px;
+  border-radius: 18px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 6px 18px rgba(8, 31, 19, 0.12);
+  border: 2px solid rgba(45, 90, 54, 0.2);
+}
+
+.y3d-profile-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.y3d-profile-logo-wrap {
+  width: 100px;
+  height: 100px;
+  min-width: 100px;
+  border-radius: 18px;
+  background: #062c23;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  flex-shrink: 0;
+  box-shadow: 0 6px 18px rgba(8, 31, 19, 0.15);
+  border: 2px solid rgba(0, 109, 54, 0.3);
+}
+
+.y3d-profile-logo-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.y3d-profile-info {
+  flex: 1;
+}
+
+.y3d-profile-badge {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--y3d-primary-emerald);
+  margin-bottom: 6px;
+}
+
+.y3d-profile-info h4 {
+  font-family: var(--y3d-font-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--y3d-primary-dark);
+  margin: 0 0 8px;
+  line-height: 1.3;
+}
+
+.y3d-profile-info p {
+  font-size: 0.92rem;
+  color: var(--y3d-text-muted);
+  line-height: 1.68;
+  margin: 0;
+}
+
+/* ── Intro 2-Column Section ── */
+.y3d-two-col {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.y3d-image-frame {
+  position: relative;
+  border-radius: var(--y3d-radius-lg);
+  overflow: hidden;
+  box-shadow: 0 20px 44px rgba(8, 31, 19, 0.14);
+  border: 4px solid #ffffff;
+  aspect-ratio: 16 / 10;
+}
+
+.y3d-image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.y3d-image-frame:hover img {
+  transform: scale(1.04);
+}
+
+/* ── Steps Section (04 Bước) ── */
+.y3d-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+}
+
+.y3d-step-card {
+  background: var(--y3d-bg-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--y3d-card-border);
+  border-radius: var(--y3d-radius-lg);
+  padding: 36px 24px;
+  box-shadow: var(--y3d-card-shadow);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.y3d-step-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--y3d-card-shadow-hover);
+  border-color: rgba(0, 109, 54, 0.35);
+}
+
+.y3d-step-number {
+  display: inline-block;
+  font-family: var(--y3d-font-serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--y3d-primary);
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.y3d-step-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: rgba(0, 109, 54, 0.1);
+  border: 1px solid rgba(0, 109, 54, 0.22);
+  color: var(--y3d-primary-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 4px 16px rgba(8, 31, 19, 0.06);
+}
+
+.y3d-step-card h4 {
+  font-family: var(--y3d-font-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--y3d-primary-dark);
+  margin: 0 0 10px;
+  line-height: 1.35;
+}
+
+.y3d-step-card p {
+  font-size: 0.92rem;
+  color: var(--y3d-text-muted);
+  line-height: 1.68;
+  margin: 0;
+}
+
+/* ── CTA Banner ── */
+.y3d-cta-banner {
+  padding: 80px 24px;
+  background: linear-gradient(135deg, #062c23 0%, #081f13 100%);
+  color: #ffffff;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.y3d-cta-content {
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.y3d-cta-badge {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #4ade80;
+  margin-bottom: 12px;
+}
+
+.y3d-cta-title {
+  font-family: var(--y3d-font-serif);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 16px;
+  line-height: 1.2;
+}
+
+.y3d-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #006d36;
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 16px 44px;
+  border-radius: var(--y3d-radius-pill);
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 109, 54, 0.45);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.y3d-cta-btn:hover {
+  background: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(5, 150, 105, 0.55);
+}
+
+/* ── FAQ Items ── */
+.y3d-faq-item {
+  background: #ffffff;
+  border: 1px solid var(--y3d-card-border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(8, 31, 19, 0.04);
+}
+
+.y3d-faq-question {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background: none;
+  border: none;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--y3d-primary-dark);
+  text-align: left;
+  cursor: pointer;
+}
+
+.y3d-faq-icon {
+  color: var(--y3d-primary-emerald);
+  transition: transform 0.25s ease;
+}
+
+.y3d-faq-icon.open {
+  transform: rotate(180deg);
+}
+
+.y3d-faq-answer {
+  padding: 0 24px 20px;
+  color: var(--y3d-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* ── Responsive Queries ── */
+@media (max-width: 1024px) {
+  .y3d-grid-3,
+  .y3d-grid-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .y3d-stats-strip {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    padding: 32px;
+  }
+  .y3d-stat-box:nth-child(2)::after {
+    display: none;
+  }
+  .y3d-steps-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .y3d-two-col {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .y3d-section {
+    padding: 60px 0;
+  }
+  .y3d-hero-banner {
+    padding: 56px 16px 44px;
+  }
+  .y3d-grid-3,
+  .y3d-grid-2,
+  .y3d-grid-6,
+  .y3d-steps-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .y3d-stats-strip {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .y3d-stat-box::after {
+    display: none !important;
+  }
+  .y3d-card-soft,
+  .y3d-feature-card,
+  .y3d-step-card {
+    padding: 26px 20px;
+  }
+  .y3d-master-profile-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 28px 20px;
+  }
+  .y3d-profile-image-wrap,
+  .y3d-profile-logo-wrap {
+    margin: 0 auto;
+  }
+}

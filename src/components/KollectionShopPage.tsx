@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import ScrollReveal from './ScrollReveal';
 import {
   fetchProductsApi,
-  createConsultationApi,
+  createShopOrderApi,
   getImageUrl,
   KollectionProduct
 } from '../services/apiService';
@@ -202,6 +202,8 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
   const [orderSubmitting, setOrderSubmitting] = useState<boolean>(false);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
   const [hasTransferred, setHasTransferred] = useState<boolean>(false);
+  const [lastPurchasedProducts, setLastPurchasedProducts] = useState<KollectionProduct[]>([]);
+  const [lastOrderCode, setLastOrderCode] = useState<string>('');
   const [orderForm, setOrderForm] = useState({
     fullName: '',
     phone: '',
@@ -419,25 +421,36 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
 
     setOrderSubmitting(true);
     try {
-      const itemsListStr = cartItems
-        .map(i => `${i.product.title || (i.product as any).name} (x${i.quantity}) - ${formatVnd(i.product.price * i.quantity)}`)
-        .join(', ');
-      const totalVal = cartTotalPrice;
+      const generatedOrderCode = `ORD-${Date.now().toString().slice(-6)}`;
+      const purchasedProds = cartItems.map(i => i.product);
+      setLastPurchasedProducts(purchasedProds);
+      setLastOrderCode(generatedOrderCode);
 
-      const transferTag = hasTransferred
-        ? ' [TRẠNG THÁI: KHÁCH ĐÃ QUÉT QR & BÁO CHUYỂN TIỀN THÀNH CÔNG]'
-        : ' [TRẠNG THÁI: KHÁCH CHƯA XÁC NHẬN CHUYỂN TIỀN / THANH TOÁN SAU]';
+      const orderItemsData = cartItems.map(i => ({
+        productId: Number(i.product.id) || undefined,
+        productTitle: String(i.product.title || (i.product as any).name || 'Sản phẩm 4U'),
+        productSku: i.product.sku || '',
+        price: Number(i.product.price) || 0,
+        quantity: Number(i.quantity) || 1,
+        subtotal: Number(i.product.price * i.quantity) || 0,
+        heroImage: i.product.heroImage || ''
+      }));
 
-      const notesCombined = `[ĐƠN HÀNG KOLLECTION 4U] Sản phẩm: ${itemsListStr}. Tổng tiền: ${formatVnd(totalVal)}. Địa chỉ nhận hàng: ${orderForm.address || 'Chưa cung cấp'}. Ghi chú: ${orderForm.notes || 'Không'}.${transferTag}`;
+      const paymentMethodStr = hasTransferred ? 'Chuyển khoản QR (Đã quét)' : 'COD / Thanh toán khi nhận hàng';
 
-      await createConsultationApi({
-        fullName: orderForm.fullName,
-        phone: orderForm.phone,
-        email: orderForm.email,
-        tourName: `Đơn Hàng Kollection 4U (${cartTotalItems} món)`,
-        notes: notesCombined,
-        preferredTime: 'Càng sớm càng tốt',
-        sourceUrl: window.location.href
+      await createShopOrderApi({
+        orderCode: generatedOrderCode,
+        customerName: orderForm.fullName.trim(),
+        customerPhone: orderForm.phone.trim(),
+        customerEmail: orderForm.email.trim() || undefined,
+        shippingAddress: orderForm.address.trim() || 'Chưa cung cấp',
+        paymentMethod: paymentMethodStr,
+        orderNotes: orderForm.notes.trim() || undefined,
+        totalAmount: cartTotalPrice,
+        shippingFee: 0,
+        status: hasTransferred ? 'Đã thanh toán (Chờ giao)' : 'Chờ xác nhận',
+        createdAt: new Date().toISOString(),
+        items: orderItemsData
       });
 
       setOrderSuccess(true);
@@ -450,6 +463,29 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
       setOrderSubmitting(false);
     }
   };
+
+  const recommendedUpsellProducts = useMemo(() => {
+    if (!lastPurchasedProducts.length) return products.slice(0, 3);
+    const purchasedIds = new Set(lastPurchasedProducts.map(p => String(p.id || p.slug)));
+    const purchasedCategories = new Set(
+      lastPurchasedProducts.map(p => (p.category || '').toLowerCase()).filter(Boolean)
+    );
+
+    // 1. First priority: Same category items not yet purchased in this order
+    const sameCategory = products.filter(p => {
+      const pId = String(p.id || p.slug);
+      const pCat = (p.category || '').toLowerCase();
+      return !purchasedIds.has(pId) && purchasedCategories.has(pCat);
+    });
+
+    // 2. Second priority: Other popular items in shop
+    const otherItems = products.filter(p => {
+      const pId = String(p.id || p.slug);
+      return !purchasedIds.has(pId) && !sameCategory.some(sc => String(sc.id || sc.slug) === pId);
+    });
+
+    return [...sameCategory, ...otherItems].slice(0, 3);
+  }, [lastPurchasedProducts, products]);
 
   const getProductGallery = (product: KollectionProduct): string[] => {
     if (product.gallery && Array.isArray(product.gallery) && product.gallery.length > 0) {
@@ -1437,20 +1473,170 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
             </button>
 
             {orderSuccess ? (
-              <div style={{ textAlign: 'center', padding: '24px 0' }}>
-                <CheckCircle2 size={60} style={{ color: '#065f46', margin: '0 auto 16px auto' }} />
-                <h3 className="font-headline" style={{ fontSize: '24px', fontWeight: 700, color: '#191c1d', margin: '0 0 10px 0' }}>
-                  Đặt hàng thành công!
-                </h3>
-                <p style={{ fontSize: '14.5px', color: '#555f6d', lineHeight: 1.6, margin: '0 0 24px 0' }}>
-                  Cảm ơn bạn đã tin chọn sản phẩm từ Kollection 4U. Chúng tôi sẽ liên hệ sớm nhất để xác nhận và đóng gói giao hàng.
-                </p>
-                <button
-                  onClick={() => { setCheckoutModalOpen(false); setOrderSuccess(false); }}
-                  style={{ padding: '12px 32px', borderRadius: '8px', backgroundColor: '#065f46', color: '#ffffff', fontWeight: 600, border: 'none', cursor: 'pointer' }}
-                >
-                  Tiếp tục mua sắm
-                </button>
+              <div style={{ padding: 'clamp(10px, 1.5vh, 16px) 0' }}>
+                <div style={{ textAlign: 'center', marginBottom: 'clamp(16px, 2.5vh, 24px)' }}>
+                  <div style={{
+                    width: '56px',
+                    height: '56px',
+                    borderRadius: '50%',
+                    backgroundColor: '#ecfdf5',
+                    color: '#059669',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 12px auto',
+                    boxShadow: '0 4px 14px rgba(5, 150, 105, 0.2)'
+                  }}>
+                    <CheckCircle2 size={32} />
+                  </div>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.08em', backgroundColor: '#dcfce7', padding: '3px 10px', borderRadius: '999px' }}>
+                    {lastOrderCode ? `Mã Đơn: ${lastOrderCode}` : 'Đặt Hàng Thành Công'}
+                  </span>
+                  <h3 className="font-headline" style={{ fontSize: 'clamp(20px, 2.5vh, 24px)', fontWeight: 800, color: '#111827', margin: '8px 0 6px 0' }}>
+                    Cảm Ơn Bạn Đã Tin Chọn Kollection 4U!
+                  </h3>
+                  <p style={{ fontSize: '13.5px', color: '#64748b', lineHeight: 1.5, margin: 0, maxWidth: '480px', marginLeft: 'auto', marginRight: 'auto' }}>
+                    Đội ngũ chuyên viên 4U sẽ liên hệ số điện thoại <strong>{orderForm.phone || 'của bạn'}</strong> trong vòng 15-30 phút để xác nhận và đóng gói giao hàng tận nơi.
+                  </p>
+                </div>
+
+                {/* UPSELL / CROSS-SELL SAME-CATEGORY RECOMMENDATION SECTION */}
+                {recommendedUpsellProducts.length > 0 && (
+                  <div style={{
+                    backgroundColor: '#f8fafc',
+                    borderRadius: '14px',
+                    padding: 'clamp(14px, 2vh, 18px)',
+                    border: '1px solid #e2e8f0',
+                    marginBottom: 'clamp(16px, 2vh, 22px)'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Gift size={18} color="#059669" />
+                        <span style={{ fontSize: '14px', fontWeight: 800, color: '#081f13', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                          Gợi Ý Mua Kèm • Cùng Bộ Sưu Tập
+                        </span>
+                      </div>
+                      <span style={{ fontSize: '11px', fontWeight: 700, backgroundColor: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '6px', border: '1px solid #fde68a' }}>
+                        ⚡ Miễn Phí Giao Chung Đơn
+                      </span>
+                    </div>
+
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+                      gap: '12px'
+                    }}>
+                      {recommendedUpsellProducts.map((recProd) => (
+                        <div
+                          key={recProd.id || recProd.slug}
+                          style={{
+                            backgroundColor: '#ffffff',
+                            borderRadius: '10px',
+                            border: '1px solid #e2e8f0',
+                            padding: '10px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            transition: 'all 0.2s ease',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
+                          }}
+                        >
+                          <div>
+                            <div style={{
+                              width: '100%',
+                              height: '110px',
+                              borderRadius: '8px',
+                              overflow: 'hidden',
+                              backgroundColor: '#f1f5f9',
+                              marginBottom: '8px',
+                              position: 'relative'
+                            }}>
+                              <img
+                                src={getMerchandiseImage(recProd)}
+                                alt={recProd.title}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              />
+                              <span style={{
+                                position: 'absolute',
+                                top: '6px',
+                                left: '6px',
+                                fontSize: '10px',
+                                fontWeight: 700,
+                                backgroundColor: 'rgba(5, 150, 105, 0.9)',
+                                color: '#ffffff',
+                                padding: '2px 6px',
+                                borderRadius: '4px'
+                              }}>
+                                {recProd.category || 'Tĩnh Dưỡng'}
+                              </span>
+                            </div>
+                            <h4 style={{
+                              fontSize: '13px',
+                              fontWeight: 700,
+                              color: '#111827',
+                              margin: '0 0 4px 0',
+                              lineHeight: 1.3,
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden'
+                            }}>
+                              {recProd.title || (recProd as any).name}
+                            </h4>
+                            <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#059669', marginBottom: '8px' }}>
+                              {formatVnd(recProd.price)}
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              handleAddToCart(recProd, 1, e);
+                            }}
+                            style={{
+                              width: '100%',
+                              padding: '7px 10px',
+                              borderRadius: '6px',
+                              backgroundColor: '#ecfdf5',
+                              border: '1px solid #a7f3d0',
+                              color: '#065f46',
+                              fontSize: '12px',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '4px',
+                              transition: 'all 0.15s ease'
+                            }}
+                          >
+                            <Plus size={13} />
+                            <span>Thêm mua kèm</span>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+                  <button
+                    onClick={() => { setCheckoutModalOpen(false); setOrderSuccess(false); }}
+                    style={{
+                      padding: '11px 28px',
+                      borderRadius: '8px',
+                      backgroundColor: '#004532',
+                      color: '#ffffff',
+                      fontWeight: 700,
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      boxShadow: '0 4px 12px rgba(0,69,50,0.2)'
+                    }}
+                  >
+                    Tiếp tục mua sắm
+                  </button>
+                </div>
               </div>
             ) : (
               <div>

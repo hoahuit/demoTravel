@@ -53,7 +53,7 @@ export default function Carousel3Dv2({ onOpenBooking, onOpenConsultation, onNavi
       src: getImageUrl(cleanHero),
       alt: tour.title,
       title: tour.title,
-      subtitle: `${tour.city.toUpperCase()} • ${formatCategoryTag(tour.category)}`,
+      subtitle: `${tour.city.toUpperCase()} • ${formatCategoryTag((tour.categories && tour.categories[0]) || tour.category)}`,
       badge: 'Độc quyền',
       isExclusive: true,
       meta: [

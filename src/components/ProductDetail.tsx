@@ -6,6 +6,7 @@ import ScrollExpandMedia from './ui/scroll-expansion-hero';
 import ElegantCarousel, { SlideData } from './ui/elegant-carousel';
 import Testimonials from './Testimonials';
 import PartnerLogos from './PartnerLogos';
+import SectionLandingPage from './SectionLandingPage';
 
 export interface ProductDetailProps {
   productSlug?: string;
@@ -177,10 +178,11 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
   }
 
   const parsedInclusions = parseArrayField(product.included).filter(s => !s.includes('Ngăn cách dấu phẩy'));
+  const primaryCategory = (product.categories && product.categories[0]) || product.category || 'Retreat';
 
   const pageData = {
     slug: product.slug,
-    badge1: product.category.toUpperCase(),
+    badge1: primaryCategory.toUpperCase(),
     badge2: product.isExclusive ? 'ĐỘC QUYỀN' : (product.isHot ? 'HOT SELECTION' : '5 STAR'),
     title: product.title,
     subtitle: product.subtitle,
@@ -190,7 +192,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
     departureDates: product.departureDates || [],
     rating: `${product.rating} / 5.0 (${product.reviewsCount} Đánh giá)`,
     ratingValue: product.rating,
-    type: product.category,
+    type: primaryCategory,
     priceText: `${product.price.toLocaleString('vi-VN')} VNĐ`,
     priceAdult: product.price,
     childPriceText: product.childPrice && product.childPrice > 0
@@ -203,7 +205,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
     childNote: product.childNote || 'Hưởng giường riêng & suất ăn trọn gói dành cho trẻ em',
     infantNote: product.infantNote || 'Ngồi cùng bố mẹ, miễn phí vé tham quan & phụ thu lưu trú',
     bookingPolicyNotes: product.bookingPolicyNotes || (product.notes && product.notes.length > 0 ? product.notes.join('. ') : 'Đổi ngày khởi hành miễn phí 01 lần trước 07 ngày. Đã bao gồm bảo hiểm du lịch trọn gói mức bồi thường tối đa 100.000.000 VNĐ/vụ.'),
-    experienceTitle: product.subtitle || `Trải nghiệm ${product.category} tại ${product.city}`,
+    experienceTitle: product.subtitle || `Trải nghiệm ${primaryCategory} tại ${product.city}`,
     experiencePara1: product.highlights && product.highlights.length > 0 ? product.highlights.join('. ') : product.subtitle,
     experiencePara2: product.blogStorySnippet || product.subtitle || `Hành trình ${product.title} tại ${product.city} với trải nghiệm trọn gói đặc sắc.`,
     highlights: product.highlights,
@@ -289,6 +291,13 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
   const mediaSrc = videoFallback;
   const bgImageSrc = pageData.heroImage;
 
+  const isZannierOrYogaTour =
+    normalizedSlug.includes('zannier') ||
+    normalizedSlug.includes('bai-san-ho') ||
+    normalizedSlug.includes('yoga') ||
+    product.slug === 'zannier-bai-san-ho-phu-yen-retreat' ||
+    (Array.isArray(product.categories) && product.categories.includes('doc-quyen'));
+
   return (
     <div style={{ background: '#e5efe8', color: '#191c1c', minHeight: '100vh', fontFamily: '"Be Vietnam Pro", "Plus Jakarta Sans", -apple-system, sans-serif' }}>
 
@@ -303,8 +312,17 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
         scrollToExpand="Cuộn xuống để mở rộng & khám phá"
         textBlend={false}
       >
+        {/* ── SECTION LANDING PAGE SHOWCASE (FULL WIDTH, POSITIONED ABOVE DOC-QUYEN / ĐỘC QUYỀN TAGS) ── */}
+        <div style={{ width: '100%', marginBottom: '40px' }}>
+          <SectionLandingPage
+            onOpenBooking={() => onOpenBooking ? onOpenBooking(product) : undefined}
+            retreatTitle={product.title}
+            templateId={(product as any).landingSectionTemplateId || product.yoga3dTemplateId}
+          />
+        </div>
+
         {/* Badges & Subtitle inside Hero container */}
-        <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: '24px 20px 8px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: '0 20px 8px', textAlign: 'center' }}>
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '14px', flexWrap: 'wrap' }}>
             <span
               style={{
@@ -943,6 +961,8 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                           price: pageData.priceAdult,
                           city: pageData.location,
                           duration: pageData.duration,
+                          category: product.category,
+                          categories: product.categories,
                           selectedDate: selectedDate || (pageData.departureDates && pageData.departureDates[0]),
                           guests: guests
                         });
@@ -996,13 +1016,12 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
               </div>
             )}
 
-        </div>
-      </section>
+          </div>
+        </section>
 
-      {/* Khách Hàng Nói Gì Về Trải Nghiệm 4U Retreat */}
-      {!hideTestimonials && <Testimonials />}
-    </ScrollExpandMedia>
-
+        {/* Khách Hàng Nói Gì Về Trải Nghiệm 4U Retreat */}
+        {!hideTestimonials && <Testimonials />}
+      </ScrollExpandMedia>
       {/* Mobile Floating Sticky Bar */}
       <div
         className="pd-mobile-floating-bar"

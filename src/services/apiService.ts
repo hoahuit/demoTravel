@@ -18,6 +18,12 @@ import {
   updateMockTour,
   deleteMockTour
 } from '../data/mockData';
+import {
+  LandingSectionTemplate,
+  DEFAULT_LANDING_SECTION_TEMPLATES,
+  getAllLandingSectionTemplates,
+  saveAllLandingSectionTemplates
+} from '../data/landingSectionData';
 import { getStoredToken } from './authService';
 
 export const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://127.0.0.1:3001';
@@ -150,7 +156,8 @@ export async function uploadImageApi(
 export function getLb4Endpoint(section: string): string {
   const mapping: Record<string, string> = {
     tours: '/tours',
-    bookings: '/bookings',
+    bookings: '/tour-bookings',
+    'tour-bookings': '/tour-bookings',
     blog: '/blogs',
     destinations: '/destinations',
     faq: '/faqs',
@@ -164,7 +171,13 @@ export function getLb4Endpoint(section: string): string {
     categories: '/menu-categories',
     'menu-categories': '/menu-categories',
     consultations: '/consultations',
+    'custom-tours': '/custom-tour-requests',
+    'custom-tour-requests': '/custom-tour-requests',
+    'shop-orders': '/shop-orders',
     products: '/products',
+    'landing-page': '/landing-section-templates',
+    yoga3d: '/landing-section-templates',
+    'landing-section-templates': '/landing-section-templates',
   };
   return mapping[section] || `/${section}`;
 }
@@ -236,12 +249,48 @@ export function parseTourJsonFields(tour: any) {
     ];
   }
 
+  // Unified Category Consolidation: Primary category is categories[0]
+  if (Array.isArray(tour.categories) && tour.categories.length > 0) {
+    tour.category = tour.categories[0];
+  } else if (tour.category) {
+    tour.categories = [tour.category];
+  } else {
+    tour.category = 'Retreat';
+    tour.categories = ['Retreat'];
+  }
 
   return tour;
 }
 
+function safeParseToArray(val: any): any[] {
+  if (!val) return [];
+  if (Array.isArray(val)) return val;
+  if (typeof val === 'string') {
+    const trimmed = val.trim();
+    if (trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return Array.isArray(parsed) ? parsed : [parsed];
+      } catch {
+        return [];
+      }
+    }
+    if (trimmed.includes(',')) {
+      return trimmed.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+    return trimmed !== 'null' && trimmed !== 'undefined' ? [trimmed] : [];
+  }
+  return [val];
+}
+
 export function sanitizeTourPayload(tourData: any, isUpdate = false) {
   const payload: any = {};
+  const arrayKeys = new Set([
+    'categories', 'departureDates', 'highlights', 'itinerary',
+    'gallery', 'included', 'excluded', 'notes', 'travelTips',
+    'faq', 'reviews'
+  ]);
+
   const validKeys = [
     'slug', 'title', 'subtitle', 'category', 'categories', 'country', 'city', 'duration', 'durationDays',
     'heroImage', 'price', 'originalPrice', 'childPrice', 'infantPrice',
@@ -249,38 +298,26 @@ export function sanitizeTourPayload(tourData: any, isUpdate = false) {
     'isHot', 'isFeatured', 'isExclusive', 'isCustomer', 'isAdminApproved', 'isAdminAprove',
     'departureDates', 'airline', 'hotel', 'transportation', 'rating', 'reviewsCount',
     'highlights', 'itinerary', 'gallery', 'included', 'excluded', 'notes', 'destinationMap',
-    'travelTips', 'faq', 'reviews'
+    'travelTips', 'faq', 'reviews', 'landingSectionTemplateId', 'yoga3dTemplateId'
   ];
 
   // If region is specified in draft, ensure it is added to categories
-  let categoriesArr: string[] = [];
-  if (Array.isArray(tourData.categories)) {
-    categoriesArr = [...tourData.categories];
-  } else if (typeof tourData.categories === 'string') {
-    try {
-      const parsed = JSON.parse(tourData.categories);
-      if (Array.isArray(parsed)) categoriesArr = parsed;
-      else categoriesArr = [tourData.categories];
-    } catch {
-      categoriesArr = tourData.categories ? [tourData.categories] : [];
-    }
-  }
+  let categoriesArr = safeParseToArray(tourData.categories);
   if (tourData.region && !categoriesArr.includes(tourData.region)) {
     categoriesArr.push(tourData.region);
   }
 
   const mergedData = {
     ...tourData,
-    categories: categoriesArr.length > 0 ? categoriesArr : tourData.categories
+    categories: categoriesArr,
+    category: categoriesArr[0] || tourData.category || 'Retreat'
   };
 
   validKeys.forEach((key) => {
     if (mergedData[key] !== undefined) {
-      if (Array.isArray(mergedData[key]) || (typeof mergedData[key] === 'object' && mergedData[key] !== null)) {
-        payload[key] = JSON.stringify(mergedData[key]);
-      } else if (typeof mergedData[key] === 'string' && (key === 'departureDates' || key === 'highlights' || key === 'gallery' || key === 'included') && mergedData[key].includes(',')) {
-        const arr = mergedData[key].split(',').map((s: string) => s.trim()).filter(Boolean);
-        payload[key] = JSON.stringify(arr);
+      if (arrayKeys.has(key)) {
+        // Send pure native arrays matching the normalized backend schema
+        payload[key] = safeParseToArray(mergedData[key]);
       } else {
         payload[key] = mergedData[key];
       }
@@ -716,6 +753,107 @@ export async function createConsultationApi(consultationData: any): Promise<any>
   return await saveSectionItemApi('consultations', 'create', consultationData);
 }
 
+export async function fetchConsultationsApi(forceRefresh = false): Promise<any[]> {
+  return await fetchSectionItemsApi('consultations', forceRefresh);
+}
+
+export async function saveConsultationApi(id: number | string, data: any): Promise<any> {
+  return await saveSectionItemApi('consultations', 'update', { ...data, id });
+}
+
+export async function deleteConsultationApi(id: number | string): Promise<boolean> {
+  await saveSectionItemApi('consultations', 'delete', { id });
+  return true;
+}
+
+// --------------------------------------------------------------------------
+// CUSTOM TOUR PLANNER / TAILOR-MADE TRIP REQUESTS API
+// --------------------------------------------------------------------------
+
+export interface CustomTourRequestItem {
+  id?: number | string;
+  requestCode?: string;
+  customerName: string;
+  customerPhone: string;
+  customerEmail?: string;
+  preferredCallTime?: string;
+  destination?: string;
+  durationDays?: number;
+  numberOfGuests?: number;
+  budgetPerPerson?: number;
+  travelStyle?: string;
+  departureMonth?: string;
+  specialRequests?: string;
+  status?: string;
+  createdAt?: string;
+}
+
+export async function fetchCustomTourRequestsApi(forceRefresh = false): Promise<CustomTourRequestItem[]> {
+  return await fetchSectionItemsApi('custom-tours', forceRefresh);
+}
+
+export async function createCustomTourRequestApi(data: Partial<CustomTourRequestItem>): Promise<CustomTourRequestItem> {
+  return await saveSectionItemApi('custom-tours', 'create', data);
+}
+
+export async function saveCustomTourRequestApi(id: number | string, data: Partial<CustomTourRequestItem>): Promise<CustomTourRequestItem> {
+  return await saveSectionItemApi('custom-tours', 'update', { ...data, id });
+}
+
+export async function deleteCustomTourRequestApi(id: number | string): Promise<boolean> {
+  await saveSectionItemApi('custom-tours', 'delete', { id });
+  return true;
+}
+
+// --------------------------------------------------------------------------
+// KOLLECTION 4U SHOP ORDERS API
+// --------------------------------------------------------------------------
+
+export interface ShopOrderItemData {
+  id?: number | string;
+  orderId?: number;
+  productId?: number;
+  productTitle: string;
+  productSku?: string;
+  price: number;
+  quantity: number;
+  subtotal: number;
+  heroImage?: string;
+}
+
+export interface ShopOrderItem {
+  id?: number | string;
+  orderCode?: string;
+  customerName: string;
+  customerPhone: string;
+  customerEmail?: string;
+  shippingAddress?: string;
+  paymentMethod?: string;
+  orderNotes?: string;
+  totalAmount: number;
+  shippingFee?: number;
+  status?: string;
+  createdAt?: string;
+  items?: ShopOrderItemData[];
+}
+
+export async function fetchShopOrdersApi(forceRefresh = false): Promise<ShopOrderItem[]> {
+  return await fetchSectionItemsApi('shop-orders', forceRefresh);
+}
+
+export async function createShopOrderApi(data: Partial<ShopOrderItem>): Promise<ShopOrderItem> {
+  return await saveSectionItemApi('shop-orders', 'create', data);
+}
+
+export async function saveShopOrderApi(id: number | string, data: Partial<ShopOrderItem>): Promise<ShopOrderItem> {
+  return await saveSectionItemApi('shop-orders', 'update', { ...data, id });
+}
+
+export async function deleteShopOrderApi(id: number | string): Promise<boolean> {
+  await saveSectionItemApi('shop-orders', 'delete', { id });
+  return true;
+}
+
 // --------------------------------------------------------------------------
 // KOLLECTION 4U PHYSICAL PRODUCTS API CALLS
 // --------------------------------------------------------------------------
@@ -781,17 +919,11 @@ export async function fetchProductsApi(forceRefresh = false): Promise<Kollection
 
 export async function createProductApi(productData: Partial<KollectionProduct>): Promise<KollectionProduct> {
   const payload = { ...productData };
-  if (Array.isArray(payload.gallery)) {
-    payload.gallery = JSON.stringify(payload.gallery);
-  }
   return await saveSectionItemApi('products', 'create', payload);
 }
 
 export async function saveProductApi(id: number | string, productData: Partial<KollectionProduct>): Promise<KollectionProduct> {
   const payload = { ...productData };
-  if (Array.isArray(payload.gallery)) {
-    payload.gallery = JSON.stringify(payload.gallery);
-  }
   return await saveSectionItemApi('products', 'update', { ...payload, id });
 }
 
@@ -799,4 +931,216 @@ export async function deleteProductApi(id: number | string): Promise<boolean> {
   await saveSectionItemApi('products', 'delete', { id });
   return true;
 }
+
+// --------------------------------------------------------------------------
+// LANDING SECTION TEMPLATES CRUD API CALLS (WITH DUAL-BRIDGE & QUERY CACHE)
+// --------------------------------------------------------------------------
+
+let inflightTemplatesPromise: Promise<LandingSectionTemplate[]> | null = null;
+
+export async function fetchLandingSectionTemplatesApi(forceRefresh = false): Promise<LandingSectionTemplate[]> {
+  if (USE_MOCK_DATA) {
+    const mockList = getAllLandingSectionTemplates();
+    return setCachedQuery('landing-section-templates', mockList);
+  }
+
+  if (!forceRefresh) {
+    const cached = getCachedQuery<LandingSectionTemplate[]>('landing-section-templates');
+    if (cached) {
+      return cached;
+    }
+  }
+
+  if (inflightTemplatesPromise) {
+    return inflightTemplatesPromise;
+  }
+
+  inflightTemplatesPromise = (async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/landing-section-templates`, {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+      });
+      if (!response.ok) {
+        console.warn(`[API Service] Failed to fetch live landing section templates (${response.status}), falling back to local.`);
+        return setCachedQuery('landing-section-templates', getAllLandingSectionTemplates());
+      }
+      const rawList = await response.json();
+      if (Array.isArray(rawList) && rawList.length > 0) {
+        saveAllLandingSectionTemplates(rawList);
+        return setCachedQuery('landing-section-templates', rawList);
+      }
+      return setCachedQuery('landing-section-templates', getAllLandingSectionTemplates());
+    } catch (err) {
+      console.warn(`[API Service] Backend unreachable at ${API_BASE_URL}, using local landing section templates.`);
+      return setCachedQuery('landing-section-templates', getAllLandingSectionTemplates());
+    } finally {
+      setTimeout(() => {
+        inflightTemplatesPromise = null;
+      }, 500);
+    }
+  })();
+
+  return inflightTemplatesPromise;
+}
+
+export async function getLandingSectionTemplateByIdApi(id: string): Promise<LandingSectionTemplate> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/landing-section-templates/${encodeURIComponent(id)}`, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+    });
+    if (response.ok) {
+      return await response.json();
+    }
+  } catch (err) {
+    console.warn(`[API Service] Error fetching template by ID ${id}:`, err);
+  }
+  const all = getAllLandingSectionTemplates();
+  return all.find((t) => t.id === id) || all.find((t) => t.isDefault) || DEFAULT_LANDING_SECTION_TEMPLATES[0];
+}
+
+export async function saveLandingSectionTemplateApi(template: LandingSectionTemplate): Promise<LandingSectionTemplate> {
+  const authHeader = getAuthHeader();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  if (authHeader) {
+    headers['Authorization'] = authHeader;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/landing-section-templates/${encodeURIComponent(template.id)}`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify(template),
+  });
+
+  invalidateQueryCache('landing-section-templates');
+
+  if (!response.ok) {
+    const errMsg = await getApiErrorMessage(response);
+    throw new Error(errMsg);
+  }
+
+  const updated = await response.json();
+  return updated;
+}
+
+export async function createLandingSectionTemplateApi(template: LandingSectionTemplate): Promise<LandingSectionTemplate> {
+  const authHeader = getAuthHeader();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  if (authHeader) {
+    headers['Authorization'] = authHeader;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/landing-section-templates`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(template),
+  });
+
+  invalidateQueryCache('landing-section-templates');
+
+  if (!response.ok) {
+    const errMsg = await getApiErrorMessage(response);
+    throw new Error(errMsg);
+  }
+
+  const created = await response.json();
+  return created;
+}
+
+export async function deleteLandingSectionTemplateApi(id: string): Promise<boolean> {
+  const authHeader = getAuthHeader();
+  const headers: Record<string, string> = {};
+  if (authHeader) {
+    headers['Authorization'] = authHeader;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/landing-section-templates/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    headers,
+  });
+
+  invalidateQueryCache('landing-section-templates');
+
+  if (!response.ok && response.status !== 204) {
+    const errMsg = await getApiErrorMessage(response);
+    throw new Error(errMsg);
+  }
+
+  return true;
+}
+
+export async function duplicateLandingSectionTemplateApi(id: string): Promise<LandingSectionTemplate> {
+  const authHeader = getAuthHeader();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  if (authHeader) {
+    headers['Authorization'] = authHeader;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/landing-section-templates/${encodeURIComponent(id)}/duplicate`, {
+    method: 'POST',
+    headers,
+  });
+
+  invalidateQueryCache('landing-section-templates');
+
+  if (!response.ok) {
+    const errMsg = await getApiErrorMessage(response);
+    throw new Error(errMsg);
+  }
+
+  const duplicated = await response.json();
+  return duplicated;
+}
+
+export async function resetLandingSectionTemplatesApi(): Promise<boolean> {
+  const authHeader = getAuthHeader();
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  if (authHeader) {
+    headers['Authorization'] = authHeader;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/landing-section-templates/reset-defaults`, {
+    method: 'POST',
+    headers,
+  });
+
+  invalidateQueryCache('landing-section-templates');
+
+  if (!response.ok) {
+    const errMsg = await getApiErrorMessage(response);
+    throw new Error(errMsg);
+  }
+
+  return true;
+}
+
+// -------------------------------------------------------------
+// TOUR BOOKINGS API (QUẢN LÝ ĐƠN ĐẶT TOUR & TRANG BỊ)
+// -------------------------------------------------------------
+export async function fetchTourBookingsApi(): Promise<any[]> {
+  return fetchSectionItemsApi('tour-bookings');
+}
+
+export async function createTourBookingApi(payload: any): Promise<any> {
+  return saveSectionItemApi('tour-bookings', 'create', payload);
+}
+
+export async function saveTourBookingApi(action: 'create' | 'update' | 'delete', payload: any): Promise<any> {
+  return saveSectionItemApi('tour-bookings', action, payload);
+}
+
+export async function deleteTourBookingApi(id: string | number): Promise<any> {
+  return saveSectionItemApi('tour-bookings', 'delete', { id });
+}
+
+
 

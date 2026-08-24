@@ -9,8 +9,10 @@ import {
   getImageUrl,
   uploadImageApi,
   fetchMenuCategoriesApi,
+  fetchLandingSectionTemplatesApi,
   MenuCategoryItem
 } from '../../services/apiService';
+import { getAllLandingSectionTemplates } from '../../data/landingSectionData';
 import ProductDetail from '../ProductDetail';
 import EmptyState from '../ui/EmptyState';
 import AdminPriceInput from './AdminPriceInput';
@@ -53,6 +55,7 @@ const buildDraft = (tour: TourPackage | null): TourPackage | null => {
 export default function AdminToursManager({ onNavigate, toast }: AdminToursManagerProps) {
   const [toursList, setToursList] = useState<TourPackage[]>([]);
   const [availableCategories, setAvailableCategories] = useState<MenuCategoryItem[]>([]);
+  const [availableLandingTemplates, setAvailableLandingTemplates] = useState<any[]>(() => getAllLandingSectionTemplates());
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [tourDraft, setTourDraft] = useState<TourPackage | null>(null);
   const [isCreatingNew, setIsCreatingNew] = useState<boolean>(false);
@@ -64,9 +67,10 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
 
   const loadLiveToursAndCategories = async (isManual = false) => {
     try {
-      const [liveData, catsData] = await Promise.all([
+      const [liveData, catsData, tplsData] = await Promise.all([
         fetchToursApi(isManual),
-        fetchMenuCategoriesApi(isManual)
+        fetchMenuCategoriesApi(isManual),
+        fetchLandingSectionTemplatesApi(isManual)
       ]);
       if (Array.isArray(liveData) && liveData.length > 0) {
         setToursList(liveData);
@@ -75,6 +79,9 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
       }
       if (Array.isArray(catsData) && catsData.length > 0) {
         setAvailableCategories(catsData);
+      }
+      if (Array.isArray(tplsData) && tplsData.length > 0) {
+        setAvailableLandingTemplates(tplsData);
       }
       if (isManual) {
         toast?.success?.('Đã làm mới danh sách tour!');
@@ -89,6 +96,26 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
     loadLiveToursAndCategories();
   }, []);
 
+  const checkIsExclusive = (t: TourPackage) => {
+    const cats = Array.isArray(t.categories) ? t.categories : (typeof t.categories === 'string' ? JSON.parse(t.categories || '[]') : []);
+    return t.isExclusive === true || cats.includes('doc-quyen') || cats.includes('Doc-Quyen');
+  };
+
+  const checkIsFeatured = (t: TourPackage) => {
+    const cats = Array.isArray(t.categories) ? t.categories : (typeof t.categories === 'string' ? JSON.parse(t.categories || '[]') : []);
+    return t.isFeatured === true || cats.includes('sap-khoi-hanh') || cats.includes('featured');
+  };
+
+  const checkIsHot = (t: TourPackage) => {
+    const cats = Array.isArray(t.categories) ? t.categories : (typeof t.categories === 'string' ? JSON.parse(t.categories || '[]') : []);
+    return t.isHot === true || cats.includes('khong-the-bo-lo') || cats.includes('hot');
+  };
+
+  const checkIsDeal = (t: TourPackage) => {
+    const cats = Array.isArray(t.categories) ? t.categories : (typeof t.categories === 'string' ? JSON.parse(t.categories || '[]') : []);
+    return (t.originalPrice || 0) > (t.price || 0) || t.isPromotion === true || cats.includes('uu-dai-gio-chot') || cats.includes('last-minute');
+  };
+
   const filteredTours = useMemo(() => {
     return toursList.filter((tour) => {
       const matchSearch =
@@ -98,10 +125,10 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
 
       if (!matchSearch) return false;
 
-      if (categoryFilter === 'Exclusive') return tour.isExclusive === true;
-      if (categoryFilter === 'Featured') return tour.isFeatured === true && !tour.isExclusive;
-      if (categoryFilter === 'Hot') return tour.isHot === true && !tour.isExclusive;
-      if (categoryFilter === 'Deals') return (tour.originalPrice || 0) > (tour.price || 0) && !tour.isExclusive;
+      if (categoryFilter === 'Exclusive') return checkIsExclusive(tour);
+      if (categoryFilter === 'Featured') return checkIsFeatured(tour);
+      if (categoryFilter === 'Hot') return checkIsHot(tour);
+      if (categoryFilter === 'Deals') return checkIsDeal(tour);
 
       return true;
     });
@@ -417,19 +444,19 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '28px' }}>
             <div style={{ padding: '20px', backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.04)' }}>
               <p style={{ fontSize: '11px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', margin: 0 }}>Retreats Độc Quyền</p>
-              <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '28px', color: '#059669', margin: '4px 0 0 0', fontWeight: 700 }}>{toursList.filter(t => t.isExclusive).length}</p>
+              <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '28px', color: '#059669', margin: '4px 0 0 0', fontWeight: 700 }}>{toursList.filter(checkIsExclusive).length}</p>
             </div>
             <div style={{ padding: '20px', backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.04)' }}>
               <p style={{ fontSize: '11px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', margin: 0 }}>Sắp Khởi Hành</p>
-              <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '28px', color: '#2563eb', margin: '4px 0 0 0', fontWeight: 700 }}>{toursList.filter(t => t.isFeatured && !t.isExclusive).length}</p>
+              <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '28px', color: '#2563eb', margin: '4px 0 0 0', fontWeight: 700 }}>{toursList.filter(checkIsFeatured).length}</p>
             </div>
             <div style={{ padding: '20px', backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.04)' }}>
               <p style={{ fontSize: '11px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', margin: 0 }}>Không Thể Bỏ Lỡ</p>
-              <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '28px', color: '#dc2626', margin: '4px 0 0 0', fontWeight: 700 }}>{toursList.filter(t => t.isHot && !t.isExclusive).length}</p>
+              <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '28px', color: '#dc2626', margin: '4px 0 0 0', fontWeight: 700 }}>{toursList.filter(checkIsHot).length}</p>
             </div>
             <div style={{ padding: '20px', backgroundColor: '#ffffff', borderRadius: '20px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.04)' }}>
               <p style={{ fontSize: '11px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', margin: 0 }}>Ưu Đãi Giờ Chót</p>
-              <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '28px', color: '#d97706', margin: '4px 0 0 0', fontWeight: 700 }}>{toursList.filter(t => (t.originalPrice || 0) > (t.price || 0) && !t.isExclusive).length}</p>
+              <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '28px', color: '#d97706', margin: '4px 0 0 0', fontWeight: 700 }}>{toursList.filter(checkIsDeal).length}</p>
             </div>
           </div>
 
@@ -528,7 +555,7 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
 
                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
                   <div>
-                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#059669', textTransform: 'uppercase' }}>{tour.city} • {tour.category}</span>
+                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#059669', textTransform: 'uppercase' }}>{tour.city} • {(tour.categories && tour.categories[0]) || tour.category || 'Retreat'}</span>
                     <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '18px', color: '#081f13', margin: '4px 0 6px 0', fontWeight: 600 }}>{tour.title}</h3>
                     <p style={{ fontSize: '13px', color: '#525a54', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{tour.subtitle}</p>
                   </div>
@@ -800,7 +827,7 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                 }}>
                   <div>
                     <span style={{ fontSize: '11px', fontWeight: 800, color: '#819986', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
-                      {tourDraft.category} • {tourDraft.city}
+                      {(tourDraft.categories && tourDraft.categories[0]) || tourDraft.category || 'Retreat'} • {tourDraft.city}
                     </span>
                     <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '26px', color: '#ffffff', margin: '4px 0 0 0', fontWeight: 600 }}>
                       {tourDraft.title}
@@ -861,6 +888,48 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                       onChange={(e) => setTourDraft({ ...tourDraft, subtitle: e.target.value })}
                       style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
                     />
+                  </div>
+
+                  {/* SECTION LANDING PAGE TEMPLATE CONFIGURATION */}
+                  <div style={{ gridColumn: 'span 2', backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '14px', padding: '16px 18px', boxShadow: '0 2px 8px rgba(22, 101, 52, 0.04)' }}>
+                    <div style={{ marginBottom: '8px' }}>
+                      <label style={{ fontSize: '12.5px', fontWeight: 800, color: '#166534', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span>🌿 Mẫu Section Landing Page (Product Detail)</span>
+                      </label>
+                      <p style={{ fontSize: '12px', color: '#4b7a58', margin: '2px 0 0 0' }}>
+                        Chọn loại Section Landing Page (Vận động 3Đ, Hít thở Pranayama, Trị liệu cột sống...) hiển thị trên trang chi tiết của Tour này. Nếu không chọn, hệ thống sẽ tự động dùng <strong>Mẫu Mặc Định (Loại 1: Vận Động 3Đ - Chia tay Đau Cổ Vai Gáy)</strong>.
+                      </p>
+                    </div>
+
+                    <select
+                      value={(tourDraft as any).landingSectionTemplateId || tourDraft.yoga3dTemplateId || ''}
+                      onChange={(e) => {
+                        const selectedVal = e.target.value;
+                        setTourDraft({
+                          ...tourDraft,
+                          landingSectionTemplateId: selectedVal,
+                          yoga3dTemplateId: selectedVal
+                        } as any);
+                      }}
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        borderRadius: '8px',
+                        border: '1px solid #86efac',
+                        fontSize: '13.5px',
+                        fontWeight: 600,
+                        color: '#081f13',
+                        backgroundColor: '#ffffff',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <option value="">-- Mặc Định: Dùng Loại 1 (Vận Động 3Đ • Chia tay Đau Cổ, Vai, Gáy) --</option>
+                      {availableLandingTemplates.map((tpl) => (
+                        <option key={tpl.id} value={tpl.id}>
+                          {tpl.name} {tpl.isDefault ? '(★ Mặc Định Hệ Thống)' : ''}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   {/* UNIFIED RETREAT CATEGORIES & HOMEPAGE DISTRIBUTION */}
@@ -1093,7 +1162,7 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                             icon: '💖'
                           },
                         ].map((series) => {
-                          const isSelected = (tourDraft.categories || []).includes(series.slug) || tourDraft.category === series.categoryName;
+                          const isSelected = (tourDraft.categories || []).includes(series.slug) || (tourDraft.categories || []).includes(series.categoryName) || tourDraft.category === series.categoryName;
                           return (
                             <label
                               key={series.slug}
@@ -1117,12 +1186,12 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                                   const current = tourDraft.categories || [];
                                   let next = e.target.checked
                                     ? [...current, series.slug]
-                                    : current.filter((s) => s !== series.slug);
+                                    : current.filter((s) => s !== series.slug && s !== series.categoryName);
                                   next = Array.from(new Set(next));
                                   setTourDraft({
                                     ...tourDraft,
                                     categories: next,
-                                    category: e.target.checked ? series.categoryName : (next[0] || 'Healing')
+                                    category: next[0] || series.categoryName || 'Healing'
                                   });
                                 }}
                                 style={{ marginTop: '2px', accentColor: series.badgeColor, cursor: 'pointer', width: '16px', height: '16px' }}
