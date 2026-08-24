@@ -85,7 +85,7 @@ export default function SectionLandingPage({
   const { hero, signals, about, method, benefits, trust, steps, pricing, faq } = data;
 
   return (
-    <div className="yoga3d-landing-container">
+    <div className="y3d-root yoga3d-landing-container">
       {/* ── 1. HERO SECTION ── */}
       <section className="y3d-hero-banner">
         <div className="y3d-hero-content">
@@ -132,16 +132,16 @@ export default function SectionLandingPage({
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 y3d-grid-2">
+          <div className="y3d-cards-row">
             {signals.items.map((item, idx) => (
-              <article key={idx} className="card-soft p-8 y3d-card-soft">
-                <div className="icon-tile mb-5 y3d-icon-tile">
+              <article key={idx} className="card-soft p-6 y3d-card-soft">
+                <div className="icon-tile mb-4 y3d-icon-tile">
                   <Activity size={24} />
                 </div>
-                <h3 className="font-serif font-bold text-xl mb-3 text-balance">
+                <h3 className="font-serif font-bold text-lg mb-2 text-balance">
                   {item.title}
                 </h3>
-                <p className="text-[15px] text-muted-foreground leading-[1.7] text-pretty">
+                <p className="text-[14px] text-muted-foreground leading-[1.6] text-pretty">
                   {item.description}
                 </p>
               </article>
@@ -194,22 +194,22 @@ export default function SectionLandingPage({
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 y3d-grid-3">
+          <div className="y3d-cards-row">
             {method.items.map((item, idx) => (
-              <article key={idx} className="card-soft p-9 text-center flex flex-col items-center y3d-card-soft">
-                <div className="text-[11px] uppercase tracking-[0.2em] text-emerald-800 font-semibold mb-4">
+              <article key={idx} className="card-soft p-6 text-center flex flex-col items-center y3d-card-soft">
+                <div className="text-[11px] uppercase tracking-[0.2em] text-emerald-800 font-semibold mb-3">
                   {item.point}
                 </div>
-                <div className="icon-tile mb-6 y3d-icon-tile">
+                <div className="icon-tile mb-4 y3d-icon-tile">
                   {idx === 0 ? <Activity size={24} /> : idx === 1 ? <Wind size={24} /> : <Sparkles size={24} />}
                 </div>
-                <h3 className="font-serif font-bold text-2xl mb-1 text-balance">
+                <h3 className="font-serif font-bold text-xl mb-1 text-balance">
                   {item.title}
                 </h3>
-                <div className="font-serif italic text-primary mb-4 text-base y3d-italic-sage">
+                <div className="font-serif italic text-primary mb-3 text-sm y3d-italic-sage">
                   {item.sanskrit}
                 </div>
-                <p className="text-[15px] text-muted-foreground leading-[1.7] text-pretty">
+                <p className="text-[14px] text-muted-foreground leading-[1.6] text-pretty">
                   {item.description}
                 </p>
               </article>
@@ -231,16 +231,16 @@ export default function SectionLandingPage({
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7 y3d-grid-6">
+          <div className="y3d-cards-row">
             {benefits.items.map((item, idx) => (
-              <article key={idx} className="card-soft p-8 text-center flex flex-col items-center y3d-card-soft">
-                <div className="icon-tile mb-5 y3d-icon-tile">
+              <article key={idx} className="card-soft p-6 text-center flex flex-col items-center y3d-card-soft">
+                <div className="icon-tile mb-4 y3d-icon-tile">
                   {idx === 0 ? <Sun size={24} /> : idx === 1 ? <Heart size={24} /> : idx === 2 ? <Dumbbell size={24} /> : idx === 3 ? <Zap size={24} /> : idx === 4 ? <Brain size={24} /> : <Leaf size={24} />}
                 </div>
-                <h3 className="font-serif font-bold text-[19px] mb-3 text-balance">
+                <h3 className="font-serif font-bold text-[17px] mb-2 text-balance">
                   {item.title}
                 </h3>
-                <p className="text-[14.5px] text-muted-foreground text-pretty">
+                <p className="text-[13.5px] text-muted-foreground text-pretty leading-[1.55]">
                   {item.description}
                 </p>
               </article>
@@ -275,12 +275,12 @@ export default function SectionLandingPage({
             ))}
           </div>
 
-          {/* 2. 4 Horizontal Feature Cards */}
-          <div className="y3d-feature-grid">
+          {/* 2. Horizontal Feature Cards Single Row */}
+          <div className="y3d-cards-row" style={{ marginBottom: '36px' }}>
             {trust.features.map((feat, idx) => (
               <div key={idx} className="y3d-feature-card">
                 <div className="y3d-feature-icon-badge">
-                  <CheckCircle size={22} />
+                  <CheckCircle size={20} />
                 </div>
                 <div className="y3d-feature-content">
                   <h4>{feat.title}</h4>
@@ -290,8 +290,8 @@ export default function SectionLandingPage({
             ))}
           </div>
 
-          {/* 3. 2 Master Profile Editorial Cards */}
-          <div className="y3d-master-profile-grid">
+          {/* 3. 2 Master Profile Editorial Cards Single Row */}
+          <div className="y3d-cards-row">
             <article className="y3d-master-profile-card">
               <div className="y3d-profile-image-wrap">
                 <img
@@ -325,7 +325,7 @@ export default function SectionLandingPage({
         </div>
       </section>
 
-      {/* ── 7. SECTION: QUY TRÌNH ĐƠN GIẢN (STEPS BENTO GRID) ── */}
+      {/* ── 7. SECTION: QUY TRÌNH ĐƠN GIẢN (STEPS SINGLE ROW) ── */}
       <section className="py-24 y3d-section">
         <div className="container-page y3d-container">
           <div className="max-w-[880px] mx-auto text-center mb-14 y3d-section-header">
@@ -335,12 +335,12 @@ export default function SectionLandingPage({
             </h2>
           </div>
 
-          <div className="y3d-steps-grid">
+          <div className="y3d-cards-row">
             {steps.items.map((stepItem, idx) => (
               <div key={idx} className="y3d-step-card">
                 <span className="y3d-step-number">{stepItem.step}</span>
                 <div className="y3d-step-icon-wrap">
-                  {idx === 0 ? <FileText size={26} /> : idx === 1 ? <Video size={26} /> : idx === 2 ? <Calendar size={26} /> : <PlayCircle size={26} />}
+                  {idx === 0 ? <FileText size={24} /> : idx === 1 ? <Video size={24} /> : idx === 2 ? <Calendar size={24} /> : <PlayCircle size={24} />}
                 </div>
                 <h4>{stepItem.title}</h4>
                 <p>{stepItem.description}</p>
@@ -353,14 +353,14 @@ export default function SectionLandingPage({
       {/* ── 8. SECTION: FAQ (CÂU HỎI THƯỜNG GẶP) ── */}
       <section id="faq" className="py-24 y3d-section y3d-section-alt">
         <div className="container-page y3d-container">
-          <div className="max-w-[880px] mx-auto text-center mb-14 y3d-section-header">
+          <div className="y3d-section-header">
             <span className="eyebrow text-base y3d-eyebrow">{faq.eyebrow}</span>
             <h2 className="text-[clamp(28px,4.2vw,52px)] text-balance">
               {faq.heading}
             </h2>
           </div>
 
-          <div className="max-w-[800px] mx-auto flex flex-col gap-4">
+          <div className="y3d-faq-list">
             {faq.items.map((faqItem, idx) => (
               <div key={idx} className="y3d-faq-item">
                 <button
@@ -382,41 +382,6 @@ export default function SectionLandingPage({
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ── 9. SECTION: CTA BANNER CUỐI TRANG ── */}
-      <section className="y3d-cta-banner">
-        <div className="y3d-cta-content">
-          <span className="y3d-cta-badge">{pricing.eyebrow}</span>
-          <h2 className="y3d-cta-title">
-            {pricing.heading}
-          </h2>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', margin: '20px 0' }}>
-            <span style={{ fontSize: '1.2rem', textDecoration: 'line-through', color: 'rgba(255,255,255,0.6)' }}>
-              {pricing.originalPrice}
-            </span>
-            <span style={{ fontSize: '2.2rem', fontWeight: 800, color: '#facc15' }}>
-              {pricing.discountedPrice}
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '480px', margin: '0 auto 32px', textAlign: 'left' }}>
-            {pricing.inclusions.map((inc, idx) => (
-              <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.92)', fontSize: '0.94rem' }}>
-                <CheckCircle size={18} style={{ color: '#4ade80', flexShrink: 0 }} />
-                <span>{inc}</span>
-              </div>
-            ))}
-          </div>
-
-          <button
-            onClick={() => onOpenBooking ? onOpenBooking() : undefined}
-            className="y3d-cta-btn"
-          >
-            <span>{pricing.ctaText}</span>
-            <ArrowRight size={20} />
-          </button>
         </div>
       </section>
     </div>

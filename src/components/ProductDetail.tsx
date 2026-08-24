@@ -312,8 +312,8 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
         scrollToExpand="Cuộn xuống để mở rộng & khám phá"
         textBlend={false}
       >
-        {/* ── SECTION LANDING PAGE SHOWCASE (FULL WIDTH, POSITIONED ABOVE DOC-QUYEN / ĐỘC QUYỀN TAGS) ── */}
-        <div style={{ width: '100%', marginBottom: '40px' }}>
+        {/* ── SECTION LANDING PAGE SHOWCASE (PERFECTLY CENTERED & FULL-WIDTH) ── */}
+        <div style={{ width: '100%', maxWidth: '100%', margin: '0 auto 40px auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <SectionLandingPage
             onOpenBooking={() => onOpenBooking ? onOpenBooking(product) : undefined}
             retreatTitle={product.title}

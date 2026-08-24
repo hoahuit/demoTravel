@@ -41,9 +41,9 @@
 
 .y3d-container {
   width: 100%;
-  max-width: 1280px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 0 36px;
+  padding: 0 clamp(24px, 5vw, 80px);
   position: relative;
   box-sizing: border-box;
 }
@@ -254,23 +254,33 @@
   background-color: rgba(45, 90, 54, 0.16);
 }
 
-/* ── Grid Layouts with Generous Gaps ── */
-.y3d-grid-3 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
+/* ── Universal Single-Row Card Layout (Strictly 1 Row, Zero Line Breaks) ── */
+.y3d-cards-row {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 18px !important;
+  width: 100% !important;
+  align-items: stretch !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
 }
 
-.y3d-grid-2 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 28px;
+.y3d-cards-row > article,
+.y3d-cards-row > div {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
 }
 
-.y3d-grid-6 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
+@media (max-width: 768px) {
+  .y3d-cards-row {
+    flex-wrap: wrap !important;
+  }
+  .y3d-cards-row > article,
+  .y3d-cards-row > div {
+    flex: 1 1 100% !important;
+  }
 }
 
 /* ── 4U LUXURY TRUST SECTION (STAT STRIP & EDITORIAL CARDS) ── */
@@ -638,13 +648,25 @@
   box-shadow: 0 12px 30px rgba(5, 150, 105, 0.55);
 }
 
-/* ── FAQ Items ── */
+/* ── FAQ Items & Centered List ── */
+.y3d-faq-list {
+  width: 100% !important;
+  max-width: 900px !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  box-sizing: border-box !important;
+}
+
 .y3d-faq-item {
+  width: 100% !important;
   background: #ffffff;
   border: 1px solid var(--y3d-card-border);
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(8, 31, 19, 0.04);
+  box-shadow: 0 4px 14px rgba(8, 31, 19, 0.04);
+  box-sizing: border-box !important;
 }
 
 .y3d-faq-question {
