@@ -155,21 +155,15 @@ export default function Header({
           return;
         }
 
-        const sectionIds = ['signals', 'about-3d', 'benefits', 'method', 'trust', 'faq'];
-        const scrollPosition = scrollY + 220;
+        const sectionIds = ['signals', 'benefits', 'method', 'faq'];
+        const scrollPosition = scrollY + 180;
 
         for (let i = sectionIds.length - 1; i >= 0; i--) {
           const el = document.getElementById(sectionIds[i]);
           if (el) {
             const top = el.getBoundingClientRect().top + scrollY;
             if (scrollPosition >= top) {
-              if (sectionIds[i] === 'about-3d') {
-                setActiveLandingSection('signals');
-              } else if (sectionIds[i] === 'trust') {
-                setActiveLandingSection('method');
-              } else {
-                setActiveLandingSection(sectionIds[i]);
-              }
+              setActiveLandingSection(sectionIds[i]);
               break;
             }
           }
@@ -184,7 +178,28 @@ export default function Header({
     setActiveCategory(null);
     setMobileMenuOpen(false);
     setActiveLandingSection(targetId);
-    const targetElement = document.getElementById(targetId) || document.querySelector(`[id*="${targetId}"]`);
+
+    // Fallback alias lookup
+    const aliasMap: Record<string, string[]> = {
+      'signals': ['signals', 'tin-hieu', 'chuong-trinh', 'vi-sao-can'],
+      'benefits': ['benefits', 'loi-ich'],
+      'method': ['method', 'phuong-phap', 'about-3d'],
+      'faq': ['faq', 'hoi-dap']
+    };
+
+    const candidates = aliasMap[targetId] || [targetId];
+    let targetElement: HTMLElement | null = null;
+    for (const cid of candidates) {
+      const el = document.getElementById(cid);
+      if (el) {
+        targetElement = el;
+        break;
+      }
+    }
+    if (!targetElement) {
+      targetElement = document.querySelector(`[id*="${targetId}"]`);
+    }
+
     if (targetElement) {
       const headerOffset = 90;
       const elementPosition = targetElement.getBoundingClientRect().top;

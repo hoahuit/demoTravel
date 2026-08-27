@@ -321,41 +321,8 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
           />
         </div>
 
-        {/* Badges & Subtitle inside Hero container */}
+        {/* Subtitle inside Hero container */}
         <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: '0 20px 8px', textAlign: 'center' }}>
-          <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '14px', flexWrap: 'wrap' }}>
-            <span
-              style={{
-                background: 'rgba(0, 109, 54, 0.1)',
-                color: '#006d36',
-                fontSize: '0.75rem',
-                fontWeight: '800',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                padding: '6px 16px',
-                borderRadius: '30px',
-                border: '1px solid rgba(0, 109, 54, 0.25)',
-              }}
-            >
-              {pageData.badge1}
-            </span>
-            <span
-              style={{
-                background: 'rgba(45, 90, 54, 0.08)',
-                color: '#2d5a36',
-                fontSize: '0.75rem',
-                fontWeight: '800',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                padding: '6px 16px',
-                borderRadius: '30px',
-                border: '1px solid rgba(45, 90, 54, 0.22)',
-              }}
-            >
-              {pageData.badge2}
-            </span>
-          </div>
-
           <p style={{ fontSize: 'clamp(1rem, 2.5vw, 1.25rem)', color: '#142619', fontWeight: '700', maxWidth: '760px', margin: '0 auto 16px', lineHeight: '1.55' }}>
             {pageData.subtitle}
           </p>

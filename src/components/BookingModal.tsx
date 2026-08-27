@@ -48,7 +48,7 @@ const ADDON_CATALOG: AddonEquipment[] = [
     price: 1665000,
     originalPrice: 1850000,
     heroImage: 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=600&q=80',
-    reasonBadge: '🌿 Khuyên Dùng Cho Buổi Thiền',
+    reasonBadge: 'Khuyên Dùng Cho Buổi Thiền',
     reasonText: 'Chất liệu lanh thoáng mát giúp thư thái tối đa trong các bài tập thở & thiền chuông.',
     matchedTags: ['chua-lanh', 'wellness', 'retreat', 'thiền', 'spa', 'yên tử']
   },
@@ -60,7 +60,7 @@ const ADDON_CATALOG: AddonEquipment[] = [
     price: 320000,
     originalPrice: 380000,
     heroImage: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80',
-    reasonBadge: '🍵 Thanh Lọc & Ngủ Sâu',
+    reasonBadge: 'Thanh Lọc & Ngủ Sâu',
     reasonText: 'Trà hữu cơ an thần, ngủ sâu và hỗ trợ thải độc trong suốt kỳ nghỉ dưỡng.',
     matchedTags: ['chua-lanh', 'wellness', 'retreat', 'heritage', 'bảo tồn']
   },
@@ -72,7 +72,7 @@ const ADDON_CATALOG: AddonEquipment[] = [
     price: 450000,
     originalPrice: 520000,
     heroImage: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=600&q=80',
-    reasonBadge: '🕯️ Tĩnh Tâm Phòng Nghỉ',
+    reasonBadge: 'Tĩnh Tâm Phòng Nghỉ',
     reasonText: 'Hương trầm tự nhiên xoa dịu hệ thần kinh sau các giờ di chuyển.',
     matchedTags: ['chua-lanh', 'wellness', 'heritage', 'retreat']
   },
@@ -84,7 +84,7 @@ const ADDON_CATALOG: AddonEquipment[] = [
     price: 1450000,
     originalPrice: 1650000,
     heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAlyoRRMDdrEh1tEdYk_hR089ATUbOba9k2ZLY4EEOt7vStwznpSaiyIxKVKJPaLLya2UilfXbxnjGpi3yvXvBjeMczyjijEQ3PPzRZlxNWPoJlS3FhCQwy5_dACe_mP_T60HyDUUQvhJX_zQ8OwwJhx4vuZQunPrrw4HoVWGq6U1Nz3l55gqrSDP8QZWu6xaHPvIJHqNxGuG4SOYKVnHBRpnPuwBd_zcicEI79s2MGlZl4FfJmLNNy',
-    reasonBadge: '🌲 Bền Bỉ Khám Phá Rừng',
+    reasonBadge: 'Bền Bỉ Khám Phá Rừng',
     reasonText: 'Kháng nước tuyệt đối, tiện lợi khi dạo rừng nguyên sinh và trekking.',
     matchedTags: ['thien-nhien', 'bao-ton', 'nature', 'trekking', 'phú yên', 'tây nguyên']
   },
@@ -96,7 +96,7 @@ const ADDON_CATALOG: AddonEquipment[] = [
     price: 420000,
     originalPrice: 480000,
     heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDAjTRcfdF6_yplK4VT-RChhxc_dz4gKf_iF0t-dDv6SZypoAbltGUIxc3lRHFKv4nZMF8Tsgu9Ba9S-MWfpU_W1_iDsxBoKe7dTpT1ogIu35me-nmxxS1IuybSM54_lEQKNizMTQX-K7xK8F-BBqBu6VbChNnNZNrY7fEoNsFJ75b1abxFjuX1yoWrrAdSUPEtpWd6tu5Wz8ul1E4qEvYXYbASQwPiWN4yvaxn9oLlfQZdQjR7y9O2',
-    reasonBadge: '💧 Tiện Dụng Hành Trình',
+    reasonBadge: 'Tiện Dụng Hành Trình',
     reasonText: 'Giữ ấm 12h & lạnh 24h, bảo vệ môi trường hạn chế rác thải nhựa.',
     matchedTags: ['thien-nhien', 'bao-ton', 'nature', 'trekking', 'chua-lanh', 'doc-quyen']
   },
@@ -108,7 +108,7 @@ const ADDON_CATALOG: AddonEquipment[] = [
     price: 680000,
     originalPrice: 790000,
     heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCl2RytbicQSz-WIZdQH-PivcpvDy2Awo_yBLeSkqUrh-Pk8fThJJFSNjrqEdKPEZzjJk2FyOXoQZnHffSjs-MybP0WsMRPyua9rr3KYevhuE80GhbDQqNj26IdKplnl0fqBnBig3L_s8rL5ppSreTiWolguuT0VVj8oLfEJT2018Tf7zB8mg7A_RMmv2EYUf66AvUcRN0PRV63NUHmHkRKYm574-XAcX5mOHyNkds6e_qGRtxMtRho',
-    reasonBadge: '🛠️ Trang Bị Khám Phá',
+    reasonBadge: 'Trang Bị Khám Phá',
     reasonText: 'Đồng hành tin cậy cho những cung đường khám phá thiên nhiên.',
     matchedTags: ['thien-nhien', 'bao-ton', 'nature', 'trekking']
   },
@@ -120,7 +120,7 @@ const ADDON_CATALOG: AddonEquipment[] = [
     price: 580000,
     originalPrice: 680000,
     heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB2KcU5rhNDPLymv81SVNzvhlWhBkB6-B-EJcP40aT9gTUcsZ62E73wO_GdxI6PZlG6jPv4cJqquEUFRZZI3pnRUdpBsitzoyhPUpioKYxUUFE58LnPHzQTDY8I0BT0O4G39IJcaxZKjBZpektsdVRT410YvQCOfpupbH3Fzl2jQN4smIUosHWVWNVA-B3rFK6kEo_fqzlS7P5Hw-26FFqxElBWlZHQ_S0hmseFhJTrwOm6F3zaNsd9',
-    reasonBadge: '🧳 Tối Ưu Hành Lý',
+    reasonBadge: 'Tối Ưu Hành Lý',
     reasonText: 'Chống ẩm mốc và phân loại ngăn nắp khi đi biển hoặc du thuyền.',
     matchedTags: ['doc-quyen', 'du-thuyen', 'biển', 'hạ long', 'phú yên', 'cruise']
   },
@@ -132,7 +132,7 @@ const ADDON_CATALOG: AddonEquipment[] = [
     price: 520000,
     originalPrice: 600000,
     heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCVR3VFpWr8SwWK1opXwuR34WlEa_pEUzTOZOz8bEvmPcmZ6tN8x6eAPxZJIyzTd4d_EMB3NGcdNfosZigQb9e5wsoWCOgklW0ZHZwU2WXFyN814powhrVfOdI0ADpb7YphPJvid6U8YHEkrRCnN9U4rh7JOx8E3ZtPpppulAo3fYK83rAvN9ZLCJ85yh_iGf31IukX-u_afPkbmdz-jTKk12fLzicU97kTtyXtsep-XZw1vLA6TWIr',
-    reasonBadge: '✍️ Ghi Chép Chiêm Nghiệm',
+    reasonBadge: 'Ghi Chép Chiêm Nghiệm',
     reasonText: 'Lưu giữ khoảnh khắc thức tỉnh và cảm nhận sâu lắng trên miền di sản.',
     matchedTags: ['heritage', 'yên tử', 'cố đô', 'văn hóa', 'tâm linh']
   }
@@ -503,14 +503,11 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
                     gap: '10px'
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <Sparkles size={16} color="#059669" />
-                        <span style={{ fontSize: '13px', fontWeight: 800, color: '#065f46', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                          Trang Bị Khuyên Dùng Cho Chuyến Đi Này
-                        </span>
-                      </div>
+                      <span style={{ fontSize: '13px', fontWeight: 800, color: '#065f46', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        Trang Bị Khuyên Dùng Cho Chuyến Đi Này
+                      </span>
                       <span style={{ fontSize: '11px', fontWeight: 700, backgroundColor: '#dcfce7', color: '#15803d', padding: '2px 8px', borderRadius: '4px', border: '1px solid #86efac' }}>
-                        ⚡ Ưu Đãi Mua Kèm -10%
+                        Ưu Đãi Mua Kèm -10%
                       </span>
                     </div>
 
@@ -563,28 +560,28 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
                               </div>
                             </div>
 
-                            <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                              <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#004532' }}>
-                                {formatVnd(addon.price)}
-                              </div>
-                              <div style={{ fontSize: '11px', color: '#94a3b8', textDecoration: 'line-through' }}>
-                                {formatVnd(addon.originalPrice)}
+                            <div style={{ textAlign: 'right', flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+                              <div>
+                                <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#004532' }}>
+                                  {formatVnd(addon.price)}
+                                </div>
+                                <div style={{ fontSize: '11px', color: '#94a3b8', textDecoration: 'line-through' }}>
+                                  {formatVnd(addon.originalPrice)}
+                                </div>
                               </div>
                               <div style={{
-                                marginTop: '4px',
+                                width: '26px',
+                                height: '26px',
                                 display: 'inline-flex',
                                 alignItems: 'center',
-                                gap: '3px',
-                                fontSize: '11px',
-                                fontWeight: 700,
-                                padding: '3px 8px',
-                                borderRadius: '4px',
+                                justifyContent: 'center',
+                                borderRadius: '6px',
                                 backgroundColor: isSelected ? '#059669' : '#e2e8f0',
                                 color: isSelected ? '#ffffff' : '#475569',
-                                transition: 'all 0.15s ease'
+                                transition: 'all 0.15s ease',
+                                cursor: 'pointer'
                               }}>
-                                {isSelected ? <Check size={12} /> : <Plus size={12} />}
-                                {isSelected ? 'Đã thêm' : 'Thêm vào tour'}
+                                {isSelected ? <Check size={14} /> : <Plus size={14} />}
                               </div>
                             </div>
                           </div>

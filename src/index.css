@@ -696,21 +696,21 @@ body {
   .pd-sticky-subnav {
     top: 60px !important;
   }
-  
+
   .pd-subnav-container {
     padding: 0 12px !important;
     height: 48px !important;
     gap: 8px !important;
   }
-  
+
   .pd-subnav-tabs {
     gap: 14px !important;
   }
-  
+
   .pd-subnav-price-box {
     display: none !important;
   }
-  
+
   .pd-subnav-cta-btn {
     padding: 6px 14px !important;
     font-size: 0.78rem !important;
@@ -1074,6 +1074,7 @@ body {
 .carousel-progress-label {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1095,11 +1096,11 @@ body {
     grid-template-columns: 1fr;
     gap: 32px;
   }
-  
+
   .carousel-image-container {
     height: 340px;
   }
-  
+
   .carousel-wrapper {
     padding: 32px 24px 24px;
     border-radius: 20px;
@@ -1176,7 +1177,7 @@ body {
   border-radius: 20px;
   padding: 24px 20px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
 }
 
 .pd-highlight-item:hover {
@@ -1315,7 +1316,7 @@ body {
   border: 1px solid rgba(45, 90, 54, 0.18);
   border-radius: 28px;
   padding: 44px 48px;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.03);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.03);
 }
 
 .pd-review-item {
@@ -1332,7 +1333,9 @@ body {
 
 /* Mobile Responsiveness Rules */
 @media (max-width: 768px) {
-  html, body {
+
+  html,
+  body {
     overflow-x: hidden !important;
     max-width: 100vw !important;
   }
@@ -1343,7 +1346,10 @@ body {
   }
 
   /* Text wrap & break */
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     word-break: break-word;
   }
 }
@@ -1420,52 +1426,67 @@ body {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
-.font-display-lg, .text-display-lg {
+.font-display-lg,
+.text-display-lg {
   font-family: 'Libre Caslon Text', serif;
   font-size: 42px;
   line-height: 52px;
   letter-spacing: -0.01em;
   font-weight: 400;
 }
-.font-headline-md, .text-headline-md {
+
+.font-headline-md,
+.text-headline-md {
   font-family: 'Libre Caslon Text', serif;
   font-size: 30px;
   line-height: 38px;
   font-weight: 400;
 }
-.font-headline-sm, .text-headline-sm {
+
+.font-headline-sm,
+.text-headline-sm {
   font-family: 'Libre Caslon Text', serif;
   font-size: 22px;
   line-height: 28px;
   font-weight: 400;
 }
-.font-title-lg, .text-title-lg {
+
+.font-title-lg,
+.text-title-lg {
   font-family: 'Hanken Grotesk', sans-serif;
   font-size: 18px;
   line-height: 24px;
   letter-spacing: 0.02em;
   font-weight: 600;
 }
-.font-body-md, .text-body-md {
+
+.font-body-md,
+.text-body-md {
   font-family: 'Hanken Grotesk', sans-serif;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
 }
-.font-body-sm, .text-body-sm {
+
+.font-body-sm,
+.text-body-sm {
   font-family: 'Hanken Grotesk', sans-serif;
   font-size: 14px;
   line-height: 20px;
   font-weight: 400;
 }
-.font-label-caps, .text-label-caps {
+
+.font-label-caps,
+.text-label-caps {
   font-family: 'Hanken Grotesk', sans-serif;
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.08em;
   font-weight: 700;
 }
-.font-data-mono, .text-data-mono {
+
+.font-data-mono,
+.text-data-mono {
   font-family: 'Hanken Grotesk', monospace;
   font-size: 14px;
   line-height: 20px;
@@ -1524,33 +1545,104 @@ body {
 /* Frame 01: Blank (0.0s - 0.1s) */
 
 /* Frame 02: Vẽ vách núi trái (0.1s - 0.75s) */
-.stage-01-left-main { animation-delay: 0.1s; animation-duration: 0.65s; }
-.stage-02-left-strata { animation-delay: 0.25s; animation-duration: 0.6s; }
-.stage-02-left-detail { animation-delay: 0.35s; animation-duration: 0.55s; }
+.stage-01-left-main {
+  animation-delay: 0.1s;
+  animation-duration: 0.65s;
+}
+
+.stage-02-left-strata {
+  animation-delay: 0.25s;
+  animation-duration: 0.6s;
+}
+
+.stage-02-left-detail {
+  animation-delay: 0.35s;
+  animation-duration: 0.55s;
+}
 
 /* Frame 03: Vẽ vách núi phải (0.45s - 1.1s) */
-.stage-03-right-main { animation-delay: 0.45s; animation-duration: 0.65s; }
-.stage-03-right-overhang { animation-delay: 0.6s; animation-duration: 0.6s; }
-.stage-03-right-strata { animation-delay: 0.75s; animation-duration: 0.6s; }
+.stage-03-right-main {
+  animation-delay: 0.45s;
+  animation-duration: 0.65s;
+}
+
+.stage-03-right-overhang {
+  animation-delay: 0.6s;
+  animation-duration: 0.6s;
+}
+
+.stage-03-right-strata {
+  animation-delay: 0.75s;
+  animation-duration: 0.6s;
+}
 
 /* Frame 04: Vẽ núi phía sau (0.85s - 1.45s) */
-.stage-04-bg-mountain-1 { animation-delay: 0.85s; animation-duration: 0.6s; }
-.stage-04-bg-mountain-2 { animation-delay: 0.95s; animation-duration: 0.6s; }
+.stage-04-bg-mountain-1 {
+  animation-delay: 0.85s;
+  animation-duration: 0.6s;
+}
+
+.stage-04-bg-mountain-2 {
+  animation-delay: 0.95s;
+  animation-duration: 0.6s;
+}
 
 /* Frame 05: Vẽ nhà + cây (1.15s - 1.7s) */
-.stage-05-house-main { animation-delay: 1.15s; animation-duration: 0.55s; }
-.stage-05-house-roof { animation-delay: 1.25s; animation-duration: 0.5s; }
-.stage-05-house-details { animation-delay: 1.35s; animation-duration: 0.5s; }
-.stage-06-tree-left { animation-delay: 1.3s; animation-duration: 0.5s; }
-.stage-06-tree-center { animation-delay: 1.4s; animation-duration: 0.5s; }
+.stage-05-house-main {
+  animation-delay: 1.15s;
+  animation-duration: 0.55s;
+}
+
+.stage-05-house-roof {
+  animation-delay: 1.25s;
+  animation-duration: 0.5s;
+}
+
+.stage-05-house-details {
+  animation-delay: 1.35s;
+  animation-duration: 0.5s;
+}
+
+.stage-06-tree-left {
+  animation-delay: 1.3s;
+  animation-duration: 0.5s;
+}
+
+.stage-06-tree-center {
+  animation-delay: 1.4s;
+  animation-duration: 0.5s;
+}
 
 /* Frame 06: Vẽ mặt nước & reflection (1.45s - 1.95s) */
-.stage-07-shoreline-main { animation-delay: 1.45s; animation-duration: 0.5s; }
-.stage-07-shoreline-rocks { animation-delay: 1.5s; animation-duration: 0.45s; }
-.stage-08-water-ripples { animation-delay: 1.55s; animation-duration: 0.55s; }
-.stage-09-refl-house { animation-delay: 1.6s; animation-duration: 0.55s; }
-.stage-09-refl-cliffs { animation-delay: 1.65s; animation-duration: 0.55s; }
-.stage-09-refl-reeds { animation-delay: 1.7s; animation-duration: 0.5s; }
+.stage-07-shoreline-main {
+  animation-delay: 1.45s;
+  animation-duration: 0.5s;
+}
+
+.stage-07-shoreline-rocks {
+  animation-delay: 1.5s;
+  animation-duration: 0.45s;
+}
+
+.stage-08-water-ripples {
+  animation-delay: 1.55s;
+  animation-duration: 0.55s;
+}
+
+.stage-09-refl-house {
+  animation-delay: 1.6s;
+  animation-duration: 0.55s;
+}
+
+.stage-09-refl-cliffs {
+  animation-delay: 1.65s;
+  animation-duration: 0.55s;
+}
+
+.stage-09-refl-reeds {
+  animation-delay: 1.7s;
+  animation-duration: 0.5s;
+}
 
 /* Frame 07: Hoàn thiện line art (1.8s - 2.05s) */
 .stage-10-details {
@@ -1563,9 +1655,11 @@ body {
     stroke-dashoffset: 4500;
     opacity: 0.2;
   }
+
   15% {
     opacity: 1;
   }
+
   100% {
     stroke-dashoffset: 0;
     opacity: 1;
@@ -1577,6 +1671,7 @@ body {
     opacity: 0;
     transform: translateY(3px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1607,12 +1702,14 @@ body {
   .hero-sketch-container {
     display: none !important;
   }
+
   .hero-destination-image {
     opacity: 1 !important;
     transform: none !important;
     filter: none !important;
     transition: none !important;
   }
+
   .draw-stroke,
   .stage-10-details {
     animation: none !important;
@@ -1620,5 +1717,3 @@ body {
     opacity: 1 !important;
   }
 }
-
-

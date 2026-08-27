@@ -373,24 +373,19 @@
     margin: 0;
 }
 
-/* ── Section Dividers & General Structure ── */
+/* ── Section Dividers & General Structure (Unified Background with Hero) ── */
 .zen-section {
     width: 100%;
     padding: clamp(76px, 8.5vw, 125px) 0;
     position: relative;
     box-sizing: border-box;
+    background-color: var(--zen-surface);
 }
 
-.zen-section-bg-low {
-    background-color: var(--zen-surface-container-low);
-}
-
-.zen-section-bg-container {
-    background-color: var(--zen-surface-container);
-}
-
+.zen-section-bg-low,
+.zen-section-bg-container,
 .zen-section-bg-high {
-    background-color: var(--zen-surface-container-high);
+    background-color: var(--zen-surface);
 }
 
 .zen-section-header {

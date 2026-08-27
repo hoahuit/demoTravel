@@ -80,9 +80,15 @@ export default function SectionLandingPage({
 
     const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
         e.preventDefault();
-        const element = document.getElementById(id);
+        const element = document.getElementById(id) || document.querySelector(`[id*="${id}"]`);
         if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
+            const headerOffset = 90;
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({
+                top: Math.max(0, offsetPosition),
+                behavior: 'smooth'
+            });
         }
     };
 
@@ -189,8 +195,8 @@ export default function SectionLandingPage({
                     </div>
                 </section>
 
-                {/* ── 2. Pain Points Section ── */}
-                <section id="chuong-trinh" className="zen-section zen-section-bg-low">
+                {/* ── 2. Vì sao cần? Section (Pain Points / Signals) ── */}
+                <section id="signals" className="zen-section">
                     <div className="zen-container">
                         <div className="zen-section-header">
                             <h2 className="zen-headline-lg">
@@ -226,10 +232,39 @@ export default function SectionLandingPage({
                     </div>
                 </section>
 
-                {/* ── 3. Solution Introduction (What is 3Đ?) ── */}
-                <section id="about-3d" className="zen-section">
+                {/* ── 3. Lợi ích Section (21-Day Transformation) ── */}
+                <section id="benefits" className="zen-section">
                     <div className="zen-container">
-                        <div className="zen-about-grid">
+                        <div className="zen-section-header">
+                            <h2 className="zen-headline-lg">
+                                {benefits.heading || '21 ngày liên tục sẽ thay đổi điều gì?'}
+                            </h2>
+                            <p className="zen-body-lg">
+                                {benefits.description || 'Đồng hành cùng chúng tôi trong 21 ngày để cảm nhận sự chuyển hóa rõ rệt từ bên trong.'}
+                            </p>
+                        </div>
+
+                        <div className="zen-benefits-grid">
+                            {benefits.items.map((item, idx) => (
+                                <div key={idx} className="zen-benefit-card">
+                                    <div className="zen-benefit-icon">
+                                        {getBenefitIcon(idx)}
+                                    </div>
+                                    <div>
+                                        <h4>{item.title}</h4>
+                                        <p>{item.description}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* ── 4. Phương pháp Section (What is 3Đ?, 3 Pillars, Expert & 4 Steps) ── */}
+                <section id="method" className="zen-section">
+                    <div className="zen-container">
+                        {/* 4.1. Solution Introduction (What is 3Đ?) */}
+                        <div id="about-3d" className="zen-about-grid" style={{ marginBottom: '60px' }}>
                             <div className="zen-about-col">
                                 <img
                                     src={ABOUT_IMG}
@@ -272,13 +307,9 @@ export default function SectionLandingPage({
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                </section>
 
-                {/* ── 4. Three Golden Points (Method / 3 Pillars - No Images) ── */}
-                <section className="zen-section zen-section-bg-container">
-                    <div className="zen-container">
-                        <div className="zen-section-header">
+                        {/* 4.2. Three Golden Pillars */}
+                        <div className="zen-section-header" style={{ marginBottom: '40px' }}>
                             <h2 className="zen-headline-lg">
                                 {method.heading || '3 Trụ Cột Vàng Cho Sức Khỏe'}
                             </h2>
@@ -339,36 +370,8 @@ export default function SectionLandingPage({
                     </div>
                 </section>
 
-                {/* ── 5. 21-Day Transformation (Benefits) ── */}
-                <section id="loi-ich" className="zen-section">
-                    <div className="zen-container">
-                        <div className="zen-section-header">
-                            <h2 className="zen-headline-lg">
-                                {benefits.heading || '21 ngày liên tục sẽ thay đổi điều gì?'}
-                            </h2>
-                            <p className="zen-body-lg">
-                                {benefits.description || 'Đồng hành cùng chúng tôi trong 21 ngày để cảm nhận sự chuyển hóa rõ rệt từ bên trong.'}
-                            </p>
-                        </div>
-
-                        <div className="zen-benefits-grid">
-                            {benefits.items.map((item, idx) => (
-                                <div key={idx} className="zen-benefit-card">
-                                    <div className="zen-benefit-icon">
-                                        {getBenefitIcon(idx)}
-                                    </div>
-                                    <div>
-                                        <h4>{item.title}</h4>
-                                        <p>{item.description}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* ── 6. Trust & Numbers / Expert Section ── */}
-                <section id="ve-chung-toi" className="zen-section zen-section-bg-high">
+                {/* ── 4.3. Trust & Numbers / Expert Section ── */}
+                <section id="ve-chung-toi" className="zen-section">
                     <div className="zen-container">
                         <div className="zen-trust-container-full">
                             <div className="zen-section-header" style={{ marginBottom: '40px' }}>
@@ -424,7 +427,7 @@ export default function SectionLandingPage({
                     </div>
                 </section>
 
-                {/* ── 7. Process Section (4 Steps) ── */}
+                {/* ── 4.4. Process Section (4 Steps) ── */}
                 <section id="lich-trinh" className="zen-section">
                     <div className="zen-container">
                         <div className="zen-section-header">
@@ -470,8 +473,8 @@ export default function SectionLandingPage({
                     </div>
                 </section>
 
-                {/* ── 8. FAQ Section ── */}
-                <section id="faq" className="zen-section zen-section-bg-low">
+                {/* ── 5. Hỏi · Đáp Section (FAQ) ── */}
+                <section id="faq" className="zen-section">
                     <div className="zen-container">
                         <div className="zen-section-header">
                             <h2 className="zen-headline-lg">
