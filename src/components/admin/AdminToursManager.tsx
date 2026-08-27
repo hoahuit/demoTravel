@@ -890,15 +890,11 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                     />
                   </div>
 
-                  {/* SECTION LANDING PAGE TEMPLATE CONFIGURATION */}
                   <div style={{ gridColumn: 'span 2', backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '14px', padding: '16px 18px', boxShadow: '0 2px 8px rgba(22, 101, 52, 0.04)' }}>
                     <div style={{ marginBottom: '8px' }}>
                       <label style={{ fontSize: '12.5px', fontWeight: 800, color: '#166534', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span>🌿 Mẫu Section Landing Page (Product Detail)</span>
+                        <span>Landing Page </span>
                       </label>
-                      <p style={{ fontSize: '12px', color: '#4b7a58', margin: '2px 0 0 0' }}>
-                        Chọn loại Section Landing Page (Vận động 3Đ, Hít thở Pranayama, Trị liệu cột sống...) hiển thị trên trang chi tiết của Tour này. Nếu không chọn, hệ thống sẽ tự động dùng <strong>Mẫu Mặc Định (Loại 1: Vận Động 3Đ - Chia tay Đau Cổ Vai Gáy)</strong>.
-                      </p>
                     </div>
 
                     <select

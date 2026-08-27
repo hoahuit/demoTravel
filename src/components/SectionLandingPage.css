@@ -57,13 +57,10 @@
 
 /* ── Base Full-Width Root & Container ── */
 .zen-root {
-    width: 100vw;
-    max-width: 100vw;
+    width: 100%;
+    max-width: 100%;
     position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
+    margin: 0 auto;
     font-family: var(--zen-font-sans);
     color: var(--zen-on-surface);
     background-color: var(--zen-surface);
@@ -532,7 +529,7 @@
 
 @media (min-width: 768px) {
     .zen-pillars-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(6, 1fr);
     }
 }
 
@@ -610,22 +607,68 @@
 }
 
 /* ── 5. 21-Day Transformation (Full Width 3 Columns) ── */
+/* ── 5. 21-Day Transformation (Dynamic 6-Column Engine) ── */
 .zen-benefits-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: clamp(20px, 2.2vw, 32px);
+    gap: clamp(16px, 2vw, 28px);
     width: 100%;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
     .zen-benefits-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(6, 1fr);
     }
 }
 
-@media (min-width: 1024px) {
-    .zen-benefits-grid {
-        grid-template-columns: repeat(3, 1fr);
+.zen-span-6 {
+    grid-column: span 1;
+}
+.zen-span-3 {
+    grid-column: span 1;
+}
+.zen-span-2 {
+    grid-column: span 1;
+}
+
+@media (min-width: 768px) {
+    .zen-span-6 {
+        grid-column: span 6 !important;
+    }
+    .zen-span-3 {
+        grid-column: span 3 !important;
+    }
+    .zen-span-2 {
+        grid-column: span 2 !important;
+    }
+
+    /* "2 to" styling - spacious, prominent, larger text & padding */
+    .zen-span-3.zen-benefit-card {
+        padding: 32px 30px;
+        background: #fcfdfc;
+        border: 1.5px solid rgba(45, 99, 60, 0.28);
+        box-shadow: 0 4px 18px rgba(18, 46, 28, 0.05);
+    }
+    .zen-span-3.zen-benefit-card h4 {
+        font-size: 21px;
+    }
+    .zen-span-3.zen-benefit-card p {
+        font-size: 15.5px;
+        line-height: 1.68;
+    }
+
+    /* "3 nhỏ" styling - clean & compact */
+    .zen-span-2.zen-benefit-card {
+        padding: 24px 22px;
+        background-color: var(--zen-surface-container-low);
+        border: 1.5px solid rgba(74, 124, 89, 0.18);
+    }
+    .zen-span-2.zen-benefit-card h4 {
+        font-size: 18px;
+    }
+    .zen-span-2.zen-benefit-card p {
+        font-size: 14.5px;
+        line-height: 1.6;
     }
 }
 
@@ -633,11 +676,12 @@
     display: flex;
     align-items: flex-start;
     gap: 18px;
-    padding: clamp(26px, 2.5vw, 36px);
+    padding: clamp(24px, 2.2vw, 32px);
     background-color: var(--zen-surface-container-low);
     border-radius: var(--zen-radius-md);
     border: 1.5px solid rgba(74, 124, 89, 0.18);
     transition: all 0.3s ease;
+    box-sizing: border-box;
 }
 
 .zen-benefit-card:hover {

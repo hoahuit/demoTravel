@@ -124,6 +124,62 @@ export default function SectionLandingPage({
         return clean.charAt(0).toUpperCase() + clean.slice(1).toLowerCase();
     };
 
+    const getPillarSpanStyle = (idx: number, total: number): string => {
+        if (total === 1) return 'span 6';
+        if (total === 2) return 'span 3';
+        if (total === 3) return 'span 2'; // 3 thẻ hàng 1 (mỗi thẻ 1/3)
+        if (total === 4) return 'span 3'; // 2 thẻ hàng 1, 2 thẻ hàng 2 (mỗi thẻ 1/2)
+        if (total === 5) {
+            // Hàng 1: 3 thẻ (span 2 mỗi thẻ = 100%)
+            // Hàng 2: 2 thẻ (span 3 mỗi thẻ = 100% -> CO GIÃN TO RA FULL BẰNG WIDTH 3 THẺ TRÊN!)
+            return idx < 3 ? 'span 2' : 'span 3';
+        }
+        if (total === 6) return 'span 2'; // 3 trên, 3 dưới
+        if (total === 7) {
+            if (idx < 3) return 'span 2';
+            return 'span 3';
+        }
+        if (total === 8) {
+            if (idx < 6) return 'span 2';
+            return 'span 3';
+        }
+        return 'span 2';
+    };
+
+    const getBenefitSpanStyle = (idx: number, total: number): string => {
+        if (total === 1) return 'span 6';
+        if (total === 2) return 'span 3';
+        if (total === 3) return 'span 2';
+        if (total === 4) return 'span 3'; // 2 2 layout (2 to x 2 rows)
+        if (total === 5) return idx < 2 ? 'span 3' : 'span 2'; // 2 to, 3 nhỏ (2 3 layout)
+        if (total === 6) return 'span 2'; // 3 3 layout (3 nhỏ x 2 rows)
+        if (total === 7) {
+            // 2 to (span 3) + 3 nhỏ (span 2) + 2 to (span 3) => 2 3 2 layout
+            if (idx < 2) return 'span 3';
+            if (idx < 5) return 'span 2';
+            return 'span 3';
+        }
+        if (total === 8) return idx < 2 ? 'span 3' : 'span 2'; // 2 3 3 layout
+        return 'span 2';
+    };
+
+    const getBenefitSpanClass = (idx: number, total: number) => {
+        if (total === 1) return 'zen-span-6';
+        if (total === 2) return 'zen-span-3';
+        if (total === 3) return 'zen-span-2';
+        if (total === 4) return 'zen-span-3'; // 2 2 layout (2 to x 2 rows)
+        if (total === 5) return idx < 2 ? 'zen-span-3' : 'zen-span-2'; // 2 to, 3 nhỏ (2 3 layout)
+        if (total === 6) return 'zen-span-2'; // 3 3 layout (3 nhỏ x 2 rows)
+        if (total === 7) {
+            // 2 to (span 3) + 3 nhỏ (span 2) + 2 to (span 3) => 2 3 2 layout
+            if (idx < 2) return 'zen-span-3';
+            if (idx < 5) return 'zen-span-2';
+            return 'zen-span-3';
+        }
+        if (total === 8) return idx < 2 ? 'zen-span-3' : 'zen-span-2'; // 2 3 3 layout
+        return 'zen-span-2';
+    };
+
     return (
         <div className="zen-root">
 
@@ -246,7 +302,11 @@ export default function SectionLandingPage({
 
                         <div className="zen-benefits-grid">
                             {benefits.items.map((item, idx) => (
-                                <div key={idx} className="zen-benefit-card">
+                                <div
+                                    key={idx}
+                                    className={`zen-benefit-card ${getBenefitSpanClass(idx, benefits.items.length)}`}
+                                    style={{ gridColumn: getBenefitSpanStyle(idx, benefits.items.length) }}
+                                >
                                     <div className="zen-benefit-icon">
                                         {getBenefitIcon(idx)}
                                     </div>
@@ -319,53 +379,26 @@ export default function SectionLandingPage({
                         </div>
 
                         <div className="zen-pillars-grid">
-                            {/* Pillar 1: Thể Dục ĐÚNG */}
-                            <div className="zen-pillar-card zen-pillar-card-clean">
-                                <div className="zen-pillar-body">
-                                    <div className="zen-pillar-top">
-                                        <span className="zen-pillar-number">01</span>
-                                        <span className="zen-pillar-tag">Thể Dục ĐÚNG</span>
+                            {method.items.map((mItem, idx) => (
+                                <div
+                                    key={idx}
+                                    className="zen-pillar-card zen-pillar-card-clean"
+                                    style={{ gridColumn: getPillarSpanStyle(idx, method.items.length) }}
+                                >
+                                    <div className="zen-pillar-body">
+                                        <div className="zen-pillar-top">
+                                            <span className="zen-pillar-number">{mItem.point || (idx < 9 ? `0${idx + 1}` : `${idx + 1}`)}</span>
+                                            <span className="zen-pillar-tag">{mItem.title}</span>
+                                        </div>
+                                        <h3 className="zen-headline-md">
+                                            {mItem.title}
+                                        </h3>
+                                        <p className="zen-body-md" style={{ margin: 0 }}>
+                                            {mItem.description}
+                                        </p>
                                     </div>
-                                    <h3 className="zen-headline-md">
-                                        {method.items[0]?.title || 'Thể Dục ĐÚNG'}
-                                    </h3>
-                                    <p className="zen-body-md" style={{ margin: 0 }}>
-                                        {method.items[0]?.description || 'Các tư thế vận động kéo giãn và giải tỏa áp lực đĩa đệm, giải phóng tắc nghẽn vùng cổ vai gáy và cột sống nhẹ nhàng.'}
-                                    </p>
                                 </div>
-                            </div>
-
-                            {/* Pillar 2: Hơi Thở ĐÚNG */}
-                            <div className="zen-pillar-card zen-pillar-card-clean">
-                                <div className="zen-pillar-body">
-                                    <div className="zen-pillar-top">
-                                        <span className="zen-pillar-number">02</span>
-                                        <span className="zen-pillar-tag">Hơi Thở ĐÚNG</span>
-                                    </div>
-                                    <h3 className="zen-headline-md">
-                                        {method.items[1]?.title || 'Hơi Thở ĐÚNG'}
-                                    </h3>
-                                    <p className="zen-body-md" style={{ margin: 0 }}>
-                                        {method.items[1]?.description || 'Kỹ thuật Hơi thở sử dụng tối đa dung tích Phổi, cung cấp đủ Oxy, giảm Stress trong vài phút, tăng Tập trung và cải thiện Giấc ngủ ngay tuần đầu.'}
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Pillar 3: Thư Giãn ĐÚNG */}
-                            <div className="zen-pillar-card zen-pillar-card-clean">
-                                <div className="zen-pillar-body">
-                                    <div className="zen-pillar-top">
-                                        <span className="zen-pillar-number">03</span>
-                                        <span className="zen-pillar-tag">Thư Giãn ĐÚNG</span>
-                                    </div>
-                                    <h3 className="zen-headline-md">
-                                        {method.items[2]?.title || 'Thư Giãn ĐÚNG'}
-                                    </h3>
-                                    <p className="zen-body-md" style={{ margin: 0 }}>
-                                        {method.items[2]?.description || 'Kỹ thuật Thư giãn sâu giải toả Căng thẳng tích tụ, chữa lành tổn thương Thể chất và Tinh thần, cảm nhận sự Tĩnh lặng và Kết nối với Bản thân.'}
-                                    </p>
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </section>

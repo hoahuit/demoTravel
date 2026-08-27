@@ -13,8 +13,15 @@ import {
   Layers,
   Sparkles,
   Check,
-  LayoutTemplate
+  LayoutTemplate,
+  Eye,
+  X,
+  Monitor,
+  Tablet,
+  Smartphone
 } from 'lucide-react';
+import SectionLandingPage from '../SectionLandingPage';
+import AdminVisualLandingEditor from './AdminVisualLandingEditor';
 import {
   LandingSectionTemplate,
   DEFAULT_LANDING_SECTION_TEMPLATES,
@@ -67,12 +74,27 @@ const TAB_NAV_ITEMS: { id: EditorTabKey; label: string }[] = [
 export default function AdminLandingSectionManager({ toast }: AdminLandingSectionManagerProps) {
   const [templates, setTemplates] = useState<LandingSectionTemplate[]>(() => getAllLandingSectionTemplates());
   const [editingTemplate, setEditingTemplate] = useState<LandingSectionTemplate | null>(null);
+  const [editorMode, setEditorMode] = useState<'visual' | 'form'>('visual');
+  const [previewTemplate, setPreviewTemplate] = useState<LandingSectionTemplate | null>(null);
+  const [selectedPreviewTemplate, setSelectedPreviewTemplate] = useState<LandingSectionTemplate | null>(null);
+  const [previewViewport, setPreviewViewport] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<EditorTabKey>('general');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedStatusFilter, setSelectedStatusFilter] = useState<'All' | 'active' | 'draft'>('All');
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+
+  // Close preview on ESC
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && previewTemplate) {
+        setPreviewTemplate(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [previewTemplate]);
 
   const loadData = async (force = false) => {
     setLoading(true);
@@ -106,12 +128,14 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
     setEditingTemplate(newTemplate);
     setIsCreating(true);
     setActiveTab('general');
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const handleOpenEdit = (tpl: LandingSectionTemplate) => {
     setEditingTemplate(JSON.parse(JSON.stringify(tpl)));
     setIsCreating(false);
     setActiveTab('general');
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const handleSetDefault = async (id: string) => {
@@ -244,6 +268,216 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
   const defaultTemplate = useMemo(() => templates.find((t) => t.isDefault) || templates[0], [templates]);
 
   // --------------------------------------------------------------------------
+  // RENDER: LIVE PREVIEW MODAL
+  // --------------------------------------------------------------------------
+  const renderPreviewModal = () => {
+    if (!previewTemplate) return null;
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 99999,
+          backgroundColor: 'rgba(8, 15, 12, 0.82)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          overflow: 'hidden'
+        }}
+      >
+        {/* Preview Top Header Bar */}
+        <div
+          style={{
+            width: '100%',
+            backgroundColor: '#081f13',
+            color: '#ffffff',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+            padding: '12px 24px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '16px',
+            flexShrink: 0,
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.35)',
+            boxSizing: 'border-box'
+          }}
+        >
+          {/* Title & Info */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
+            <div
+              style={{
+                width: '34px',
+                height: '34px',
+                borderRadius: '8px',
+                backgroundColor: 'rgba(52, 211, 153, 0.15)',
+                color: '#34d399',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}
+            >
+              <Eye size={18} />
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '15px', fontWeight: 800, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {previewTemplate.name}
+                </span>
+                <span style={{ fontSize: '11px', fontWeight: 700, backgroundColor: 'rgba(52, 211, 153, 0.15)', color: '#34d399', padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(52, 211, 153, 0.3)' }}>
+                  Live Preview
+                </span>
+              </div>
+              <span style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.6)' }}>
+                Mã mẫu: <code>{previewTemplate.id}</code> • Giao diện Section Landing Page thực tế
+              </span>
+            </div>
+          </div>
+
+          {/* Device Viewport Switcher */}
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              borderRadius: '999px',
+              padding: '3px',
+              gap: '3px'
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setPreviewViewport('desktop')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '999px',
+                border: 'none',
+                backgroundColor: previewViewport === 'desktop' ? '#006d36' : 'transparent',
+                color: previewViewport === 'desktop' ? '#ffffff' : 'rgba(255, 255, 255, 0.75)',
+                fontSize: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <Monitor size={14} />
+              <span>Desktop (Toàn màn hình)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setPreviewViewport('tablet')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '999px',
+                border: 'none',
+                backgroundColor: previewViewport === 'tablet' ? '#006d36' : 'transparent',
+                color: previewViewport === 'tablet' ? '#ffffff' : 'rgba(255, 255, 255, 0.75)',
+                fontSize: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <Tablet size={14} />
+              <span>Tablet (768px)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setPreviewViewport('mobile')}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '999px',
+                border: 'none',
+                backgroundColor: previewViewport === 'mobile' ? '#006d36' : 'transparent',
+                color: previewViewport === 'mobile' ? '#ffffff' : 'rgba(255, 255, 255, 0.75)',
+                fontSize: '12px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <Smartphone size={14} />
+              <span>Mobile (390px)</span>
+            </button>
+          </div>
+
+          {/* Close Button */}
+          <button
+            type="button"
+            onClick={() => setPreviewTemplate(null)}
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '8px',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              color: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.4)')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)')}
+            title="Đóng xem trước (ESC)"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Preview Scrollable Viewport Frame */}
+        <div
+          style={{
+            flex: 1,
+            width: '100%',
+            overflowY: 'auto',
+            display: 'flex',
+            justifyContent: 'center',
+            padding: previewViewport === 'desktop' ? '0' : '32px 16px',
+            boxSizing: 'border-box',
+            backgroundColor: previewViewport === 'desktop' ? '#f3f8f5' : '#03100a'
+          }}
+        >
+          <div
+            style={{
+              width: previewViewport === 'desktop' ? '100%' : previewViewport === 'tablet' ? '768px' : '390px',
+              maxWidth: '100%',
+              minHeight: '100%',
+              backgroundColor: '#f3f8f5',
+              borderRadius: previewViewport === 'desktop' ? '0' : '24px',
+              overflow: 'hidden',
+              boxShadow: previewViewport === 'desktop' ? 'none' : '0 25px 60px rgba(0,0,0,0.6), 0 0 0 8px #1e293b',
+              transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+              position: 'relative'
+            }}
+          >
+            <SectionLandingPage
+              templateData={previewTemplate.data}
+              retreatTitle={previewTemplate.name}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // --------------------------------------------------------------------------
   // RENDER: FULL-PAGE DETAIL EDITOR VIEW
   // --------------------------------------------------------------------------
   if (editingTemplate) {
@@ -259,8 +493,8 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
             borderBottom: '1px solid #e2e8f0',
-            padding: '14px 24px',
-            margin: '-24px -24px 24px -24px',
+            padding: '14px 36px',
+            margin: '-28px -36px 24px -36px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -332,6 +566,61 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
 
           {/* Right Side: Action Buttons (Unified heights: 38px) */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+            {/* Editor Mode Switcher */}
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                backgroundColor: '#f1f5f9',
+                borderRadius: '8px',
+                padding: '3px',
+                border: '1px solid #cbd5e1'
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setEditorMode('visual')}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '6px',
+                  border: 'none',
+                  backgroundColor: editorMode === 'visual' ? '#006d36' : 'transparent',
+                  color: editorMode === 'visual' ? '#ffffff' : '#64748b',
+                  fontSize: '12.5px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <Sparkles size={14} />
+                <span>✨ Sửa Trực Tiếp Giao Diện</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditorMode('form')}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '6px',
+                  border: 'none',
+                  backgroundColor: editorMode === 'form' ? '#006d36' : 'transparent',
+                  color: editorMode === 'form' ? '#ffffff' : '#64748b',
+                  fontSize: '12.5px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <LayoutTemplate size={14} />
+                <span>Chế Độ Form</span>
+              </button>
+            </div>
+
             <button
               type="button"
               onClick={() => setEditingTemplate(null)}
@@ -382,1390 +671,1426 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
           </div>
         </div>
 
-        {/* Tab Navigation Strip (Clean horizontal pills with flex wrap, no bulky scrollbar) */}
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '8px',
-            borderBottom: '1px solid #e2e8f0',
-            paddingBottom: '14px',
-            marginBottom: '24px'
-          }}
-        >
-          {TAB_NAV_ITEMS.map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id)}
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '8px',
-                  border: isActive ? '1px solid #bbf7d0' : '1px solid transparent',
-                  fontSize: '13px',
-                  fontWeight: isActive ? 700 : 600,
-                  color: isActive ? '#006d36' : '#64748b',
-                  backgroundColor: isActive ? '#e8f5e9' : '#f8fafc',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  transition: 'all 0.15s ease'
+        {/* VISUAL WYSIWYG MODE (DEFAULT) */}
+        {editorMode === 'visual' && (
+          <div style={{ width: '100%', marginTop: '8px' }}>
+            {/* Full-Width Interactive Editable Landing Page Container */}
+            <div
+              style={{
+                width: '100%',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                border: '2px solid #006d36',
+                boxShadow: '0 10px 40px rgba(0, 109, 54, 0.12)',
+                backgroundColor: '#f3f8f5'
+              }}
+            >
+              <AdminVisualLandingEditor
+                templateData={editingTemplate.data}
+                retreatTitle={editingTemplate.name}
+                onChange={(newData) => {
+                  setEditingTemplate({
+                    ...editingTemplate,
+                    data: newData
+                  });
                 }}
-                onMouseEnter={(e) => {
-                  if (!isActive) e.currentTarget.style.backgroundColor = '#f1f5f9';
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) e.currentTarget.style.backgroundColor = '#f8fafc';
-                }}
-              >
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
+              />
+            </div>
+          </div>
+        )}
 
-        {/* Editor Body Form Container */}
-        <div
-          style={{
-            backgroundColor: '#ffffff',
-            borderRadius: '14px',
-            border: '1px solid #e5e7eb',
-            padding: '24px 28px',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
-          }}
-        >
-          {/* ── TAB 1: THÔNG TIN CHUNG ── */}
-          {activeTab === 'general' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
-                  Thông Tin Nhận Diện Mẫu Section
-                </h3>
-                <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
-                  Thiết lập tên gọi, mã định danh và trạng thái áp dụng của mẫu Section này trong hệ thống.
-                </p>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Tên Mẫu Section *
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.name}
-                    onChange={(e) => setEditingTemplate({ ...editingTemplate, name: e.target.value })}
-                    placeholder="VD: Vận Động 3Đ • Chia tay Đau Cổ, Vai, Gáy"
+        {/* FORM MODE (TRADITIONAL TABS) */}
+        {editorMode === 'form' && (
+          <div>
+            {/* Tab Navigation Strip */}
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '8px',
+                borderBottom: '1px solid #e2e8f0',
+                paddingBottom: '14px',
+                marginBottom: '24px'
+              }}
+            >
+              {TAB_NAV_ITEMS.map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveTab(tab.id)}
                     style={{
-                      width: '100%',
-                      padding: '9px 13px',
+                      padding: '8px 16px',
                       borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
-                      fontSize: '13.5px',
-                      color: '#0f172a',
-                      boxSizing: 'border-box'
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Mã Định Danh (Slug ID) *
-                  </label>
-                  <input
-                    type="text"
-                    disabled={!isCreating}
-                    value={editingTemplate.id}
-                    onChange={(e) => setEditingTemplate({ ...editingTemplate, id: e.target.value })}
-                    placeholder="VD: van-dong-co-vai-gay"
-                    style={{
-                      width: '100%',
-                      padding: '9px 13px',
-                      borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
-                      fontSize: '13.5px',
-                      color: '#0f172a',
-                      backgroundColor: !isCreating ? '#f8fafc' : '#ffffff',
-                      boxSizing: 'border-box'
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                  Mô Tả Mục Đích & Định Hướng
-                </label>
-                <textarea
-                  rows={3}
-                  value={editingTemplate.description}
-                  onChange={(e) => setEditingTemplate({ ...editingTemplate, description: e.target.value })}
-                  placeholder="Mô tả tóm tắt giá trị và đối tượng áp dụng của mẫu section này..."
-                  style={{
-                    width: '100%',
-                    padding: '9px 13px',
-                    borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
-                    fontSize: '13.5px',
-                    color: '#0f172a',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', paddingTop: '10px' }}>
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Trạng Thái Áp Dụng
-                  </label>
-                  <select
-                    value={editingTemplate.status}
-                    onChange={(e) => setEditingTemplate({ ...editingTemplate, status: e.target.value as any })}
-                    style={{
-                      width: '100%',
-                      padding: '9px 13px',
-                      borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
-                      fontSize: '13.5px',
-                      color: '#0f172a',
-                      backgroundColor: '#ffffff',
-                      boxSizing: 'border-box'
-                    }}
-                  >
-                    <option value="active">Hoạt động (Active)</option>
-                    <option value="draft">Bản nháp (Draft)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Thiết Lập Mặc Định
-                  </label>
-                  <label
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      padding: '9px 13px',
-                      borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
+                      border: isActive ? '1px solid #bbf7d0' : '1px solid transparent',
+                      fontSize: '13px',
+                      fontWeight: isActive ? 700 : 600,
+                      color: isActive ? '#006d36' : '#64748b',
+                      backgroundColor: isActive ? '#e8f5e9' : '#f8fafc',
                       cursor: 'pointer',
-                      backgroundColor: '#f8fafc',
-                      boxSizing: 'border-box'
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.15s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isActive) e.currentTarget.style.backgroundColor = '#f1f5f9';
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) e.currentTarget.style.backgroundColor = '#f8fafc';
                     }}
                   >
-                    <input
-                      type="checkbox"
-                      checked={editingTemplate.isDefault}
-                      onChange={(e) => setEditingTemplate({ ...editingTemplate, isDefault: e.target.checked })}
-                      style={{ width: '16px', height: '16px', accentColor: '#006d36' }}
-                    />
-                    <span style={{ fontSize: '13px', color: '#1e293b', fontWeight: 600 }}>
-                      Đặt mẫu này làm Mặc Định toàn hệ thống
-                    </span>
-                  </label>
-                </div>
-              </div>
+                    {tab.label}
+                  </button>
+                );
+              })}
             </div>
-          )}
 
-          {/* ── TAB 2: HERO BANNER ── */}
-          {activeTab === 'hero' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
-                  Khối Hero Banner (Đầu Trang)
-                </h3>
-                <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
-                  Nội dung tiêu đề lớn, thông điệp chính và nút kêu gọi hành động (CTA) xuất hiện ngay trên đầu Section.
-                </p>
-              </div>
+            {/* Editor Body Form Container */}
+            <div
+              style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '14px',
+                border: '1px solid #e5e7eb',
+                padding: '24px 28px',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
+              }}
+            >
+              {/* ── TAB 1: THÔNG TIN CHUNG ── */}
+              {activeTab === 'general' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
+                      Thông Tin Nhận Diện Mẫu Section
+                    </h3>
+                    <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
+                      Thiết lập tên gọi, mã định danh và trạng thái áp dụng của mẫu Section này trong hệ thống.
+                    </p>
+                  </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Huy Hiệu Đầu Trang (Badge)
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.hero.badge}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, hero: { ...editingTemplate.data.hero, badge: e.target.value } }
-                      })
-                    }
-                    placeholder="VD: Chương trình Thực Hành 3Đ 21 ngày liên tục"
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Tiêu Đề Chính (Title)
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.hero.title}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, hero: { ...editingTemplate.data.hero, title: e.target.value } }
-                      })
-                    }
-                    placeholder="VD: Thể Dục ĐÚNG"
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Tiêu Đề Phụ Nghiêng (Title Italic)
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.hero.titleItalic}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, hero: { ...editingTemplate.data.hero, titleItalic: e.target.value } }
-                      })
-                    }
-                    placeholder='VD: "Chia tay Đau Cổ, Vai, Gáy"'
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontStyle: 'italic', boxSizing: 'border-box' }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Chữ Trên Nút Kêu Gọi (CTA Button Text)
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.hero.ctaText}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, hero: { ...editingTemplate.data.hero, ctaText: e.target.value } }
-                      })
-                    }
-                    placeholder="VD: Tham gia Info Session để tìm hiểu thêm"
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                  Nội Dung Giới Thiệu Ngắn (Description)
-                </label>
-                <textarea
-                  rows={3}
-                  value={editingTemplate.data.hero.description}
-                  onChange={(e) =>
-                    setEditingTemplate({
-                      ...editingTemplate,
-                      data: { ...editingTemplate.data, hero: { ...editingTemplate.data.hero, description: e.target.value } }
-                    })
-                  }
-                  style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                />
-              </div>
-
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                  Dòng Thông Tin Lịch Học & Khai Giảng (Sub Info)
-                </label>
-                <input
-                  type="text"
-                  value={editingTemplate.data.hero.subInfo}
-                  onChange={(e) =>
-                    setEditingTemplate({
-                      ...editingTemplate,
-                      data: { ...editingTemplate.data, hero: { ...editingTemplate.data.hero, subInfo: e.target.value } }
-                    })
-                  }
-                  placeholder="VD: Khai giảng 16 / 9 · 07:00 Sáng · 60 phút mỗi ngày · Online qua ZOOM"
-                  style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* ── TAB 3: TÍN HIỆU CƠ THỂ (SIGNALS) ── */}
-          {activeTab === 'signals' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
-                  Khối 4 Tín Hiệu Cơ Thể (Signals)
-                </h3>
-                <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
-                  Khối đồng cảm nỗi đau của học viên: Đau cổ vai gáy, Giấc ngủ kém, Đau thắt lưng, Mệt mỏi mãn tính.
-                </p>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Eyebrow
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.signals.eyebrow}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, signals: { ...editingTemplate.data.signals, eyebrow: e.target.value } }
-                      })
-                    }
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Tiêu Đề Khối
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.signals.heading}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, signals: { ...editingTemplate.data.signals, heading: e.target.value } }
-                      })
-                    }
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                  Đoạn Văn Dẫn Nhập
-                </label>
-                <textarea
-                  rows={2}
-                  value={editingTemplate.data.signals.description}
-                  onChange={(e) =>
-                    setEditingTemplate({
-                      ...editingTemplate,
-                      data: { ...editingTemplate.data, signals: { ...editingTemplate.data.signals, description: e.target.value } }
-                    })
-                  }
-                  style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                />
-              </div>
-
-              <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '16px' }}>
-                <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', marginBottom: '14px' }}>
-                  Danh Sách 4 Triệu Chứng / Nỗi Đau
-                </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  {editingTemplate.data.signals.items.map((item, idx) => (
-                    <div
-                      key={idx}
-                      style={{
-                        padding: '16px',
-                        backgroundColor: '#f8fafc',
-                        borderRadius: '10px',
-                        border: '1px solid #e2e8f0',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '10px'
-                      }}
-                    >
-                      <span style={{ fontSize: '12px', fontWeight: 700, color: '#006d36' }}>
-                        Triệu Chứng #{idx + 1}
-                      </span>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Tên Mẫu Section *
+                      </label>
                       <input
                         type="text"
-                        value={item.title}
-                        onChange={(e) => {
-                          const updated = [...editingTemplate.data.signals.items];
-                          updated[idx].title = e.target.value;
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: { ...editingTemplate.data, signals: { ...editingTemplate.data.signals, items: updated } }
-                          });
+                        value={editingTemplate.name}
+                        onChange={(e) => setEditingTemplate({ ...editingTemplate, name: e.target.value })}
+                        placeholder="VD: Vận Động 3Đ • Chia tay Đau Cổ, Vai, Gáy"
+                        style={{
+                          width: '100%',
+                          padding: '9px 13px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '13.5px',
+                          color: '#0f172a',
+                          boxSizing: 'border-box'
                         }}
-                        placeholder="Tiêu đề triệu chứng"
-                        style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 600, boxSizing: 'border-box' }}
-                      />
-                      <textarea
-                        rows={3}
-                        value={item.description}
-                        onChange={(e) => {
-                          const updated = [...editingTemplate.data.signals.items];
-                          updated[idx].description = e.target.value;
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: { ...editingTemplate.data, signals: { ...editingTemplate.data.signals, items: updated } }
-                          });
-                        }}
-                        placeholder="Mô tả chi tiết cảm giác đau..."
-                        style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12.5px', boxSizing: 'border-box' }}
                       />
                     </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
 
-          {/* ── TAB 4: GIỚI THIỆU & PHƯƠNG PHÁP 3Đ ── */}
-          {activeTab === 'about' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
-                  Khái Niệm & 3 Điểm Vàng Phương Pháp Sivananda
-                </h3>
-                <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
-                  Trình bày triết lý 3Đ (Thể Dục ĐÚNG, Hít Thở ĐÚNG, Thư Giãn ĐÚNG) và hình ảnh minh họa.
-                </p>
-              </div>
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Mã Định Danh (Slug ID) *
+                      </label>
+                      <input
+                        type="text"
+                        disabled={!isCreating}
+                        value={editingTemplate.id}
+                        onChange={(e) => setEditingTemplate({ ...editingTemplate, id: e.target.value })}
+                        placeholder="VD: van-dong-co-vai-gay"
+                        style={{
+                          width: '100%',
+                          padding: '9px 13px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '13.5px',
+                          color: '#0f172a',
+                          backgroundColor: !isCreating ? '#f8fafc' : '#ffffff',
+                          boxSizing: 'border-box'
+                        }}
+                      />
+                    </div>
+                  </div>
 
-              {/* About Block */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
                   <div>
                     <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                      Eyebrow Giới Thiệu
+                      Mô Tả Mục Đích & Định Hướng
                     </label>
-                    <input
-                      type="text"
-                      value={editingTemplate.data.about.eyebrow}
+                    <textarea
+                      rows={3}
+                      value={editingTemplate.description}
+                      onChange={(e) => setEditingTemplate({ ...editingTemplate, description: e.target.value })}
+                      placeholder="Mô tả tóm tắt giá trị và đối tượng áp dụng của mẫu section này..."
+                      style={{
+                        width: '100%',
+                        padding: '9px 13px',
+                        borderRadius: '8px',
+                        border: '1px solid #cbd5e1',
+                        fontSize: '13.5px',
+                        color: '#0f172a',
+                        boxSizing: 'border-box'
+                      }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', paddingTop: '10px' }}>
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Trạng Thái Áp Dụng
+                      </label>
+                      <select
+                        value={editingTemplate.status}
+                        onChange={(e) => setEditingTemplate({ ...editingTemplate, status: e.target.value as any })}
+                        style={{
+                          width: '100%',
+                          padding: '9px 13px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '13.5px',
+                          color: '#0f172a',
+                          backgroundColor: '#ffffff',
+                          boxSizing: 'border-box'
+                        }}
+                      >
+                        <option value="active">Hoạt động (Active)</option>
+                        <option value="draft">Bản nháp (Draft)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Thiết Lập Mặc Định
+                      </label>
+                      <label
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '10px',
+                          padding: '9px 13px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          cursor: 'pointer',
+                          backgroundColor: '#f8fafc',
+                          boxSizing: 'border-box'
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={editingTemplate.isDefault}
+                          onChange={(e) => setEditingTemplate({ ...editingTemplate, isDefault: e.target.checked })}
+                          style={{ width: '16px', height: '16px', accentColor: '#006d36' }}
+                        />
+                        <span style={{ fontSize: '13px', color: '#1e293b', fontWeight: 600 }}>
+                          Đặt mẫu này làm Mặc Định toàn hệ thống
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ── TAB 2: HERO BANNER ── */}
+              {activeTab === 'hero' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
+                      Khối Hero Banner (Đầu Trang)
+                    </h3>
+                    <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
+                      Nội dung tiêu đề lớn, thông điệp chính và nút kêu gọi hành động (CTA) xuất hiện ngay trên đầu Section.
+                    </p>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Huy Hiệu Đầu Trang (Badge)
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.hero.badge}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, hero: { ...editingTemplate.data.hero, badge: e.target.value } }
+                          })
+                        }
+                        placeholder="VD: Chương trình Thực Hành 3Đ 21 ngày liên tục"
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Tiêu Đề Chính (Title)
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.hero.title}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, hero: { ...editingTemplate.data.hero, title: e.target.value } }
+                          })
+                        }
+                        placeholder="VD: Thể Dục ĐÚNG"
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Tiêu Đề Phụ Nghiêng (Title Italic)
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.hero.titleItalic}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, hero: { ...editingTemplate.data.hero, titleItalic: e.target.value } }
+                          })
+                        }
+                        placeholder='VD: "Chia tay Đau Cổ, Vai, Gáy"'
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontStyle: 'italic', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Chữ Trên Nút Kêu Gọi (CTA Button Text)
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.hero.ctaText}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, hero: { ...editingTemplate.data.hero, ctaText: e.target.value } }
+                          })
+                        }
+                        placeholder="VD: Tham gia Info Session để tìm hiểu thêm"
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                      Nội Dung Giới Thiệu Ngắn (Description)
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={editingTemplate.data.hero.description}
                       onChange={(e) =>
                         setEditingTemplate({
                           ...editingTemplate,
-                          data: { ...editingTemplate.data, about: { ...editingTemplate.data.about, eyebrow: e.target.value } }
+                          data: { ...editingTemplate.data, hero: { ...editingTemplate.data.hero, description: e.target.value } }
                         })
                       }
                       style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
                     />
                   </div>
+
                   <div>
                     <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                      Tiêu Đề Giới Thiệu
+                      Dòng Thông Tin Lịch Học & Khai Giảng (Sub Info)
                     </label>
                     <input
                       type="text"
-                      value={editingTemplate.data.about.heading}
+                      value={editingTemplate.data.hero.subInfo}
                       onChange={(e) =>
                         setEditingTemplate({
                           ...editingTemplate,
-                          data: { ...editingTemplate.data, about: { ...editingTemplate.data.about, heading: e.target.value } }
+                          data: { ...editingTemplate.data, hero: { ...editingTemplate.data.hero, subInfo: e.target.value } }
                         })
                       }
-                      style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
+                      placeholder="VD: Khai giảng 16 / 9 · 07:00 Sáng · 60 phút mỗi ngày · Online qua ZOOM"
+                      style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
                     />
                   </div>
                 </div>
+              )}
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              {/* ── TAB 3: TÍN HIỆU CƠ THỂ (SIGNALS) ── */}
+              {activeTab === 'signals' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
+                      Khối 4 Tín Hiệu Cơ Thể (Signals)
+                    </h3>
+                    <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
+                      Khối đồng cảm nỗi đau của học viên: Đau cổ vai gáy, Giấc ngủ kém, Đau thắt lưng, Mệt mỏi mãn tính.
+                    </p>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Eyebrow
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.signals.eyebrow}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, signals: { ...editingTemplate.data.signals, eyebrow: e.target.value } }
+                          })
+                        }
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Tiêu Đề Khối
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.signals.heading}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, signals: { ...editingTemplate.data.signals, heading: e.target.value } }
+                          })
+                        }
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+
                   <div>
                     <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                      Đoạn Văn 01
+                      Đoạn Văn Dẫn Nhập
                     </label>
                     <textarea
-                      rows={3}
-                      value={editingTemplate.data.about.para1}
+                      rows={2}
+                      value={editingTemplate.data.signals.description}
                       onChange={(e) =>
                         setEditingTemplate({
                           ...editingTemplate,
-                          data: { ...editingTemplate.data, about: { ...editingTemplate.data.about, para1: e.target.value } }
+                          data: { ...editingTemplate.data, signals: { ...editingTemplate.data.signals, description: e.target.value } }
+                        })
+                      }
+                      style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                    />
+                  </div>
+
+                  <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '16px' }}>
+                    <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', marginBottom: '14px' }}>
+                      Danh Sách 4 Triệu Chứng / Nỗi Đau
+                    </h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                      {editingTemplate.data.signals.items.map((item, idx) => (
+                        <div
+                          key={idx}
+                          style={{
+                            padding: '16px',
+                            backgroundColor: '#f8fafc',
+                            borderRadius: '10px',
+                            border: '1px solid #e2e8f0',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '10px'
+                          }}
+                        >
+                          <span style={{ fontSize: '12px', fontWeight: 700, color: '#006d36' }}>
+                            Triệu Chứng #{idx + 1}
+                          </span>
+                          <input
+                            type="text"
+                            value={item.title}
+                            onChange={(e) => {
+                              const updated = [...editingTemplate.data.signals.items];
+                              updated[idx].title = e.target.value;
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: { ...editingTemplate.data, signals: { ...editingTemplate.data.signals, items: updated } }
+                              });
+                            }}
+                            placeholder="Tiêu đề triệu chứng"
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 600, boxSizing: 'border-box' }}
+                          />
+                          <textarea
+                            rows={3}
+                            value={item.description}
+                            onChange={(e) => {
+                              const updated = [...editingTemplate.data.signals.items];
+                              updated[idx].description = e.target.value;
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: { ...editingTemplate.data, signals: { ...editingTemplate.data.signals, items: updated } }
+                              });
+                            }}
+                            placeholder="Mô tả chi tiết cảm giác đau..."
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12.5px', boxSizing: 'border-box' }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ── TAB 4: GIỚI THIỆU & PHƯƠNG PHÁP 3Đ ── */}
+              {activeTab === 'about' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
+                      Khái Niệm & 3 Điểm Vàng Phương Pháp Sivananda
+                    </h3>
+                    <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
+                      Trình bày triết lý 3Đ (Thể Dục ĐÚNG, Hít Thở ĐÚNG, Thư Giãn ĐÚNG) và hình ảnh minh họa.
+                    </p>
+                  </div>
+
+                  {/* About Block */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
+                      <div>
+                        <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                          Eyebrow Giới Thiệu
+                        </label>
+                        <input
+                          type="text"
+                          value={editingTemplate.data.about.eyebrow}
+                          onChange={(e) =>
+                            setEditingTemplate({
+                              ...editingTemplate,
+                              data: { ...editingTemplate.data, about: { ...editingTemplate.data.about, eyebrow: e.target.value } }
+                            })
+                          }
+                          style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                          Tiêu Đề Giới Thiệu
+                        </label>
+                        <input
+                          type="text"
+                          value={editingTemplate.data.about.heading}
+                          onChange={(e) =>
+                            setEditingTemplate({
+                              ...editingTemplate,
+                              data: { ...editingTemplate.data, about: { ...editingTemplate.data.about, heading: e.target.value } }
+                            })
+                          }
+                          style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
+                        />
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                      <div>
+                        <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                          Đoạn Văn 01
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={editingTemplate.data.about.para1}
+                          onChange={(e) =>
+                            setEditingTemplate({
+                              ...editingTemplate,
+                              data: { ...editingTemplate.data, about: { ...editingTemplate.data.about, para1: e.target.value } }
+                            })
+                          }
+                          style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                          Đoạn Văn 02
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={editingTemplate.data.about.para2}
+                          onChange={(e) =>
+                            setEditingTemplate({
+                              ...editingTemplate,
+                              data: { ...editingTemplate.data, about: { ...editingTemplate.data.about, para2: e.target.value } }
+                            })
+                          }
+                          style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Đường Dẫn Hình Ảnh Minh Họa
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.about.image}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, about: { ...editingTemplate.data.about, image: e.target.value } }
+                          })
+                        }
+                        placeholder="/images/yoga-practice-guide.jpg"
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* 3 Points Method */}
+                  <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '20px' }}>
+                    <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a', marginBottom: '14px' }}>
+                      Cấu Hình 3 Điểm Vàng (Method)
+                    </h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+                      {editingTemplate.data.method.items.map((item, idx) => (
+                        <div
+                          key={idx}
+                          style={{
+                            padding: '16px',
+                            backgroundColor: '#f8fafc',
+                            borderRadius: '10px',
+                            border: '1px solid #e2e8f0',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '10px'
+                          }}
+                        >
+                          <input
+                            type="text"
+                            value={item.point}
+                            onChange={(e) => {
+                              const updated = [...editingTemplate.data.method.items];
+                              updated[idx].point = e.target.value;
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: { ...editingTemplate.data, method: { ...editingTemplate.data.method, items: updated } }
+                              });
+                            }}
+                            placeholder="Điểm 01 · Vận Động"
+                            style={{ width: '100%', padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12px', fontWeight: 700, color: '#006d36', boxSizing: 'border-box' }}
+                          />
+                          <input
+                            type="text"
+                            value={item.title}
+                            onChange={(e) => {
+                              const updated = [...editingTemplate.data.method.items];
+                              updated[idx].title = e.target.value;
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: { ...editingTemplate.data, method: { ...editingTemplate.data.method, items: updated } }
+                              });
+                            }}
+                            placeholder="Tiêu đề điểm"
+                            style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 700, boxSizing: 'border-box' }}
+                          />
+                          <input
+                            type="text"
+                            value={item.sanskrit}
+                            onChange={(e) => {
+                              const updated = [...editingTemplate.data.method.items];
+                              updated[idx].sanskrit = e.target.value;
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: { ...editingTemplate.data, method: { ...editingTemplate.data.method, items: updated } }
+                              });
+                            }}
+                            placeholder="Tên tiếng Phạn / Chú thích"
+                            style={{ width: '100%', padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12px', fontStyle: 'italic', boxSizing: 'border-box' }}
+                          />
+                          <textarea
+                            rows={4}
+                            value={item.description}
+                            onChange={(e) => {
+                              const updated = [...editingTemplate.data.method.items];
+                              updated[idx].description = e.target.value;
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: { ...editingTemplate.data, method: { ...editingTemplate.data.method, items: updated } }
+                              });
+                            }}
+                            placeholder="Nội dung mô tả điểm vàng..."
+                            style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12.5px', boxSizing: 'border-box' }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ── TAB 5: LỢI ÍCH 21 NGÀY (BENEFITS) ── */}
+              {activeTab === 'benefits' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
+                      Khối 6 Lợi Ích Sau 21 Ngày Liên Tục
+                    </h3>
+                    <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
+                      Các chuyển hóa rõ rệt về giấc ngủ, giảm đau, năng lượng và tâm trí.
+                    </p>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Eyebrow
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.benefits.eyebrow}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, benefits: { ...editingTemplate.data.benefits, eyebrow: e.target.value } }
+                          })
+                        }
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Tiêu Đề Khối
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.benefits.heading}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, benefits: { ...editingTemplate.data.benefits, heading: e.target.value } }
+                          })
+                        }
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginTop: '8px' }}>
+                    {editingTemplate.data.benefits.items.map((item, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          padding: '16px',
+                          backgroundColor: '#f8fafc',
+                          borderRadius: '10px',
+                          border: '1px solid #e2e8f0',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '10px'
+                        }}
+                      >
+                        <span style={{ fontWeight: 700, fontSize: '12px', color: '#006d36' }}>
+                          Lợi ích #{idx + 1}
+                        </span>
+                        <input
+                          type="text"
+                          value={item.title}
+                          onChange={(e) => {
+                            const updated = [...editingTemplate.data.benefits.items];
+                            updated[idx].title = e.target.value;
+                            setEditingTemplate({
+                              ...editingTemplate,
+                              data: { ...editingTemplate.data, benefits: { ...editingTemplate.data.benefits, items: updated } }
+                            });
+                          }}
+                          placeholder="Tiêu đề lợi ích"
+                          style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 700, boxSizing: 'border-box' }}
+                        />
+                        <textarea
+                          rows={3}
+                          value={item.description}
+                          onChange={(e) => {
+                            const updated = [...editingTemplate.data.benefits.items];
+                            updated[idx].description = e.target.value;
+                            setEditingTemplate({
+                              ...editingTemplate,
+                              data: { ...editingTemplate.data, benefits: { ...editingTemplate.data.benefits, items: updated } }
+                            });
+                          }}
+                          placeholder="Mô tả chuyển hóa..."
+                          style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12.5px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ── TAB 6: VÌ SAO TIN TƯỞNG (TRUST) ── */}
+              {activeTab === 'trust' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
+                      Vì Sao Tin Tưởng & Đội Ngũ Chuyên Gia
+                    </h3>
+                    <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
+                      Cấu hình các số liệu bảo chứng, 4 cam kết giá trị, thông tin Master Trainer và Tổ chức bảo trợ.
+                    </p>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Eyebrow
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.trust.eyebrow}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, trust: { ...editingTemplate.data.trust, eyebrow: e.target.value } }
+                          })
+                        }
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Tiêu Đề Khối
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.trust.heading}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, trust: { ...editingTemplate.data.trust, heading: e.target.value } }
+                          })
+                        }
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                      Mô Tả Tổng Quan Khối
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={editingTemplate.data.trust.description || ''}
+                      onChange={(e) =>
+                        setEditingTemplate({
+                          ...editingTemplate,
+                          data: { ...editingTemplate.data, trust: { ...editingTemplate.data.trust, description: e.target.value } }
                         })
                       }
                       style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
                     />
                   </div>
+
+                  {/* 4 Stats Cards */}
+                  <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '16px' }}>
+                    <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', marginBottom: '12px' }}>
+                      4 Số Liệu Thống Kê / Bảo Chứng
+                    </h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px' }}>
+                      {(editingTemplate.data.trust.stats || []).map((stat, idx) => (
+                        <div key={idx} style={{ padding: '14px', backgroundColor: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                          <span style={{ fontSize: '11px', fontWeight: 700, color: '#006d36', display: 'block', marginBottom: '6px' }}>
+                            Chỉ số #{idx + 1}
+                          </span>
+                          <input
+                            type="text"
+                            value={stat.number}
+                            onChange={(e) => {
+                              const updated = [...(editingTemplate.data.trust.stats || [])];
+                              updated[idx].number = e.target.value;
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: { ...editingTemplate.data, trust: { ...editingTemplate.data.trust, stats: updated } }
+                              });
+                            }}
+                            placeholder="21 / 80+ / 100+"
+                            style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '15px', fontWeight: 800, textAlign: 'center', marginBottom: '8px', boxSizing: 'border-box' }}
+                          />
+                          <textarea
+                            rows={2}
+                            value={stat.label}
+                            onChange={(e) => {
+                              const updated = [...(editingTemplate.data.trust.stats || [])];
+                              updated[idx].label = e.target.value;
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: { ...editingTemplate.data, trust: { ...editingTemplate.data.trust, stats: updated } }
+                              });
+                            }}
+                            placeholder="Mô tả chỉ số"
+                            style={{ width: '100%', padding: '6px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12px', boxSizing: 'border-box' }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 4 Feature Commitments */}
+                  <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '16px' }}>
+                    <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', marginBottom: '12px' }}>
+                      4 Đặc Điểm / Cam Kết Giá Trị (Features)
+                    </h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+                      {(editingTemplate.data.trust.features || []).map((feat, idx) => (
+                        <div key={idx} style={{ padding: '16px', backgroundColor: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <span style={{ fontSize: '12px', fontWeight: 700, color: '#006d36' }}>
+                            Cam kết #{idx + 1}
+                          </span>
+                          <input
+                            type="text"
+                            value={feat.title}
+                            onChange={(e) => {
+                              const updated = [...(editingTemplate.data.trust.features || [])];
+                              updated[idx].title = e.target.value;
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: { ...editingTemplate.data, trust: { ...editingTemplate.data.trust, features: updated } }
+                              });
+                            }}
+                            placeholder="Tiêu đề cam kết"
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 700, boxSizing: 'border-box' }}
+                          />
+                          <textarea
+                            rows={3}
+                            value={feat.description}
+                            onChange={(e) => {
+                              const updated = [...(editingTemplate.data.trust.features || [])];
+                              updated[idx].description = e.target.value;
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: { ...editingTemplate.data, trust: { ...editingTemplate.data.trust, features: updated } }
+                              });
+                            }}
+                            placeholder="Nội dung mô tả cam kết..."
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12.5px', boxSizing: 'border-box' }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Master Profile & Organization */}
+                  <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '16px' }}>
+                    <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', marginBottom: '14px' }}>
+                      Thông Tin Chuyên Gia Giảng Dạy & Tổ Chức Bảo Trợ
+                    </h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                      {/* Teacher Card */}
+                      <div style={{ padding: '20px', backgroundColor: '#f0fdf4', borderRadius: '12px', border: '1px solid #bbf7d0', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <span style={{ fontSize: '13px', fontWeight: 700, color: '#166534', textTransform: 'uppercase' }}>
+                          Chuyên Gia / Master Trainer
+                        </span>
+                        <div>
+                          <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Huy hiệu / Badge</label>
+                          <input
+                            type="text"
+                            value={editingTemplate.data.trust.teacher?.badge || ''}
+                            onChange={(e) =>
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: {
+                                  ...editingTemplate.data,
+                                  trust: {
+                                    ...editingTemplate.data.trust,
+                                    teacher: { ...(editingTemplate.data.trust.teacher || {}), badge: e.target.value } as any
+                                  }
+                                }
+                              })
+                            }
+                            placeholder="CHUYÊN GIA HƯỚNG DẪN"
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                          />
+                        </div>
+                        <div>
+                          <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Tên Chuyên Gia</label>
+                          <input
+                            type="text"
+                            value={editingTemplate.data.trust.teacher?.title || ''}
+                            onChange={(e) =>
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: {
+                                  ...editingTemplate.data,
+                                  trust: {
+                                    ...editingTemplate.data.trust,
+                                    teacher: { ...(editingTemplate.data.trust.teacher || {}), title: e.target.value } as any
+                                  }
+                                }
+                              })
+                            }
+                            placeholder="Cô Đinh Kim Dung"
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 700, boxSizing: 'border-box' }}
+                          />
+                        </div>
+                        <div>
+                          <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Tiểu Sử & Kinh Nghiệm</label>
+                          <textarea
+                            rows={3}
+                            value={editingTemplate.data.trust.teacher?.bio || ''}
+                            onChange={(e) =>
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: {
+                                  ...editingTemplate.data,
+                                  trust: {
+                                    ...editingTemplate.data.trust,
+                                    teacher: { ...(editingTemplate.data.trust.teacher || {}), bio: e.target.value } as any
+                                  }
+                                }
+                              })
+                            }
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12.5px', boxSizing: 'border-box' }}
+                          />
+                        </div>
+                        <div>
+                          <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Link Ảnh Chân Dung</label>
+                          <input
+                            type="text"
+                            value={editingTemplate.data.trust.teacher?.image || ''}
+                            onChange={(e) =>
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: {
+                                  ...editingTemplate.data,
+                                  trust: {
+                                    ...editingTemplate.data.trust,
+                                    teacher: { ...(editingTemplate.data.trust.teacher || {}), image: e.target.value } as any
+                                  }
+                                }
+                              })
+                            }
+                            placeholder="/images/yoga-teacher-portrait.jpg"
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Organization Card */}
+                      <div style={{ padding: '20px', backgroundColor: '#f0fdf4', borderRadius: '12px', border: '1px solid #bbf7d0', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <span style={{ fontSize: '13px', fontWeight: 700, color: '#166534', textTransform: 'uppercase' }}>
+                          Tổ Chức Bảo Trợ / Đồng Hành
+                        </span>
+                        <div>
+                          <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Huy hiệu / Badge</label>
+                          <input
+                            type="text"
+                            value={editingTemplate.data.trust.organization?.badge || ''}
+                            onChange={(e) =>
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: {
+                                  ...editingTemplate.data,
+                                  trust: {
+                                    ...editingTemplate.data.trust,
+                                    organization: { ...(editingTemplate.data.trust.organization || {}), badge: e.target.value } as any
+                                  }
+                                }
+                              })
+                            }
+                            placeholder="BẢO TRỢ CHUYÊN MÔN"
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                          />
+                        </div>
+                        <div>
+                          <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Tên Tổ Chức</label>
+                          <input
+                            type="text"
+                            value={editingTemplate.data.trust.organization?.title || ''}
+                            onChange={(e) =>
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: {
+                                  ...editingTemplate.data,
+                                  trust: {
+                                    ...editingTemplate.data.trust,
+                                    organization: { ...(editingTemplate.data.trust.organization || {}), title: e.target.value } as any
+                                  }
+                                }
+                              })
+                            }
+                            placeholder="4U Wellness · Tổ chức Phi Lợi nhuận"
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 700, boxSizing: 'border-box' }}
+                          />
+                        </div>
+                        <div>
+                          <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Giới Thiệu Tổ Chức</label>
+                          <textarea
+                            rows={3}
+                            value={editingTemplate.data.trust.organization?.bio || ''}
+                            onChange={(e) =>
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: {
+                                  ...editingTemplate.data,
+                                  trust: {
+                                    ...editingTemplate.data.trust,
+                                    organization: { ...(editingTemplate.data.trust.organization || {}), bio: e.target.value } as any
+                                  }
+                                }
+                              })
+                            }
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12.5px', boxSizing: 'border-box' }}
+                          />
+                        </div>
+                        <div>
+                          <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Link Logo Tổ Chức</label>
+                          <input
+                            type="text"
+                            value={editingTemplate.data.trust.organization?.logo || ''}
+                            onChange={(e) =>
+                              setEditingTemplate({
+                                ...editingTemplate,
+                                data: {
+                                  ...editingTemplate.data,
+                                  trust: {
+                                    ...editingTemplate.data.trust,
+                                    organization: { ...(editingTemplate.data.trust.organization || {}), logo: e.target.value } as any
+                                  }
+                                }
+                              })
+                            }
+                            placeholder="/Logo-4U-Wellness.png"
+                            style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ── TAB 7: LỘ TRÌNH 4 BƯỚC (STEPS) ── */}
+              {activeTab === 'steps' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
+                      Khối Lộ Trình 4 Bước Đơn Giản (Steps)
+                    </h3>
+                    <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
+                      Quy trình 4 bước từ Đăng ký Info Session đến Bắt đầu 21 ngày thực hành.
+                    </p>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Eyebrow
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.steps.eyebrow}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, steps: { ...editingTemplate.data.steps, eyebrow: e.target.value } }
+                          })
+                        }
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Tiêu Đề Khối
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.steps.heading}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, steps: { ...editingTemplate.data.steps, heading: e.target.value } }
+                          })
+                        }
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginTop: '8px' }}>
+                    {editingTemplate.data.steps.items.map((stepItem, idx) => (
+                      <div key={idx} style={{ padding: '16px', backgroundColor: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <input
+                          type="text"
+                          value={stepItem.step}
+                          onChange={(e) => {
+                            const updated = [...editingTemplate.data.steps.items];
+                            updated[idx].step = e.target.value;
+                            setEditingTemplate({
+                              ...editingTemplate,
+                              data: { ...editingTemplate.data, steps: { ...editingTemplate.data.steps, items: updated } }
+                            });
+                          }}
+                          placeholder="Bước 01"
+                          style={{ width: '100%', padding: '6px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12px', fontWeight: 700, color: '#006d36', boxSizing: 'border-box' }}
+                        />
+                        <input
+                          type="text"
+                          value={stepItem.title}
+                          onChange={(e) => {
+                            const updated = [...editingTemplate.data.steps.items];
+                            updated[idx].title = e.target.value;
+                            setEditingTemplate({
+                              ...editingTemplate,
+                              data: { ...editingTemplate.data, steps: { ...editingTemplate.data.steps, items: updated } }
+                            });
+                          }}
+                          placeholder="Tiêu đề bước"
+                          style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 700, boxSizing: 'border-box' }}
+                        />
+                        <textarea
+                          rows={3}
+                          value={stepItem.description}
+                          onChange={(e) => {
+                            const updated = [...editingTemplate.data.steps.items];
+                            updated[idx].description = e.target.value;
+                            setEditingTemplate({
+                              ...editingTemplate,
+                              data: { ...editingTemplate.data, steps: { ...editingTemplate.data.steps, items: updated } }
+                            });
+                          }}
+                          placeholder="Mô tả bước thực hiện..."
+                          style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ── TAB 8: BẢNG GIÁ & QUYỀN LỢI (PRICING) ── */}
+              {activeTab === 'pricing' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
+                      Khối Bảng Giá & Quyền Lợi Khóa Học (Pricing)
+                    </h3>
+                    <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
+                      Thiết lập giá gốc, giá ưu đãi, huy hiệu khuyến mãi và danh sách quyền lợi đính kèm.
+                    </p>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Eyebrow
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.pricing.eyebrow}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, pricing: { ...editingTemplate.data.pricing, eyebrow: e.target.value } }
+                          })
+                        }
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Tên Gói / Tiêu Đề Khối
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.pricing.heading}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, pricing: { ...editingTemplate.data.pricing, heading: e.target.value } }
+                          })
+                        }
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Giá Gốc (Original Price)
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.pricing.originalPrice}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, pricing: { ...editingTemplate.data.pricing, originalPrice: e.target.value } }
+                          })
+                        }
+                        placeholder="VD: 3.500.000đ"
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Giá Ưu Đãi (Discounted Price)
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.pricing.discountedPrice}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, pricing: { ...editingTemplate.data.pricing, discountedPrice: e.target.value } }
+                          })
+                        }
+                        placeholder="VD: 1.990.000đ"
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 700, color: '#006d36', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Huy Hiệu Ưu Đãi (Badge)
+                      </label>
+                      <input
+                        type="text"
+                        value={editingTemplate.data.pricing.badge}
+                        onChange={(e) =>
+                          setEditingTemplate({
+                            ...editingTemplate,
+                            data: { ...editingTemplate.data, pricing: { ...editingTemplate.data.pricing, badge: e.target.value } }
+                          })
+                        }
+                        placeholder="VD: ƯU ĐÃI KHÓA SẮP KHAI GIẢNG"
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+
                   <div>
                     <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                      Đoạn Văn 02
+                      Danh Sách Quyền Lợi (Mỗi dòng 1 quyền lợi)
                     </label>
                     <textarea
-                      rows={3}
-                      value={editingTemplate.data.about.para2}
-                      onChange={(e) =>
+                      rows={4}
+                      value={editingTemplate.data.pricing.inclusions.join('\n')}
+                      onChange={(e) => {
+                        const lines = e.target.value.split('\n');
                         setEditingTemplate({
                           ...editingTemplate,
-                          data: { ...editingTemplate.data, about: { ...editingTemplate.data.about, para2: e.target.value } }
-                        })
-                      }
-                      style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                          data: { ...editingTemplate.data, pricing: { ...editingTemplate.data.pricing, inclusions: lines } }
+                        });
+                      }}
+                      placeholder="21 Buổi học trực tiếp qua Zoom cùng Chuyên gia&#10;Giáo trình Vận Động & Hít Thở chuẩn Sivananda&#10;Tham gia cộng đồng thực hành Sống Không Bệnh..."
+                      style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
                     />
                   </div>
                 </div>
+              )}
 
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Đường Dẫn Hình Ảnh Minh Họa
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.about.image}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, about: { ...editingTemplate.data.about, image: e.target.value } }
-                      })
-                    }
-                    placeholder="/images/yoga-practice-guide.jpg"
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                  />
-                </div>
-              </div>
-
-              {/* 3 Points Method */}
-              <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '20px' }}>
-                <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a', marginBottom: '14px' }}>
-                  Cấu Hình 3 Điểm Vàng (Method)
-                </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
-                  {editingTemplate.data.method.items.map((item, idx) => (
-                    <div
-                      key={idx}
-                      style={{
-                        padding: '16px',
-                        backgroundColor: '#f8fafc',
-                        borderRadius: '10px',
-                        border: '1px solid #e2e8f0',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '10px'
-                      }}
-                    >
-                      <input
-                        type="text"
-                        value={item.point}
-                        onChange={(e) => {
-                          const updated = [...editingTemplate.data.method.items];
-                          updated[idx].point = e.target.value;
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: { ...editingTemplate.data, method: { ...editingTemplate.data.method, items: updated } }
-                          });
-                        }}
-                        placeholder="Điểm 01 · Vận Động"
-                        style={{ width: '100%', padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12px', fontWeight: 700, color: '#006d36', boxSizing: 'border-box' }}
-                      />
-                      <input
-                        type="text"
-                        value={item.title}
-                        onChange={(e) => {
-                          const updated = [...editingTemplate.data.method.items];
-                          updated[idx].title = e.target.value;
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: { ...editingTemplate.data, method: { ...editingTemplate.data.method, items: updated } }
-                          });
-                        }}
-                        placeholder="Tiêu đề điểm"
-                        style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 700, boxSizing: 'border-box' }}
-                      />
-                      <input
-                        type="text"
-                        value={item.sanskrit}
-                        onChange={(e) => {
-                          const updated = [...editingTemplate.data.method.items];
-                          updated[idx].sanskrit = e.target.value;
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: { ...editingTemplate.data, method: { ...editingTemplate.data.method, items: updated } }
-                          });
-                        }}
-                        placeholder="Tên tiếng Phạn / Chú thích"
-                        style={{ width: '100%', padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12px', fontStyle: 'italic', boxSizing: 'border-box' }}
-                      />
-                      <textarea
-                        rows={4}
-                        value={item.description}
-                        onChange={(e) => {
-                          const updated = [...editingTemplate.data.method.items];
-                          updated[idx].description = e.target.value;
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: { ...editingTemplate.data, method: { ...editingTemplate.data.method, items: updated } }
-                          });
-                        }}
-                        placeholder="Nội dung mô tả điểm vàng..."
-                        style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12.5px', boxSizing: 'border-box' }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── TAB 5: LỢI ÍCH 21 NGÀY (BENEFITS) ── */}
-          {activeTab === 'benefits' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
-                  Khối 6 Lợi Ích Sau 21 Ngày Liên Tục
-                </h3>
-                <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
-                  Các chuyển hóa rõ rệt về giấc ngủ, giảm đau, năng lượng và tâm trí.
-                </p>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Eyebrow
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.benefits.eyebrow}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, benefits: { ...editingTemplate.data.benefits, eyebrow: e.target.value } }
-                      })
-                    }
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Tiêu Đề Khối
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.benefits.heading}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, benefits: { ...editingTemplate.data.benefits, heading: e.target.value } }
-                      })
-                    }
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginTop: '8px' }}>
-                {editingTemplate.data.benefits.items.map((item, idx) => (
-                  <div
-                    key={idx}
-                    style={{
-                      padding: '16px',
-                      backgroundColor: '#f8fafc',
-                      borderRadius: '10px',
-                      border: '1px solid #e2e8f0',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '10px'
-                    }}
-                  >
-                    <span style={{ fontWeight: 700, fontSize: '12px', color: '#006d36' }}>
-                      Lợi ích #{idx + 1}
-                    </span>
-                    <input
-                      type="text"
-                      value={item.title}
-                      onChange={(e) => {
-                        const updated = [...editingTemplate.data.benefits.items];
-                        updated[idx].title = e.target.value;
-                        setEditingTemplate({
-                          ...editingTemplate,
-                          data: { ...editingTemplate.data, benefits: { ...editingTemplate.data.benefits, items: updated } }
-                        });
-                      }}
-                      placeholder="Tiêu đề lợi ích"
-                      style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 700, boxSizing: 'border-box' }}
-                    />
-                    <textarea
-                      rows={3}
-                      value={item.description}
-                      onChange={(e) => {
-                        const updated = [...editingTemplate.data.benefits.items];
-                        updated[idx].description = e.target.value;
-                        setEditingTemplate({
-                          ...editingTemplate,
-                          data: { ...editingTemplate.data, benefits: { ...editingTemplate.data.benefits, items: updated } }
-                        });
-                      }}
-                      placeholder="Mô tả chuyển hóa..."
-                      style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12.5px', boxSizing: 'border-box' }}
-                    />
+              {/* ── TAB 9: CÂU HỎI THƯỜNG GẶP (FAQ) ── */}
+              {activeTab === 'faq' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
+                    <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
+                      Khối Câu Hỏi Thường Gặp (FAQ)
+                    </h3>
+                    <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
+                      Giải đáp các băn khoăn phổ biến của người mới tham gia lớp học.
+                    </p>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
 
-          {/* ── TAB 6: VÌ SAO TIN TƯỞNG (TRUST) ── */}
-          {activeTab === 'trust' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
-                  Vì Sao Tin Tưởng & Đội Ngũ Chuyên Gia
-                </h3>
-                <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
-                  Cấu hình các số liệu bảo chứng, 4 cam kết giá trị, thông tin Master Trainer và Tổ chức bảo trợ.
-                </p>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Eyebrow
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.trust.eyebrow}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, trust: { ...editingTemplate.data.trust, eyebrow: e.target.value } }
-                      })
-                    }
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Tiêu Đề Khối
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.trust.heading}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, trust: { ...editingTemplate.data.trust, heading: e.target.value } }
-                      })
-                    }
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                  Mô Tả Tổng Quan Khối
-                </label>
-                <textarea
-                  rows={2}
-                  value={editingTemplate.data.trust.description || ''}
-                  onChange={(e) =>
-                    setEditingTemplate({
-                      ...editingTemplate,
-                      data: { ...editingTemplate.data, trust: { ...editingTemplate.data.trust, description: e.target.value } }
-                    })
-                  }
-                  style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
-                />
-              </div>
-
-              {/* 4 Stats Cards */}
-              <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '16px' }}>
-                <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', marginBottom: '12px' }}>
-                  4 Số Liệu Thống Kê / Bảo Chứng
-                </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px' }}>
-                  {(editingTemplate.data.trust.stats || []).map((stat, idx) => (
-                    <div key={idx} style={{ padding: '14px', backgroundColor: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                      <span style={{ fontSize: '11px', fontWeight: 700, color: '#006d36', display: 'block', marginBottom: '6px' }}>
-                        Chỉ số #{idx + 1}
-                      </span>
-                      <input
-                        type="text"
-                        value={stat.number}
-                        onChange={(e) => {
-                          const updated = [...(editingTemplate.data.trust.stats || [])];
-                          updated[idx].number = e.target.value;
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: { ...editingTemplate.data, trust: { ...editingTemplate.data.trust, stats: updated } }
-                          });
-                        }}
-                        placeholder="21 / 80+ / 100+"
-                        style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '15px', fontWeight: 800, textAlign: 'center', marginBottom: '8px', boxSizing: 'border-box' }}
-                      />
-                      <textarea
-                        rows={2}
-                        value={stat.label}
-                        onChange={(e) => {
-                          const updated = [...(editingTemplate.data.trust.stats || [])];
-                          updated[idx].label = e.target.value;
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: { ...editingTemplate.data, trust: { ...editingTemplate.data.trust, stats: updated } }
-                          });
-                        }}
-                        placeholder="Mô tả chỉ số"
-                        style={{ width: '100%', padding: '6px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12px', boxSizing: 'border-box' }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 4 Feature Commitments */}
-              <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '16px' }}>
-                <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', marginBottom: '12px' }}>
-                  4 Đặc Điểm / Cam Kết Giá Trị (Features)
-                </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
-                  {(editingTemplate.data.trust.features || []).map((feat, idx) => (
-                    <div key={idx} style={{ padding: '16px', backgroundColor: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      <span style={{ fontSize: '12px', fontWeight: 700, color: '#006d36' }}>
-                        Cam kết #{idx + 1}
-                      </span>
-                      <input
-                        type="text"
-                        value={feat.title}
-                        onChange={(e) => {
-                          const updated = [...(editingTemplate.data.trust.features || [])];
-                          updated[idx].title = e.target.value;
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: { ...editingTemplate.data, trust: { ...editingTemplate.data.trust, features: updated } }
-                          });
-                        }}
-                        placeholder="Tiêu đề cam kết"
-                        style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 700, boxSizing: 'border-box' }}
-                      />
-                      <textarea
-                        rows={3}
-                        value={feat.description}
-                        onChange={(e) => {
-                          const updated = [...(editingTemplate.data.trust.features || [])];
-                          updated[idx].description = e.target.value;
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: { ...editingTemplate.data, trust: { ...editingTemplate.data.trust, features: updated } }
-                          });
-                        }}
-                        placeholder="Nội dung mô tả cam kết..."
-                        style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12.5px', boxSizing: 'border-box' }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Master Profile & Organization */}
-              <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '16px' }}>
-                <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', marginBottom: '14px' }}>
-                  Thông Tin Chuyên Gia Giảng Dạy & Tổ Chức Bảo Trợ
-                </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                  {/* Teacher Card */}
-                  <div style={{ padding: '20px', backgroundColor: '#f0fdf4', borderRadius: '12px', border: '1px solid #bbf7d0', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    <span style={{ fontSize: '13px', fontWeight: 700, color: '#166534', textTransform: 'uppercase' }}>
-                      Chuyên Gia / Master Trainer
-                    </span>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
                     <div>
-                      <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Huy hiệu / Badge</label>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Eyebrow
+                      </label>
                       <input
                         type="text"
-                        value={editingTemplate.data.trust.teacher?.badge || ''}
+                        value={editingTemplate.data.faq.eyebrow}
                         onChange={(e) =>
                           setEditingTemplate({
                             ...editingTemplate,
-                            data: {
-                              ...editingTemplate.data,
-                              trust: {
-                                ...editingTemplate.data.trust,
-                                teacher: { ...(editingTemplate.data.trust.teacher || {}), badge: e.target.value } as any
-                              }
-                            }
+                            data: { ...editingTemplate.data, faq: { ...editingTemplate.data.faq, eyebrow: e.target.value } }
                           })
                         }
-                        placeholder="CHUYÊN GIA HƯỚNG DẪN"
-                        style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
                       />
                     </div>
+
                     <div>
-                      <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Tên Chuyên Gia</label>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                        Tiêu Đề Khối
+                      </label>
                       <input
                         type="text"
-                        value={editingTemplate.data.trust.teacher?.title || ''}
+                        value={editingTemplate.data.faq.heading}
                         onChange={(e) =>
                           setEditingTemplate({
                             ...editingTemplate,
-                            data: {
-                              ...editingTemplate.data,
-                              trust: {
-                                ...editingTemplate.data.trust,
-                                teacher: { ...(editingTemplate.data.trust.teacher || {}), title: e.target.value } as any
-                              }
-                            }
+                            data: { ...editingTemplate.data, faq: { ...editingTemplate.data.faq, heading: e.target.value } }
                           })
                         }
-                        placeholder="Cô Đinh Kim Dung"
-                        style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 700, boxSizing: 'border-box' }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Tiểu Sử & Kinh Nghiệm</label>
-                      <textarea
-                        rows={3}
-                        value={editingTemplate.data.trust.teacher?.bio || ''}
-                        onChange={(e) =>
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: {
-                              ...editingTemplate.data,
-                              trust: {
-                                ...editingTemplate.data.trust,
-                                teacher: { ...(editingTemplate.data.trust.teacher || {}), bio: e.target.value } as any
-                              }
-                            }
-                          })
-                        }
-                        style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12.5px', boxSizing: 'border-box' }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Link Ảnh Chân Dung</label>
-                      <input
-                        type="text"
-                        value={editingTemplate.data.trust.teacher?.image || ''}
-                        onChange={(e) =>
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: {
-                              ...editingTemplate.data,
-                              trust: {
-                                ...editingTemplate.data.trust,
-                                teacher: { ...(editingTemplate.data.trust.teacher || {}), image: e.target.value } as any
-                              }
-                            }
-                          })
-                        }
-                        placeholder="/images/yoga-teacher-portrait.jpg"
-                        style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
                       />
                     </div>
                   </div>
 
-                  {/* Organization Card */}
-                  <div style={{ padding: '20px', backgroundColor: '#f0fdf4', borderRadius: '12px', border: '1px solid #bbf7d0', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    <span style={{ fontSize: '13px', fontWeight: 700, color: '#166534', textTransform: 'uppercase' }}>
-                      Tổ Chức Bảo Trợ / Đồng Hành
-                    </span>
-                    <div>
-                      <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Huy hiệu / Badge</label>
-                      <input
-                        type="text"
-                        value={editingTemplate.data.trust.organization?.badge || ''}
-                        onChange={(e) =>
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: {
-                              ...editingTemplate.data,
-                              trust: {
-                                ...editingTemplate.data.trust,
-                                organization: { ...(editingTemplate.data.trust.organization || {}), badge: e.target.value } as any
-                              }
-                            }
-                          })
-                        }
-                        placeholder="BẢO TRỢ CHUYÊN MÔN"
-                        style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Tên Tổ Chức</label>
-                      <input
-                        type="text"
-                        value={editingTemplate.data.trust.organization?.title || ''}
-                        onChange={(e) =>
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: {
-                              ...editingTemplate.data,
-                              trust: {
-                                ...editingTemplate.data.trust,
-                                organization: { ...(editingTemplate.data.trust.organization || {}), title: e.target.value } as any
-                              }
-                            }
-                          })
-                        }
-                        placeholder="4U Wellness · Tổ chức Phi Lợi nhuận"
-                        style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 700, boxSizing: 'border-box' }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Giới Thiệu Tổ Chức</label>
-                      <textarea
-                        rows={3}
-                        value={editingTemplate.data.trust.organization?.bio || ''}
-                        onChange={(e) =>
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: {
-                              ...editingTemplate.data,
-                              trust: {
-                                ...editingTemplate.data.trust,
-                                organization: { ...(editingTemplate.data.trust.organization || {}), bio: e.target.value } as any
-                              }
-                            }
-                          })
-                        }
-                        style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12.5px', boxSizing: 'border-box' }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Link Logo Tổ Chức</label>
-                      <input
-                        type="text"
-                        value={editingTemplate.data.trust.organization?.logo || ''}
-                        onChange={(e) =>
-                          setEditingTemplate({
-                            ...editingTemplate,
-                            data: {
-                              ...editingTemplate.data,
-                              trust: {
-                                ...editingTemplate.data.trust,
-                                organization: { ...(editingTemplate.data.trust.organization || {}), logo: e.target.value } as any
-                              }
-                            }
-                          })
-                        }
-                        placeholder="/Logo-4U-Wellness.png"
-                        style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
-                      />
-                    </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '6px' }}>
+                    {editingTemplate.data.faq.items.map((item, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          padding: '16px',
+                          backgroundColor: '#f8fafc',
+                          borderRadius: '10px',
+                          border: '1px solid #e2e8f0',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '8px'
+                        }}
+                      >
+                        <span style={{ fontSize: '12px', fontWeight: 700, color: '#006d36' }}>
+                          Câu hỏi #{idx + 1}
+                        </span>
+                        <input
+                          type="text"
+                          value={item.question}
+                          onChange={(e) => {
+                            const updated = [...editingTemplate.data.faq.items];
+                            updated[idx].question = e.target.value;
+                            setEditingTemplate({
+                              ...editingTemplate,
+                              data: { ...editingTemplate.data, faq: { ...editingTemplate.data.faq, items: updated } }
+                            });
+                          }}
+                          placeholder="Câu hỏi..."
+                          style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
+                        />
+                        <textarea
+                          rows={3}
+                          value={item.answer}
+                          onChange={(e) => {
+                            const updated = [...editingTemplate.data.faq.items];
+                            updated[idx].answer = e.target.value;
+                            setEditingTemplate({
+                              ...editingTemplate,
+                              data: { ...editingTemplate.data, faq: { ...editingTemplate.data.faq, items: updated } }
+                            });
+                          }}
+                          placeholder="Câu trả lời..."
+                          style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12.5px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
+              )}
             </div>
-          )}
+          </div>
+        )}
 
-          {/* ── TAB 7: LỘ TRÌNH 4 BƯỚC (STEPS) ── */}
-          {activeTab === 'steps' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
-                  Khối Lộ Trình 4 Bước Đơn Giản (Steps)
-                </h3>
-                <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
-                  Quy trình 4 bước từ Đăng ký Info Session đến Bắt đầu 21 ngày thực hành.
-                </p>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Eyebrow
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.steps.eyebrow}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, steps: { ...editingTemplate.data.steps, eyebrow: e.target.value } }
-                      })
-                    }
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Tiêu Đề Khối
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.steps.heading}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, steps: { ...editingTemplate.data.steps, heading: e.target.value } }
-                      })
-                    }
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginTop: '8px' }}>
-                {editingTemplate.data.steps.items.map((stepItem, idx) => (
-                  <div key={idx} style={{ padding: '16px', backgroundColor: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <input
-                      type="text"
-                      value={stepItem.step}
-                      onChange={(e) => {
-                        const updated = [...editingTemplate.data.steps.items];
-                        updated[idx].step = e.target.value;
-                        setEditingTemplate({
-                          ...editingTemplate,
-                          data: { ...editingTemplate.data, steps: { ...editingTemplate.data.steps, items: updated } }
-                        });
-                      }}
-                      placeholder="Bước 01"
-                      style={{ width: '100%', padding: '6px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12px', fontWeight: 700, color: '#006d36', boxSizing: 'border-box' }}
-                    />
-                    <input
-                      type="text"
-                      value={stepItem.title}
-                      onChange={(e) => {
-                        const updated = [...editingTemplate.data.steps.items];
-                        updated[idx].title = e.target.value;
-                        setEditingTemplate({
-                          ...editingTemplate,
-                          data: { ...editingTemplate.data, steps: { ...editingTemplate.data.steps, items: updated } }
-                        });
-                      }}
-                      placeholder="Tiêu đề bước"
-                      style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 700, boxSizing: 'border-box' }}
-                    />
-                    <textarea
-                      rows={3}
-                      value={stepItem.description}
-                      onChange={(e) => {
-                        const updated = [...editingTemplate.data.steps.items];
-                        updated[idx].description = e.target.value;
-                        setEditingTemplate({
-                          ...editingTemplate,
-                          data: { ...editingTemplate.data, steps: { ...editingTemplate.data.steps, items: updated } }
-                        });
-                      }}
-                      placeholder="Mô tả bước thực hiện..."
-                      style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12px', boxSizing: 'border-box' }}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* ── TAB 8: BẢNG GIÁ & QUYỀN LỢI (PRICING) ── */}
-          {activeTab === 'pricing' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
-                  Khối Bảng Giá & Quyền Lợi Khóa Học (Pricing)
-                </h3>
-                <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
-                  Thiết lập giá gốc, giá ưu đãi, huy hiệu khuyến mãi và danh sách quyền lợi đính kèm.
-                </p>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Eyebrow
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.pricing.eyebrow}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, pricing: { ...editingTemplate.data.pricing, eyebrow: e.target.value } }
-                      })
-                    }
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Tên Gói / Tiêu Đề Khối
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.pricing.heading}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, pricing: { ...editingTemplate.data.pricing, heading: e.target.value } }
-                      })
-                    }
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Giá Gốc (Original Price)
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.pricing.originalPrice}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, pricing: { ...editingTemplate.data.pricing, originalPrice: e.target.value } }
-                      })
-                    }
-                    placeholder="VD: 3.500.000đ"
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Giá Ưu Đãi (Discounted Price)
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.pricing.discountedPrice}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, pricing: { ...editingTemplate.data.pricing, discountedPrice: e.target.value } }
-                      })
-                    }
-                    placeholder="VD: 1.990.000đ"
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 700, color: '#006d36', boxSizing: 'border-box' }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Huy Hiệu Ưu Đãi (Badge)
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.pricing.badge}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, pricing: { ...editingTemplate.data.pricing, badge: e.target.value } }
-                      })
-                    }
-                    placeholder="VD: ƯU ĐÃI KHÓA SẮP KHAI GIẢNG"
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                  Danh Sách Quyền Lợi (Mỗi dòng 1 quyền lợi)
-                </label>
-                <textarea
-                  rows={4}
-                  value={editingTemplate.data.pricing.inclusions.join('\n')}
-                  onChange={(e) => {
-                    const lines = e.target.value.split('\n');
-                    setEditingTemplate({
-                      ...editingTemplate,
-                      data: { ...editingTemplate.data, pricing: { ...editingTemplate.data.pricing, inclusions: lines } }
-                    });
-                  }}
-                  placeholder="21 Buổi học trực tiếp qua Zoom cùng Chuyên gia&#10;Giáo trình Vận Động & Hít Thở chuẩn Sivananda&#10;Tham gia cộng đồng thực hành Sống Không Bệnh..."
-                  style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* ── TAB 9: CÂU HỎI THƯỜNG GẶP (FAQ) ── */}
-          {activeTab === 'faq' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ borderBottom: '1px solid #f1f5f9', paddingBottom: '14px' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
-                  Khối Câu Hỏi Thường Gặp (FAQ)
-                </h3>
-                <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0 0' }}>
-                  Giải đáp các băn khoăn phổ biến của người mới tham gia lớp học.
-                </p>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Eyebrow
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.faq.eyebrow}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, faq: { ...editingTemplate.data.faq, eyebrow: e.target.value } }
-                      })
-                    }
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
-                    Tiêu Đề Khối
-                  </label>
-                  <input
-                    type="text"
-                    value={editingTemplate.data.faq.heading}
-                    onChange={(e) =>
-                      setEditingTemplate({
-                        ...editingTemplate,
-                        data: { ...editingTemplate.data, faq: { ...editingTemplate.data.faq, heading: e.target.value } }
-                      })
-                    }
-                    style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '6px' }}>
-                {editingTemplate.data.faq.items.map((item, idx) => (
-                  <div
-                    key={idx}
-                    style={{
-                      padding: '16px',
-                      backgroundColor: '#f8fafc',
-                      borderRadius: '10px',
-                      border: '1px solid #e2e8f0',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '8px'
-                    }}
-                  >
-                    <span style={{ fontSize: '12px', fontWeight: 700, color: '#006d36' }}>
-                      Câu hỏi #{idx + 1}
-                    </span>
-                    <input
-                      type="text"
-                      value={item.question}
-                      onChange={(e) => {
-                        const updated = [...editingTemplate.data.faq.items];
-                        updated[idx].question = e.target.value;
-                        setEditingTemplate({
-                          ...editingTemplate,
-                          data: { ...editingTemplate.data, faq: { ...editingTemplate.data.faq, items: updated } }
-                        });
-                      }}
-                      placeholder="Câu hỏi..."
-                      style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
-                    />
-                    <textarea
-                      rows={3}
-                      value={item.answer}
-                      onChange={(e) => {
-                        const updated = [...editingTemplate.data.faq.items];
-                        updated[idx].answer = e.target.value;
-                        setEditingTemplate({
-                          ...editingTemplate,
-                          data: { ...editingTemplate.data, faq: { ...editingTemplate.data.faq, items: updated } }
-                        });
-                      }}
-                      placeholder="Câu trả lời..."
-                      style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '12.5px', boxSizing: 'border-box' }}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+        {/* Live Preview Modal */}
+        {renderPreviewModal()}
       </div>
     );
   }
@@ -2034,7 +2359,7 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
                               border: '1px solid #fde047'
                             }}
                           >
-                            ★ Mặc Định
+                            default
                           </span>
                         )}
                       </div>
@@ -2129,6 +2454,31 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
 
                         <button
                           type="button"
+                          onClick={() => {
+                            setSelectedPreviewTemplate(tpl);
+                            const el = document.getElementById('live-preview-section');
+                            if (el) el.scrollIntoView({ behavior: 'smooth' });
+                          }}
+                          style={{
+                            width: '50px',
+                            height: '32px',
+                            borderRadius: '8px',
+                            border: '1px solid #bae6fd',
+                            background: '#f0f9ff',
+                            color: '#0284c7',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.15s ease'
+                          }}
+                          title="Xem trực quan mẫu này ở bên dưới"
+                        >
+                          <Eye size={14} />
+                        </button>
+
+                        <button
+                          type="button"
                           onClick={() => handleOpenEdit(tpl)}
                           style={{
                             width: '50px',
@@ -2200,6 +2550,9 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
           </tbody>
         </table>
       </div>
+
+      {/* Live Preview Modal (nếu người dùng bấm chế độ xem riêng) */}
+      {renderPreviewModal()}
     </div>
   );
 }

@@ -43,7 +43,7 @@ import './Admin.css';
 export const ADMIN_SECTIONS = [
   { id: 'tours', label: 'Quản Lý Tour' },
   { id: 'bookings', label: 'Quản Lý Đơn Đặt Tour' },
-  { id: 'landing-page', label: 'Quản Lý Section Landing Page' },
+  { id: 'landing-page', label: 'Quản Lý Landing Page' },
   { id: 'products', label: 'Sản Phẩm (Kollection 4U)' },
   { id: 'blog', label: 'Quản Lý Bài Viết' },
   { id: 'destinations', label: 'Quản Lý Điểm Đến' },
@@ -52,7 +52,7 @@ export const ADMIN_SECTIONS = [
   { id: 'custom-tours', label: 'Thiết Kế Lịch Trình Riêng' },
   { id: 'shop-orders', label: 'Đơn Hàng Kollection 4U' },
   { id: 'categories', label: 'Danh Mục Menu' },
-  { id: 'users', label: 'Quản Lý Người Dùng & Phân Quyền' },
+  { id: 'users', label: 'Quản Lý Người Dùng ' },
   { id: 'settings', label: 'Cấu Hình Hệ Thống' },
 ] as const;
 
@@ -441,26 +441,8 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
           <img
             src="/Logo-4U-Wellness.png"
             alt="4U Wellness Logo"
-            style={{ height: '34px', width: 'auto', objectFit: 'contain', display: 'block' }}
+            style={{ height: '45px', width: 'auto', objectFit: 'contain', display: 'block' }}
           />
-          <span style={{ height: '16px', width: '1px', backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
-          <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '15px', fontWeight: 700, letterSpacing: '0.08em', color: '#ffffff' }}>
-            ADMIN CONSOLE
-          </span>
-          <span
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              color: '#34d399',
-              fontSize: '11px',
-              fontWeight: 700,
-              padding: '2px 8px',
-              borderRadius: '4px',
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase'
-            }}
-          >
-            {roleConfig.label}
-          </span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
@@ -517,12 +499,6 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
             boxSizing: 'border-box'
           }}
         >
-          <div style={{ padding: '0 12px 16px 12px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '12px' }}>
-            <p style={{ fontSize: '11px', fontWeight: 700, color: '#819986', textTransform: 'uppercase', letterSpacing: '0.1em', margin: 0 }}>
-              Danh Mục Quản Trị
-            </p>
-          </div>
-
           {permittedSections.map((sec) => (
             <button
               key={sec.id}

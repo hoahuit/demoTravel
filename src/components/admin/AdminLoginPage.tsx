@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './AdminLoginPage.css';
 
@@ -8,7 +8,7 @@ interface AdminLoginPageProps {
 }
 
 export default function AdminLoginPage({ onNavigateHome }: AdminLoginPageProps) {
-  const { login } = useAuth();
+  const { login, loginOffline } = useAuth();
 
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -173,29 +173,25 @@ export default function AdminLoginPage({ onNavigateHome }: AdminLoginPageProps) 
               <div style={{ marginTop: '16px', textAlign: 'center' }}>
                 <button
                   type="button"
-                  onClick={async () => {
-                    setUsernameOrEmail('admin');
-                    setPassword('admin123');
-                    setIsSubmitting(true);
-                    try {
-                      await login('admin', 'admin123');
-                    } catch (e: any) {
-                      setErrorMessage(e?.message || 'Đăng nhập thất bại.');
-                    } finally {
-                      setIsSubmitting(false);
-                    }
+                  onClick={() => {
+                    setErrorMessage('');
+                    loginOffline('superadmin');
                   }}
                   style={{
                     background: 'rgba(15, 118, 110, 0.08)',
                     color: '#0f766e',
                     border: '1px dashed #0f766e',
                     borderRadius: '8px',
-                    padding: '8px 14px',
-                    fontSize: '12.5px',
-                    fontWeight: 600,
+                    padding: '9px 14px',
+                    fontSize: '13px',
+                    fontWeight: 700,
                     cursor: 'pointer',
                     width: '100%',
-                    transition: 'all 0.2s ease'
+                    transition: 'all 0.2s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px'
                   }}
                 >
                   ⚡ Đăng Nhập Nhanh (Chế độ Local Offline)
@@ -210,15 +206,22 @@ export default function AdminLoginPage({ onNavigateHome }: AdminLoginPageProps) 
               <button
                 type="button"
                 onClick={() => {
-                  if (onNavigateHome) onNavigateHome();
-                  else window.location.href = '/';
+                  if (onNavigateHome) {
+                    onNavigateHome();
+                  } else {
+                    window.location.pathname = '/';
+                  }
                 }}
                 className="admin-login-back-btn"
+                style={{ cursor: 'pointer' }}
               >
                 ← Trở về website 4U Retreat
               </button>
 
-              <span>Mã hóa SSL 256-bit</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                <ShieldCheck size={14} color="#10b981" />
+                Mã hóa SSL 256-bit
+              </span>
             </div>
           </div>
         </div>

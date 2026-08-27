@@ -17,6 +17,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (usernameOrEmail: string, password: string) => Promise<AuthUser>;
+  loginOffline: (role?: UserRole) => AuthUser;
   logout: () => void;
   canAccess: (sectionId: string) => boolean;
   refreshProfile: () => Promise<void>;
@@ -70,6 +71,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const loginOffline = (role: UserRole = 'superadmin'): AuthUser => {
+    const mockUser: AuthUser = {
+      id: 1,
+      username: 'admin',
+      email: 'admin@4utours.com',
+      fullName: 'Quản Trị Viên (Offline SuperAdmin)',
+      role: role,
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      lastLoginAt: new Date().toISOString(),
+    };
+    const mockToken = `mock-token-${Date.now()}`;
+    setUser(mockUser);
+    setToken(mockToken);
+    setAuthSession(mockToken, mockUser);
+    setIsLoading(false);
+    return mockUser;
+  };
+
   const logout = () => {
     clearAuthSession();
     setUser(null);
@@ -94,6 +114,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isAuthenticated: Boolean(user && token),
     isLoading,
     login,
+    loginOffline,
     logout,
     canAccess,
     refreshProfile,
