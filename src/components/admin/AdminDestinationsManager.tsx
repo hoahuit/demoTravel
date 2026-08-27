@@ -2,6 +2,7 @@ import React from 'react';
 import { RefreshCw, Plus, Edit2, Trash2 } from 'lucide-react';
 import { getImageUrl } from '../../services/apiService';
 import EmptyState from '../ui/EmptyState';
+import './AdminDestinationsManager.css';
 
 interface AdminDestinationsManagerProps {
   destinationsList: any[];
@@ -27,42 +28,30 @@ export default function AdminDestinationsManager({
   );
 
   return (
-    <div style={{ width: '100%', boxSizing: 'border-box' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '24px', paddingBottom: '20px', borderBottom: '1px solid #e2e8f0' }}>
+    <div className="admin-dest-root">
+      <div className="admin-dest-header">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, color: '#0f766e', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+          <div className="admin-dest-meta-row">
+            <span className="admin-dest-tag">
               4U RETREAT • ĐỊA ĐIỂM NGHỈ DƯỠNG
             </span>
-            <span style={{ height: '4px', width: '4px', borderRadius: '50%', backgroundColor: '#cbd5e1' }} />
-            <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748b' }}>
+            <span className="admin-dest-dot" />
+            <span className="admin-dest-subtag">
               Danh Thắng & Kỳ Quan
             </span>
           </div>
-          <h1 style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif", fontSize: '24px', margin: 0, color: '#0f172a', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.3 }}>
+          <h1 className="admin-dest-title">
             Quản Lý Điểm Đến ({filtered.length})
           </h1>
-          <p style={{ margin: '4px 0 0 0', fontSize: '13.5px', color: '#64748b' }}>
+          <p className="admin-dest-desc">
             Quản lý thông tin các vùng danh thắng, kỳ quan và trung tâm tĩnh dưỡng khắp Việt Nam.
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <div className="admin-dest-btn-group">
           <button
             type="button"
             onClick={() => window.location.reload()}
-            style={{
-              backgroundColor: '#ffffff',
-              color: '#334155',
-              border: '1px solid #cbd5e1',
-              borderRadius: '8px',
-              padding: '8px 14px',
-              fontSize: '13px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
+            className="admin-dest-refresh-btn"
           >
             <RefreshCw size={14} color="#64748b" />
             <span>Làm Mới</span>
@@ -71,20 +60,7 @@ export default function AdminDestinationsManager({
           <button
             type="button"
             onClick={() => openCreateModal('destinations')}
-            style={{
-              backgroundColor: '#0f766e',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '8px 16px',
-              fontSize: '13px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              boxShadow: '0 1px 3px rgba(15, 118, 110, 0.2)'
-            }}
+            className="admin-dest-add-btn"
           >
             <Plus size={15} />
             <span>Thêm Mới</span>
@@ -92,13 +68,13 @@ export default function AdminDestinationsManager({
         </div>
       </div>
 
-      <div style={{ marginBottom: '20px' }}>
+      <div className="admin-dest-search-wrap">
         <input
           type="text"
           placeholder="Tìm điểm đến theo tên, quốc gia..."
           value={searchFilter}
           onChange={(e) => setSearchFilter(e.target.value)}
-          style={{ width: '100%', maxWidth: '400px', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '14px' }}
+          className="admin-dest-search-input"
         />
       </div>
 
@@ -111,21 +87,21 @@ export default function AdminDestinationsManager({
           transparent={true}
         />
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+        <div className="admin-dest-grid">
           {filtered.map((dest) => (
-            <div key={dest.slug} style={{ backgroundColor: '#ffffff', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(6, 27, 14, 0.08)', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ height: '160px', width: '100%', overflow: 'hidden' }}>
-                <img src={getImageUrl(dest.heroImage)} alt={dest.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <div key={dest.slug} className="admin-dest-card">
+              <div className="admin-dest-card-img-wrap">
+                <img src={getImageUrl(dest.heroImage)} alt={dest.name} className="admin-dest-card-img" />
               </div>
-              <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
+              <div className="admin-dest-card-body">
                 <div>
-                  <span style={{ fontSize: '10px', fontWeight: 700, color: '#059669', textTransform: 'uppercase' }}>{dest.country}</span>
-                  <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '18px', color: '#081f13', margin: '4px 0 6px 0' }}>{dest.name}</h3>
-                  <p style={{ fontSize: '13px', color: '#525a54', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{dest.overview}</p>
+                  <span className="admin-dest-card-country">{dest.country}</span>
+                  <h3 className="admin-dest-card-name">{dest.name}</h3>
+                  <p className="admin-dest-card-overview">{dest.overview}</p>
                 </div>
-                <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-                  <button onClick={() => openEditModal('destinations', dest)} style={{ width: '50px', height: '32px', backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '6px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} title="Chỉnh sửa"><Edit2 size={14} /></button>
-                  <button onClick={() => handleDeleteItem('destinations', dest.slug)} style={{ width: '50px', height: '32px', backgroundColor: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5', borderRadius: '6px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} title="Xóa"><Trash2 size={14} /></button>
+                <div className="admin-dest-card-actions">
+                  <button onClick={() => openEditModal('destinations', dest)} className="admin-dest-edit-btn" title="Chỉnh sửa"><Edit2 size={14} /></button>
+                  <button onClick={() => handleDeleteItem('destinations', dest.slug)} className="admin-dest-delete-btn" title="Xóa"><Trash2 size={14} /></button>
                 </div>
               </div>
             </div>

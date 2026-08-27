@@ -1,0 +1,361 @@
+/* ==========================================================================
+   AdminLandingSectionManager.css
+   Chuyên biệt cho Quản lý Landing Page Templates trong Admin
+   ========================================================================== */
+
+.admin-landing-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+
+/* Header & Sticky Topbar */
+.admin-landing-sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #ffffff;
+    border-bottom: 1.5px solid #e2e8f0;
+    margin: -28px -36px 24px -36px;
+    padding: 14px 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.admin-landing-back-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+}
+
+.admin-landing-back-btn:hover {
+    background-color: #f8fafc;
+}
+
+.admin-landing-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.admin-landing-badge-mode {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 6px;
+}
+
+.admin-landing-badge-mode.create {
+    background-color: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.admin-landing-badge-mode.edit {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+/* Mode Switcher Buttons */
+.admin-landing-mode-group {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f1f5f9;
+    border-radius: 8px;
+    padding: 3px;
+    border: 1px solid #cbd5e1;
+}
+
+.admin-landing-mode-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+    background-color: transparent;
+    color: #64748b;
+}
+
+.admin-landing-mode-btn.active {
+    background-color: #006d36;
+    color: #ffffff;
+}
+
+/* Stats Cards Grid */
+.admin-landing-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.admin-landing-stat-card {
+    background: #ffffff;
+    padding: 18px 22px;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.admin-landing-stat-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.admin-landing-stat-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.admin-landing-stat-value {
+    font-size: 26px;
+    font-weight: 800;
+    color: #081f13;
+}
+
+/* Filters & Search Toolbar */
+.admin-landing-toolbar {
+    background: #ffffff;
+    padding: 14px 20px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.admin-landing-search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 240px;
+}
+
+.admin-landing-search-input {
+    width: 100%;
+    padding: 9px 12px 9px 38px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 13px;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.15s ease;
+}
+
+.admin-landing-search-input:focus {
+    border-color: #006d36;
+}
+
+.admin-landing-filter-pill {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: none;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    background: #f3f4f6;
+    color: #4b5563;
+    transition: all 0.15s ease;
+}
+
+.admin-landing-filter-pill.active {
+    background: #006d36;
+    color: #ffffff;
+}
+
+/* Table View */
+.admin-landing-table-card {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.admin-landing-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.admin-landing-table thead tr {
+    background: #f8fafc;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 12px;
+    font-weight: 800;
+    color: #4b5563;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.admin-landing-table th,
+.admin-landing-table td {
+    padding: 14px 16px;
+}
+
+.admin-landing-table tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.15s ease;
+}
+
+.admin-landing-table tr:hover {
+    background-color: #f9fafb;
+}
+
+.admin-landing-table tr.is-default {
+    background-color: #f0fdf4;
+}
+
+.admin-landing-badge-default {
+    font-size: 10px;
+    font-weight: 800;
+    background: #fef9c3;
+    color: #854d0e;
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 1px solid #fde047;
+    text-transform: uppercase;
+}
+
+.admin-landing-action-btn {
+    width: 38px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    color: #374151;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.admin-landing-action-btn:hover {
+    background: #e2e8f0;
+}
+
+.admin-landing-action-btn.delete {
+    border: 1px solid #fecaca;
+    background: #fff1f2;
+    color: #b91c1c;
+}
+
+.admin-landing-action-btn.delete:hover {
+    background: #fee2e2;
+}
+
+/* Form Tabs & Body */
+.admin-landing-tabs-bar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 20px;
+}
+
+.admin-landing-tab-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    background-color: #f8fafc;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+}
+
+.admin-landing-tab-btn:hover {
+    background-color: #f1f5f9;
+}
+
+.admin-landing-tab-btn.active {
+    border: 1px solid #bbf7d0;
+    font-weight: 700;
+    color: #006d36;
+    background-color: #e8f5e9;
+}
+
+.admin-landing-form-card {
+    background-color: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    padding: 24px 28px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.admin-landing-form-header {
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+}
+
+.admin-landing-form-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+}
+
+.admin-landing-form-subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin: 4px 0 0 0;
+}
+
+.admin-landing-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.admin-landing-input,
+.admin-landing-textarea,
+.admin-landing-select {
+    width: 100%;
+    padding: 9px 13px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 13.5px;
+    color: #0f172a;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.admin-landing-input:focus,
+.admin-landing-textarea:focus,
+.admin-landing-select:focus {
+    border-color: #006d36;
+}

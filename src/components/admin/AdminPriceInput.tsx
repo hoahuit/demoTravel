@@ -1,4 +1,5 @@
 import React from 'react';
+import './AdminPriceInput.css';
 
 export interface AdminPriceInputProps {
   id?: string;
@@ -71,7 +72,7 @@ export default function AdminPriceInput({
     <div className="serene-price-group">
       <div className="serene-price-header">
         <label htmlFor={id} className="serene-price-label">
-          {label} {required && <span style={{ color: '#e11d48' }}>*</span>}
+          {label} {required && <span className="serene-required-star">*</span>}
         </label>
         <span className={`serene-price-badge-preview ${isZero ? 'zero' : ''}`}>
           {formatVndReadable(numValue)}

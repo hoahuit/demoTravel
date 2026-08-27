@@ -132,35 +132,18 @@ export default function Testimonials() {
   return (
     <section
       id="testimonials"
-      style={{
-        background: '#e5efe8',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
-        color: '#10201B',
-        padding: '90px 0 100px 0',
-        overflowX: 'hidden',
-        position: 'relative'
-      }}
+      className="testimonials-section"
     >
       {/* ── 1. SECTION HEADER ── */}
       <ScrollReveal>
-        <div style={{ maxWidth: '640px', margin: '0 auto 64px', textAlign: 'center', padding: '0 24px' }}>
+        <div className="testimonials-header-container">
           <div className="testimonials-header-badge">
             <span className="dot" /> Đánh Giá & Cảm Nhận Thực Tế
           </div>
-          <h2
-            style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontWeight: 500,
-              fontSize: 'clamp(28px, 4vw, 42px)',
-              lineHeight: 1.15,
-              marginBottom: '18px',
-              color: '#10201B',
-              letterSpacing: '-0.01em'
-            }}
-          >
-            Khách hàng nói gì về <span style={{ color: '#2D5A36', fontWeight: 700, fontStyle: 'italic' }}>chúng tôi</span>?
+          <h2 className="testimonials-header-title">
+            Khách hàng nói gì về <span className="testimonials-title-accent">chúng tôi</span>?
           </h2>
-          <p style={{ fontSize: '15.5px', color: 'rgba(16,32,27,0.6)', lineHeight: 1.6, margin: 0 }}>
+          <p className="testimonials-header-desc">
             Lắng nghe cảm nhận thực tế từ các gia đình, doanh nghiệp & khách du lịch quốc tế sau chuyến đi.
           </p>
         </div>
@@ -174,12 +157,7 @@ export default function Testimonials() {
         >
           <div
             ref={trackRef}
-            style={{
-              display: 'flex',
-              gap: '24px',
-              width: 'max-content',
-              willChange: 'transform'
-            }}
+            className="testimonials-track"
           >
             {doubleTestimonials.map((t, idx) => {
               const isActive = activeIdx === idx;
@@ -218,9 +196,9 @@ export default function Testimonials() {
                   {/* Person Profile */}
                   <div className="person">
                     {t.avatar ? (
-                      <img src={getImageUrl(t.avatar)} alt={t.name} style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover' }} />
+                      <img src={getImageUrl(t.avatar)} alt={t.name} className="testimonial-img-avatar" />
                     ) : (
-                      <div className="testimonial-avatar" style={{ background: t.color }}>
+                      <div className="testimonial-avatar">
                         {getInitials(t.name)}
                       </div>
                     )}

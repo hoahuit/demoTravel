@@ -8,6 +8,7 @@ import {
   getImageUrl,
   KollectionProduct
 } from '../../services/apiService';
+import './AdminProductsManager.css';
 import {
   ShoppingBag,
   Plus,
@@ -214,70 +215,33 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
   };
 
   return (
-    <div style={{ width: '100%', boxSizing: 'border-box', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+    <div className="admin-products-root">
       {/* Header & Metrics */}
-      <div style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid #e2e8f0' }}>
+      <div className="admin-products-header-wrap">
+        <div className="admin-products-header">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-              <span style={{ fontSize: '11px', fontWeight: 700, color: '#0f766e', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            <div className="admin-products-meta-row">
+              <span className="admin-products-tag">
                 KOLLECTION 4U • QUẢN LÝ SẢN PHẨM
               </span>
-              <span style={{ height: '4px', width: '4px', borderRadius: '50%', backgroundColor: '#cbd5e1' }} />
-              <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748b' }}>
+              <span className="admin-products-dot" />
+              <span className="admin-products-subtag">
                 Gian hàng NomadStore
               </span>
             </div>
-            <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a', margin: '0 0 4px 0', letterSpacing: '-0.02em', lineHeight: 1.3 }}>
+            <h1 className="admin-products-title">
               Quản Lý Sản Phẩm (Kollection 4U)
             </h1>
-            <p style={{ fontSize: '13.5px', color: '#64748b', margin: 0 }}>
+            <p className="admin-products-desc">
               Quản lý các sản phẩm vật lý độc bản, trà thảo mộc, nến thơm & quà tặng lưu niệm của 4U Retreat.
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            {onNavigate && (
-              <button
-                type="button"
-                onClick={() => onNavigate('/kollection-4u')}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '8px 14px',
-                  borderRadius: '8px',
-                  background: '#f0fdf4',
-                  border: '1px solid #bbf7d0',
-                  color: '#166534',
-                  fontWeight: 600,
-                  fontSize: '13px',
-                  cursor: 'pointer'
-                }}
-              >
-              </button>
-            )}
-
+          <div className="admin-products-btn-group">
             <button
               type="button"
               onClick={() => loadProducts(true)}
-              style={{
-                backgroundColor: '#ffffff',
-                color: '#334155',
-                border: '1px solid #cbd5e1',
-                borderRadius: '8px',
-                padding: '8px 14px',
-                fontSize: '13px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.15s ease'
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f8fafc')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ffffff')}
+              className="admin-products-refresh-btn"
             >
               <RefreshCw size={14} color="#64748b" />
               <span>Làm Mới</span>
@@ -286,24 +250,7 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
             <button
               type="button"
               onClick={handleOpenCreate}
-              style={{
-                backgroundColor: '#0f766e',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: '8px',
-                padding: '8px 16px',
-                fontSize: '13px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                whiteSpace: 'nowrap',
-                boxShadow: '0 1px 3px rgba(15, 118, 110, 0.2)',
-                transition: 'all 0.15s ease'
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#115e59')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#0f766e')}
+              className="admin-products-add-btn"
             >
               <Plus size={15} />
               <span>Thêm Mới</span>
@@ -312,75 +259,58 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
         </div>
 
         {/* Metrics Row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '24px' }}>
-          <div style={{ background: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #e5e7eb', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: '#6b7280' }}>Tổng Sản Phẩm</span>
-              <Package size={20} style={{ color: '#006d36' }} />
+        <div className="admin-products-metrics-grid">
+          <div className="admin-products-metric-card">
+            <div className="admin-products-metric-top">
+              <span className="admin-products-metric-label">Tổng Sản Phẩm</span>
+              <Package size={20} color="#006d36" />
             </div>
-            <div style={{ fontSize: '26px', fontWeight: 800, color: '#081f13' }}>{products.length}</div>
+            <div className="admin-products-metric-val">{products.length}</div>
           </div>
 
-          <div style={{ background: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #e5e7eb', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: '#6b7280' }}>Tổng Tồn Kho</span>
-              <Layers size={20} style={{ color: '#2563eb' }} />
+          <div className="admin-products-metric-card">
+            <div className="admin-products-metric-top">
+              <span className="admin-products-metric-label">Tổng Tồn Kho</span>
+              <Layers size={20} color="#2563eb" />
             </div>
-            <div style={{ fontSize: '26px', fontWeight: 800, color: '#081f13' }}>{totalStock} <span style={{ fontSize: '14px', fontWeight: 600, color: '#6b7280' }}>món</span></div>
+            <div className="admin-products-metric-val">{totalStock} <span style={{ fontSize: '14px', fontWeight: 600, color: '#6b7280' }}>món</span></div>
           </div>
 
-          <div style={{ background: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #e5e7eb', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: '#6b7280' }}>Sản Phẩm Bán Chạy</span>
-              <Flame size={20} style={{ color: '#f97316' }} />
+          <div className="admin-products-metric-card">
+            <div className="admin-products-metric-top">
+              <span className="admin-products-metric-label">Sản Phẩm Bán Chạy</span>
+              <Flame size={20} color="#f97316" />
             </div>
-            <div style={{ fontSize: '26px', fontWeight: 800, color: '#081f13' }}>{products.filter(p => p.isBestSeller).length}</div>
+            <div className="admin-products-metric-val">{products.filter(p => p.isBestSeller).length}</div>
           </div>
 
-          <div style={{ background: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #e5e7eb', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: '#6b7280' }}>Sản Phẩm Nổi Bật</span>
-              <Star size={20} style={{ color: '#eab308' }} />
+          <div className="admin-products-metric-card">
+            <div className="admin-products-metric-top">
+              <span className="admin-products-metric-label">Sản Phẩm Nổi Bật</span>
+              <Star size={20} color="#eab308" />
             </div>
-            <div style={{ fontSize: '26px', fontWeight: 800, color: '#081f13' }}>{products.filter(p => p.isFeatured).length}</div>
+            <div className="admin-products-metric-val">{products.filter(p => p.isFeatured).length}</div>
           </div>
         </div>
 
         {/* Filters bar */}
-        <div style={{ background: '#ffffff', padding: '14px 20px', borderRadius: '12px', border: '1px solid #e5e7eb', display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <div style={{ position: 'relative', flex: '1', minWidth: '240px' }}>
-            <Search size={17} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }} />
+        <div className="admin-products-filter-bar">
+          <div className="admin-products-search-wrap">
+            <Search size={17} className="admin-products-search-icon" />
             <input
               type="text"
               placeholder="Tìm theo tên sản phẩm, mã SKU, slug..."
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '9px 12px 9px 38px',
-                borderRadius: '8px',
-                border: '1px solid #d1d5db',
-                fontSize: '13px',
-                outline: 'none',
-                boxSizing: 'border-box'
-              }}
+              className="admin-products-search-input"
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div className="admin-products-cats-wrap">
             <span style={{ fontSize: '13px', fontWeight: 700, color: '#4b5563' }}>Phân loại:</span>
             <button
               onClick={() => setSelectedCategory('All')}
-              style={{
-                padding: '6px 14px',
-                borderRadius: '999px',
-                border: 'none',
-                fontSize: '12px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                background: selectedCategory === 'All' ? '#006d36' : '#f3f4f6',
-                color: selectedCategory === 'All' ? '#ffffff' : '#4b5563'
-              }}
+              className={`admin-products-cat-btn ${selectedCategory === 'All' ? 'active' : ''}`}
             >
               Tất Cả ({products.length})
             </button>
@@ -390,16 +320,7 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  style={{
-                    padding: '6px 14px',
-                    borderRadius: '999px',
-                    border: 'none',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    background: selectedCategory === cat ? '#006d36' : '#f3f4f6',
-                    color: selectedCategory === cat ? '#ffffff' : '#4b5563'
-                  }}
+                  className={`admin-products-cat-btn ${selectedCategory === cat ? 'active' : ''}`}
                 >
                   {cat} ({count})
                 </button>
@@ -412,160 +333,124 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
       {/* Product List Table */}
       {loading ? (
         <div style={{ textAlign: 'center', padding: '60px 20px', background: '#ffffff', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
-          <RefreshCw size={28} className="spin" style={{ color: '#006d36', marginBottom: '12px' }} />
+          <RefreshCw size={28} className="spin" color="#006d36" style={{ marginBottom: '12px' }} />
           <p style={{ color: '#6b7280', margin: 0, fontWeight: 600 }}>Đang tải danh sách sản phẩm...</p>
         </div>
       ) : filteredProducts.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '60px 20px', background: '#ffffff', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
-          <ShoppingBag size={48} style={{ color: '#9ca3af', marginBottom: '12px' }} />
+          <ShoppingBag size={48} color="#9ca3af" style={{ marginBottom: '12px' }} />
           <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#1f2937', margin: '0 0 6px 0' }}>Chưa có sản phẩm nào phù hợp</h3>
           <p style={{ color: '#6b7280', fontSize: '14px', margin: '0 0 16px 0' }}>Hãy thử đổi từ khóa tìm kiếm hoặc nhấn nút thêm mới.</p>
           <button
             onClick={handleOpenCreate}
-            style={{
-              padding: '8px 18px',
-              borderRadius: '8px',
-              background: '#006d36',
-              color: '#ffffff',
-              fontWeight: 700,
-              fontSize: '13px',
-              border: 'none',
-              cursor: 'pointer'
-            }}
+            className="admin-products-add-btn"
           >
             + Thêm Sản Phẩm Mới
           </button>
         </div>
       ) : (
-        <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e5e7eb', overflow: 'hidden', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+        <div className="admin-products-table-wrap">
+          <table className="admin-products-table">
             <thead>
-              <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e5e7eb', fontSize: '12px', fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                <th style={{ padding: '14px 20px' }}>Sản Phẩm</th>
-                <th style={{ padding: '14px 16px' }}>Mã SKU / Slug</th>
-                <th style={{ padding: '14px 16px' }}>Phân Loại</th>
-                <th style={{ padding: '14px 16px' }}>Giá Bán</th>
-                <th style={{ padding: '14px 16px' }}>Tồn Kho</th>
-                <th style={{ padding: '14px 16px' }}>Đặc Điểm</th>
-                <th style={{ padding: '14px 20px', textAlign: 'right' }}>Thao Tác</th>
+              <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e5e7eb' }}>
+                <th className="admin-products-th title-col">Sản Phẩm</th>
+                <th className="admin-products-th">Mã SKU / Slug</th>
+                <th className="admin-products-th">Phân Loại</th>
+                <th className="admin-products-th">Giá Bán</th>
+                <th className="admin-products-th">Tồn Kho</th>
+                <th className="admin-products-th">Đặc Điểm</th>
+                <th className="admin-products-th actions">Thao Tác</th>
               </tr>
             </thead>
             <tbody>
-              {filteredProducts.map((p) => (
-                <tr key={p.id} style={{ borderBottom: '1px solid #f1f5f9', transition: 'background 0.2s ease' }} onMouseEnter={e => e.currentTarget.style.background = '#f9fafb'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                  <td style={{ padding: '14px 20px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                      <img
-                        src={getImageUrl(p.heroImage)}
-                        alt={p.title}
-                        style={{ width: '56px', height: '56px', borderRadius: '10px', objectFit: 'cover', border: '1px solid #e5e7eb', flexShrink: 0 }}
-                      />
-                      <div>
-                        <div style={{ fontWeight: 800, color: '#111827', fontSize: '14px', marginBottom: '3px' }}>{p.title}</div>
-                        <div style={{ fontSize: '12px', color: '#6b7280', maxWidth: '320px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          {p.subtitle || 'Không có mô tả ngắn'}
+              {filteredProducts.map((p) => {
+                const stockCount = p.stock || 0;
+                const stockClass = stockCount > 10 ? 'in-stock' : stockCount > 0 ? 'low-stock' : 'out-stock';
+
+                return (
+                  <tr key={p.id} className="admin-products-tr">
+                    <td className="admin-products-td title-col">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                        <img
+                          src={getImageUrl(p.heroImage)}
+                          alt={p.title}
+                          className="admin-products-thumb"
+                        />
+                        <div>
+                          <div className="admin-products-name">{p.title}</div>
+                          <div className="admin-products-sub">
+                            {p.subtitle || 'Không có mô tả ngắn'}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
+                    </td>
 
-                  <td style={{ padding: '14px 16px', fontSize: '13px' }}>
-                    <div style={{ fontFamily: 'monospace', fontWeight: 700, color: '#0369a1' }}>{p.sku || 'N/A'}</div>
-                    <div style={{ fontSize: '11px', color: '#9ca3af' }}>/{p.slug}</div>
-                  </td>
+                    <td className="admin-products-td" style={{ fontSize: '13px' }}>
+                      <div className="admin-products-sku">{p.sku || 'N/A'}</div>
+                      <div className="admin-products-slug">/{p.slug}</div>
+                    </td>
 
-                  <td style={{ padding: '14px 16px' }}>
-                    <span style={{ display: 'inline-block', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: 700, background: 'rgba(0,109,54,0.08)', color: '#006d36' }}>
-                      {p.category}
-                    </span>
-                  </td>
+                    <td className="admin-products-td">
+                      <span className="admin-products-cat-badge">
+                        {p.category}
+                      </span>
+                    </td>
 
-                  <td style={{ padding: '14px 16px' }}>
-                    <div style={{ fontWeight: 800, color: '#081f13', fontSize: '14px' }}>{formatVnd(p.price)}</div>
-                    {p.originalPrice && p.originalPrice > p.price && (
-                      <div style={{ fontSize: '11px', color: '#9ca3af', textDecoration: 'line-through' }}>{formatVnd(p.originalPrice)}</div>
-                    )}
-                  </td>
-
-                  <td style={{ padding: '14px 16px' }}>
-                    <span style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      padding: '4px 10px',
-                      borderRadius: '999px',
-                      fontSize: '12px',
-                      fontWeight: 800,
-                      background: (p.stock || 0) > 10 ? '#dcfce7' : (p.stock || 0) > 0 ? '#fef3c7' : '#fee2e2',
-                      color: (p.stock || 0) > 10 ? '#166534' : (p.stock || 0) > 0 ? '#92400e' : '#991b1b',
-                    }}>
-                      {(p.stock || 0) > 0 ? `Còn ${p.stock}` : 'Hết hàng'}
-                    </span>
-                  </td>
-
-                  <td style={{ padding: '14px 16px' }}>
-                    <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-                      {p.isFeatured && (
-                        <span style={{ fontSize: '10px', fontWeight: 800, background: '#fef9c3', color: '#854d0e', padding: '2px 6px', borderRadius: '4px' }}>
-                          Nổi bật
-                        </span>
+                    <td className="admin-products-td">
+                      <div className="admin-products-price">{formatVnd(p.price)}</div>
+                      {p.originalPrice && p.originalPrice > p.price && (
+                        <div className="admin-products-original-price">{formatVnd(p.originalPrice)}</div>
                       )}
-                      {p.isBestSeller && (
-                        <span style={{ fontSize: '10px', fontWeight: 800, background: '#ffedd5', color: '#9a3412', padding: '2px 6px', borderRadius: '4px' }}>
-                          Bán chạy
-                        </span>
-                      )}
-                      {p.isNewArrival && (
-                        <span style={{ fontSize: '10px', fontWeight: 800, background: '#e0f2fe', color: '#0369a1', padding: '2px 6px', borderRadius: '4px' }}>
-                          Mới
-                        </span>
-                      )}
-                    </div>
-                  </td>
+                    </td>
 
-                  <td style={{ padding: '14px 20px', textAlign: 'right' }}>
-                    <div style={{ display: 'inline-flex', gap: '8px' }}>
-                      <button
-                        onClick={() => handleOpenEdit(p)}
-                        style={{
-                          width: '50px',
-                          height: '32px',
-                          borderRadius: '8px',
-                          border: '1px solid #e5e7eb',
-                          background: '#f9fafb',
-                          color: '#374151',
-                          cursor: 'pointer',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                        title="Chỉnh sửa"
-                      >
-                        <Edit2 size={14} />
-                      </button>
+                    <td className="admin-products-td">
+                      <span className={`admin-products-stock-badge ${stockClass}`}>
+                        {stockCount > 0 ? `Còn ${stockCount}` : 'Hết hàng'}
+                      </span>
+                    </td>
 
-                      <button
-                        onClick={() => handleDelete(p)}
-                        style={{
-                          width: '50px',
-                          height: '32px',
-                          borderRadius: '8px',
-                          border: '1px solid #fecaca',
-                          background: '#fff1f2',
-                          color: '#b91c1c',
-                          cursor: 'pointer',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                        title="Xóa"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    <td className="admin-products-td">
+                      <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                        {p.isFeatured && (
+                          <span style={{ fontSize: '10px', fontWeight: 800, background: '#fef9c3', color: '#854d0e', padding: '2px 6px', borderRadius: '4px' }}>
+                            Nổi bật
+                          </span>
+                        )}
+                        {p.isBestSeller && (
+                          <span style={{ fontSize: '10px', fontWeight: 800, background: '#ffedd5', color: '#9a3412', padding: '2px 6px', borderRadius: '4px' }}>
+                            Bán chạy
+                          </span>
+                        )}
+                        {p.isNewArrival && (
+                          <span style={{ fontSize: '10px', fontWeight: 800, background: '#e0f2fe', color: '#0369a1', padding: '2px 6px', borderRadius: '4px' }}>
+                            Mới
+                          </span>
+                        )}
+                      </div>
+                    </td>
+
+                    <td className="admin-products-td actions">
+                      <div style={{ display: 'inline-flex', gap: '8px' }}>
+                        <button
+                          onClick={() => handleOpenEdit(p)}
+                          className="admin-products-btn-edit"
+                          title="Chỉnh sửa"
+                        >
+                          <Edit2 size={14} />
+                        </button>
+
+                        <button
+                          onClick={() => handleDelete(p)}
+                          className="admin-products-btn-delete"
+                          title="Xóa"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -573,74 +458,74 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
 
       {/* Modal Add / Edit Product */}
       {modalOpen && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10000, padding: '20px' }}>
-          <div style={{ backgroundColor: '#ffffff', borderRadius: '18px', width: '100%', maxWidth: '780px', maxHeight: '92vh', display: 'flex', flexDirection: 'column', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', overflow: 'hidden' }}>
+        <div className="admin-products-modal-backdrop">
+          <div className="admin-products-modal-box">
 
             {/* Modal Header */}
-            <div style={{ padding: '20px 28px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc' }}>
+            <div className="admin-products-modal-header">
               <div>
-                <h2 style={{ fontSize: '19px', fontWeight: 800, color: '#081f13', margin: '0 0 2px 0' }}>
+                <h2 className="admin-products-modal-title">
                   {isEditing ? 'Chỉnh Sửa Sản Phẩm Kollection' : 'Thêm Sản Phẩm Vật Lý Mới'}
                 </h2>
-                <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>
+                <p className="admin-products-modal-desc">
                   Nhập thông số chi tiết của sản phẩm để hiển thị lên gian hàng Kollection 4U.
                 </p>
               </div>
-              <button onClick={() => setModalOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: '4px' }}>
+              <button onClick={() => setModalOpen(false)} className="admin-products-modal-close-btn">
                 <X size={22} />
               </button>
             </div>
 
             {/* Modal Form Body */}
-            <form onSubmit={handleSave} style={{ overflowY: 'auto', padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+            <form onSubmit={handleSave} className="admin-products-modal-form">
 
               {/* Row 1: Title & Slug */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div>
-                  <label style={{ fontSize: '13px', fontWeight: 700, color: '#374151', display: 'block', marginBottom: '6px' }}>Tên Sản Phẩm *</label>
+                  <label className="admin-products-modal-label">Tên Sản Phẩm *</label>
                   <input
                     type="text"
                     required
                     placeholder="Ví dụ: Trà Sen Bách Diệp Tây Hồ"
                     value={editingItem.title || ''}
                     onChange={(e) => handleTitleChange(e.target.value)}
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', boxSizing: 'border-box' }}
+                    className="admin-products-modal-input"
                   />
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '13px', fontWeight: 700, color: '#374151', display: 'block', marginBottom: '6px' }}>Slug Đường Dẫn *</label>
+                  <label className="admin-products-modal-label">Slug Đường Dẫn *</label>
                   <input
                     type="text"
                     required
                     placeholder="tra-sen-bach-diep-tay-ho"
                     value={editingItem.slug || ''}
                     onChange={(e) => setEditingItem({ ...editingItem, slug: e.target.value })}
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', boxSizing: 'border-box' }}
+                    className="admin-products-modal-input"
                   />
                 </div>
               </div>
 
               {/* Row 2: Subtitle */}
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 700, color: '#374151', display: 'block', marginBottom: '6px' }}>Mô Tả Ngắn (Subtitle)</label>
+                <label className="admin-products-modal-label">Mô Tả Ngắn (Subtitle)</label>
                 <input
                   type="text"
                   placeholder="Điểm nhấn chính của sản phẩm (ví dụ: Tuyển chọn từ búp sen trăm cánh ngậm sương sớm...)"
                   value={editingItem.subtitle || ''}
                   onChange={(e) => setEditingItem({ ...editingItem, subtitle: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', boxSizing: 'border-box' }}
+                  className="admin-products-modal-input"
                 />
               </div>
 
               {/* Row 3: Category & SKU & Stock */}
               <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr', gap: '16px' }}>
                 <div>
-                  <label style={{ fontSize: '13px', fontWeight: 700, color: '#374151', display: 'block', marginBottom: '6px' }}>Phân Loại Sản Phẩm</label>
+                  <label className="admin-products-modal-label">Phân Loại Sản Phẩm</label>
                   <select
                     value={editingItem.category || 'Trà & Thảo Mộc'}
                     onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value })}
-                    style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', boxSizing: 'border-box', background: '#ffffff' }}
+                    className="admin-products-modal-select"
                   >
                     {PRODUCT_CATEGORIES.map(c => (
                       <option key={c} value={c}>{c}</option>
@@ -649,25 +534,25 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '13px', fontWeight: 700, color: '#374151', display: 'block', marginBottom: '6px' }}>Mã SKU</label>
+                  <label className="admin-products-modal-label">Mã SKU</label>
                   <input
                     type="text"
                     placeholder="4U-TEA-001"
                     value={editingItem.sku || ''}
                     onChange={(e) => setEditingItem({ ...editingItem, sku: e.target.value })}
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', boxSizing: 'border-box' }}
+                    className="admin-products-modal-input"
                   />
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '13px', fontWeight: 700, color: '#374151', display: 'block', marginBottom: '6px' }}>Số Lượng Tồn Kho</label>
+                  <label className="admin-products-modal-label">Số Lượng Tồn Kho</label>
                   <input
                     type="number"
                     min="0"
                     placeholder="50"
                     value={editingItem.stock ?? 50}
                     onChange={(e) => setEditingItem({ ...editingItem, stock: Number(e.target.value) })}
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', boxSizing: 'border-box' }}
+                    className="admin-products-modal-input"
                   />
                 </div>
               </div>
@@ -696,7 +581,7 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
 
               {/* Row 5: Hero Image & Upload */}
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 700, color: '#374151', display: 'block', marginBottom: '6px' }}>Ảnh Đại Diện Sản Phẩm (Hero Image)</label>
+                <label className="admin-products-modal-label">Ảnh Đại Diện Sản Phẩm (Hero Image)</label>
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                   <input
                     type="text"
@@ -706,7 +591,7 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
                     onChange={(e) => setEditingItem({ ...editingItem, heroImage: e.target.value })}
                     style={{ flex: 1, padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px' }}
                   />
-                  <label style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 16px', borderRadius: '8px', background: '#f1f5f9', color: '#475569', fontWeight: 700, fontSize: '13px', cursor: 'pointer', border: '1px solid #cbd5e1' }}>
+                  <label className="admin-products-modal-upload-btn">
                     <Upload size={16} /> {uploading ? 'Đang tải...' : 'Chọn File Ảnh'}
                     <input type="file" accept="image/*" onChange={handleFileUpload} style={{ display: 'none' }} disabled={uploading} />
                   </label>
@@ -722,7 +607,7 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
 
               {/* Row 6: Description & Specifications */}
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 700, color: '#374151', display: 'block', marginBottom: '6px' }}>Bài Viết Chi Tiết / Câu Chuyện Sản Phẩm</label>
+                <label className="admin-products-modal-label">Bài Viết Chi Tiết / Câu Chuyện Sản Phẩm</label>
                 <textarea
                   rows={4}
                   placeholder="Mô tả chi tiết nguồn gốc xuất xứ, nghệ nhân chế tác, công dụng phục hồi sức khỏe..."
@@ -733,19 +618,19 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
               </div>
 
               <div>
-                <label style={{ fontSize: '13px', fontWeight: 700, color: '#374151', display: 'block', marginBottom: '6px' }}>Thông Số Kỹ Thuật (Specifications)</label>
+                <label className="admin-products-modal-label">Thông Số Kỹ Thuật (Specifications)</label>
                 <input
                   type="text"
                   placeholder="Trọng lượng: 200g | Kích thước: 15x10cm | Hạn dùng: 12 tháng | Xuất xứ: Việt Nam"
                   value={editingItem.specifications || ''}
                   onChange={(e) => setEditingItem({ ...editingItem, specifications: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                  className="admin-products-modal-input"
                 />
               </div>
 
               {/* Row 7: Checkboxes Tags */}
-              <div style={{ display: 'flex', gap: '24px', padding: '12px 16px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-                <label style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 700, color: '#334155', cursor: 'pointer' }}>
+              <div className="admin-products-modal-checkbox-row">
+                <label className="admin-products-modal-checkbox-label">
                   <input
                     type="checkbox"
                     checked={editingItem.isFeatured || false}
@@ -755,7 +640,7 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
                   ⭐ Sản Phẩm Nổi Bật (Featured)
                 </label>
 
-                <label style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 700, color: '#334155', cursor: 'pointer' }}>
+                <label className="admin-products-modal-checkbox-label">
                   <input
                     type="checkbox"
                     checked={editingItem.isNewArrival || false}
@@ -765,7 +650,7 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
                   ✨ Sản Phẩm Mới Về (New Arrival)
                 </label>
 
-                <label style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 700, color: '#334155', cursor: 'pointer' }}>
+                <label className="admin-products-modal-checkbox-label">
                   <input
                     type="checkbox"
                     checked={editingItem.isBestSeller || false}
@@ -777,18 +662,18 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
               </div>
 
               {/* Modal Actions */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '12px', borderTop: '1px solid #e2e8f0', paddingTop: '16px' }}>
+              <div className="admin-products-modal-footer">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  style={{ padding: '10px 20px', borderRadius: '8px', border: '1px solid #cbd5e1', background: '#ffffff', color: '#475569', fontWeight: 700, fontSize: '14px', cursor: 'pointer' }}
+                  className="admin-products-modal-dismiss-btn"
                 >
                   Hủy Bỏ
                 </button>
 
                 <button
                   type="submit"
-                  style={{ padding: '10px 24px', borderRadius: '8px', border: 'none', background: 'linear-gradient(135deg, #006d36 0%, #081f13 100%)', color: '#ffffff', fontWeight: 700, fontSize: '14px', cursor: 'pointer', boxShadow: '0 4px 14px rgba(0, 109, 54, 0.25)' }}
+                  className="admin-products-modal-save-btn"
                 >
                   {isEditing ? 'Cập Nhật Sản Phẩm' : 'Tạo Sản Phẩm Mới'}
                 </button>

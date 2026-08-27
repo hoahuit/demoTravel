@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './App.css';
 import Header from './components/Header';
 import SearchModal from './components/SearchModal';
 import BookingModal from './components/BookingModal';
@@ -278,7 +279,7 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <div className="apple-app" style={{ minHeight: '100vh', background: 'var(--apple-bg)' }}>
+      <div className="apple-app">
         {/* Search Modal */}
         <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} onNavigate={navigateTo} />
 

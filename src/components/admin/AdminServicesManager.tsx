@@ -1,6 +1,7 @@
 import React from 'react';
 import { Edit2, Trash2 } from 'lucide-react';
 import { getImageUrl } from '../../services/apiService';
+import './AdminServicesManager.css';
 
 interface AdminServicesManagerProps {
   servicesList: any[];
@@ -25,65 +26,43 @@ export default function AdminServicesManager({
 
   return (
     <div className="serene-container-inner">
-      <div className="serene-sticky-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <div className="serene-sticky-bar admin-services-sticky-bar">
         <div>
-          <p style={{ fontSize: '11px', fontWeight: 700, color: '#525a54', textTransform: 'uppercase', margin: '0 0 4px 0' }}>
+          <p className="admin-services-tag">
             Dịch Vụ Cao Cấp
           </p>
-          <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '28px', margin: 0, color: '#081f13', fontWeight: 600 }}>
+          <h1 className="admin-services-title">
             Dịch Vụ Retreat ({filtered.length})
           </h1>
         </div>
         <button
           onClick={() => openCreateModal('services')}
-          style={{ backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '8px', padding: '10px 20px', fontSize: '14px', fontWeight: 700, cursor: 'pointer' }}
+          className="admin-services-add-btn"
         >
           + Thêm Dịch Vụ Mới
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+      <div className="admin-services-grid">
         {filtered.map((service) => (
-          <div key={service.id} style={{ backgroundColor: '#ffffff', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(6, 27, 14, 0.08)' }}>
-            <div style={{ height: '160px', width: '100%', overflow: 'hidden' }}>
-              <img src={getImageUrl(service.heroImage)} alt={service.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <div key={service.id} className="admin-services-card">
+            <div className="admin-services-card-img-wrap">
+              <img src={getImageUrl(service.heroImage)} alt={service.title} className="admin-services-card-img" />
             </div>
-            <div style={{ padding: '16px' }}>
-              <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '18px', color: '#081f13', margin: '0 0 6px 0' }}>{service.title}</h3>
-              <p style={{ fontSize: '13px', color: '#525a54', margin: '0 0 12px 0' }}>{service.subtitle}</p>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+            <div className="admin-services-card-body">
+              <h3 className="admin-services-card-title">{service.title}</h3>
+              <p className="admin-services-card-sub">{service.subtitle}</p>
+              <div className="admin-services-actions">
                 <button
                   onClick={() => openEditModal('services', service)}
-                  style={{
-                    width: '50px',
-                    height: '32px',
-                    backgroundColor: '#081f13',
-                    color: '#ffffff',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
+                  className="admin-services-edit-btn"
                   title="Chỉnh sửa"
                 >
                   <Edit2 size={14} />
                 </button>
                 <button
                   onClick={() => handleDeleteItem('services', service.id)}
-                  style={{
-                    width: '50px',
-                    height: '32px',
-                    backgroundColor: '#fee2e2',
-                    color: '#dc2626',
-                    border: '1px solid #fca5a5',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
+                  className="admin-services-delete-btn"
                   title="Xóa"
                 >
                   <Trash2 size={14} />

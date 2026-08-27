@@ -438,6 +438,35 @@
     border-color: rgba(45, 99, 60, 0.45);
 }
 
+/* ── Pain Icons, Avatars & Layout Helpers ── */
+.zen-avatar-0 { background-color: #dcebe2; }
+.zen-avatar-1 { background-color: #cbe0d3; }
+.zen-avatar-2 { background-color: #b7d4c2; }
+
+.zen-pain-icon-0 { background-color: #ffdad6; color: #93000a; }
+.zen-pain-icon-1 { background-color: #d9e5e1; color: #5b6764; }
+.zen-pain-icon-2 { background-color: #ffdad6; color: #93000a; }
+.zen-pain-icon-3 { background-color: #182723; color: #7e8f89; }
+
+.zen-span-2 { grid-column: span 2; }
+.zen-span-3 { grid-column: span 3; }
+.zen-span-6 { grid-column: span 6; }
+
+.zen-pillar-span-2 { grid-column: span 2; }
+.zen-pillar-span-3 { grid-column: span 3; }
+.zen-pillar-span-6 { grid-column: span 6; }
+
+.zen-expert-brand-name { font-family: var(--zen-font-serif); font-weight: 700; color: var(--zen-primary); }
+.zen-expert-nonprofit-tag { font-size: 11px; background-color: rgba(35, 79, 47, 0.12); padding: 2px 8px; border-radius: 4px; color: var(--zen-moss-darkest); font-weight: 600; }
+
+.zen-m-0 { margin: 0 !important; }
+.zen-mb-8 { margin-bottom: 8px !important; }
+.zen-mb-14 { margin-bottom: 14px !important; }
+.zen-mb-20 { margin-bottom: 20px !important; }
+.zen-mb-40 { margin-bottom: 40px !important; }
+.zen-mb-60 { margin-bottom: 60px !important; }
+.zen-expert-desc-text { margin-bottom: 14px; width: 100%; font-size: clamp(16px, 1.2vw, 18px); line-height: 1.7; }
+
 .zen-pain-icon {
     width: 72px;
     height: 72px;

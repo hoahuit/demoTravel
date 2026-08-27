@@ -1,0 +1,281 @@
+/* ==========================================================================
+   elegant-carousel.css
+   Băng xoay ảnh chuyển cảnh mượt mà phong cách thanh lịch
+   ========================================================================== */
+
+.carousel-root {
+    position: relative;
+    width: 100%;
+    min-height: 580px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0d1a14;
+    overflow: hidden;
+    padding: 60px 24px 80px;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+.carousel-bg-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transition: background 0.8s ease;
+    background: radial-gradient(ellipse at 70% 50%, rgba(212, 169, 85, 0.12) 0%, transparent 70%);
+}
+
+.carousel-inner {
+    position: relative;
+    z-index: 10;
+    max-width: 1240px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 48px;
+    align-items: center;
+}
+
+@media (max-width: 900px) {
+    .carousel-inner {
+        grid-template-columns: 1fr;
+        gap: 36px;
+    }
+}
+
+.carousel-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.carousel-content-inner {
+    display: flex;
+    flex-direction: column;
+}
+
+.carousel-collection-num {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.carousel-collection-num.transitioning {
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.carousel-collection-num.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.carousel-num-line {
+    width: 36px;
+    height: 2px;
+    background-color: var(--slide-accent, #C4956A);
+}
+
+.carousel-num-text {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: monospace;
+}
+
+.carousel-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0 0 10px 0;
+    line-height: 1.15;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.carousel-title.transitioning {
+    opacity: 0;
+    transform: translateY(12px);
+}
+
+.carousel-title.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.carousel-subtitle {
+    font-size: clamp(15px, 1.8vw, 18px);
+    font-weight: 600;
+    color: var(--slide-accent, #C4956A);
+    margin: 0 0 18px 0;
+    letter-spacing: 0.04em;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.carousel-subtitle.transitioning {
+    opacity: 0;
+    transform: translateY(12px);
+}
+
+.carousel-subtitle.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.carousel-description {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.7;
+    margin: 0 0 32px 0;
+    max-width: 480px;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.carousel-description.transitioning {
+    opacity: 0;
+    transform: translateY(12px);
+}
+
+.carousel-description.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.carousel-nav-arrows {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.carousel-arrow-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.carousel-arrow-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+}
+
+.carousel-image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    max-height: 480px;
+}
+
+.carousel-image-frame {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.carousel-image-frame.transitioning {
+    opacity: 0.3;
+    transform: scale(0.97);
+}
+
+.carousel-image-frame.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.carousel-frame-corner {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-color: var(--slide-accent, #C4956A);
+}
+
+.carousel-frame-corner--tl {
+    top: -8px;
+    left: -8px;
+    border-top: 2px solid;
+    border-left: 2px solid;
+}
+
+.carousel-frame-corner--br {
+    bottom: -8px;
+    right: -8px;
+    border-bottom: 2px solid;
+    border-right: 2px solid;
+}
+
+.carousel-progress-bar {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 20;
+    max-width: 90%;
+    overflow-x: auto;
+}
+
+.carousel-progress-item {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 6px 0;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.carousel-progress-item.active {
+    opacity: 1;
+}
+
+.carousel-progress-track {
+    width: 80px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.carousel-progress-fill {
+    width: var(--progress-w, 0%);
+    height: 100%;
+    background-color: var(--slide-accent, #C4956A);
+    transition: width 0.1s linear;
+}
+
+.carousel-progress-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    white-space: nowrap;
+    text-align: left;
+}
+
+.carousel-progress-item.active .carousel-progress-label {
+    color: var(--slide-accent, #ffffff);
+}

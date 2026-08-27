@@ -1,5 +1,6 @@
 import React from 'react';
 import ToursPage from '../../../components/ToursPage';
+import './KhongTheBoLo.css';
 
 interface KhongTheBoLoProps {
   onNavigate: (path: string) => void;

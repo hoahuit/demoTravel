@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import '../../index.css';
+import './elegant-carousel.css';
 
 export interface SlideData {
   title: string;
@@ -136,20 +137,16 @@ export default function ElegantCarousel({ slides = defaultSlides }: ElegantCarou
 
   return (
     <div
-      className="carousel-wrapper"
+      className="carousel-root"
+      style={{ '--slide-accent': currentSlide.accent } as React.CSSProperties}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Background accent wash */}
-      <div
-        className="carousel-bg-wash"
-        style={{
-          background: `radial-gradient(ellipse at 70% 50%, ${currentSlide.accent}18 0%, transparent 70%)`,
-        }}
-      />
+      {/* Background ambient glow */}
+      <div className="carousel-bg-glow" />
 
       <div className="carousel-inner">
         {/* Left: Text Content */}
@@ -159,7 +156,7 @@ export default function ElegantCarousel({ slides = defaultSlides }: ElegantCarou
             <div
               className={`carousel-collection-num ${isTransitioning ? 'transitioning' : 'visible'}`}
             >
-              <span className="carousel-num-line" style={{ backgroundColor: currentSlide.accent }} />
+              <span className="carousel-num-line" />
               <span className="carousel-num-text">
                 {String(currentIndex + 1).padStart(2, '0')} / {String(activeSlides.length).padStart(2, '0')}
               </span>
@@ -175,7 +172,6 @@ export default function ElegantCarousel({ slides = defaultSlides }: ElegantCarou
             {/* Subtitle */}
             <p
               className={`carousel-subtitle ${isTransitioning ? 'transitioning' : 'visible'}`}
-              style={{ color: currentSlide.accent }}
             >
               {currentSlide.subtitle}
             </p>
@@ -220,8 +216,8 @@ export default function ElegantCarousel({ slides = defaultSlides }: ElegantCarou
           </div>
 
           {/* Decorative frame corner */}
-          <div className="carousel-frame-corner carousel-frame-corner--tl" style={{ borderColor: currentSlide.accent }} />
-          <div className="carousel-frame-corner carousel-frame-corner--br" style={{ borderColor: currentSlide.accent }} />
+          <div className="carousel-frame-corner carousel-frame-corner--tl" />
+          <div className="carousel-frame-corner carousel-frame-corner--br" />
         </div>
       </div>
 
@@ -238,12 +234,11 @@ export default function ElegantCarousel({ slides = defaultSlides }: ElegantCarou
               <div
                 className="carousel-progress-fill"
                 style={{
-                  width: index === currentIndex ? `${progress}%` : index < currentIndex ? '100%' : '0%',
-                  backgroundColor: index === currentIndex ? currentSlide.accent : undefined,
-                }}
+                  '--progress-w': index === currentIndex ? `${progress}%` : index < currentIndex ? '100%' : '0%'
+                } as React.CSSProperties}
               />
             </div>
-            <span className="carousel-progress-label" style={{ color: index === currentIndex ? currentSlide.accent : undefined }}>
+            <span className="carousel-progress-label">
               {slide.title}
             </span>
           </button>

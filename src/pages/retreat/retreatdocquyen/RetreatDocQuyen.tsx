@@ -1,5 +1,6 @@
 import React from 'react';
 import ToursPage from '../../../components/ToursPage';
+import './RetreatDocQuyen.css';
 
 interface RetreatDocQuyenProps {
   onNavigate: (path: string) => void;

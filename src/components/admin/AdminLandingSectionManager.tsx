@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import SectionLandingPage from '../SectionLandingPage';
 import AdminVisualLandingEditor from './AdminVisualLandingEditor';
+import './AdminLandingSectionManager.css';
 import {
   LandingSectionTemplate,
   DEFAULT_LANDING_SECTION_TEMPLATES,

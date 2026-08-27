@@ -99,12 +99,12 @@ export default function SectionLandingPage({
     const ABOUT_IMG = about.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCugcyFbQTVlM8o720zc8FSyMRmNEAxlQL9nGYt69uUjZMLJJ5W9ohqxiIg2wKUN_a1c3qG0df0X-rOlykE6j_ATlcu6BY1XoDwPIsniF4TS7jpnpDezoTGoGKxsAX0ayi4YspWBzbkct8MbGIdC4fRb-VUt-1wRx2tWcbQKUetl3l08xXSW5-URAM3XcpJwuL2y0e35PjVKlo6QFP7ILGxDYFfY1nFmGICBqmWQPTwQXUngMj1vEbq';
     const EXPERT_IMG = trust.teacher.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCiExjxiVWNasHsG7LcpWyLE27qaLpzuRJfa9v53eT143AyOnE1neNwY4iv5563rN5p2hTKuTfouR14V46H7LDE6lTjF4Rp3k3Oh4uEZpjuRi7-ROTbGf67LsvVcCi7U6JtD6TvN2n5Tg2AGsAdx8xW6IYD0UdpenFRtD0Wfs_UtxPUBAF8tlowm-p31ncG99UOt-CoL_UOf4aDyuZ2BP0HH9rpw1nhyHptJGCQ7incu8EHkbo1aSs5';
 
-    // Pain point background / color mapping
-    const getPainIconColor = (idx: number) => {
-        if (idx === 0) return { bg: '#ffdad6', color: '#93000a', icon: <Frown size={32} /> };
-        if (idx === 1) return { bg: '#d9e5e1', color: '#5b6764', icon: <Moon size={32} /> };
-        if (idx === 2) return { bg: '#ffdad6', color: '#93000a', icon: <Activity size={32} /> };
-        return { bg: '#182723', color: '#7e8f89', icon: <BatteryCharging size={32} /> };
+    // Pain point background / color class mapping
+    const getPainIconInfo = (idx: number) => {
+        if (idx === 0) return { className: 'zen-pain-icon-0', icon: <Frown size={32} /> };
+        if (idx === 1) return { className: 'zen-pain-icon-1', icon: <Moon size={32} /> };
+        if (idx === 2) return { className: 'zen-pain-icon-2', icon: <Activity size={32} /> };
+        return { className: 'zen-pain-icon-3', icon: <BatteryCharging size={32} /> };
     };
 
     // Benefit icons mapping
@@ -124,59 +124,39 @@ export default function SectionLandingPage({
         return clean.charAt(0).toUpperCase() + clean.slice(1).toLowerCase();
     };
 
-    const getPillarSpanStyle = (idx: number, total: number): string => {
-        if (total === 1) return 'span 6';
-        if (total === 2) return 'span 3';
-        if (total === 3) return 'span 2'; // 3 thẻ hàng 1 (mỗi thẻ 1/3)
-        if (total === 4) return 'span 3'; // 2 thẻ hàng 1, 2 thẻ hàng 2 (mỗi thẻ 1/2)
+    const getPillarSpanClass = (idx: number, total: number): string => {
+        if (total === 1) return 'zen-pillar-span-6';
+        if (total === 2) return 'zen-pillar-span-3';
+        if (total === 3) return 'zen-pillar-span-2';
+        if (total === 4) return 'zen-pillar-span-3';
         if (total === 5) {
-            // Hàng 1: 3 thẻ (span 2 mỗi thẻ = 100%)
-            // Hàng 2: 2 thẻ (span 3 mỗi thẻ = 100% -> CO GIÃN TO RA FULL BẰNG WIDTH 3 THẺ TRÊN!)
-            return idx < 3 ? 'span 2' : 'span 3';
+            return idx < 3 ? 'zen-pillar-span-2' : 'zen-pillar-span-3';
         }
-        if (total === 6) return 'span 2'; // 3 trên, 3 dưới
+        if (total === 6) return 'zen-pillar-span-2';
         if (total === 7) {
-            if (idx < 3) return 'span 2';
-            return 'span 3';
+            if (idx < 3) return 'zen-pillar-span-2';
+            return 'zen-pillar-span-3';
         }
         if (total === 8) {
-            if (idx < 6) return 'span 2';
-            return 'span 3';
+            if (idx < 6) return 'zen-pillar-span-2';
+            return 'zen-pillar-span-3';
         }
-        return 'span 2';
-    };
-
-    const getBenefitSpanStyle = (idx: number, total: number): string => {
-        if (total === 1) return 'span 6';
-        if (total === 2) return 'span 3';
-        if (total === 3) return 'span 2';
-        if (total === 4) return 'span 3'; // 2 2 layout (2 to x 2 rows)
-        if (total === 5) return idx < 2 ? 'span 3' : 'span 2'; // 2 to, 3 nhỏ (2 3 layout)
-        if (total === 6) return 'span 2'; // 3 3 layout (3 nhỏ x 2 rows)
-        if (total === 7) {
-            // 2 to (span 3) + 3 nhỏ (span 2) + 2 to (span 3) => 2 3 2 layout
-            if (idx < 2) return 'span 3';
-            if (idx < 5) return 'span 2';
-            return 'span 3';
-        }
-        if (total === 8) return idx < 2 ? 'span 3' : 'span 2'; // 2 3 3 layout
-        return 'span 2';
+        return 'zen-pillar-span-2';
     };
 
     const getBenefitSpanClass = (idx: number, total: number) => {
         if (total === 1) return 'zen-span-6';
         if (total === 2) return 'zen-span-3';
         if (total === 3) return 'zen-span-2';
-        if (total === 4) return 'zen-span-3'; // 2 2 layout (2 to x 2 rows)
-        if (total === 5) return idx < 2 ? 'zen-span-3' : 'zen-span-2'; // 2 to, 3 nhỏ (2 3 layout)
-        if (total === 6) return 'zen-span-2'; // 3 3 layout (3 nhỏ x 2 rows)
+        if (total === 4) return 'zen-span-3';
+        if (total === 5) return idx < 2 ? 'zen-span-3' : 'zen-span-2';
+        if (total === 6) return 'zen-span-2';
         if (total === 7) {
-            // 2 to (span 3) + 3 nhỏ (span 2) + 2 to (span 3) => 2 3 2 layout
             if (idx < 2) return 'zen-span-3';
             if (idx < 5) return 'zen-span-2';
             return 'zen-span-3';
         }
-        if (total === 8) return idx < 2 ? 'zen-span-3' : 'zen-span-2'; // 2 3 3 layout
+        if (total === 8) return idx < 2 ? 'zen-span-3' : 'zen-span-2';
         return 'zen-span-2';
     };
 
@@ -233,13 +213,13 @@ export default function SectionLandingPage({
 
                             <div className="zen-hero-social-proof zen-hero-social-proof-centered">
                                 <div className="zen-avatar-cluster">
-                                    <div className="zen-avatar-circle" style={{ backgroundColor: '#dcebe2' }}>
+                                    <div className="zen-avatar-circle zen-avatar-0">
                                         <User size={18} />
                                     </div>
-                                    <div className="zen-avatar-circle" style={{ backgroundColor: '#cbe0d3' }}>
+                                    <div className="zen-avatar-circle zen-avatar-1">
                                         <User size={18} />
                                     </div>
-                                    <div className="zen-avatar-circle" style={{ backgroundColor: '#b7d4c2' }}>
+                                    <div className="zen-avatar-circle zen-avatar-2">
                                         <User size={18} />
                                     </div>
                                 </div>
@@ -265,20 +245,19 @@ export default function SectionLandingPage({
 
                         <div className="zen-pain-grid">
                             {signals.items.map((item, idx) => {
-                                const styleInfo = getPainIconColor(idx);
+                                const painIconInfo = getPainIconInfo(idx);
                                 const cleanTitle = item.title.replace(/^"|"$/g, '');
                                 return (
                                     <div key={idx} className="zen-pain-card">
                                         <div
-                                            className="zen-pain-icon"
-                                            style={{ backgroundColor: styleInfo.bg, color: styleInfo.color }}
+                                            className={`zen-pain-icon ${painIconInfo.className}`}
                                         >
-                                            {styleInfo.icon}
+                                            {painIconInfo.icon}
                                         </div>
                                         <h3 className="zen-headline-md zen-font-serif">
                                             {cleanTitle}
                                         </h3>
-                                        <p className="zen-body-md" style={{ margin: 0 }}>
+                                        <p className="zen-body-md zen-m-0">
                                             {item.description}
                                         </p>
                                     </div>
@@ -305,7 +284,6 @@ export default function SectionLandingPage({
                                 <div
                                     key={idx}
                                     className={`zen-benefit-card ${getBenefitSpanClass(idx, benefits.items.length)}`}
-                                    style={{ gridColumn: getBenefitSpanStyle(idx, benefits.items.length) }}
                                 >
                                     <div className="zen-benefit-icon">
                                         {getBenefitIcon(idx)}
@@ -324,7 +302,7 @@ export default function SectionLandingPage({
                 <section id="method" className="zen-section">
                     <div className="zen-container">
                         {/* 4.1. Solution Introduction (What is 3Đ?) */}
-                        <div id="about-3d" className="zen-about-grid" style={{ marginBottom: '60px' }}>
+                        <div id="about-3d" className="zen-about-grid zen-mb-60">
                             <div className="zen-about-col">
                                 <img
                                     src={ABOUT_IMG}
@@ -338,10 +316,10 @@ export default function SectionLandingPage({
                                 <span className="zen-eyebrow">
                                     {about.eyebrow || 'Giải Pháp Tự Nhiên'}
                                 </span>
-                                <h2 className="zen-headline-lg" style={{ marginBottom: '20px' }}>
+                                <h2 className="zen-headline-lg zen-mb-20">
                                     {about.heading || 'Phương Pháp 3Đ Là Gì?'}
                                 </h2>
-                                <p className="zen-body-lg" style={{ marginBottom: '20px' }}>
+                                <p className="zen-body-lg zen-mb-20">
                                     {about.para1 || 'Dựa trên nền tảng triết lý Sivananda với hơn 5,000 năm lịch sử, phương pháp 3Đ tập trung vào việc khôi phục khả năng tự chữa lành của cơ thể thông qua ba trụ cột cốt lõi.'}
                                 </p>
 
@@ -369,7 +347,7 @@ export default function SectionLandingPage({
                         </div>
 
                         {/* 4.2. Three Golden Pillars */}
-                        <div className="zen-section-header" style={{ marginBottom: '40px' }}>
+                        <div className="zen-section-header zen-mb-40">
                             <h2 className="zen-headline-lg">
                                 {method.heading || '3 Trụ Cột Vàng Cho Sức Khỏe'}
                             </h2>
@@ -382,8 +360,7 @@ export default function SectionLandingPage({
                             {method.items.map((mItem, idx) => (
                                 <div
                                     key={idx}
-                                    className="zen-pillar-card zen-pillar-card-clean"
-                                    style={{ gridColumn: getPillarSpanStyle(idx, method.items.length) }}
+                                    className={`zen-pillar-card zen-pillar-card-clean ${getPillarSpanClass(idx, method.items.length)}`}
                                 >
                                     <div className="zen-pillar-body">
                                         <div className="zen-pillar-top">
@@ -393,7 +370,7 @@ export default function SectionLandingPage({
                                         <h3 className="zen-headline-md">
                                             {mItem.title}
                                         </h3>
-                                        <p className="zen-body-md" style={{ margin: 0 }}>
+                                        <p className="zen-body-md zen-m-0">
                                             {mItem.description}
                                         </p>
                                     </div>
@@ -407,7 +384,7 @@ export default function SectionLandingPage({
                 <section id="ve-chung-toi" className="zen-section">
                     <div className="zen-container">
                         <div className="zen-trust-container-full">
-                            <div className="zen-section-header" style={{ marginBottom: '40px' }}>
+                            <div className="zen-section-header zen-mb-40">
                                 <h2 className="zen-headline-lg">
                                     {trust.teacher.title ? trust.teacher.title.toUpperCase() : 'CHUYÊN GIA HƯỚNG DẪN'}
                                 </h2>
@@ -421,17 +398,17 @@ export default function SectionLandingPage({
                                     loading="lazy"
                                 />
                                 <div className="zen-expert-info">
-                                    <h3 className="zen-headline-md" style={{ marginBottom: '8px' }}>
+                                    <h3 className="zen-headline-md zen-mb-8">
                                         {trust.teacher.title || 'Chuyên gia hướng dẫn'}
                                     </h3>
-                                    <p className="zen-body-md" style={{ marginBottom: '14px', width: '100%', fontSize: 'clamp(16px, 1.2vw, 18px)', lineHeight: 1.7 }}>
+                                    <p className="zen-body-md zen-expert-desc-text">
                                         {trust.teacher.bio || 'Được đào tạo và truyền thừa trực tiếp từ Hệ phái Sivananda, chuyên sâu về Vận động Asana, Hít thở Pranayama và Thư giãn Savasana. Hơn 10 năm Kinh nghiệm hướng dẫn Học viên Văn phòng và Người có Bệnh nền tại Việt Nam.'}
                                     </p>
                                     <div className="zen-expert-tag">
-                                        <span style={{ fontFamily: 'var(--zen-font-serif)', fontWeight: 700, color: 'var(--zen-primary)' }}>
+                                        <span className="zen-expert-brand-name">
                                             4U Wellness
                                         </span>
-                                        <span style={{ fontSize: '11px', backgroundColor: 'rgba(35, 79, 47, 0.12)', padding: '2px 8px', borderRadius: '4px', color: 'var(--zen-moss-darkest)', fontWeight: 600 }}>
+                                        <span className="zen-expert-nonprofit-tag">
                                             Non-profit
                                         </span>
                                     </div>

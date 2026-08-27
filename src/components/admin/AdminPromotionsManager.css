@@ -1,0 +1,126 @@
+/* ==========================================================================
+   AdminPromotionsManager.css
+   Quản lý Chương Trình Khuyến Mãi & Voucher Admin
+   ========================================================================== */
+
+.admin-promo-sticky-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.admin-promo-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: #525a54;
+    text-transform: uppercase;
+    margin: 0 0 4px 0;
+}
+
+.admin-promo-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 28px;
+    margin: 0;
+    color: #081f13;
+    font-weight: 600;
+}
+
+.admin-promo-add-btn {
+    background-color: #081f13;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.admin-promo-add-btn:hover {
+    background-color: #1a422a;
+}
+
+.admin-promo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.admin-promo-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(6, 27, 14, 0.08);
+}
+
+.admin-promo-badge {
+    font-size: 11px;
+    font-weight: 800;
+    background-color: #fef3c7;
+    color: #b45309;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.admin-promo-card-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 18px;
+    color: #081f13;
+    margin: 10px 0 4px 0;
+}
+
+.admin-promo-card-desc {
+    font-size: 13px;
+    color: #525a54;
+    margin: 0 0 12px 0;
+}
+
+.admin-promo-code-text {
+    color: #081f13;
+    font-family: monospace;
+}
+
+.admin-promo-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.admin-promo-edit-btn {
+    width: 50px;
+    height: 32px;
+    background-color: #081f13;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.admin-promo-edit-btn:hover {
+    background-color: #1a422a;
+}
+
+.admin-promo-delete-btn {
+    width: 50px;
+    height: 32px;
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.admin-promo-delete-btn:hover {
+    background-color: #fecaca;
+}

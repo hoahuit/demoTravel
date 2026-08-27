@@ -67,4 +67,14 @@
   align-items: center;
   justify-content: center;
   padding: 8px 24px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1E4A3D;
+}
+
+.infinite-slider-track {
+  display: flex;
+  gap: 60px;
+  align-items: center;
+  width: max-content;
 }

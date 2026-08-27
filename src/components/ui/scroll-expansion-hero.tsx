@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import './scroll-expansion-hero.css';
 
 const Image: React.FC<{ src: string; alt?: string; className?: string; style?: React.CSSProperties }> = ({ src, alt, className, style }) => (
   <img src={src} alt={alt || ''} className={className} style={style} />
@@ -160,11 +161,7 @@ const ScrollExpandMedia: React.FC<ScrollExpandMediaProps> = ({
             <Image
               src={bgImageSrc}
               alt='Background'
-              className='w-screen h-screen'
-              style={{
-                objectFit: 'cover',
-                objectPosition: 'center',
-              }}
+              className='expand-hero-bg-img'
             />
             <div className='absolute inset-0 bg-black/40' />
           </motion.div>
@@ -172,15 +169,13 @@ const ScrollExpandMedia: React.FC<ScrollExpandMediaProps> = ({
           <div className='w-full flex flex-col items-center justify-start relative z-10'>
             <div className='flex flex-col items-center justify-center w-full h-[100dvh] relative'>
               <div
-                className='absolute z-0 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-none overflow-hidden'
+                className='expand-hero-media-box'
                 style={{
-                  width: `${mediaWidth}px`,
-                  height: `${mediaHeight}px`,
-                  maxWidth: '100vw',
-                  maxHeight: '100vh',
-                  borderRadius: `${Math.max(20 - scrollProgress * 20, 0)}px`,
-                  boxShadow: scrollProgress > 0.8 ? 'none' : '0px 0px 50px rgba(0, 0, 0, 0.3)',
-                }}
+                  '--media-w': `${mediaWidth}px`,
+                  '--media-h': `${mediaHeight}px`,
+                  '--media-radius': `${Math.max(20 - scrollProgress * 20, 0)}px`,
+                  '--media-shadow': scrollProgress > 0.8 ? 'none' : '0px 0px 50px rgba(0, 0, 0, 0.3)',
+                } as React.CSSProperties}
               >
                 {mediaType === 'video' ? (
                   mediaSrc.includes('youtube.com') ? (
@@ -202,10 +197,7 @@ const ScrollExpandMedia: React.FC<ScrollExpandMediaProps> = ({
                         allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                         allowFullScreen
                       />
-                      <div
-                        className='absolute inset-0 z-10'
-                        style={{ pointerEvents: 'none' }}
-                      ></div>
+                      <div className='absolute inset-0 z-10 expand-hero-pointer-none'></div>
 
                       <motion.div
                         className='absolute inset-0 bg-black/30 rounded-xl'
@@ -229,10 +221,7 @@ const ScrollExpandMedia: React.FC<ScrollExpandMediaProps> = ({
                         disablePictureInPicture
                         disableRemotePlayback
                       />
-                      <div
-                        className='absolute inset-0 z-10'
-                        style={{ pointerEvents: 'none' }}
-                      ></div>
+                      <div className='absolute inset-0 z-10 expand-hero-pointer-none'></div>
 
                       <motion.div
                         className='absolute inset-0 bg-black/30 rounded-xl'
@@ -262,16 +251,16 @@ const ScrollExpandMedia: React.FC<ScrollExpandMediaProps> = ({
                 <div className='flex flex-col items-center text-center relative z-10 mt-4 transition-none'>
                   {date && (
                     <p
-                      className='text-2xl text-emerald-200 font-bold drop-shadow-md'
-                      style={{ transform: `translateX(-${textTranslateX}vw)` }}
+                      className='text-2xl text-emerald-200 font-bold drop-shadow-md expand-hero-text-left'
+                      style={{ '--text-trans-x': `${textTranslateX}vw` } as React.CSSProperties}
                     >
                       {date}
                     </p>
                   )}
                   {scrollToExpand && (
                     <p
-                      className='text-emerald-100 font-medium text-center drop-shadow-sm'
-                      style={{ transform: `translateX(${textTranslateX}vw)` }}
+                      className='text-emerald-100 font-medium text-center drop-shadow-sm expand-hero-text-right'
+                      style={{ '--text-trans-x': `${textTranslateX}vw` } as React.CSSProperties}
                     >
                       {scrollToExpand}
                     </p>
@@ -284,14 +273,14 @@ const ScrollExpandMedia: React.FC<ScrollExpandMediaProps> = ({
                   }`}
               >
                 <motion.h2
-                  className='text-4xl md:text-5xl lg:text-6xl font-bold text-white transition-none drop-shadow-lg'
-                  style={{ transform: `translateX(-${textTranslateX}vw)` }}
+                  className='text-4xl md:text-5xl lg:text-6xl font-bold text-white transition-none drop-shadow-lg expand-hero-text-left'
+                  style={{ '--text-trans-x': `${textTranslateX}vw` } as React.CSSProperties}
                 >
                   {firstWord}
                 </motion.h2>
                 <motion.h2
-                  className='text-4xl md:text-5xl lg:text-6xl font-bold text-center text-white transition-none drop-shadow-lg'
-                  style={{ transform: `translateX(${textTranslateX}vw)` }}
+                  className='text-4xl md:text-5xl lg:text-6xl font-bold text-center text-white transition-none drop-shadow-lg expand-hero-text-right'
+                  style={{ '--text-trans-x': `${textTranslateX}vw` } as React.CSSProperties}
                 >
                   {restOfTitle}
                 </motion.h2>

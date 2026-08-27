@@ -1,6 +1,7 @@
 import React from 'react';
 import Carousel3Dv2 from './Carousel3Dv2';
 import ScrollReveal from './ScrollReveal';
+import './AudienceBento.css';
 
 export interface AudienceBentoProps {
   onOpenBooking?: (tourData?: any) => void;

@@ -1,4 +1,5 @@
 import React from 'react';
+import './AdminAboutManager.css';
 
 interface AdminAboutManagerProps {
   aboutState: any;
@@ -13,42 +14,42 @@ export default function AdminAboutManager({ aboutState, setAboutState, toast }: 
 
   return (
     <div className="serene-container-inner">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <div className="admin-about-header-row">
         <div>
-          <p style={{ fontSize: '11px', fontWeight: 700, color: '#525a54', textTransform: 'uppercase', margin: '0 0 4px 0' }}>
+          <p className="admin-about-category-tag">
             Nội Dung Thương Hiệu
           </p>
-          <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '28px', margin: 0, color: '#081f13', fontWeight: 600 }}>
+          <h1 className="admin-about-title">
             Quản Lý Trang Giới Thiệu 4U Retreat
           </h1>
         </div>
         <button
           onClick={handleSaveAbout}
-          style={{ backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '8px', padding: '10px 20px', fontSize: '14px', fontWeight: 700, cursor: 'pointer' }}
+          className="admin-about-save-btn"
         >
           Lưu Nội Dung
         </button>
       </div>
 
-      <div style={{ backgroundColor: '#ffffff', borderRadius: '16px', padding: '28px', border: '1px solid rgba(6, 27, 14, 0.08)' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div className="admin-about-card-box">
+        <div className="admin-about-form-stack">
           <div>
-            <label style={{ fontSize: '13px', fontWeight: 700, color: '#081f13', marginBottom: '6px', display: 'block' }}>Tiêu Đề Thương Hiệu</label>
+            <label className="admin-about-label">Tiêu Đề Thương Hiệu</label>
             <input
               type="text"
               value={aboutState.title || ''}
               onChange={(e) => setAboutState({ ...aboutState, title: e.target.value })}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '16px', fontWeight: 600 }}
+              className="admin-about-input"
             />
           </div>
 
           <div>
-            <label style={{ fontSize: '13px', fontWeight: 700, color: '#081f13', marginBottom: '6px', display: 'block' }}>Câu Chuyện Thương Hiệu (Story)</label>
+            <label className="admin-about-label">Câu Chuyện Thương Hiệu (Story)</label>
             <textarea
               rows={4}
               value={aboutState.story || ''}
               onChange={(e) => setAboutState({ ...aboutState, story: e.target.value })}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '14px' }}
+              className="admin-about-textarea"
             />
           </div>
         </div>

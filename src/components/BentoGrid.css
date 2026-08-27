@@ -1,0 +1,269 @@
+/* ==========================================================================
+   BentoGrid.css
+   Sản phẩm sắp khởi hành & Editorial 2-column showcase
+   ========================================================================== */
+
+.bento-grid-section {
+    background: #e5efe8;
+    padding: 120px 0 130px;
+    color: #10201B;
+    font-family: 'Work Sans', 'Plus Jakarta Sans', sans-serif;
+    width: 100%;
+    overflow: hidden;
+    border-top: 1px solid rgba(16, 32, 27, 0.08);
+}
+
+.dest-full-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 48px;
+    box-sizing: border-box;
+}
+
+/* Header */
+.dest-header-flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 64px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid rgba(16, 32, 27, 0.12);
+}
+
+.dest-eyebrow {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #527059;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.dest-heading {
+    font-family: 'Libre Caslon Text', 'Playfair Display', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.15;
+    color: #10201B;
+    margin: 0;
+}
+
+.dest-subdesc {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 15px;
+    color: #405246;
+    margin: 0;
+    max-width: 480px;
+    line-height: 1.65;
+    font-weight: 400;
+}
+
+/* Grid & Cards */
+.dest-editorial-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 64px 44px;
+}
+
+.dest-editorial-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    background: transparent;
+}
+
+.dest-editorial-img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #d8e5dc;
+}
+
+.dest-editorial-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dest-editorial-card:hover .dest-editorial-img-wrap img {
+    transform: scale(1.05);
+}
+
+.dest-departure-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: rgba(16, 32, 27, 0.85);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 6px 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    border-radius: 4px;
+}
+
+.dest-category-tag {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: linear-gradient(135deg, #007a3d 0%, #0d2b1d 100%);
+    backdrop-filter: blur(10px);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 6px 14px;
+    text-transform: uppercase;
+    border-radius: 6px;
+    border: 1px solid rgba(74, 222, 128, 0.45);
+    box-shadow: 0 6px 20px rgba(0, 122, 61, 0.35);
+    display: inline-flex;
+    align-items: center;
+}
+
+.dest-card-meta-row {
+    margin-top: 24px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dest-meta-label {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #527059;
+}
+
+.dest-card-title {
+    font-family: 'Libre Caslon Text', 'Playfair Display', Georgia, serif;
+    font-size: clamp(22px, 2.2vw, 28px);
+    font-weight: 400;
+    line-height: 1.25;
+    color: #10201B;
+    margin: 0 0 12px 0;
+}
+
+.dest-card-desc {
+    font-size: 14.5px;
+    color: #405246;
+    line-height: 1.65;
+    margin: 0 0 24px 0;
+    font-weight: 400;
+    min-height: 46px;
+}
+
+.dest-card-bottom-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid rgba(16, 32, 27, 0.1);
+}
+
+.dest-price-label {
+    display: block;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #527059;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.dest-price-val {
+    font-family: 'Libre Caslon Text', Georgia, serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #10201B;
+}
+
+.dest-editorial-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #10201B;
+    text-decoration: none;
+    border-bottom: 1.5px solid #10201B;
+    padding-bottom: 4px;
+    transition: all 0.25s ease;
+    margin-top: auto;
+}
+
+.dest-editorial-card:hover .dest-editorial-link {
+    color: #006d36;
+    border-bottom-color: #006d36;
+}
+
+/* More Button */
+.dest-more-container {
+    text-align: center;
+    margin-top: 64px;
+}
+
+.dest-editorial-btn-more {
+    padding: 14px 38px;
+    border: 1.5px solid #10201B;
+    background: transparent;
+    color: #10201B;
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dest-editorial-btn-more:hover {
+    background: #10201B;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(16, 32, 27, 0.18);
+}
+
+.dest-chevron-icon {
+    transition: transform 0.3s ease;
+}
+
+.dest-chevron-icon.rotated {
+    transform: rotate(180deg);
+}
+
+@media (max-width: 900px) {
+    .dest-editorial-grid {
+        grid-template-columns: 1fr;
+        gap: 56px;
+    }
+    .dest-full-container {
+        padding: 0 20px;
+    }
+}

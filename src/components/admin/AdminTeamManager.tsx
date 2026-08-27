@@ -1,6 +1,7 @@
 import React from 'react';
 import { Edit2, Trash2 } from 'lucide-react';
 import { getImageUrl } from '../../services/apiService';
+import './AdminTeamManager.css';
 
 interface AdminTeamManagerProps {
   teamList: any[];
@@ -25,64 +26,42 @@ export default function AdminTeamManager({
 
   return (
     <div className="serene-container-inner">
-      <div className="serene-sticky-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <div className="serene-sticky-bar admin-team-sticky-bar">
         <div>
-          <p style={{ fontSize: '11px', fontWeight: 700, color: '#525a54', textTransform: 'uppercase', margin: '0 0 4px 0' }}>
+          <p className="admin-team-tag">
             Nhân Sự & Chuyên Gia
           </p>
-          <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '28px', margin: 0, color: '#081f13', fontWeight: 600 }}>
+          <h1 className="admin-team-title">
             Đội Ngũ Nhân Sự ({filtered.length})
           </h1>
         </div>
         <button
           onClick={() => openCreateModal('team')}
-          style={{ backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '8px', padding: '10px 20px', fontSize: '14px', fontWeight: 700, cursor: 'pointer' }}
+          className="admin-team-add-btn"
         >
           + Thêm Thành Viên Mới
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px' }}>
+      <div className="admin-team-grid">
         {filtered.map((member) => (
-          <div key={member.id} style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '20px', border: '1px solid rgba(6, 27, 14, 0.08)', textAlign: 'center' }}>
-            <div style={{ width: '80px', height: '80px', borderRadius: '50%', overflow: 'hidden', margin: '0 auto 12px auto' }}>
-              <img src={getImageUrl(member.portrait)} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <div key={member.id} className="admin-team-card">
+            <div className="admin-team-avatar-wrap">
+              <img src={getImageUrl(member.portrait)} alt={member.name} className="admin-team-avatar-img" />
             </div>
-            <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#081f13', margin: '0 0 4px 0' }}>{member.name}</h3>
-            <p style={{ fontSize: '12px', color: '#059669', fontWeight: 600, margin: '0 0 12px 0' }}>{member.role}</p>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
+            <h3 className="admin-team-member-name">{member.name}</h3>
+            <p className="admin-team-member-role">{member.role}</p>
+            <div className="admin-team-action-row">
               <button
                 onClick={() => openEditModal('team', member)}
-                style={{
-                  width: '50px',
-                  height: '32px',
-                  backgroundColor: '#081f13',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
+                className="admin-team-edit-btn"
                 title="Chỉnh sửa"
               >
                 <Edit2 size={14} />
               </button>
               <button
                 onClick={() => handleDeleteItem('team', member.id)}
-                style={{
-                  width: '50px',
-                  height: '32px',
-                  backgroundColor: '#fee2e2',
-                  color: '#dc2626',
-                  border: '1px solid #fca5a5',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
+                className="admin-team-delete-btn"
                 title="Xóa"
               >
                 <Trash2 size={14} />

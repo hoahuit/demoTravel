@@ -1,0 +1,155 @@
+/* ==========================================================================
+   AdminDashboard.css
+   Layout & Navigation của Hệ thống Quản trị 4U Wellness Admin
+   ========================================================================== */
+
+.serene-admin-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f1f5f9;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Loading State */
+.admin-loading-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #081f13;
+    color: #ffffff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.admin-loading-spinner {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 3px solid #0f766e;
+    border-top-color: transparent;
+    animation: admin-spin 0.6s linear infinite;
+}
+
+@keyframes admin-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Top Header Bar */
+.serene-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 28px;
+    background-color: #081f13;
+    color: #ffffff;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-logo-img {
+    height: 45px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.admin-user-greeting {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #e2e8f0;
+    font-size: 13px;
+}
+
+.admin-user-greeting span {
+    color: #94a3b8;
+}
+
+.admin-user-greeting strong {
+    color: #ffffff;
+}
+
+.admin-logout-btn {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+
+.admin-logout-btn:hover {
+    background-color: rgba(239, 68, 68, 0.25);
+}
+
+/* Admin Main Layout Body */
+.admin-layout-body {
+    display: flex;
+    flex: 1;
+}
+
+/* Admin Sidebar */
+.serene-sidebar {
+    width: 260px;
+    min-width: 260px;
+    flex-shrink: 0;
+    background-color: #06170e;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    align-self: flex-start;
+    overflow-y: auto;
+    box-sizing: border-box;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.serene-sidebar-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    background-color: transparent;
+    color: #a1bfa9;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s ease;
+}
+
+.serene-sidebar-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+}
+
+.serene-sidebar-item.active {
+    background-color: #081f13;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* Admin Main Content Container */
+.serene-main-content {
+    flex: 1;
+    min-width: 0;
+    padding: 28px 36px;
+    box-sizing: border-box;
+    background-color: #f8fafc;
+}

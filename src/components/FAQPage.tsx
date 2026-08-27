@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FAQ_DATA, syncFaqDataFromApi, FAQItem } from '../data/faqData';
 import { fetchSectionItemsApi } from '../services/apiService';
 import { HelpCircle, ChevronDown, Search } from 'lucide-react';
+import './FAQPage.css';
 
 export default function FAQPage() {
   const [faqs, setFaqs] = useState<FAQItem[]>(FAQ_DATA);
@@ -24,86 +25,61 @@ export default function FAQPage() {
   );
 
   return (
-    <div style={{ background: '#ffffff', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px' }}>
+    <div className="faq-page-root">
       {/* Hero */}
-      <section style={{ position: 'relative', width: '100%', height: '320px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+      <section className="faq-hero">
         <img
           src="https://images.unsplash.com/photo-1544717305-2782549b5136?q=85&w=2560&auto=format&fit=crop"
           alt="FAQ"
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+          className="faq-hero-img"
         />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%)' }} />
-        <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: '800px', padding: '0 20px' }}>
-          <span style={{ display: 'inline-block', background: 'rgba(52, 211, 153, 0.2)', border: '1px solid rgba(52, 211, 153, 0.4)', backdropFilter: 'blur(8px)', color: '#4ade80', fontSize: '12px', fontWeight: 800, letterSpacing: '0.15em', padding: '6px 18px', borderRadius: '999px', textTransform: 'uppercase', marginBottom: '16px' }}>
+        <div className="faq-hero-overlay" />
+        <div className="faq-hero-content">
+          <span className="faq-badge">
             SUPPORT & FAQ • GIẢI ĐÁP THẮC MẮC
           </span>
-          <h1 style={{ fontSize: 'clamp(32px, 4.5vw, 56px)', fontWeight: 800, margin: '0 0 16px 0', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+          <h1 className="faq-headline">
             Câu Hỏi Thường Gặp
           </h1>
-          <p style={{ fontSize: 'clamp(16px, 1.8vw, 20px)', opacity: 0.92, margin: 0 }}>
+          <p className="faq-subheadline">
             Giải đáp 100% thắc mắc về thủ tục Visa, quy trình đặt tour, bảo hiểm & chính sách hủy tour
           </p>
         </div>
       </section>
 
       {/* FAQ Search & Accordion */}
-      <div style={{ maxWidth: '900px', margin: '48px auto 0', padding: '0 24px' }}>
-        <div style={{ position: 'relative', marginBottom: '32px' }}>
-          <Search size={20} style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+      <div className="faq-container">
+        <div className="faq-search-wrap">
+          <Search size={20} className="faq-search-icon" />
           <input
             type="text"
             placeholder="Nhập từ khóa tìm kiếm (Ví dụ: Visa, Hoàn tiền, Khách sạn...)"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            style={{ width: '100%', padding: '16px 20px 16px 54px', borderRadius: '20px', border: '1px solid #e2e8f0', fontSize: '15px', outline: 'none', background: '#ffffff', boxShadow: '0 10px 30px rgba(0,0,0,0.04)', fontWeight: 500 }}
+            className="faq-search-input"
           />
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="faq-list">
           {filteredFaqs.map(faq => {
             const isOpen = openId === faq.id;
             return (
-              <div
-                key={faq.id}
-                style={{
-                  background: '#ffffff',
-                  borderRadius: '20px',
-                  border: '1px solid rgba(0,0,0,0.06)',
-                  overflow: 'hidden',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.02)'
-                }}
-              >
+              <div key={faq.id} className="faq-card">
                 <button
                   onClick={() => setOpenId(isOpen ? null : faq.id)}
-                  style={{
-                    width: '100%',
-                    padding: '24px 28px',
-                    background: 'none',
-                    border: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                    fontSize: '17px',
-                    fontWeight: 800,
-                    color: '#0f172a'
-                  }}
+                  className="faq-toggle-btn"
                 >
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <HelpCircle size={20} style={{ color: '#006d36', flexShrink: 0 }} />
+                  <span className="faq-question-label">
+                    <HelpCircle size={20} className="faq-question-icon" />
                     {faq.question}
                   </span>
                   <ChevronDown
                     size={20}
-                    style={{
-                      transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                      transition: 'transform 0.3s ease',
-                      color: '#64748b'
-                    }}
+                    className={`faq-chevron ${isOpen ? 'open' : ''}`}
                   />
                 </button>
                 {isOpen && (
-                  <div style={{ padding: '0 28px 24px 60px', color: '#475569', fontSize: '15px', lineHeight: 1.7, borderTop: '1px solid #f8fafc', paddingTop: '16px' }}>
+                  <div className="faq-answer-body">
                     {faq.answer}
                   </div>
                 )}

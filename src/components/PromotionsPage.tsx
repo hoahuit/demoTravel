@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { PROMOTIONS_DATA, syncPromotionsDataFromApi, PromotionItem } from '../data/promotionsData';
 import { fetchSectionItemsApi } from '../services/apiService';
 import { Tag, Clock, ArrowRight, Sparkles } from 'lucide-react';
+import './PromotionsPage.css';
 
 interface PromotionsPageProps {
   onNavigate: (path: string) => void;
@@ -21,69 +22,58 @@ export default function PromotionsPage({ onNavigate, onOpenBooking }: Promotions
   }, []);
 
   return (
-    <div style={{ background: '#ffffff', minHeight: '100vh', paddingTop: '100px', paddingBottom: '80px' }}>
+    <div className="promotions-page-root">
       {/* Hero */}
-      <section style={{ position: 'relative', width: '100%', height: '360px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+      <section className="promotions-hero">
         <img
           src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?q=85&w=2560&auto=format&fit=crop"
           alt="Promotions"
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+          className="promotions-hero-img"
         />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%)' }} />
-        <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', maxWidth: '800px', padding: '0 20px' }}>
-          <span style={{ display: 'inline-block', background: 'rgba(239, 68, 68, 0.25)', border: '1px solid rgba(239, 68, 68, 0.5)', backdropFilter: 'blur(8px)', color: '#fca5a5', fontSize: '12px', fontWeight: 800, letterSpacing: '0.15em', padding: '6px 18px', borderRadius: '999px', textTransform: 'uppercase', marginBottom: '16px' }}>
+        <div className="promotions-hero-overlay" />
+        <div className="promotions-hero-content">
+          <span className="promotions-badge">
             SPECIAL DEALS • CƠ HỘI ĐỘC QUYỀN
           </span>
-          <h1 style={{ fontSize: 'clamp(32px, 4.5vw, 56px)', fontWeight: 800, margin: '0 0 16px 0', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+          <h1 className="promotions-headline">
             Ưu Đãi Đặc Biệt & Flash Sale
           </h1>
-          <p style={{ fontSize: 'clamp(16px, 1.8vw, 20px)', opacity: 0.92, margin: 0 }}>
+          <p className="promotions-subheadline">
             Đăng ký tour sớm nhận ưu đãi giảm trực tiếp lên đến 25% & miễn phí Visa VIP
           </p>
         </div>
       </section>
 
       {/* Promotions List */}
-      <div style={{ maxWidth: '1280px', margin: '48px auto 0', padding: '0 24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: '32px' }}>
+      <div className="promotions-list-container">
+        <div className="promotions-grid">
           {promotions.map(promo => (
-            <div
-              key={promo.id}
-              style={{
-                background: '#ffffff',
-                borderRadius: '24px',
-                overflow: 'hidden',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                border: '1px solid rgba(0,0,0,0.06)',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <div style={{ position: 'relative', width: '100%', height: '220px', overflow: 'hidden' }}>
-                <img src={promo.bannerImage} alt={promo.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                <span style={{ position: 'absolute', top: '16px', right: '16px', background: '#ef4444', color: '#fff', fontSize: '12px', fontWeight: 800, padding: '6px 16px', borderRadius: '999px', boxShadow: '0 4px 12px rgba(239,68,68,0.4)' }}>
+            <div key={promo.id} className="promotion-card">
+              <div className="promotion-banner-wrap">
+                <img src={promo.bannerImage} alt={promo.title} className="promotion-banner-img" />
+                <span className="promotion-discount-badge">
                   {promo.discountBadge}
                 </span>
-                <span style={{ position: 'absolute', bottom: '16px', left: '16px', background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', color: '#fff', fontSize: '12px', fontWeight: 700, padding: '5px 14px', borderRadius: '999px' }}>
-                  Mã: <strong style={{ color: '#4ade80' }}>{promo.code}</strong>
+                <span className="promotion-code-badge">
+                  Mã: <strong>{promo.code}</strong>
                 </span>
               </div>
-              <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div className="promotion-content">
                 <div>
-                  <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a', margin: '0 0 10px 0', lineHeight: 1.35 }}>
+                  <h3 className="promotion-title">
                     {promo.title}
                   </h3>
-                  <p style={{ fontSize: '14px', color: '#64748b', margin: '0 0 16px 0', lineHeight: 1.5 }}>
+                  <p className="promotion-subtitle">
                     {promo.subtitle}
                   </p>
                 </div>
                 <div>
-                  <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '16px', paddingTop: '16px', borderTop: '1px solid #f1f5f9' }}>
+                  <div className="promotion-expiry">
                     ⏰ Hạn ưu đãi: <strong>{promo.expiryDate}</strong>
                   </div>
                   <button
                     onClick={onOpenBooking}
-                    style={{ width: '100%', background: '#006d36', color: '#fff', border: 'none', padding: '12px 20px', borderRadius: '999px', fontWeight: 700, fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                    className="promotion-apply-btn"
                   >
                     <span>Áp Dụng Khuyến Mãi Ngay</span>
                     <ArrowRight size={16} />
