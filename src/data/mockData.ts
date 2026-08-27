@@ -927,7 +927,8 @@ const STORAGE_KEYS = {
   TOURS: 'mock_4u_tours',
   BOOKINGS: 'mock_4u_bookings',
   CONSULTATIONS: 'mock_4u_consultations',
-  PRODUCTS: 'mock_4u_products'
+  PRODUCTS: 'mock_4u_products',
+  SHOP_ORDERS: 'mock_4u_shop_orders'
 };
 
 function getStoredOrInitial<T>(key: string, initial: T): T {
@@ -1088,3 +1089,74 @@ export function deleteMockTour(id: string) {
   saveToStorage(STORAGE_KEYS.TOURS, updated);
   return { success: true };
 }
+
+// --------------------------------------------------------------------------
+// 5. MOCK SHOP ORDERS CRUD
+// --------------------------------------------------------------------------
+export function getMockShopOrders() {
+  return getStoredOrInitial<any[]>(STORAGE_KEYS.SHOP_ORDERS, [
+    {
+      id: 1,
+      orderCode: 'ORD-789012',
+      customerName: 'Hoàng Anh Tuấn',
+      customerPhone: '0912345678',
+      customerEmail: 'tuan.hoang@example.com',
+      shippingAddress: '123 Nguyễn Huệ, Phường Bến Nghé, Quận 1, TP.HCM',
+      paymentMethod: 'Chuyển khoản QR (Đã quét)',
+      orderNotes: 'Đóng gói hộp quà sang trọng giúp tôi',
+      totalAmount: 2330000,
+      shippingFee: 0,
+      status: 'Đã thanh toán (Chờ giao)',
+      createdAt: new Date().toISOString(),
+      items: [
+        {
+          productId: 1,
+          productTitle: 'Bình Giữ Nhiệt Khắc Laser 4U',
+          productSku: 'BG-4U-01',
+          price: 480000,
+          quantity: 1,
+          subtotal: 480000,
+          heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDAjTRcfdF6_yplK4VT-RChhxc_dz4gKf_iF0t-dDv6SZypoAbltGUIxc3lRHFKv4nZMF8Tsgu9Ba9S-MWfpU_W1_iDsxBoKe7dTpT1ogIu35me-nmxxS1IuybSM54_lEQKNizMTQX-K7xK8F-BBqBu6VbChNnNZNrY7fEoNsFJ75b1abxFjuX1yoWrrAdSUPEtpWd6tu5Wz8ul1E4qEvYXYbASQwPiWN4yvaxn9oLlfQZdQjR7y9O2'
+        },
+        {
+          productId: 4,
+          productTitle: 'Balo Canvas Sáp Ong Alpine',
+          productSku: 'BL-ALP-04',
+          price: 1850000,
+          quantity: 1,
+          subtotal: 1850000,
+          heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAlyoRRMDdrEh1tEdYk_hR089ATUbOba9k2ZLY4EEOt7vStwznpSaiyIxKVKJPaLLya2UilfXbxnjGpi3yvXvBjeMczyjijEQ3PPzRZlxNWPoJlS3FhCQwy5_dACe_mP_T60HyDUUQvhJX_zQ8OwwJhx4vuZQunPrrw4HoVWGq6U1Nz3l55gqrSDP8QZWu6xaHPvIJHqNxGuG4SOYKVnHBRpnPuwBd_zcicEI79s2MGlZl4FfJmLNNy'
+        }
+      ]
+    }
+  ]);
+}
+
+export function addMockShopOrder(data: any) {
+  const current = getMockShopOrders();
+  const newItem = {
+    id: data.id || Date.now(),
+    orderCode: data.orderCode || `ORD-${Date.now().toString().slice(-6)}`,
+    ...data,
+    status: data.status || 'Chờ xác nhận',
+    createdAt: data.createdAt || new Date().toISOString()
+  };
+  const updated = [newItem, ...current];
+  saveToStorage(STORAGE_KEYS.SHOP_ORDERS, updated);
+  return newItem;
+}
+
+export function updateMockShopOrder(id: number | string, data: any) {
+  const current = getMockShopOrders();
+  const updated = current.map(o => (String(o.id) === String(id) ? { ...o, ...data } : o));
+  saveToStorage(STORAGE_KEYS.SHOP_ORDERS, updated);
+  return updated.find(o => String(o.id) === String(id));
+}
+
+export function deleteMockShopOrder(id: number | string) {
+  const current = getMockShopOrders();
+  const updated = current.filter(o => String(o.id) !== String(id));
+  saveToStorage(STORAGE_KEYS.SHOP_ORDERS, updated);
+  return { success: true };
+}
+

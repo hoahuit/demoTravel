@@ -12,11 +12,15 @@ import {
   getMockCategories,
   getMockConsultations,
   getMockBookings,
+  getMockShopOrders,
   addMockConsultation,
   addMockBooking,
   addMockTour,
   updateMockTour,
-  deleteMockTour
+  deleteMockTour,
+  addMockShopOrder,
+  updateMockShopOrder,
+  deleteMockShopOrder
 } from '../data/mockData';
 import {
   LandingSectionTemplate,
@@ -575,6 +579,7 @@ export function getSectionMockFallback(section: string): any {
     case 'menu-categories': return getMockCategories();
     case 'consultations': return getMockConsultations();
     case 'bookings': return getMockBookings();
+    case 'shop-orders': return getMockShopOrders();
     default: return [];
   }
 }
@@ -648,6 +653,23 @@ export async function saveSectionItemApi(
       invalidateQueryCache(`section:${section}`);
       return created;
     }
+    if (section === 'shop-orders') {
+      if (action === 'create') {
+        const created = addMockShopOrder(data);
+        invalidateQueryCache(`section:${section}`);
+        return created;
+      }
+      if (action === 'update') {
+        const updated = updateMockShopOrder(data.id, data);
+        invalidateQueryCache(`section:${section}`);
+        return updated;
+      }
+      if (action === 'delete') {
+        deleteMockShopOrder(data.id);
+        invalidateQueryCache(`section:${section}`);
+        return { success: true };
+      }
+    }
     if (section === 'tours') {
       if (action === 'create') addMockTour(data);
       if (action === 'update') updateMockTour(data.id || data.slug, data);
@@ -688,28 +710,50 @@ export async function saveSectionItemApi(
     url = `${API_BASE_URL}${endpoint}/${targetId}`;
   }
 
-  const response = await fetch(url, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: getAuthHeader(),
-    },
-    body: action !== 'delete' ? JSON.stringify(payload) : undefined,
-  });
+  try {
+    const response = await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: getAuthHeader(),
+      },
+      body: action !== 'delete' ? JSON.stringify(payload) : undefined,
+    });
 
-  // Invalidate query cache for this section on mutation
-  invalidateQueryCache(`section:${section}`);
+    // Invalidate query cache for this section on mutation
+    invalidateQueryCache(`section:${section}`);
 
-  if (!response.ok) {
-    const errMsg = await getApiErrorMessage(response);
-    throw new Error(errMsg);
+    if (!response.ok) {
+      const errMsg = await getApiErrorMessage(response);
+      throw new Error(errMsg);
+    }
+
+    if (response.status === 204) {
+      return { success: true, action };
+    }
+
+    return await response.json();
+  } catch (err) {
+    // Graceful fallback for shop-orders when live endpoint is unavailable
+    if (section === 'shop-orders') {
+      if (action === 'create') {
+        const created = addMockShopOrder(data);
+        invalidateQueryCache(`section:${section}`);
+        return created;
+      }
+      if (action === 'update') {
+        const updated = updateMockShopOrder(data.id, data);
+        invalidateQueryCache(`section:${section}`);
+        return updated;
+      }
+      if (action === 'delete') {
+        deleteMockShopOrder(data.id);
+        invalidateQueryCache(`section:${section}`);
+        return { success: true };
+      }
+    }
+    throw err;
   }
-
-  if (response.status === 204) {
-    return { success: true, action };
-  }
-
-  return await response.json();
 }
 
 // --------------------------------------------------------------------------

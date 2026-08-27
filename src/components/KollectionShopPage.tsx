@@ -199,11 +199,20 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
 
   // Checkout Modal State
   const [checkoutModalOpen, setCheckoutModalOpen] = useState<boolean>(false);
+  const [checkoutStep, setCheckoutStep] = useState<'FORM' | 'UPSELL' | 'SUCCESS'>('FORM');
   const [orderSubmitting, setOrderSubmitting] = useState<boolean>(false);
-  const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
   const [hasTransferred, setHasTransferred] = useState<boolean>(false);
-  const [lastPurchasedProducts, setLastPurchasedProducts] = useState<KollectionProduct[]>([]);
+  const [upsellSelectedMap, setUpsellSelectedMap] = useState<Record<string, number>>({});
   const [lastOrderCode, setLastOrderCode] = useState<string>('');
+  const [lastPlacedOrder, setLastPlacedOrder] = useState<{
+    orderCode: string;
+    items: { product: KollectionProduct; quantity: number }[];
+    totalAmount: number;
+    customerName: string;
+    customerPhone: string;
+    shippingAddress: string;
+    paymentMethod: string;
+  } | null>(null);
   const [orderForm, setOrderForm] = useState({
     fullName: '',
     phone: '',
@@ -409,24 +418,93 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
       return;
     }
     setCartOpen(false);
+    setCheckoutStep('FORM');
+    setUpsellSelectedMap({});
     setCheckoutModalOpen(true);
   };
 
-  const handleSubmitOrder = async (e: React.FormEvent) => {
+  const recommendedUpsellProducts = useMemo(() => {
+    if (!cartItems.length) return products.slice(0, 4);
+    const cartIds = new Set(cartItems.map(i => String(i.product.id || i.product.slug)));
+    const cartCategories = new Set(
+      cartItems.map(i => (i.product.category || '').toLowerCase()).filter(Boolean)
+    );
+
+    // 1. First priority: Same category items not yet in cart
+    const sameCategory = products.filter(p => {
+      const pId = String(p.id || p.slug);
+      const pCat = (p.category || '').toLowerCase();
+      return !cartIds.has(pId) && cartCategories.has(pCat);
+    });
+
+    // 2. Second priority: Other popular items in shop
+    const otherItems = products.filter(p => {
+      const pId = String(p.id || p.slug);
+      return !cartIds.has(pId) && !sameCategory.some(sc => String(sc.id || sc.slug) === pId);
+    });
+
+    return [...sameCategory, ...otherItems].slice(0, 4);
+  }, [cartItems, products]);
+
+  const activeUpsellItems = useMemo(() => {
+    return Object.entries(upsellSelectedMap)
+      .map(([idOrSlug, qty]) => {
+        if (qty <= 0) return null;
+        const prod = products.find(p => String(p.id) === idOrSlug || String(p.slug) === idOrSlug);
+        if (!prod) return null;
+        return { product: prod, quantity: qty };
+      })
+      .filter(Boolean) as { product: KollectionProduct; quantity: number }[];
+  }, [upsellSelectedMap, products]);
+
+  const upsellTotalPrice = useMemo(() => {
+    return activeUpsellItems.reduce((acc, curr) => acc + (curr.product.price || 0) * curr.quantity, 0);
+  }, [activeUpsellItems]);
+
+  const finalCombinedTotalPrice = useMemo(() => {
+    return cartTotalPrice + upsellTotalPrice;
+  }, [cartTotalPrice, upsellTotalPrice]);
+
+  const finalCombinedTotalItems = useMemo(() => {
+    const upsellQty = activeUpsellItems.reduce((acc, curr) => acc + curr.quantity, 0);
+    return cartTotalItems + upsellQty;
+  }, [cartTotalItems, activeUpsellItems]);
+
+  const handleToggleUpsellItem = (product: KollectionProduct, delta: number) => {
+    const key = String(product.id || product.slug);
+    setUpsellSelectedMap(prev => {
+      const currentQty = prev[key] || 0;
+      const nextQty = Math.max(0, currentQty + delta);
+      if (nextQty === 0) {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      }
+      return { ...prev, [key]: nextQty };
+    });
+  };
+
+  const handleProceedToUpsell = (e: React.FormEvent) => {
     e.preventDefault();
     if (!orderForm.fullName.trim() || !orderForm.phone.trim()) {
       toast?.show?.('Vui lòng điền Họ tên và Số điện thoại nhận hàng.', 'warning');
       return;
     }
+    // Proceed to Step 2: UPSELL
+    setCheckoutStep('UPSELL');
+  };
 
+  const handleConfirmFinalOrder = async (includeUpsell = true) => {
     setOrderSubmitting(true);
     try {
       const generatedOrderCode = `ORD-${Date.now().toString().slice(-6)}`;
-      const purchasedProds = cartItems.map(i => i.product);
-      setLastPurchasedProducts(purchasedProds);
-      setLastOrderCode(generatedOrderCode);
+      const finalItemsList = includeUpsell
+        ? [...cartItems, ...activeUpsellItems]
+        : [...cartItems];
 
-      const orderItemsData = cartItems.map(i => ({
+      const finalTotal = includeUpsell ? finalCombinedTotalPrice : cartTotalPrice;
+
+      const orderItemsData = finalItemsList.map(i => ({
         productId: Number(i.product.id) || undefined,
         productTitle: String(i.product.title || (i.product as any).name || 'Sản phẩm 4U'),
         productSku: i.product.sku || '',
@@ -446,16 +524,27 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
         shippingAddress: orderForm.address.trim() || 'Chưa cung cấp',
         paymentMethod: paymentMethodStr,
         orderNotes: orderForm.notes.trim() || undefined,
-        totalAmount: cartTotalPrice,
+        totalAmount: finalTotal,
         shippingFee: 0,
         status: hasTransferred ? 'Đã thanh toán (Chờ giao)' : 'Chờ xác nhận',
         createdAt: new Date().toISOString(),
         items: orderItemsData
       });
 
-      setOrderSuccess(true);
+      setLastOrderCode(generatedOrderCode);
+      setLastPlacedOrder({
+        orderCode: generatedOrderCode,
+        items: finalItemsList,
+        totalAmount: finalTotal,
+        customerName: orderForm.fullName.trim(),
+        customerPhone: orderForm.phone.trim(),
+        shippingAddress: orderForm.address.trim() || 'Chưa cung cấp',
+        paymentMethod: paymentMethodStr
+      });
+
+      setCheckoutStep('SUCCESS');
       setCartItems([]);
-      setHasTransferred(false);
+      setUpsellSelectedMap({});
       toast?.show?.('Đặt hàng thành công! Đội ngũ 4U sẽ liên hệ xác nhận đơn hàng.', 'success');
     } catch (err: any) {
       toast?.show?.('Gửi đơn hàng thất bại: ' + (err?.message || err), 'error');
@@ -463,29 +552,6 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
       setOrderSubmitting(false);
     }
   };
-
-  const recommendedUpsellProducts = useMemo(() => {
-    if (!lastPurchasedProducts.length) return products.slice(0, 3);
-    const purchasedIds = new Set(lastPurchasedProducts.map(p => String(p.id || p.slug)));
-    const purchasedCategories = new Set(
-      lastPurchasedProducts.map(p => (p.category || '').toLowerCase()).filter(Boolean)
-    );
-
-    // 1. First priority: Same category items not yet purchased in this order
-    const sameCategory = products.filter(p => {
-      const pId = String(p.id || p.slug);
-      const pCat = (p.category || '').toLowerCase();
-      return !purchasedIds.has(pId) && purchasedCategories.has(pCat);
-    });
-
-    // 2. Second priority: Other popular items in shop
-    const otherItems = products.filter(p => {
-      const pId = String(p.id || p.slug);
-      return !purchasedIds.has(pId) && !sameCategory.some(sc => String(sc.id || sc.slug) === pId);
-    });
-
-    return [...sameCategory, ...otherItems].slice(0, 3);
-  }, [lastPurchasedProducts, products]);
 
   const getProductGallery = (product: KollectionProduct): string[] => {
     if (product.gallery && Array.isArray(product.gallery) && product.gallery.length > 0) {
@@ -1421,14 +1487,14 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
       )}
 
       {/* ══════════════════════════════════════════════════════════════
-          6. FAST CHECKOUT MODAL
+          6. FAST CHECKOUT & UPSELL MODAL (MULTI-STEP FLOW)
       ══════════════════════════════════════════════════════════════ */}
       {checkoutModalOpen && (
         <div style={{
           position: 'fixed',
           inset: 0,
           backgroundColor: 'rgba(0,0,0,0.65)',
-          backdropFilter: 'blur(4px)',
+          backdropFilter: 'blur(5px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -1440,17 +1506,22 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
             backgroundColor: '#ffffff',
             borderRadius: '20px',
             width: '100%',
-            maxWidth: '560px',
+            maxWidth: checkoutStep === 'UPSELL' ? '680px' : '560px',
             maxHeight: '96vh',
             overflowY: 'auto',
             boxShadow: '0 30px 70px rgba(0, 0, 0, 0.35)',
             padding: 'clamp(20px, 3vh, 32px) clamp(18px, 3vw, 30px)',
             position: 'relative',
             boxSizing: 'border-box',
-            fontFamily: "'Work Sans', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif"
+            fontFamily: "'Work Sans', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+            transition: 'max-width 0.3s ease'
           }}>
             <button
-              onClick={() => { setCheckoutModalOpen(false); setOrderSuccess(false); }}
+              onClick={() => {
+                setCheckoutModalOpen(false);
+                setCheckoutStep('FORM');
+                setUpsellSelectedMap({});
+              }}
               style={{
                 position: 'absolute',
                 top: 'clamp(14px, 2vh, 20px)',
@@ -1472,182 +1543,24 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
               <X size={18} />
             </button>
 
-            {orderSuccess ? (
-              <div style={{ padding: 'clamp(10px, 1.5vh, 16px) 0' }}>
-                <div style={{ textAlign: 'center', marginBottom: 'clamp(16px, 2.5vh, 24px)' }}>
-                  <div style={{
-                    width: '56px',
-                    height: '56px',
-                    borderRadius: '50%',
-                    backgroundColor: '#ecfdf5',
-                    color: '#059669',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 12px auto',
-                    boxShadow: '0 4px 14px rgba(5, 150, 105, 0.2)'
-                  }}>
-                    <CheckCircle2 size={32} />
-                  </div>
-                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.08em', backgroundColor: '#dcfce7', padding: '3px 10px', borderRadius: '999px' }}>
-                    {lastOrderCode ? `Mã Đơn: ${lastOrderCode}` : 'Đặt Hàng Thành Công'}
-                  </span>
-                  <h3 className="font-headline" style={{ fontSize: 'clamp(20px, 2.5vh, 24px)', fontWeight: 800, color: '#111827', margin: '8px 0 6px 0' }}>
-                    Cảm Ơn Bạn Đã Tin Chọn Kollection 4U!
-                  </h3>
-                  <p style={{ fontSize: '13.5px', color: '#64748b', lineHeight: 1.5, margin: 0, maxWidth: '480px', marginLeft: 'auto', marginRight: 'auto' }}>
-                    Đội ngũ chuyên viên 4U sẽ liên hệ số điện thoại <strong>{orderForm.phone || 'của bạn'}</strong> trong vòng 15-30 phút để xác nhận và đóng gói giao hàng tận nơi.
-                  </p>
-                </div>
-
-                {/* UPSELL / CROSS-SELL SAME-CATEGORY RECOMMENDATION SECTION */}
-                {recommendedUpsellProducts.length > 0 && (
-                  <div style={{
-                    backgroundColor: '#f8fafc',
-                    borderRadius: '14px',
-                    padding: 'clamp(14px, 2vh, 18px)',
-                    border: '1px solid #e2e8f0',
-                    marginBottom: 'clamp(16px, 2vh, 22px)'
-                  }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Gift size={18} color="#059669" />
-                        <span style={{ fontSize: '14px', fontWeight: 800, color: '#081f13', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-                          Gợi Ý Mua Kèm • Cùng Bộ Sưu Tập
-                        </span>
-                      </div>
-                      <span style={{ fontSize: '11px', fontWeight: 700, backgroundColor: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '6px', border: '1px solid #fde68a' }}>
-                        ⚡ Miễn Phí Giao Chung Đơn
-                      </span>
-                    </div>
-
-                    <div style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-                      gap: '12px'
-                    }}>
-                      {recommendedUpsellProducts.map((recProd) => (
-                        <div
-                          key={recProd.id || recProd.slug}
-                          style={{
-                            backgroundColor: '#ffffff',
-                            borderRadius: '10px',
-                            border: '1px solid #e2e8f0',
-                            padding: '10px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-between',
-                            transition: 'all 0.2s ease',
-                            boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
-                          }}
-                        >
-                          <div>
-                            <div style={{
-                              width: '100%',
-                              height: '110px',
-                              borderRadius: '8px',
-                              overflow: 'hidden',
-                              backgroundColor: '#f1f5f9',
-                              marginBottom: '8px',
-                              position: 'relative'
-                            }}>
-                              <img
-                                src={getMerchandiseImage(recProd)}
-                                alt={recProd.title}
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                              />
-                              <span style={{
-                                position: 'absolute',
-                                top: '6px',
-                                left: '6px',
-                                fontSize: '10px',
-                                fontWeight: 700,
-                                backgroundColor: 'rgba(5, 150, 105, 0.9)',
-                                color: '#ffffff',
-                                padding: '2px 6px',
-                                borderRadius: '4px'
-                              }}>
-                                {recProd.category || 'Tĩnh Dưỡng'}
-                              </span>
-                            </div>
-                            <h4 style={{
-                              fontSize: '13px',
-                              fontWeight: 700,
-                              color: '#111827',
-                              margin: '0 0 4px 0',
-                              lineHeight: 1.3,
-                              display: '-webkit-box',
-                              WebkitLineClamp: 2,
-                              WebkitBoxOrient: 'vertical',
-                              overflow: 'hidden'
-                            }}>
-                              {recProd.title || (recProd as any).name}
-                            </h4>
-                            <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#059669', marginBottom: '8px' }}>
-                              {formatVnd(recProd.price)}
-                            </div>
-                          </div>
-
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              handleAddToCart(recProd, 1, e);
-                            }}
-                            style={{
-                              width: '100%',
-                              padding: '7px 10px',
-                              borderRadius: '6px',
-                              backgroundColor: '#ecfdf5',
-                              border: '1px solid #a7f3d0',
-                              color: '#065f46',
-                              fontSize: '12px',
-                              fontWeight: 700,
-                              cursor: 'pointer',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              gap: '4px',
-                              transition: 'all 0.15s ease'
-                            }}
-                          >
-                            <Plus size={13} />
-                            <span>Thêm mua kèm</span>
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
-                  <button
-                    onClick={() => { setCheckoutModalOpen(false); setOrderSuccess(false); }}
-                    style={{
-                      padding: '11px 28px',
-                      borderRadius: '8px',
-                      backgroundColor: '#004532',
-                      color: '#ffffff',
-                      fontWeight: 700,
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      boxShadow: '0 4px 12px rgba(0,69,50,0.2)'
-                    }}
-                  >
-                    Tiếp tục mua sắm
-                  </button>
-                </div>
-              </div>
-            ) : (
+            {/* ──────────────────────────────────────────────────────────
+                STEP 1: CUSTOMER INFORMATION FORM
+            ────────────────────────────────────────────────────────── */}
+            {checkoutStep === 'FORM' && (
               <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#004532', backgroundColor: '#e8f5e9', padding: '3px 10px', borderRadius: '999px', letterSpacing: '0.05em' }}>
+                    BƯỚC 1/2 • THÔNG TIN ĐẶT HÀNG
+                  </span>
+                </div>
                 <h2 className="font-headline" style={{ fontSize: 'clamp(20px, 2.6vh, 24px)', fontWeight: 800, color: '#111827', margin: '0 0 4px 0', letterSpacing: '-0.01em' }}>
                   Xác nhận đơn hàng
                 </h2>
-                <p style={{ fontSize: 'clamp(12px, 1.5vh, 13.5px)', color: '#64748b', margin: '0 0 clamp(10px, 1.6vh, 16px) 0', lineHeight: 1.4 }}>
-                  Vui lòng cung cấp thông tin để 4U giao hàng tận nơi cho bạn.
+                <p style={{ fontSize: 'clamp(12px, 1.5vh, 13.5px)', color: '#64748b', margin: '0 0 clamp(12px, 1.8vh, 18px) 0', lineHeight: 1.4 }}>
+                  Vui lòng cung cấp thông tin để 4U chuẩn bị và đóng gói giao hàng tận nơi.
                 </p>
 
-                <form onSubmit={handleSubmitOrder} style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(10px, 1.4vh, 14px)' }}>
+                <form onSubmit={handleProceedToUpsell} style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(10px, 1.4vh, 14px)' }}>
                   {/* 2-Column Responsive Inputs: Họ tên + Số điện thoại */}
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'clamp(8px, 1.2vh, 14px)' }}>
                     <div>
@@ -1690,25 +1603,26 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                     <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>Ghi chú đơn hàng</label>
                     <textarea
                       rows={2}
-                      placeholder="Ghi chú thêm về thời gian nhận hàng hoặc đóng gói..."
+                      placeholder="Ghi chú thêm về thời gian nhận hàng hoặc đóng gói quà..."
                       value={orderForm.notes}
                       onChange={e => setOrderForm({ ...orderForm, notes: e.target.value })}
                       style={{ width: '100%', padding: 'clamp(7px, 1vh, 10px) 12px', borderRadius: '6px', border: '1px solid #bec9c2', fontSize: '13.5px', boxSizing: 'border-box', outline: 'none', resize: 'vertical' }}
                     />
                   </div>
 
-                  <div style={{ backgroundColor: '#f8f9fa', padding: 'clamp(10px, 1.5vh, 14px) 16px', borderRadius: '6px', border: '1px solid #edeeef' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', color: '#555f6d', marginBottom: '3px' }}>
-                      <span>Tổng số lượng:</span>
+                  {/* Cart Summary Card */}
+                  <div style={{ backgroundColor: '#f8f9fa', padding: 'clamp(10px, 1.5vh, 14px) 16px', borderRadius: '8px', border: '1px solid #edeeef' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', color: '#555f6d', marginBottom: '4px' }}>
+                      <span>Số lượng hiện tại:</span>
                       <strong>{cartTotalItems} sản phẩm</strong>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'clamp(15px, 2vh, 17px)', fontWeight: 700, color: '#004532' }}>
-                      <span>Tổng thanh toán:</span>
+                      <span>Tổng tiền hàng:</span>
                       <span>{formatVnd(cartTotalPrice)}</span>
                     </div>
                   </div>
 
-                  {/* QR PAYMENT SECTION */}
+                  {/* QR PAYMENT OPTION PREVIEW */}
                   <div style={{
                     backgroundColor: '#f4f7f5',
                     border: '1px solid #cce3d4',
@@ -1731,10 +1645,9 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                     </div>
 
                     <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
-                      {/* QR Image */}
                       <div style={{
-                        width: 'clamp(100px, 13vh, 120px)',
-                        height: 'clamp(100px, 13vh, 120px)',
+                        width: 'clamp(90px, 12vh, 110px)',
+                        height: 'clamp(90px, 12vh, 110px)',
                         backgroundColor: '#ffffff',
                         borderRadius: '8px',
                         border: '1px solid #cbd5e1',
@@ -1752,34 +1665,14 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                         />
                       </div>
 
-                      {/* Bank Transfer Info */}
-                      <div style={{ flex: 1, minWidth: '170px', fontSize: '12px', color: '#334155', display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                        <div>
-                          <span style={{ color: '#64748b' }}>Ngân hàng:</span>{' '}
-                          <strong style={{ color: '#081f13' }}>MB Bank (Quân Đội)</strong>
-                        </div>
-                        <div>
-                          <span style={{ color: '#64748b' }}>Số tài khoản:</span>{' '}
-                          <strong style={{ color: '#065f46', fontFamily: 'monospace', fontSize: '13px' }}>0987 654 321</strong>
-                        </div>
-                        <div>
-                          <span style={{ color: '#64748b' }}>Chủ tài khoản:</span>{' '}
-                          <strong style={{ color: '#081f13' }}>4U WELLNESS & RETREAT</strong>
-                        </div>
-                        <div>
-                          <span style={{ color: '#64748b' }}>Số tiền:</span>{' '}
-                          <strong style={{ color: '#065f46', fontSize: '13px' }}>{formatVnd(cartTotalPrice)}</strong>
-                        </div>
-                        <div>
-                          <span style={{ color: '#64748b' }}>Nội dung CK:</span>{' '}
-                          <code style={{ backgroundColor: '#ffffff', padding: '2px 6px', borderRadius: '4px', border: '1px solid #cbd5e1', fontWeight: 700, color: '#081f13' }}>
-                            4U {orderForm.phone ? orderForm.phone.replace(/\s+/g, '') : 'KOLLECTION'}
-                          </code>
-                        </div>
+                      <div style={{ flex: 1, minWidth: '160px', fontSize: '12px', color: '#334155', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                        <div><span style={{ color: '#64748b' }}>Ngân hàng:</span> <strong style={{ color: '#081f13' }}>MB Bank</strong></div>
+                        <div><span style={{ color: '#64748b' }}>Số tài khoản:</span> <strong style={{ color: '#065f46', fontFamily: 'monospace', fontSize: '13px' }}>0987 654 321</strong></div>
+                        <div><span style={{ color: '#64748b' }}>Chủ tài khoản:</span> <strong style={{ color: '#081f13' }}>4U WELLNESS & RETREAT</strong></div>
+                        <div><span style={{ color: '#64748b' }}>Số tiền:</span> <strong style={{ color: '#065f46', fontSize: '13px' }}>{formatVnd(cartTotalPrice)}</strong></div>
                       </div>
                     </div>
 
-                    {/* Button to confirm transfer */}
                     <button
                       type="button"
                       onClick={() => {
@@ -1793,7 +1686,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                               notes: prev.notes ? `${prev.notes} - ${transferTag}` : transferTag
                             }));
                           }
-                          toast?.show?.('Đã ghi nhận: Bạn đã chuyển tiền thành công!', 'success');
+                          toast?.show?.('Đã ghi nhận: Bạn chọn thanh toán chuyển khoản QR!', 'success');
                         } else {
                           setOrderForm(prev => ({
                             ...prev,
@@ -1816,18 +1709,17 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                         justifyContent: 'center',
                         gap: '6px',
                         transition: 'all 0.2s ease',
-                        marginTop: '2px',
-                        boxShadow: hasTransferred ? '0 0 0 2px rgba(5, 150, 105, 0.2)' : 'none'
+                        marginTop: '2px'
                       }}
                     >
                       {hasTransferred ? <CheckCircle2 size={16} color="#059669" /> : <CreditCard size={16} />}
-                      {hasTransferred ? '✓ Tôi Đã Chuyển Tiền Thành Công (Đã lưu vào đơn hàng)' : '👉 Bấm vào đây sau khi bạn ĐÃ CHUYỂN TIỀN'}
+                      {hasTransferred ? '✓ Tôi Đã Chuyển Khoản QR Thành Công' : '👉 Bấm vào đây nếu bạn muốn Chuyển Khoản QR ngay'}
                     </button>
                   </div>
 
+                  {/* Submit Button to go to Step 2 UPSELL */}
                   <button
                     type="submit"
-                    disabled={orderSubmitting}
                     style={{
                       width: '100%',
                       padding: 'clamp(11px, 1.6vh, 14px) 20px',
@@ -1836,6 +1728,279 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                       color: '#ffffff',
                       fontSize: 'clamp(13.5px, 1.6vh, 15px)',
                       fontWeight: 700,
+                      border: 'none',
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 14px rgba(0, 69, 50, 0.25)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <span>Tiếp tục • Hoàn tất đặt hàng</span>
+                    <ArrowRight size={18} />
+                  </button>
+                </form>
+              </div>
+            )}
+
+            {/* ──────────────────────────────────────────────────────────
+                STEP 2: UPSELL & CROSS-SELL POPUP MODAL (DYNAMIC PRICING)
+            ────────────────────────────────────────────────────────── */}
+            {checkoutStep === 'UPSELL' && (
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#059669', backgroundColor: '#dcfce7', padding: '3px 10px', borderRadius: '999px', letterSpacing: '0.05em' }}>
+                    BƯỚC 2/2 • GỢI Ý MUA KÈM ƯU ĐÃI
+                  </span>
+                  <span style={{ fontSize: '11px', fontWeight: 700, backgroundColor: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '6px', border: '1px solid #fde68a' }}>
+                    ⚡ Miễn Phí Giao Chung Đơn
+                  </span>
+                </div>
+
+                <h2 className="font-headline" style={{ fontSize: 'clamp(20px, 2.6vh, 24px)', fontWeight: 800, color: '#111827', margin: '0 0 4px 0' }}>
+                  Mua Kèm Ưu Đãi Đặc Quyền
+                </h2>
+                <p style={{ fontSize: 'clamp(12.5px, 1.5vh, 13.5px)', color: '#64748b', margin: '0 0 clamp(14px, 2vh, 18px) 0', lineHeight: 1.45 }}>
+                  Chọn thêm các sản phẩm yêu thích cùng bộ sưu tập dưới đây để nhận ưu đãi freeship và quà đóng gói cao cấp.
+                </p>
+
+                {/* Upsell Products Cards Grid */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                  gap: '12px',
+                  marginBottom: '16px',
+                  maxHeight: '340px',
+                  overflowY: 'auto',
+                  paddingRight: '4px'
+                }}>
+                  {recommendedUpsellProducts.map((recProd) => {
+                    const key = String(recProd.id || recProd.slug);
+                    const isSelectedQty = upsellSelectedMap[key] || 0;
+
+                    return (
+                      <div
+                        key={key}
+                        style={{
+                          backgroundColor: isSelectedQty > 0 ? '#f0fdf4' : '#ffffff',
+                          borderRadius: '12px',
+                          border: isSelectedQty > 0 ? '2px solid #059669' : '1px solid #e2e8f0',
+                          padding: '12px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'space-between',
+                          transition: 'all 0.2s ease',
+                          boxShadow: isSelectedQty > 0 ? '0 4px 12px rgba(5, 150, 105, 0.15)' : '0 2px 6px rgba(0,0,0,0.02)'
+                        }}
+                      >
+                        <div>
+                          <div style={{
+                            width: '100%',
+                            height: '110px',
+                            borderRadius: '8px',
+                            overflow: 'hidden',
+                            backgroundColor: '#f1f5f9',
+                            marginBottom: '8px',
+                            position: 'relative'
+                          }}>
+                            <img
+                              src={getMerchandiseImage(recProd)}
+                              alt={recProd.title}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            />
+                            <span style={{
+                              position: 'absolute',
+                              top: '6px',
+                              left: '6px',
+                              fontSize: '10px',
+                              fontWeight: 700,
+                              backgroundColor: 'rgba(5, 150, 105, 0.9)',
+                              color: '#ffffff',
+                              padding: '2px 6px',
+                              borderRadius: '4px'
+                            }}>
+                              {recProd.category || 'Tĩnh Dưỡng'}
+                            </span>
+                            {isSelectedQty > 0 && (
+                              <span style={{
+                                position: 'absolute',
+                                top: '6px',
+                                right: '6px',
+                                fontSize: '10px',
+                                fontWeight: 800,
+                                backgroundColor: '#059669',
+                                color: '#ffffff',
+                                padding: '2px 6px',
+                                borderRadius: '4px'
+                              }}>
+                                Đã chọn x{isSelectedQty}
+                              </span>
+                            )}
+                          </div>
+                          <h4 style={{
+                            fontSize: '13px',
+                            fontWeight: 700,
+                            color: '#111827',
+                            margin: '0 0 4px 0',
+                            lineHeight: 1.3,
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden'
+                          }}>
+                            {recProd.title || (recProd as any).name}
+                          </h4>
+                          <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#059669', marginBottom: '8px' }}>
+                            {formatVnd(recProd.price)}
+                          </div>
+                        </div>
+
+                        {isSelectedQty === 0 ? (
+                          <button
+                            type="button"
+                            onClick={() => handleToggleUpsellItem(recProd, 1)}
+                            style={{
+                              width: '100%',
+                              padding: '8px 10px',
+                              borderRadius: '6px',
+                              backgroundColor: '#ecfdf5',
+                              border: '1px solid #a7f3d0',
+                              color: '#065f46',
+                              fontSize: '12px',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '4px',
+                              transition: 'all 0.15s ease'
+                            }}
+                          >
+                            <Plus size={14} />
+                            <span>+ Thêm mua kèm (+{formatVnd(recProd.price)})</span>
+                          </button>
+                        ) : (
+                          <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            backgroundColor: '#ffffff',
+                            border: '1px solid #059669',
+                            borderRadius: '6px',
+                            padding: '3px 6px'
+                          }}>
+                            <button
+                              type="button"
+                              onClick={() => handleToggleUpsellItem(recProd, -1)}
+                              style={{
+                                border: 'none',
+                                background: '#f1f5f9',
+                                color: '#1e293b',
+                                width: '26px',
+                                height: '26px',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontWeight: 800
+                              }}
+                            >
+                              <Minus size={13} />
+                            </button>
+                            <span style={{ fontSize: '13px', fontWeight: 800, color: '#059669' }}>
+                              {isSelectedQty}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleToggleUpsellItem(recProd, 1)}
+                              style={{
+                                border: 'none',
+                                background: '#059669',
+                                color: '#ffffff',
+                                width: '26px',
+                                height: '26px',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontWeight: 800
+                              }}
+                            >
+                              <Plus size={13} />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* DYNAMIC REAL-TIME PRICE CALCULATION SUMMARY */}
+                <div style={{
+                  backgroundColor: '#f0fdf4',
+                  borderRadius: '12px',
+                  border: '1px solid #bbf7d0',
+                  padding: '14px 18px',
+                  marginBottom: '18px'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#475569', marginBottom: '4px' }}>
+                    <span>Đơn hàng ban đầu ({cartTotalItems} món):</span>
+                    <span style={{ fontWeight: 600 }}>{formatVnd(cartTotalPrice)}</span>
+                  </div>
+
+                  {activeUpsellItems.length > 0 && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#059669', marginBottom: '4px' }}>
+                      <span>Sản phẩm mua kèm thêm (+{activeUpsellItems.reduce((a,c) => a + c.quantity, 0)} món):</span>
+                      <strong style={{ color: '#059669' }}>+ {formatVnd(upsellTotalPrice)}</strong>
+                    </div>
+                  )}
+
+                  {activeUpsellItems.length > 0 && (
+                    <div style={{ fontSize: '11.5px', color: '#065f46', marginBottom: '6px', paddingLeft: '8px', borderLeft: '2px solid #34d399' }}>
+                      {activeUpsellItems.map(item => `${item.product.title} (x${item.quantity})`).join(', ')}
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#475569', marginBottom: '6px' }}>
+                    <span>Phí vận chuyển:</span>
+                    <span style={{ color: '#059669', fontWeight: 700 }}>0 ₫ (Miễn phí toàn quốc)</span>
+                  </div>
+
+                  <div style={{ height: '1px', backgroundColor: '#bbf7d0', margin: '8px 0' }} />
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <span style={{ fontSize: '14px', fontWeight: 800, color: '#081f13', display: 'block' }}>
+                        TỔNG THANH TOÁN MỚI:
+                      </span>
+                      <span style={{ fontSize: '11px', color: '#64748b' }}>
+                        ({finalCombinedTotalItems} sản phẩm sau khi mua kèm)
+                      </span>
+                    </div>
+                    <span style={{ fontSize: 'clamp(18px, 2.4vh, 22px)', fontWeight: 800, color: '#004532' }}>
+                      {formatVnd(finalCombinedTotalPrice)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Primary & Secondary Action Buttons */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <button
+                    type="button"
+                    disabled={orderSubmitting}
+                    onClick={() => handleConfirmFinalOrder(true)}
+                    style={{
+                      width: '100%',
+                      padding: '13px 20px',
+                      borderRadius: '8px',
+                      backgroundColor: '#004532',
+                      color: '#ffffff',
+                      fontSize: '15px',
+                      fontWeight: 800,
                       border: 'none',
                       cursor: orderSubmitting ? 'not-allowed' : 'pointer',
                       boxShadow: '0 4px 14px rgba(0, 69, 50, 0.25)',
@@ -1847,9 +2012,182 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                     }}
                   >
                     {orderSubmitting ? <RefreshCw size={18} className="spin" /> : <ShieldCheck size={18} />}
-                    {orderSubmitting ? 'Đang xử lý...' : 'Hoàn tất đặt hàng'}
+                    <span>
+                      {orderSubmitting
+                        ? 'Đang lưu đơn hàng...'
+                        : `Xác Nhận Đặt Hàng (${formatVnd(finalCombinedTotalPrice)})`}
+                    </span>
                   </button>
-                </form>
+
+                  {activeUpsellItems.length > 0 ? (
+                    <button
+                      type="button"
+                      disabled={orderSubmitting}
+                      onClick={() => handleConfirmFinalOrder(false)}
+                      style={{
+                        width: '100%',
+                        padding: '9px 16px',
+                        borderRadius: '8px',
+                        backgroundColor: '#f8fafc',
+                        border: '1px solid #cbd5e1',
+                        color: '#475569',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        cursor: orderSubmitting ? 'not-allowed' : 'pointer',
+                        textAlign: 'center'
+                      }}
+                    >
+                      Bỏ qua mua kèm, chỉ đặt đơn ban đầu ({formatVnd(cartTotalPrice)})
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setCheckoutStep('FORM')}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#64748b',
+                        fontSize: '13px',
+                        cursor: 'pointer',
+                        textAlign: 'center',
+                        padding: '4px'
+                      }}
+                    >
+                      ← Quay lại chỉnh sửa thông tin giao hàng
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* ──────────────────────────────────────────────────────────
+                STEP 3: ORDER CONFIRMED & SUCCESS SCREEN
+            ────────────────────────────────────────────────────────── */}
+            {checkoutStep === 'SUCCESS' && (
+              <div style={{ padding: 'clamp(6px, 1vh, 12px) 0' }}>
+                <div style={{ textAlign: 'center', marginBottom: 'clamp(14px, 2vh, 20px)' }}>
+                  <div style={{
+                    width: '56px',
+                    height: '56px',
+                    borderRadius: '50%',
+                    backgroundColor: '#ecfdf5',
+                    color: '#059669',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 12px auto',
+                    boxShadow: '0 4px 14px rgba(5, 150, 105, 0.2)'
+                  }}>
+                    <CheckCircle2 size={32} />
+                  </div>
+                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.08em', backgroundColor: '#dcfce7', padding: '3px 12px', borderRadius: '999px' }}>
+                    {lastOrderCode ? `Mã Đơn: ${lastOrderCode}` : 'Đặt Hàng Thành Công'}
+                  </span>
+                  <h3 className="font-headline" style={{ fontSize: 'clamp(20px, 2.5vh, 24px)', fontWeight: 800, color: '#111827', margin: '8px 0 6px 0' }}>
+                    Cảm Ơn Bạn Đã Tin Chọn Kollection 4U!
+                  </h3>
+                  <p style={{ fontSize: '13.5px', color: '#64748b', lineHeight: 1.5, margin: 0, maxWidth: '480px', marginLeft: 'auto', marginRight: 'auto' }}>
+                    Đội ngũ chuyên viên 4U sẽ liên hệ số điện thoại <strong>{lastPlacedOrder?.customerPhone || orderForm.phone || 'của bạn'}</strong> trong vòng 15-30 phút để xác nhận và đóng gói giao hàng tận nơi.
+                  </p>
+                </div>
+
+                {/* Ordered Items Receipt Box */}
+                <div style={{
+                  backgroundColor: '#f8fafc',
+                  borderRadius: '12px',
+                  border: '1px solid #e2e8f0',
+                  padding: '14px 16px',
+                  marginBottom: '16px'
+                }}>
+                  <div style={{ fontSize: '12px', fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
+                    Chi tiết đơn hàng ({lastPlacedOrder?.items?.length || 0} mục):
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '160px', overflowY: 'auto', marginBottom: '10px' }}>
+                    {lastPlacedOrder?.items?.map((item: any, idx: number) => (
+                      <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
+                          <span style={{ fontWeight: 700, color: '#059669' }}>{item.quantity}x</span>
+                          <span style={{ color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {item.product?.title || (item.product as any)?.name || 'Sản phẩm 4U'}
+                          </span>
+                        </div>
+                        <span style={{ fontWeight: 600, color: '#334155', marginLeft: '12px', whiteSpace: 'nowrap' }}>
+                          {formatVnd((item.product?.price || 0) * item.quantity)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ height: '1px', backgroundColor: '#e2e8f0', margin: '8px 0' }} />
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '14px' }}>
+                    <span style={{ fontWeight: 700, color: '#0f172a' }}>Tổng số tiền thanh toán:</span>
+                    <strong style={{ fontSize: '17px', color: '#004532' }}>
+                      {formatVnd(lastPlacedOrder?.totalAmount || finalCombinedTotalPrice)}
+                    </strong>
+                  </div>
+                </div>
+
+                {/* Optional QR Payment Transfer Details */}
+                <div style={{
+                  backgroundColor: '#f4f7f5',
+                  border: '1px solid #cce3d4',
+                  borderRadius: '12px',
+                  padding: '12px 16px',
+                  marginBottom: '18px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '14px'
+                }}>
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    backgroundColor: '#ffffff',
+                    borderRadius: '8px',
+                    border: '1px solid #cbd5e1',
+                    padding: '3px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <img
+                      src={`https://api.vietqr.io/image/970422-0987654321-compact.png?amount=${lastPlacedOrder?.totalAmount || finalCombinedTotalPrice}&addInfo=${encodeURIComponent('4U ' + (lastOrderCode || 'KOLLECTION'))}&accountName=4U%20WELLNESS%20RETREAT`}
+                      alt="Mã QR Chuyển Khoản"
+                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                    />
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#334155', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <div><span style={{ color: '#64748b' }}>MB Bank:</span> <strong style={{ fontFamily: 'monospace', color: '#065f46' }}>0987 654 321</strong></div>
+                    <div><span style={{ color: '#64748b' }}>Chủ TK:</span> <strong>4U WELLNESS & RETREAT</strong></div>
+                    <div><span style={{ color: '#64748b' }}>Nội dung:</span> <code style={{ backgroundColor: '#ffffff', padding: '1px 5px', borderRadius: '3px' }}>4U {lastOrderCode || 'KOLLECTION'}</code></div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <button
+                    onClick={() => {
+                      setCheckoutModalOpen(false);
+                      setCheckoutStep('FORM');
+                      setUpsellSelectedMap({});
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '12px 28px',
+                      borderRadius: '8px',
+                      backgroundColor: '#004532',
+                      color: '#ffffff',
+                      fontWeight: 700,
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      boxShadow: '0 4px 12px rgba(0,69,50,0.2)'
+                    }}
+                  >
+                    Hoàn tất & Tiếp tục mua sắm
+                  </button>
+                </div>
               </div>
             )}
           </div>

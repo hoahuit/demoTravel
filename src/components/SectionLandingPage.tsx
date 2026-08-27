@@ -84,13 +84,22 @@ export default function SectionLandingPage({
 
   const { hero, signals, about, method, benefits, trust, steps, pricing, faq } = data;
 
+  const getCardGridClass = (count: number) => {
+    if (count === 6) return 'y3d-cards-grid y3d-cards-grid-6';
+    if (count === 5) return 'y3d-cards-grid y3d-cards-grid-5';
+    if (count === 4) return 'y3d-cards-grid y3d-cards-grid-4';
+    if (count === 3) return 'y3d-cards-grid y3d-cards-grid-3';
+    if (count === 2) return 'y3d-cards-grid y3d-cards-grid-2';
+    return 'y3d-cards-grid';
+  };
+
   return (
     <div className="y3d-root yoga3d-landing-container">
       {/* ── 1. HERO SECTION ── */}
       <section className="y3d-hero-banner">
         <div className="y3d-hero-content">
           <div className="y3d-badge-pill">
-            <Sparkles size={16} />
+            <Sparkles size={18} />
             <span>{hero.badge}</span>
           </div>
 
@@ -109,7 +118,7 @@ export default function SectionLandingPage({
               className="y3d-btn-primary"
             >
               <span>{hero.ctaText}</span>
-              <ArrowRight size={18} />
+              <ArrowRight size={20} />
             </button>
           </div>
 
@@ -120,28 +129,28 @@ export default function SectionLandingPage({
       </section>
 
       {/* ── 2. SECTION: CƠ THỂ ĐANG GỬI TÍN HIỆU ── */}
-      <section id="signals" className="py-24 y3d-section y3d-section-alt">
-        <div className="container-page y3d-container">
-          <div className="max-w-[880px] mx-auto text-center mb-14 y3d-section-header">
-            <span className="eyebrow text-base y3d-eyebrow">{signals.eyebrow}</span>
-            <h2 className="text-[clamp(28px,4.2vw,52px)] text-balance">
+      <section id="signals" className="y3d-section y3d-section-alt">
+        <div className="y3d-container">
+          <div className="y3d-section-header">
+            <span className="y3d-eyebrow">{signals.eyebrow}</span>
+            <h2 className="y3d-section-heading">
               {signals.heading}
             </h2>
-            <p className="text-[17px] text-muted-foreground mt-5 leading-[1.7] text-pretty">
+            <p className="y3d-section-desc">
               {signals.description}
             </p>
           </div>
 
-          <div className="y3d-cards-row">
+          <div className={getCardGridClass(signals.items.length)}>
             {signals.items.map((item, idx) => (
-              <article key={idx} className="card-soft p-6 y3d-card-soft">
-                <div className="icon-tile mb-4 y3d-icon-tile">
-                  <Activity size={24} />
+              <article key={idx} className="y3d-card-soft">
+                <div className="y3d-icon-tile">
+                  <Activity size={28} />
                 </div>
-                <h3 className="font-serif font-bold text-lg mb-2 text-balance">
+                <h3 className="y3d-card-title">
                   {item.title}
                 </h3>
-                <p className="text-[14px] text-muted-foreground leading-[1.6] text-pretty">
+                <p className="y3d-card-desc">
                   {item.description}
                 </p>
               </article>
@@ -151,30 +160,29 @@ export default function SectionLandingPage({
       </section>
 
       {/* ── 3. SECTION: GIỚI THIỆU KHÁI NIỆM & HÌNH ẢNH ── */}
-      <section id="about-3d" className="py-24 y3d-section">
-        <div className="container-page y3d-container">
-          <div className="grid lg:grid-cols-2 gap-14 items-center y3d-grid-2">
-            <div>
-              <span className="eyebrow text-base y3d-eyebrow">{about.eyebrow}</span>
-              <h2 className="text-[clamp(24px,2.8vw,38px)] mb-6 leading-[1.25] text-balance font-bold">
+      <section id="about-3d" className="y3d-section">
+        <div className="y3d-container">
+          <div className="y3d-about-grid">
+            <div className="y3d-about-content">
+              <span className="y3d-eyebrow">{about.eyebrow}</span>
+              <h2 className="y3d-about-heading">
                 {about.heading}
               </h2>
-              <p className="text-[16px] text-muted-foreground leading-[1.8] mb-5 text-pretty">
+              <p className="y3d-about-desc">
                 {about.para1}
               </p>
-              <p className="text-[16px] text-muted-foreground leading-[1.8] text-pretty">
+              <p className="y3d-about-desc">
                 {about.para2}
               </p>
             </div>
 
-            <div className="order-first lg:order-last y3d-image-frame">
+            <div className="y3d-image-frame">
               <img
                 src={about.image || '/images/yoga-practice-guide.jpg'}
                 alt="Chuyên gia hướng dẫn phương pháp cho học viên"
                 loading="lazy"
                 width="1920"
                 height="1080"
-                className="w-full h-auto rounded-3xl object-cover aspect-[16/10]"
               />
             </div>
           </div>
@@ -182,34 +190,34 @@ export default function SectionLandingPage({
       </section>
 
       {/* ── 4. SECTION: 3 ĐIỂM VÀNG (METHOD) ── */}
-      <section id="method" className="bg-section-alt py-24 y3d-section y3d-section-alt">
-        <div className="container-page y3d-container">
-          <div className="max-w-[880px] mx-auto text-center mb-14 y3d-section-header">
-            <span className="eyebrow text-base y3d-eyebrow">{method.eyebrow}</span>
-            <h2 className="text-[clamp(32px,4.4vw,56px)] text-balance">
+      <section id="method" className="y3d-section y3d-section-alt">
+        <div className="y3d-container">
+          <div className="y3d-section-header">
+            <span className="y3d-eyebrow">{method.eyebrow}</span>
+            <h2 className="y3d-section-heading">
               {method.heading}
             </h2>
-            <p className="text-[17px] text-muted-foreground mt-5 leading-[1.7] text-pretty">
+            <p className="y3d-section-desc">
               {method.description}
             </p>
           </div>
 
-          <div className="y3d-cards-row">
+          <div className={getCardGridClass(method.items.length)}>
             {method.items.map((item, idx) => (
-              <article key={idx} className="card-soft p-6 text-center flex flex-col items-center y3d-card-soft">
-                <div className="text-[11px] uppercase tracking-[0.2em] text-emerald-800 font-semibold mb-3">
+              <article key={idx} className="y3d-card-soft text-center flex flex-col items-center">
+                <div className="y3d-point-tag">
                   {item.point}
                 </div>
-                <div className="icon-tile mb-4 y3d-icon-tile">
-                  {idx === 0 ? <Activity size={24} /> : idx === 1 ? <Wind size={24} /> : <Sparkles size={24} />}
+                <div className="y3d-icon-tile">
+                  {idx === 0 ? <Activity size={28} /> : idx === 1 ? <Wind size={28} /> : <Sparkles size={28} />}
                 </div>
-                <h3 className="font-serif font-bold text-xl mb-1 text-balance">
+                <h3 className="y3d-card-title">
                   {item.title}
                 </h3>
-                <div className="font-serif italic text-primary mb-3 text-sm y3d-italic-sage">
+                <div className="y3d-italic-sage">
                   {item.sanskrit}
                 </div>
-                <p className="text-[14px] text-muted-foreground leading-[1.6] text-pretty">
+                <p className="y3d-card-desc">
                   {item.description}
                 </p>
               </article>
@@ -219,28 +227,28 @@ export default function SectionLandingPage({
       </section>
 
       {/* ── 5. SECTION: 21 NGÀY LIÊN TỤC SẼ THAY ĐỔI ĐIỀU GÌ (BENEFITS) ── */}
-      <section id="benefits" className="py-24 y3d-section">
-        <div className="container-page y3d-container">
-          <div className="max-w-[880px] mx-auto text-center mb-14 y3d-section-header">
-            <span className="eyebrow text-base y3d-eyebrow">{benefits.eyebrow}</span>
-            <h2 className="text-[clamp(22px,3.6vw,44px)] text-balance">
+      <section id="benefits" className="y3d-section">
+        <div className="y3d-container">
+          <div className="y3d-section-header">
+            <span className="y3d-eyebrow">{benefits.eyebrow}</span>
+            <h2 className="y3d-section-heading">
               {benefits.heading}
             </h2>
-            <p className="text-[17px] text-muted-foreground mt-5 leading-[1.7] text-pretty">
+            <p className="y3d-section-desc">
               {benefits.description}
             </p>
           </div>
 
-          <div className="y3d-cards-row">
+          <div className={getCardGridClass(benefits.items.length)}>
             {benefits.items.map((item, idx) => (
-              <article key={idx} className="card-soft p-6 text-center flex flex-col items-center y3d-card-soft">
-                <div className="icon-tile mb-4 y3d-icon-tile">
-                  {idx === 0 ? <Sun size={24} /> : idx === 1 ? <Heart size={24} /> : idx === 2 ? <Dumbbell size={24} /> : idx === 3 ? <Zap size={24} /> : idx === 4 ? <Brain size={24} /> : <Leaf size={24} />}
+              <article key={idx} className="y3d-card-soft text-center flex flex-col items-center">
+                <div className="y3d-icon-tile">
+                  {idx === 0 ? <Sun size={28} /> : idx === 1 ? <Heart size={28} /> : idx === 2 ? <Dumbbell size={28} /> : idx === 3 ? <Zap size={28} /> : idx === 4 ? <Brain size={28} /> : <Leaf size={28} />}
                 </div>
-                <h3 className="font-serif font-bold text-[17px] mb-2 text-balance">
+                <h3 className="y3d-card-title">
                   {item.title}
                 </h3>
-                <p className="text-[13.5px] text-muted-foreground text-pretty leading-[1.55]">
+                <p className="y3d-card-desc">
                   {item.description}
                 </p>
               </article>
@@ -250,14 +258,14 @@ export default function SectionLandingPage({
       </section>
 
       {/* ── 6. SECTION: VÌ SAO TIN TƯỞNG (LUXURY BENTO & EDITORIAL TRUST SECTION) ── */}
-      <section id="trust" className="py-24 y3d-section y3d-section-alt">
-        <div className="container-page y3d-container">
-          <div className="max-w-[880px] mx-auto text-center mb-14 y3d-section-header">
-            <span className="eyebrow text-base y3d-eyebrow">{trust.eyebrow}</span>
-            <h2 className="text-[clamp(28px,4.2vw,52px)] text-balance">
+      <section id="trust" className="y3d-section y3d-section-alt">
+        <div className="y3d-container">
+          <div className="y3d-section-header">
+            <span className="y3d-eyebrow">{trust.eyebrow}</span>
+            <h2 className="y3d-section-heading">
               {trust.heading}
             </h2>
-            <p className="text-[17px] text-muted-foreground mt-5 leading-[1.7] text-pretty">
+            <p className="y3d-section-desc">
               {trust.description}
             </p>
           </div>
@@ -267,7 +275,7 @@ export default function SectionLandingPage({
             {trust.stats.map((stat, idx) => (
               <div key={idx} className="y3d-stat-box">
                 <div className="y3d-stat-icon-wrap">
-                  {idx === 0 ? <CalendarDays size={26} /> : idx === 1 ? <Clock size={26} /> : idx === 2 ? <Globe size={26} /> : <Landmark size={26} />}
+                  {idx === 0 ? <CalendarDays size={30} /> : idx === 1 ? <Clock size={30} /> : idx === 2 ? <Globe size={30} /> : <Landmark size={30} />}
                 </div>
                 <div className="y3d-stat-number">{stat.number}</div>
                 <div className="y3d-stat-label">{stat.label}</div>
@@ -275,12 +283,12 @@ export default function SectionLandingPage({
             ))}
           </div>
 
-          {/* 2. Horizontal Feature Cards Single Row */}
-          <div className="y3d-cards-row" style={{ marginBottom: '36px' }}>
+          {/* 2. Feature Cards (4 items -> 2 rows x 2 items) */}
+          <div className={getCardGridClass(trust.features.length)} style={{ marginBottom: '36px' }}>
             {trust.features.map((feat, idx) => (
               <div key={idx} className="y3d-feature-card">
                 <div className="y3d-feature-icon-badge">
-                  <CheckCircle size={20} />
+                  <CheckCircle size={22} />
                 </div>
                 <div className="y3d-feature-content">
                   <h4>{feat.title}</h4>
@@ -290,8 +298,8 @@ export default function SectionLandingPage({
             ))}
           </div>
 
-          {/* 3. 2 Master Profile Editorial Cards Single Row */}
-          <div className="y3d-cards-row">
+          {/* 3. 2 Master Profile Editorial Cards (1 row x 2 items) */}
+          <div className="y3d-cards-grid y3d-cards-grid-2">
             <article className="y3d-master-profile-card">
               <div className="y3d-profile-image-wrap">
                 <img
@@ -325,22 +333,22 @@ export default function SectionLandingPage({
         </div>
       </section>
 
-      {/* ── 7. SECTION: QUY TRÌNH ĐƠN GIẢN (STEPS SINGLE ROW) ── */}
-      <section className="py-24 y3d-section">
-        <div className="container-page y3d-container">
-          <div className="max-w-[880px] mx-auto text-center mb-14 y3d-section-header">
-            <span className="eyebrow text-base y3d-eyebrow">{steps.eyebrow}</span>
-            <h2 className="text-[clamp(28px,4.2vw,52px)] text-balance">
+      {/* ── 7. SECTION: QUY TRÌNH ĐƠN GIẢN (STEPS: 4 items -> 2 rows x 2 items) ── */}
+      <section className="y3d-section">
+        <div className="y3d-container">
+          <div className="y3d-section-header">
+            <span className="y3d-eyebrow">{steps.eyebrow}</span>
+            <h2 className="y3d-section-heading">
               {steps.heading}
             </h2>
           </div>
 
-          <div className="y3d-cards-row">
+          <div className={getCardGridClass(steps.items.length)}>
             {steps.items.map((stepItem, idx) => (
               <div key={idx} className="y3d-step-card">
                 <span className="y3d-step-number">{stepItem.step}</span>
                 <div className="y3d-step-icon-wrap">
-                  {idx === 0 ? <FileText size={24} /> : idx === 1 ? <Video size={24} /> : idx === 2 ? <Calendar size={24} /> : <PlayCircle size={24} />}
+                  {idx === 0 ? <FileText size={28} /> : idx === 1 ? <Video size={28} /> : idx === 2 ? <Calendar size={28} /> : <PlayCircle size={28} />}
                 </div>
                 <h4>{stepItem.title}</h4>
                 <p>{stepItem.description}</p>
@@ -351,11 +359,11 @@ export default function SectionLandingPage({
       </section>
 
       {/* ── 8. SECTION: FAQ (CÂU HỎI THƯỜNG GẶP) ── */}
-      <section id="faq" className="py-24 y3d-section y3d-section-alt">
-        <div className="container-page y3d-container">
+      <section id="faq" className="y3d-section y3d-section-alt">
+        <div className="y3d-container">
           <div className="y3d-section-header">
-            <span className="eyebrow text-base y3d-eyebrow">{faq.eyebrow}</span>
-            <h2 className="text-[clamp(28px,4.2vw,52px)] text-balance">
+            <span className="y3d-eyebrow">{faq.eyebrow}</span>
+            <h2 className="y3d-section-heading">
               {faq.heading}
             </h2>
           </div>
@@ -370,7 +378,7 @@ export default function SectionLandingPage({
                 >
                   <span>{faqItem.question}</span>
                   <ChevronDown
-                    size={20}
+                    size={22}
                     className={`y3d-faq-icon ${activeFaq === idx ? 'open' : ''}`}
                   />
                 </button>

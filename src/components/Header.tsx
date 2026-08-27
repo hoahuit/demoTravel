@@ -27,12 +27,27 @@ import {
 import { fetchMenuCategoriesApi, MenuCategoryItem } from '../services/apiService';
 
 export interface HeaderProps {
+  currentPath?: string;
   onOpenSearch?: () => void;
   onNavigate?: (path: string) => void;
   onOpenBooking?: (tourData?: any) => void;
   onOpenCalendar?: () => void;
   onOpenCustomTour?: () => void;
 }
+
+export const LANDING_PAGE_SUBMENUS = [
+  { id: 'signals', label: 'Vì sao cần?', targetId: 'signals' },
+  { id: 'benefits', label: 'Lợi ích', targetId: 'benefits' },
+  { id: 'method', label: 'Phương pháp', targetId: 'method' },
+  { id: 'faq', label: 'Hỏi · Đáp', targetId: 'faq' }
+];
+
+const DEFAULT_FIXED_PARENT_MENUS = [
+  { label: 'Retreats ĐỘC QUYỀN', href: '/retreat/docquyen', isHighlight: true, icon: Crown },
+  { label: 'Sắp Khởi Hành', href: '/retreat/sapkhoihanh', isHighlight: false, icon: Calendar },
+  { label: 'KHÔNG THỂ BỎ LỠ', href: '/retreat/khongthebolo', isHighlight: false, icon: Flame },
+  { label: 'Ưu Đãi GIỜ CHÓT', href: '/retreat/uudaigiochot', isHighlight: false, icon: Zap }
+];
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Heart,
@@ -82,6 +97,7 @@ interface MenuCategory {
 }
 
 export default function Header({
+  currentPath = '',
   onNavigate,
   onOpenBooking,
   onOpenCalendar
@@ -92,6 +108,20 @@ export default function Header({
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [mobileExpandedCat, setMobileExpandedCat] = useState<string | null>(null);
   const [liveCategories, setLiveCategories] = useState<MenuCategoryItem[]>([]);
+  const [activeLandingSection, setActiveLandingSection] = useState<string>('signals');
+
+  const isDetailPage = useMemo(() => {
+    const path = currentPath || (typeof window !== 'undefined' ? window.location.pathname : '');
+    return (
+      path.startsWith('/productdetail') ||
+      path.startsWith('/sanpham') ||
+      path.startsWith('/san-pham') ||
+      path.startsWith('/tour/') ||
+      path.startsWith('/tours/') ||
+      (path.startsWith('/retreat/') &&
+        !['/retreat/docquyen', '/retreat/sapkhoihanh', '/retreat/khongthebolo', '/retreat/uudaigiochot', '/retreat/hot'].includes(path))
+    );
+  }, [currentPath]);
 
   useEffect(() => {
     fetchMenuCategoriesApi()
@@ -100,26 +130,64 @@ export default function Header({
           setLiveCategories(cats);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 30) {
+      const scrollY = window.scrollY;
+      if (scrollY > 50) {
         setScrolled(true);
+        if (!isDetailPage) {
+          setRow2Visible(false);
+        } else {
+          setRow2Visible(true); // Trên trang detail khi cuộn xuống, Row 2 luôn hiển thị cứng 4 menu landing page
+        }
       } else {
         setScrolled(false);
-      }
-
-      if (window.scrollY > 60) {
-        setRow2Visible(false);
-      } else {
         setRow2Visible(true);
       }
+
+      // Track active landing page section when on detail page
+      if (isDetailPage) {
+        if (scrollY < 120) {
+          setActiveLandingSection('signals');
+          return;
+        }
+
+        const sectionIds = ['signals', 'about-3d', 'method', 'benefits', 'trust', 'faq'];
+        const scrollPosition = scrollY + 220;
+
+        for (let i = sectionIds.length - 1; i >= 0; i--) {
+          const el = document.getElementById(sectionIds[i]);
+          if (el) {
+            const top = el.getBoundingClientRect().top + scrollY;
+            if (scrollPosition >= top) {
+              if (sectionIds[i] === 'about-3d') {
+                setActiveLandingSection('signals');
+              } else if (sectionIds[i] === 'trust') {
+                setActiveLandingSection('benefits');
+              } else {
+                setActiveLandingSection(sectionIds[i]);
+              }
+              break;
+            }
+          }
+        }
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isDetailPage]);
+
+  const handleScrollToLandingSection = (targetId: string) => {
+    setActiveCategory(null);
+    setMobileMenuOpen(false);
+    const targetElement = document.getElementById(targetId) || document.querySelector(`[id*="${targetId}"]`);
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   // 1. Fixed Top Badges (Retreats Độc Quyền, Sắp Khởi Hành, Không Thể Bỏ Lỡ, Ưu Đãi Giờ Chót)
   const fixedBadges = useMemo(() => {
@@ -131,18 +199,18 @@ export default function Header({
           c.slug === 'doc-quyen'
             ? '/retreat/docquyen'
             : c.slug === 'sap-khoi-hanh'
-            ? '/retreat/sapkhoihanh'
-            : c.slug === 'khong-the-bo-lo'
-            ? '/retreat/khongthebolo'
-            : c.slug === 'uu-dai-gio-chot'
-            ? '/retreat/uudaigiochot'
-            : `/retreat/${c.slug}`,
+              ? '/retreat/sapkhoihanh'
+              : c.slug === 'khong-the-bo-lo'
+                ? '/retreat/khongthebolo'
+                : c.slug === 'uu-dai-gio-chot'
+                  ? '/retreat/uudaigiochot'
+                  : `/retreat/${c.slug}`,
         isHighlight:
           c.slug === 'doc-quyen' || c.slug === 'docquyen' || c.icon === 'Crown',
-        icon: (c.icon && ICON_MAP[c.icon]) || null
+        icon: (c.icon && ICON_MAP[c.icon]) || (c.slug === 'doc-quyen' ? Crown : null)
       }));
     }
-    return [];
+    return DEFAULT_FIXED_PARENT_MENUS;
   }, [liveCategories]);
 
   // 2. Dynamic Menu Data built directly from liveCategories
@@ -246,6 +314,8 @@ export default function Header({
   }, [liveCategories]);
 
   const activeCategoryData = menuData.find((m) => m.id === activeCategory);
+  const showLandingSubmenu = isDetailPage && scrolled;
+  const isRow2Open = showLandingSubmenu || row2Visible;
 
   return (
     <>
@@ -256,7 +326,9 @@ export default function Header({
         }}
         onMouseLeave={() => {
           setActiveCategory(null);
-          if (window.scrollY > 50) setRow2Visible(false);
+          if (!isDetailPage && window.scrollY > 50) {
+            setRow2Visible(false);
+          }
         }}
         style={{
           position: 'fixed',
@@ -267,8 +339,8 @@ export default function Header({
           background: activeCategory
             ? 'rgba(13, 23, 16, 0.88)'
             : scrolled
-            ? 'rgba(13, 23, 16, 0.88)'
-            : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%)',
+              ? 'rgba(13, 23, 16, 0.88)'
+              : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%)',
           backdropFilter:
             activeCategory || scrolled ? 'blur(24px) saturate(180%)' : 'none',
           WebkitBackdropFilter:
@@ -409,13 +481,13 @@ export default function Header({
               ))}
             </div>
 
-            {/* Row 2: Main Navigation Items */}
+            {/* Row 2: Main Navigation Items / Landing Page Submenus on Detail Page */}
             <div
               style={{
-                maxHeight: row2Visible ? '48px' : '0px',
-                opacity: row2Visible ? 1 : 0,
+                maxHeight: isRow2Open ? '48px' : '0px',
+                opacity: isRow2Open ? 1 : 0,
                 overflow: 'hidden',
-                pointerEvents: row2Visible ? 'auto' : 'none',
+                pointerEvents: isRow2Open ? 'auto' : 'none',
                 transition:
                   'max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
                 width: '100%',
@@ -423,129 +495,189 @@ export default function Header({
                 alignItems: 'center',
                 justifyContent: 'center',
                 whiteSpace: 'nowrap',
-                minHeight: row2Visible ? '34px' : '0px'
+                minHeight: isRow2Open ? '34px' : '0px'
               }}
             >
-              <nav
-                className="hide-mobile"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexWrap: 'nowrap',
-                  whiteSpace: 'nowrap',
-                  gap: '28px'
-                }}
-              >
-                {menuData.map((item) => (
-                  <div
-                    key={item.id}
-                    onMouseEnter={() =>
-                      item.hasSubmenu
-                        ? setActiveCategory(item.id)
-                        : setActiveCategory(null)
-                    }
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      position: 'relative',
-                      whiteSpace: 'nowrap',
-                      flexShrink: 0
-                    }}
-                  >
-                    {item.hasSubmenu ? (
+              {showLandingSubmenu ? (
+                <nav
+                  className="hide-mobile"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexWrap: 'nowrap',
+                    whiteSpace: 'nowrap',
+                    gap: '24px'
+                  }}
+                >
+                  {LANDING_PAGE_SUBMENUS.map((item) => {
+                    const isActive = activeLandingSection === item.targetId;
+                    return (
                       <button
-                        onClick={(e) => {
-                          if (item.href && item.href.startsWith('/')) {
-                            e.preventDefault();
-                            if (onNavigate) onNavigate(item.href);
-                            setActiveCategory(null);
-                          } else {
-                            setActiveCategory(
-                              activeCategory === item.id ? null : item.id
-                            );
-                          }
-                        }}
+                        key={item.id}
+                        type="button"
+                        onClick={() => handleScrollToLandingSection(item.targetId)}
                         style={{
-                          background: 'none',
-                          border: 'none',
-                          color:
-                            activeCategory === item.id ? '#4ade80' : '#ffffff',
-                          fontSize: '1.02rem',
-                          fontWeight: '700',
+                          background: isActive ? 'rgba(74, 222, 128, 0.18)' : 'rgba(255, 255, 255, 0.06)',
+                          border: isActive ? '1px solid rgba(74, 222, 128, 0.5)' : '1px solid rgba(255, 255, 255, 0.12)',
+                          borderRadius: '999px',
+                          color: isActive ? '#4ade80' : '#ffffff',
+                          fontSize: '0.96rem',
+                          fontWeight: isActive ? 800 : 700,
+                          padding: '5px 18px',
                           cursor: 'pointer',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '6px',
-                          padding: '0',
+                          gap: '7px',
                           whiteSpace: 'nowrap',
-                          transition: 'color 0.2s ease'
+                          transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                          boxShadow: isActive ? '0 3px 14px rgba(74, 222, 128, 0.28)' : 'none'
                         }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.color = '#4ade80')
-                        }
-                        onMouseLeave={(e) => {
-                          if (activeCategory !== item.id)
-                            e.currentTarget.style.color = '#ffffff';
-                        }}
-                      >
-                        <span style={{ whiteSpace: 'nowrap' }}>
-                          {item.title}
-                        </span>
-                        <ChevronDown
-                          size={14}
-                          style={{
-                            transform:
-                              activeCategory === item.id
-                                ? 'rotate(180deg)'
-                                : 'none',
-                            transition: 'transform 0.25s ease',
-                            opacity: 0.85,
-                            color:
-                              activeCategory === item.id
-                                ? '#4ade80'
-                                : 'currentColor',
-                            flexShrink: 0
-                          }}
-                        />
-                      </button>
-                    ) : (
-                      <a
-                        href={item.href}
-                        onClick={(e) => {
-                          if (item.href && item.href.startsWith('/')) {
-                            e.preventDefault();
-                            if (onNavigate) onNavigate(item.href);
+                        onMouseEnter={(e) => {
+                          if (!isActive) {
+                            e.currentTarget.style.color = '#4ade80';
+                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                            e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.3)';
                           }
-                          setActiveCategory(null);
                         }}
-                        style={{
-                          color: '#ffffff',
-                          fontSize: '1.02rem',
-                          fontWeight: '700',
-                          textDecoration: 'none',
-                          padding: '0',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          whiteSpace: 'nowrap',
-                          transition: 'color 0.2s ease'
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.color = '#4ade80')
-                        }
                         onMouseLeave={(e) => {
-                          if (activeCategory !== item.id)
+                          if (!isActive) {
                             e.currentTarget.style.color = '#ffffff';
+                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
+                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                          }
                         }}
                       >
-                        <span style={{ whiteSpace: 'nowrap' }}>
-                          {item.title}
-                        </span>
-                      </a>
-                    )}
-                  </div>
-                ))}
-              </nav>
+                        <span>{item.label}</span>
+                        {isActive && (
+                          <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#4ade80', marginLeft: '3px' }} />
+                        )}
+                      </button>
+                    );
+                  })}
+                </nav>
+              ) : (
+                <nav
+                  className="hide-mobile"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexWrap: 'nowrap',
+                    whiteSpace: 'nowrap',
+                    gap: '28px'
+                  }}
+                >
+                  {menuData.map((item) => (
+                    <div
+                      key={item.id}
+                      onMouseEnter={() =>
+                        item.hasSubmenu
+                          ? setActiveCategory(item.id)
+                          : setActiveCategory(null)
+                      }
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        position: 'relative',
+                        whiteSpace: 'nowrap',
+                        flexShrink: 0
+                      }}
+                    >
+                      {item.hasSubmenu ? (
+                        <button
+                          onClick={(e) => {
+                            if (item.href && item.href.startsWith('/')) {
+                              e.preventDefault();
+                              if (onNavigate) onNavigate(item.href);
+                              setActiveCategory(null);
+                            } else {
+                              setActiveCategory(
+                                activeCategory === item.id ? null : item.id
+                              );
+                            }
+                          }}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color:
+                              activeCategory === item.id ? '#4ade80' : '#ffffff',
+                            fontSize: '1.02rem',
+                            fontWeight: '700',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            padding: '0',
+                            whiteSpace: 'nowrap',
+                            transition: 'color 0.2s ease'
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.color = '#4ade80')
+                          }
+                          onMouseLeave={(e) => {
+                            if (activeCategory !== item.id)
+                              e.currentTarget.style.color = '#ffffff';
+                          }}
+                        >
+                          <span style={{ whiteSpace: 'nowrap' }}>
+                            {item.title}
+                          </span>
+                          <ChevronDown
+                            size={14}
+                            style={{
+                              transform:
+                                activeCategory === item.id
+                                  ? 'rotate(180deg)'
+                                  : 'none',
+                              transition: 'transform 0.25s ease',
+                              opacity: 0.85,
+                              color:
+                                activeCategory === item.id
+                                  ? '#4ade80'
+                                  : 'currentColor',
+                              flexShrink: 0
+                            }}
+                          />
+                        </button>
+                      ) : (
+                        <a
+                          href={item.href}
+                          onClick={(e) => {
+                            if (item.href && item.href.startsWith('/')) {
+                              e.preventDefault();
+                              if (onNavigate) onNavigate(item.href);
+                            }
+                            setActiveCategory(null);
+                          }}
+                          style={{
+                            color: '#ffffff',
+                            fontSize: '1.02rem',
+                            fontWeight: '700',
+                            textDecoration: 'none',
+                            padding: '0',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            whiteSpace: 'nowrap',
+                            transition: 'color 0.2s ease'
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.color = '#4ade80')
+                          }
+                          onMouseLeave={(e) => {
+                            if (activeCategory !== item.id)
+                              e.currentTarget.style.color = '#ffffff';
+                          }}
+                        >
+                          <span style={{ whiteSpace: 'nowrap' }}>
+                            {item.title}
+                          </span>
+                        </a>
+                      )}
+                    </div>
+                  ))}
+                </nav>
+              )}
             </div>
           </div>
 
@@ -839,13 +971,11 @@ export default function Header({
                                       fontWeight: 800,
                                       padding: '1px 6px',
                                       borderRadius: '999px',
-                                      backgroundColor: `${
-                                        sub.badgeColor || col.color
-                                      }22`,
+                                      backgroundColor: `${sub.badgeColor || col.color
+                                        }22`,
                                       color: sub.badgeColor || col.color,
-                                      border: `1px solid ${
-                                        sub.badgeColor || col.color
-                                      }44`,
+                                      border: `1px solid ${sub.badgeColor || col.color
+                                        }44`,
                                       letterSpacing: '0.04em'
                                     }}
                                   >
@@ -894,10 +1024,92 @@ export default function Header({
             padding: '24px 20px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '8px',
+            gap: '10px',
             overflowY: 'auto'
           }}
         >
+          {/* Top 4 Parent Menus in Mobile Drawer */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '8px',
+            paddingBottom: '14px',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.12)'
+          }}>
+            {fixedBadges.map((b, idx) => (
+              <a
+                key={idx}
+                href={b.href}
+                onClick={(e) => {
+                  if (b.href && b.href.startsWith('/')) {
+                    e.preventDefault();
+                    if (onNavigate) onNavigate(b.href);
+                  }
+                  setMobileMenuOpen(false);
+                }}
+                style={{
+                  backgroundColor: b.isHighlight ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                  border: b.isHighlight ? '1px solid rgba(74, 222, 128, 0.4)' : '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '10px',
+                  padding: '10px 12px',
+                  color: b.isHighlight ? '#4ade80' : '#ffffff',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                {b.isHighlight && <Crown size={14} style={{ color: '#facc15' }} />}
+                <span>{b.label}</span>
+              </a>
+            ))}
+          </div>
+
+          {/* If on Detail Page: Display the 4 Landing Page Submenus in Mobile Drawer */}
+          {isDetailPage && (
+            <div style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.04)',
+              borderRadius: '14px',
+              padding: '12px',
+              border: '1px solid rgba(74, 222, 128, 0.25)',
+              marginBottom: '8px'
+            }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px' }}>
+                Nội Dung Landing Page
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                {LANDING_PAGE_SUBMENUS.map((item) => {
+                  const isActive = activeLandingSection === item.targetId;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => handleScrollToLandingSection(item.targetId)}
+                      style={{
+                        background: isActive ? 'rgba(74, 222, 128, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                        border: isActive ? '1px solid #4ade80' : '1px solid rgba(255, 255, 255, 0.08)',
+                        borderRadius: '8px',
+                        padding: '9px 10px',
+                        color: isActive ? '#4ade80' : '#ffffff',
+                        fontSize: '0.86rem',
+                        fontWeight: isActive ? 800 : 600,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        textAlign: 'left'
+                      }}
+                    >
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {menuData.map((cat, idx) => (
             <div
               key={idx}

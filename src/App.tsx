@@ -308,6 +308,7 @@ export default function App() {
         {/* Header — "Đặt Lịch & Tư Vấn" opens Consultation Modal, "Lịch khởi hành" opens Departure Calendar */}
         {!isAdminRoute && (
           <Header
+            currentPath={currentPath}
             onOpenSearch={() => setSearchOpen(true)}
             onNavigate={navigateTo}
             onOpenBooking={() => handleOpenConsultation('consultation')}
