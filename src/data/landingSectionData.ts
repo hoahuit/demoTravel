@@ -181,7 +181,7 @@ export const DEFAULT_LANDING_SECTION_DATA: LandingSectionData = {
       },
       {
         point: 'Điểm 02 · Hơi Thở',
-        title: 'Hít Thở ĐÚNG',
+        title: 'Hơi Thở ĐÚNG',
         sanskrit: 'Pranayama, Hơi thở sâu',
         description: 'Kỹ thuật Hơi thở sử dụng tối đa dung tích Phổi, cung cấp đủ Oxy, giảm Stress trong vài phút, tăng Tập trung và cải thiện Giấc ngủ ngay tuần đầu.'
       },

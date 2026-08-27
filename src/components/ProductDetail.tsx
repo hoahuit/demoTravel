@@ -244,21 +244,21 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
 
   const experienceSlides: SlideData[] = [
     {
-      title: pageData.experienceTitle,
+      title: pageData.highlights?.[0] || pageData.experienceTitle || pageData.title,
       subtitle: pageData.subtitle,
       description: pageData.experiencePara1,
       accent: '#006d36',
       imageUrl: pageData.galleryImages?.[0] || pageData.heroImage,
     },
     {
-      title: pageData.highlights?.[0] || `Hành trình ${pageData.location}`,
-      subtitle: pageData.type,
-      description: pageData.subtitle,
+      title: pageData.highlights?.[1] || `Trải nghiệm ẩm thực & tinh thần`,
+      subtitle: pageData.type || pageData.subtitle,
+      description: pageData.experiencePara2,
       accent: '#B08A46',
       imageUrl: pageData.galleryImages?.[1] || pageData.galleryImages?.[0] || pageData.heroImage,
     },
     {
-      title: pageData.highlights?.[1] || `Trải nghiệm ẩm thực & tinh thần`,
+      title: pageData.highlights?.[2] || `Liệu trình phục hồi chuyên sâu`,
       subtitle: pageData.subtitle,
       description: pageData.experiencePara2,
       accent: '#2E86AB',
@@ -267,7 +267,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
     {
       title: pageData.title,
       subtitle: pageData.location,
-      description: pageData.experiencePara2,
+      description: pageData.experiencePara1,
       accent: '#C4956A',
       imageUrl: pageData.galleryImages?.[3] || pageData.heroImage,
     },
@@ -312,8 +312,8 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
         scrollToExpand="Cuộn xuống để mở rộng & khám phá"
         textBlend={false}
       >
-        {/* ── SECTION LANDING PAGE SHOWCASE (PERFECTLY CENTERED & FULL-WIDTH) ── */}
-        <div style={{ width: '100%', maxWidth: '100%', margin: '0 auto 40px auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        {/* ── SECTION LANDING PAGE SHOWCASE (100% FULL SCREEN EDGE-TO-EDGE) ── */}
+        <div style={{ width: '100%', maxWidth: '100%', margin: '0 0 40px 0', padding: 0 }}>
           <SectionLandingPage
             onOpenBooking={() => onOpenBooking ? onOpenBooking(product) : undefined}
             retreatTitle={product.title}

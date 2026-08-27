@@ -155,7 +155,7 @@ export default function Header({
           return;
         }
 
-        const sectionIds = ['signals', 'about-3d', 'method', 'benefits', 'trust', 'faq'];
+        const sectionIds = ['signals', 'about-3d', 'benefits', 'method', 'trust', 'faq'];
         const scrollPosition = scrollY + 220;
 
         for (let i = sectionIds.length - 1; i >= 0; i--) {
@@ -166,7 +166,7 @@ export default function Header({
               if (sectionIds[i] === 'about-3d') {
                 setActiveLandingSection('signals');
               } else if (sectionIds[i] === 'trust') {
-                setActiveLandingSection('benefits');
+                setActiveLandingSection('method');
               } else {
                 setActiveLandingSection(sectionIds[i]);
               }
@@ -183,9 +183,16 @@ export default function Header({
   const handleScrollToLandingSection = (targetId: string) => {
     setActiveCategory(null);
     setMobileMenuOpen(false);
+    setActiveLandingSection(targetId);
     const targetElement = document.getElementById(targetId) || document.querySelector(`[id*="${targetId}"]`);
     if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const headerOffset = 90;
+      const elementPosition = targetElement.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({
+        top: Math.max(0, offsetPosition),
+        behavior: 'smooth'
+      });
     }
   };
 
@@ -505,56 +512,58 @@ export default function Header({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    flexWrap: 'nowrap',
-                    whiteSpace: 'nowrap',
-                    gap: '24px'
+                    width: '100%'
                   }}
                 >
-                  {LANDING_PAGE_SUBMENUS.map((item) => {
-                    const isActive = activeLandingSection === item.targetId;
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => handleScrollToLandingSection(item.targetId)}
-                        style={{
-                          background: isActive ? 'rgba(74, 222, 128, 0.18)' : 'rgba(255, 255, 255, 0.06)',
-                          border: isActive ? '1px solid rgba(74, 222, 128, 0.5)' : '1px solid rgba(255, 255, 255, 0.12)',
-                          borderRadius: '999px',
-                          color: isActive ? '#4ade80' : '#ffffff',
-                          fontSize: '0.96rem',
-                          fontWeight: isActive ? 800 : 700,
-                          padding: '5px 18px',
-                          cursor: 'pointer',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '7px',
-                          whiteSpace: 'nowrap',
-                          transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                          boxShadow: isActive ? '0 3px 14px rgba(74, 222, 128, 0.28)' : 'none'
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isActive) {
-                            e.currentTarget.style.color = '#4ade80';
-                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
-                            e.currentTarget.style.borderColor = 'rgba(74, 222, 128, 0.3)';
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isActive) {
-                            e.currentTarget.style.color = '#ffffff';
-                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
-                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                          }
-                        }}
-                      >
-                        <span>{item.label}</span>
-                        {isActive && (
-                          <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#4ade80', marginLeft: '3px' }} />
-                        )}
-                      </button>
-                    );
-                  })}
+                  <div
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      background: 'rgba(16, 26, 20, 0.7)',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '9999px',
+                      padding: '3px 5px',
+                      gap: '4px',
+                      boxShadow: '0 4px 24px rgba(0, 0, 0, 0.3)'
+                    }}
+                  >
+                    {LANDING_PAGE_SUBMENUS.map((item) => {
+                      const isActive = activeLandingSection === item.targetId;
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => handleScrollToLandingSection(item.targetId)}
+                          style={{
+                            background: isActive
+                              ? 'linear-gradient(135deg, rgba(74, 222, 128, 0.22) 0%, rgba(34, 197, 94, 0.15) 100%)'
+                              : 'transparent',
+                            border: isActive
+                              ? '1px solid rgba(74, 222, 128, 0.45)'
+                              : '1px solid transparent',
+                            borderRadius: '9999px',
+                            color: isActive ? '#4ade80' : 'rgba(255, 255, 255, 0.72)',
+                            fontSize: '0.88rem',
+                            fontWeight: isActive ? 700 : 500,
+                            letterSpacing: '0.01em',
+                            padding: '5px 18px',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            whiteSpace: 'nowrap',
+                            outline: 'none',
+                            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                            boxShadow: isActive ? '0 2px 10px rgba(74, 222, 128, 0.2)' : 'none'
+                          }}
+                        >
+                          <span>{item.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </nav>
               ) : (
                 <nav
@@ -1070,16 +1079,16 @@ export default function Header({
           {/* If on Detail Page: Display the 4 Landing Page Submenus in Mobile Drawer */}
           {isDetailPage && (
             <div style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.04)',
-              borderRadius: '14px',
+              backgroundColor: 'rgba(255, 255, 255, 0.03)',
+              borderRadius: '16px',
               padding: '12px',
-              border: '1px solid rgba(74, 222, 128, 0.25)',
-              marginBottom: '8px'
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              marginBottom: '12px'
             }}>
-              <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px' }}>
-                Nội Dung Landing Page
+              <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px', paddingLeft: '4px' }}>
+                Mục nổi bật trong trang
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
                 {LANDING_PAGE_SUBMENUS.map((item) => {
                   const isActive = activeLandingSection === item.targetId;
                   return (
@@ -1088,18 +1097,20 @@ export default function Header({
                       type="button"
                       onClick={() => handleScrollToLandingSection(item.targetId)}
                       style={{
-                        background: isActive ? 'rgba(74, 222, 128, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                        border: isActive ? '1px solid #4ade80' : '1px solid rgba(255, 255, 255, 0.08)',
-                        borderRadius: '8px',
-                        padding: '9px 10px',
-                        color: isActive ? '#4ade80' : '#ffffff',
-                        fontSize: '0.86rem',
-                        fontWeight: isActive ? 800 : 600,
+                        background: isActive ? 'rgba(74, 222, 128, 0.18)' : 'rgba(255, 255, 255, 0.04)',
+                        border: isActive ? '1px solid rgba(74, 222, 128, 0.45)' : '1px solid rgba(255, 255, 255, 0.06)',
+                        borderRadius: '10px',
+                        padding: '9px 12px',
+                        color: isActive ? '#4ade80' : 'rgba(255, 255, 255, 0.75)',
+                        fontSize: '0.85rem',
+                        fontWeight: isActive ? 700 : 500,
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '6px',
-                        textAlign: 'left'
+                        justifyContent: 'center',
+                        textAlign: 'center',
+                        transition: 'all 0.2s ease',
+                        outline: 'none'
                       }}
                     >
                       <span>{item.label}</span>

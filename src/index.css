@@ -1043,14 +1043,16 @@ body {
 }
 
 .carousel-progress-item {
-  flex: 1;
-  min-width: 140px;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 100%;
   text-align: left;
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 6px 0;
+  padding: 6px 4px;
   outline: none;
+  box-sizing: border-box;
 }
 
 .carousel-progress-track {
@@ -1070,12 +1072,18 @@ body {
 }
 
 .carousel-progress-label {
-  display: block;
-  font-size: 0.85rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.82rem;
+  line-height: 1.45;
   font-weight: 700;
   color: #727d77;
   transition: color 0.3s ease;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .carousel-progress-item:hover .carousel-progress-label {
