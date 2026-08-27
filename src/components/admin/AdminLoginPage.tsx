@@ -140,17 +140,16 @@ export default function AdminLoginPage({ onNavigateHome }: AdminLoginPageProps) 
               </div>
 
               {/* Remember Session & Support */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: '#475569' }}>
+              <div className="admin-login-remember-row">
+                <label className="admin-login-checkbox-label">
                   <input
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    style={{ accentColor: '#0f766e', cursor: 'pointer' }}
+                    className="admin-login-checkbox"
                   />
                   <span>Ghi nhớ phiên đăng nhập</span>
                 </label>
-
               </div>
 
               {/* Submit Button */}
@@ -170,29 +169,14 @@ export default function AdminLoginPage({ onNavigateHome }: AdminLoginPageProps) 
               </button>
 
               {/* Quick Offline Login Helper */}
-              <div style={{ marginTop: '16px', textAlign: 'center' }}>
+              <div className="admin-login-offline-wrap">
                 <button
                   type="button"
                   onClick={() => {
                     setErrorMessage('');
                     loginOffline('superadmin');
                   }}
-                  style={{
-                    background: 'rgba(15, 118, 110, 0.08)',
-                    color: '#0f766e',
-                    border: '1px dashed #0f766e',
-                    borderRadius: '8px',
-                    padding: '9px 14px',
-                    fontSize: '13px',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    width: '100%',
-                    transition: 'all 0.2s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '6px'
-                  }}
+                  className="admin-login-offline-btn"
                 >
                   ⚡ Đăng Nhập Nhanh (Chế độ Local Offline)
                 </button>
@@ -213,12 +197,11 @@ export default function AdminLoginPage({ onNavigateHome }: AdminLoginPageProps) 
                   }
                 }}
                 className="admin-login-back-btn"
-                style={{ cursor: 'pointer' }}
               >
                 ← Trở về website 4U Retreat
               </button>
 
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              <span className="admin-login-ssl-tag">
                 <ShieldCheck size={14} color="#10b981" />
                 Mã hóa SSL 256-bit
               </span>

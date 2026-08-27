@@ -116,7 +116,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
 
                 <li className="footer-contact-row">
                   <div>
-                    <div><a href="tel:0896472601" className="footer-link-white" style={{ fontWeight: '600' }}>076 488 6877</a></div>
+                    <div><a href="tel:0896472601" className="footer-link-white footer-bold-text">076 488 6877</a></div>
                   </div>
                 </li>
 

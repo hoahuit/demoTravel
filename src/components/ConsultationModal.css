@@ -1,0 +1,345 @@
+/* ==========================================================================
+   ConsultationModal.css
+   Modal Tư Vấn 1:1 & May Đo Lịch Trình Riêng (2-in-1 Smart Modal)
+   ========================================================================== */
+
+/* Floating Buttons */
+.consultation-floating-wrap {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 9990;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+.consultation-float-btn {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: #1E4A3D;
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(30, 74, 61, 0.4), 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s cubic-bezier(.22, .61, .36, 1);
+    position: relative;
+}
+
+.consultation-float-btn:hover {
+    transform: scale(1.1);
+    background-color: #10201B;
+}
+
+.consultation-float-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ef4444;
+    border: 2px solid #ffffff;
+}
+
+.consultation-scrolltop-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(229, 239, 232, 0.95);
+    color: #10201B;
+    border: 1px solid rgba(16, 32, 27, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s ease;
+}
+
+.consultation-scrolltop-btn:hover {
+    transform: translateY(-3px);
+    background: #ffffff;
+}
+
+/* Modal Overlay & Box */
+.consultation-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(16, 32, 27, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 30px 16px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.consultation-modal-box {
+    background-color: #e5efe8;
+    color: #10201B;
+    width: 100%;
+    max-width: 680px;
+    min-width: min(680px, calc(100vw - 32px));
+    height: 650px;
+    max-height: min(650px, calc(100vh - 40px));
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 80px rgba(16, 32, 27, 0.45);
+    position: relative;
+    border-radius: 18px;
+    border: 1px solid rgba(16, 32, 27, 0.12);
+    font-family: 'Work Sans', 'Plus Jakarta Sans', sans-serif;
+    margin: auto;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.consultation-close-btn {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    z-index: 50;
+    background: #ef4444;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(239, 68, 68, 0.4);
+    transition: all 0.2s ease;
+}
+
+.consultation-close-btn:hover {
+    transform: scale(1.08);
+    background-color: #dc2626;
+}
+
+.consultation-modal-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+/* Header & Tabs */
+.consultation-header {
+    padding: 56px 32px 14px;
+    border-bottom: 1px solid rgba(16, 32, 27, 0.12);
+    width: 100%;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.consultation-tab-switcher {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    background-color: rgba(16, 32, 27, 0.08);
+    border-radius: 999px;
+    padding: 4px;
+    gap: 4px;
+    box-sizing: border-box;
+    margin-bottom: 14px;
+}
+
+.consultation-tab-btn {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: none;
+    background-color: transparent;
+    color: #405246;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.consultation-tab-btn.active {
+    background-color: #1E4A3D;
+    color: #ffffff;
+}
+
+.consultation-header-title {
+    font-family: 'Libre Caslon Text', 'Playfair Display', Georgia, serif;
+    font-size: clamp(22px, 2.6vw, 26px);
+    font-weight: 400;
+    color: #10201B;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+}
+
+.consultation-header-desc {
+    font-size: 13px;
+    color: #405246;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Form layout */
+.consultation-form-root {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    box-sizing: border-box;
+}
+
+.consultation-form-body {
+    padding: 20px 32px;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.consultation-grid-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px 24px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.consult-journey-label {
+    display: block;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 11px;
+    color: #405246;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.consult-journey-input {
+    border: none;
+    border-bottom: 1.5px solid #10201B;
+    background: transparent;
+    border-radius: 0;
+    padding: 8px 0;
+    width: 100%;
+    color: #10201B;
+    font-family: 'Work Sans', 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.consult-journey-input:focus {
+    border-bottom-color: #006d36;
+}
+
+.consultation-form-footer {
+    background-color: #e5efe8;
+    border-top: 1px solid rgba(16, 32, 27, 0.12);
+    padding: 14px 32px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.consultation-submit-btn {
+    background-color: #1E4A3D;
+    color: #ffffff;
+    border: none;
+    padding: 12px 28px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(30, 74, 61, 0.3);
+    transition: all 0.3s ease;
+}
+
+.consultation-submit-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Success box */
+.consultation-success-root {
+    padding: 50px 36px;
+    text-align: center;
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.consultation-success-icon-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #1E4A3D;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 10px 25px rgba(30, 74, 61, 0.3);
+}
+
+.consultation-success-title {
+    font-family: 'Libre Caslon Text', 'Playfair Display', Georgia, serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: #10201B;
+    margin: 0 0 10px 0;
+}
+
+.consultation-success-desc {
+    font-size: 14.5px;
+    color: #405246;
+    max-width: 480px;
+    margin: 0 auto 24px auto;
+    line-height: 1.6;
+}
+
+.consultation-success-btn {
+    background-color: #1E4A3D;
+    color: #ffffff;
+    border: none;
+    padding: 12px 28px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 6px;
+    cursor: pointer;
+}

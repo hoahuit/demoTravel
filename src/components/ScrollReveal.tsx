@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import './ScrollReveal.css';
 
 interface ScrollRevealProps {
   children: React.ReactNode;
@@ -45,14 +46,8 @@ export default function ScrollReveal({ children, delay = 0, className = '', styl
   return (
     <div
       ref={ref}
-      style={{
-        ...style,
-        transitionDelay: `${delay}ms`,
-        willChange: 'opacity, transform'
-      }}
-      className={`transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-7'
-      } ${className}`}
+      style={delay ? ({ '--reveal-delay': `${delay}ms` } as React.CSSProperties) : undefined}
+      className={`scroll-reveal-box ${isVisible ? 'visible' : 'hidden'} ${className}`}
     >
       {children}
     </div>

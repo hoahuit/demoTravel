@@ -1,5 +1,6 @@
 import React from 'react';
 import ToursPage from '../../../components/ToursPage';
+import './RetreatHot.css';
 
 interface RetreatHotProps {
   onNavigate: (path: string) => void;

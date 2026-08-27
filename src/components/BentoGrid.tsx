@@ -4,6 +4,7 @@ import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData
 import { fetchToursApi, getImageUrl } from '../services/apiService';
 import { ArrowRight, ChevronDown, Calendar, MapPin } from 'lucide-react';
 import EmptyState from './ui/EmptyState';
+import './BentoGrid.css';
 
 export interface BentoGridProps {
   onOpenBooking?: (tourData?: any) => void;
@@ -46,155 +47,23 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
   const visibleItems = showAll ? items : items.slice(0, 4);
 
   return (
-    <section
-      id="sap-khoi-hanh"
-      style={{
-        background: '#e5efe8',
-        padding: '120px 0 130px',
-        color: '#10201B',
-        fontFamily: "'Work Sans', 'Plus Jakarta Sans', sans-serif",
-        width: '100%',
-        overflow: 'hidden',
-        borderTop: '1px solid rgba(16, 32, 27, 0.08)'
-      }}
-    >
-      <style>{`
-        .dest-editorial-card {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-          cursor: pointer;
-          text-decoration: none;
-          color: inherit;
-          background: transparent;
-        }
-        .dest-editorial-img-wrap {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 16 / 10;
-          overflow: hidden;
-          background: #d8e5dc;
-        }
-        .dest-editorial-img-wrap img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-          transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .dest-editorial-card:hover .dest-editorial-img-wrap img {
-          transform: scale(1.05);
-        }
-        .dest-editorial-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          font-family: 'Work Sans', sans-serif;
-          font-size: 11.5px;
-          font-weight: 700;
-          letter-spacing: 0.16em;
-          text-transform: uppercase;
-          color: #10201B;
-          text-decoration: none;
-          border-bottom: 1.5px solid #10201B;
-          padding-bottom: 4px;
-          transition: all 0.25s ease;
-          margin-top: auto;
-        }
-        .dest-editorial-card:hover .dest-editorial-link {
-          color: #006d36;
-          border-bottom-color: #006d36;
-        }
-        .dest-editorial-btn-more {
-          padding: 14px 38px;
-          border: 1.5px solid #10201B;
-          background: transparent;
-          color: #10201B;
-          font-family: 'Work Sans', sans-serif;
-          font-weight: 700;
-          font-size: 12px;
-          letter-spacing: 0.16em;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .dest-editorial-btn-more:hover {
-          background: #10201B;
-          color: #ffffff;
-          transform: translateY(-2px);
-          box-shadow: 0 10px 24px rgba(16, 32, 27, 0.18);
-        }
-        @media (max-width: 900px) {
-          .dest-editorial-grid {
-            grid-template-columns: 1fr !important;
-            gap: 56px !important;
-          }
-          .dest-full-container {
-            padding: 0 20px !important;
-          }
-        }
-      `}</style>
-
+    <section id="sap-khoi-hanh" className="bento-grid-section">
       {/* ── 100% FULL WIDTH CONTAINER ── */}
-      <div style={{ width: '100%', maxWidth: '100%', padding: '0 48px', boxSizing: 'border-box' }} className="dest-full-container">
+      <div className="dest-full-container">
 
         {/* ── 1. SECTION HEADER (DESTINATION FORMAT) ── */}
         <ScrollReveal>
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
-              gap: '24px',
-              marginBottom: '64px',
-              paddingBottom: '32px',
-              borderBottom: '1px solid rgba(16, 32, 27, 0.12)'
-            }}
-          >
+          <div className="dest-header-flex">
             <div>
-              <span
-                style={{
-                  fontFamily: "'Work Sans', sans-serif",
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
-                  color: '#527059',
-                  display: 'block',
-                  marginBottom: '10px'
-                }}
-              >
+              <span className="dest-eyebrow">
                 Upcoming Journeys 2026
               </span>
-              <h2
-                style={{
-                  fontFamily: "'Libre Caslon Text', 'Playfair Display', Georgia, serif",
-                  fontWeight: 400,
-                  fontSize: 'clamp(32px, 4vw, 48px)',
-                  lineHeight: 1.15,
-                  color: '#10201B',
-                  margin: 0
-                }}
-              >
+              <h2 className="dest-heading">
                 Sản Phẩm Sắp Khởi Hành
               </h2>
             </div>
 
-            <p
-              style={{
-                fontFamily: "'Work Sans', sans-serif",
-                fontSize: '15px',
-                color: '#405246',
-                margin: 0,
-                maxWidth: '480px',
-                lineHeight: 1.65,
-                fontWeight: 400
-              }}
-            >
+            <p className="dest-subdesc">
               Những chuyến đi tĩnh dưỡng gần nhất đã sẵn sàng lịch trình may đo, mang lại không gian tái tạo năng lượng hoàn hảo.
             </p>
           </div>
@@ -208,14 +77,7 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
             transparent={true}
           />
         ) : (
-          <div
-            className="dest-editorial-grid"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '64px 44px'
-            }}
-          >
+          <div className="dest-editorial-grid">
             {visibleItems.map((item, index) => (
               <ScrollReveal key={item.id || index} delay={index * 100}>
                 <div
@@ -233,132 +95,41 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
                     <img src={item.image} alt={item.title} loading="lazy" />
 
                     {/* Minimalist Departure Badge */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '16px',
-                        left: '16px',
-                        background: 'rgba(16, 32, 27, 0.85)',
-                        backdropFilter: 'blur(8px)',
-                        color: '#ffffff',
-                        fontSize: '11px',
-                        fontWeight: 700,
-                        letterSpacing: '0.08em',
-                        padding: '6px 14px',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        textTransform: 'uppercase',
-                        borderRadius: '4px'
-                      }}
-                    >
+                    <div className="dest-departure-badge">
                       <Calendar size={13} color="#ffffff" />
                       <span>{item.departureDates}</span>
                     </div>
 
                     {/* Top Right Category Tag */}
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '16px',
-                        right: '16px',
-                        background: 'linear-gradient(135deg, #007a3d 0%, #0d2b1d 100%)',
-                        backdropFilter: 'blur(10px)',
-                        color: '#ffffff',
-                        fontSize: '11px',
-                        fontWeight: 700,
-                        letterSpacing: '0.1em',
-                        padding: '6px 14px',
-                        textTransform: 'uppercase',
-                        borderRadius: '6px',
-                        border: '1px solid rgba(74, 222, 128, 0.45)',
-                        boxShadow: '0 6px 20px rgba(0, 122, 61, 0.35)',
-                        display: 'inline-flex',
-                        alignItems: 'center'
-                      }}
-                    >
+                    <div className="dest-category-tag">
                       Sắp Khởi Hành
                     </div>
                   </div>
 
                   {/* Meta Label */}
-                  <div style={{ marginTop: '24px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span
-                      style={{
-                        fontFamily: "'Work Sans', sans-serif",
-                        fontSize: '11px',
-                        fontWeight: 700,
-                        letterSpacing: '0.14em',
-                        textTransform: 'uppercase',
-                        color: '#527059'
-                      }}
-                    >
+                  <div className="dest-card-meta-row">
+                    <span className="dest-meta-label">
                       {item.location} • {item.category}
                     </span>
                   </div>
 
                   {/* Title Serif */}
-                  <h3
-                    style={{
-                      fontFamily: "'Libre Caslon Text', 'Playfair Display', Georgia, serif",
-                      fontSize: 'clamp(22px, 2.2vw, 28px)',
-                      fontWeight: 400,
-                      lineHeight: 1.25,
-                      color: '#10201B',
-                      margin: '0 0 12px 0'
-                    }}
-                  >
+                  <h3 className="dest-card-title">
                     {item.title}
                   </h3>
 
                   {/* Description */}
-                  <p
-                    style={{
-                      fontSize: '14.5px',
-                      color: '#405246',
-                      lineHeight: 1.65,
-                      margin: '0 0 24px 0',
-                      fontWeight: 400,
-                      minHeight: '46px'
-                    }}
-                  >
+                  <p className="dest-card-desc">
                     {item.desc}
                   </p>
 
                   {/* Bottom: Price & Underline Action */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'flex-end',
-                      justifyContent: 'space-between',
-                      gap: '16px',
-                      marginTop: 'auto',
-                      paddingTop: '18px',
-                      borderTop: '1px solid rgba(16, 32, 27, 0.1)'
-                    }}
-                  >
+                  <div className="dest-card-bottom-row">
                     <div>
-                      <span
-                        style={{
-                          display: 'block',
-                          fontSize: '10.5px',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.12em',
-                          color: '#527059',
-                          fontWeight: 700,
-                          marginBottom: '2px'
-                        }}
-                      >
+                      <span className="dest-price-label">
                         Giá trải nghiệm
                       </span>
-                      <span
-                        style={{
-                          fontFamily: "'Libre Caslon Text', Georgia, serif",
-                          fontSize: '22px',
-                          fontWeight: 700,
-                          color: '#10201B'
-                        }}
-                      >
+                      <span className="dest-price-val">
                         {item.price}
                       </span>
                     </div>
@@ -377,7 +148,7 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
         {/* ── 3. VIEW ALL / COLLAPSE BUTTON ── */}
         {items.length > 4 && (
           <ScrollReveal>
-            <div style={{ textAlign: 'center', marginTop: '64px' }}>
+            <div className="dest-more-container">
               <button
                 className="dest-editorial-btn-more"
                 onClick={() => setShowAll(!showAll)}
@@ -385,10 +156,7 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
                 <span>{showAll ? 'Thu Gọn Lịch Trình' : `Xem Thêm Tất Cả (${items.length})`}</span>
                 <ChevronDown
                   size={15}
-                  style={{
-                    transform: showAll ? 'rotate(180deg)' : 'none',
-                    transition: 'transform 0.3s ease'
-                  }}
+                  className={`dest-chevron-icon ${showAll ? 'rotated' : ''}`}
                 />
               </button>
             </div>

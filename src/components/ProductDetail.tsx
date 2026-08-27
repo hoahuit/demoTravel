@@ -7,6 +7,7 @@ import ElegantCarousel, { SlideData } from './ui/elegant-carousel';
 import Testimonials from './Testimonials';
 import PartnerLogos from './PartnerLogos';
 import SectionLandingPage from './SectionLandingPage';
+import './ProductDetail.css';
 
 export interface ProductDetailProps {
   productSlug?: string;
@@ -107,38 +108,16 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
   // If data is still loading from API and we don't have customTourData or cached tour, show loading spinner
   if (isLoading && !customTourData && !tourFound) {
     return (
-      <div style={{
-        minHeight: '80vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#dce7df',
-        padding: '60px 20px',
-        gap: '18px'
-      }}>
-        <div style={{
-          width: '52px',
-          height: '52px',
-          borderRadius: '50%',
-          border: '4px solid rgba(8, 31, 19, 0.12)',
-          borderTopColor: '#081f13',
-          animation: 'spin 0.8s linear infinite'
-        }} />
-        <div style={{ textAlign: 'center' }}>
-          <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: '0 0 6px 0', fontWeight: 600 }}>
+      <div className="pd-loading-container">
+        <div className="pd-loading-spinner" />
+        <div className="pd-loading-text-wrap">
+          <h3 className="pd-loading-title">
             Đang tải dữ liệu tour...
           </h3>
-          <p style={{ fontSize: '13px', color: '#4d6453', margin: 0 }}>
+          <p className="pd-loading-desc">
             4U Retreat • Vui lòng đợi trong giây lát
           </p>
         </div>
-        <style>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
       </div>
     );
   }
@@ -146,28 +125,18 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
   const product = customTourData || tourFound || null;
   if (!product) {
     return (
-      <div style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#dce7df', padding: '60px 20px', textAlign: 'center' }}>
-        <div style={{ maxWidth: 480, backgroundColor: '#ffffff', borderRadius: '24px', padding: '36px 28px', boxShadow: '0 8px 30px rgba(8, 31, 19, 0.08)', border: '1px solid rgba(8, 31, 19, 0.08)' }}>
-          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '22px', color: '#081f13', marginBottom: 12 }}>
+      <div className="pd-notfound-container">
+        <div className="pd-notfound-card">
+          <h2 className="pd-notfound-title">
             Tour Chưa Sẵn Sàng Hoặc Không Tồn Tại
           </h2>
-          <p style={{ fontSize: '13px', color: '#4d6453', lineHeight: 1.6, marginBottom: 24 }}>
-            Không tìm thấy thông tin tour với định danh: <strong style={{ color: '#081f13' }}>{normalizedSlug}</strong>
+          <p className="pd-notfound-desc">
+            Không tìm thấy thông tin tour với định danh: <strong className="pd-strong-dark">{normalizedSlug}</strong>
           </p>
           {onBackHome && (
             <button
               onClick={onBackHome}
-              style={{
-                backgroundColor: '#081f13',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: '10px',
-                padding: '10px 24px',
-                fontSize: '13px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
+              className="pd-notfound-btn"
             >
               Về Trang Chủ
             </button>
@@ -291,15 +260,8 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
   const mediaSrc = videoFallback;
   const bgImageSrc = pageData.heroImage;
 
-  const isZannierOrYogaTour =
-    normalizedSlug.includes('zannier') ||
-    normalizedSlug.includes('bai-san-ho') ||
-    normalizedSlug.includes('yoga') ||
-    product.slug === 'zannier-bai-san-ho-phu-yen-retreat' ||
-    (Array.isArray(product.categories) && product.categories.includes('doc-quyen'));
-
   return (
-    <div style={{ background: '#e5efe8', color: '#191c1c', minHeight: '100vh', fontFamily: '"Be Vietnam Pro", "Plus Jakarta Sans", -apple-system, sans-serif' }}>
+    <div className="pd-page-root">
 
       {/* ── 1. HERO SECTION WITH SCROLL EXPANSION ANIMATION ── */}
       <ScrollExpandMedia
@@ -313,7 +275,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
         textBlend={false}
       >
         {/* ── SECTION LANDING PAGE SHOWCASE (100% FULL SCREEN EDGE-TO-EDGE) ── */}
-        <div style={{ width: '100%', maxWidth: '100%', margin: '0 0 40px 0', padding: 0 }}>
+        <div className="pd-landing-showcase-wrap">
           <SectionLandingPage
             onOpenBooking={() => onOpenBooking ? onOpenBooking(product) : undefined}
             retreatTitle={product.title}
@@ -322,22 +284,22 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
         </div>
 
         {/* Subtitle inside Hero container */}
-        <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%', padding: '0 20px 8px', textAlign: 'center' }}>
-          <p style={{ fontSize: 'clamp(1rem, 2.5vw, 1.25rem)', color: '#142619', fontWeight: '700', maxWidth: '760px', margin: '0 auto 16px', lineHeight: '1.55' }}>
+        <div className="pd-hero-summary-wrap">
+          <p className="pd-hero-subtitle">
             {pageData.subtitle}
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '18px', fontSize: '0.9rem', color: '#415a47', flexWrap: 'wrap', fontWeight: '600' }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-              <MapPin size={16} style={{ color: '#006d36' }} /> {pageData.location}
+          <div className="pd-hero-meta-row">
+            <span className="pd-hero-meta-item">
+              <MapPin size={16} className="pd-icon-green" /> {pageData.location}
             </span>
             <span>•</span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-              <Clock size={16} style={{ color: '#006d36' }} /> {pageData.duration}
+            <span className="pd-hero-meta-item">
+              <Clock size={16} className="pd-icon-green" /> {pageData.duration}
             </span>
             <span>•</span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-              <Star size={16} style={{ color: '#e5a100', fill: '#e5a100' }} /> <strong style={{ color: '#142619' }}>{pageData.ratingValue}</strong>
+            <span className="pd-hero-meta-item">
+              <Star size={16} className="pd-icon-gold" /> <strong className="pd-rating-bold">{pageData.ratingValue}</strong>
             </span>
           </div>
         </div>
@@ -350,20 +312,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                 <button
                   key={tab.id}
                   onClick={() => handleTabClick(tab.id)}
-                  style={{
-                    border: 'none',
-                    background: 'none',
-                    fontSize: '0.8rem',
-                    fontWeight: activeTab === tab.id ? '800' : '600',
-                    color: activeTab === tab.id ? '#006d36' : '#5b6561',
-                    borderBottom: activeTab === tab.id ? '2.5px solid #006d36' : '2.5px solid transparent',
-                    cursor: 'pointer',
-                    letterSpacing: '0.08em',
-                    padding: '0 6px',
-                    height: '100%',
-                    whiteSpace: 'nowrap',
-                    transition: 'all 0.2s ease',
-                  }}
+                  className={`pd-subnav-tab-btn ${activeTab === tab.id ? 'active' : ''}`}
                 >
                   {tab.label}
                 </button>
@@ -371,25 +320,13 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
             </div>
 
             <div className="pd-subnav-cta">
-              <div className="pd-subnav-price-box" style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.7rem', color: '#5b6561', textTransform: 'uppercase' }}>Giá Trọn Gói</div>
-                <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#006d36' }}>{pageData.priceText}</div>
+              <div className="pd-subnav-price-box">
+                <div className="pd-subnav-price-label">Giá Trọn Gói</div>
+                <div className="pd-subnav-price-val">{pageData.priceText}</div>
               </div>
               <button
                 className="pd-subnav-cta-btn"
                 onClick={onOpenBooking}
-                style={{
-                  background: '#062c23',
-                  color: '#ffffff',
-                  border: 'none',
-                  padding: '10px 20px',
-                  borderRadius: '30px',
-                  fontWeight: '700',
-                  fontSize: '0.85rem',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 14px rgba(6, 44, 35, 0.25)',
-                  transition: 'all 0.2s ease',
-                }}
               >
                 Đặt Ngay
               </button>
@@ -398,31 +335,14 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
         </div>
 
         {/* ── 3. MAIN CONTENT BODY (FULL SCREEN FOR ALL TABS) ── */}
-        <section style={{ padding: '40px 48px 80px', width: '100%', boxSizing: 'border-box' }}>
-          <div
-            style={
-              activeTab === 'PriceDescription'
-                ? {
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 360px',
-                  gap: '36px',
-                  maxWidth: '100%',
-                  margin: '0',
-                  width: '100%'
-                }
-                : {
-                  width: '100%',
-                  maxWidth: '100%',
-                  margin: '0'
-                }
-            }
-          >
+        <section className="pd-main-section">
+          <div className={activeTab === 'PriceDescription' ? 'pd-content-grid-price' : 'pd-content-grid-default'}>
 
             {/* TAB CONTENT PANEL */}
-            <div style={{ width: '100%' }}>
+            <div className="pd-tab-panel">
               {/* TAB 1: TRẢI NGHIỆM ĐỘC BẢN (ELEGANT CAROUSEL & EDITORIAL TEXT WITHOUT BOXED CARD BACKGROUND) */}
               {activeTab === 'Highlight' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '40px', width: '100%' }}>
+                <div className="pd-editorial-stack">
                   {/* Elegant Carousel component (Transparent Background) */}
                   <ElegantCarousel slides={experienceSlides} />
 
@@ -434,7 +354,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                       </span>
                     </div>
 
-                    <h3 className="pd-editorial-title" style={{ marginBottom: '20px' }}>
+                    <h3 className="pd-editorial-title">
                       {pageData.experienceTitle}
                     </h3>
 
@@ -448,108 +368,95 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                     {/* 4 Core Pillars Highlights */}
                     <div className="pd-highlights-grid">
                       <div className="pd-highlight-item">
-                        <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(0, 109, 54, 0.08)', color: '#006d36', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
+                        <div className="pd-highlight-icon-wrap green">
                           <Heart size={20} />
                         </div>
-                        <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#191c1c', margin: '0 0 6px' }}>Phục hồi thân tâm</h4>
-                        <p style={{ fontSize: '0.88rem', color: '#5b6561', margin: 0, lineHeight: 1.6 }}>Liệu trình thiền định & yoga chữa lành chuyên sâu.</p>
+                        <h4 className="pd-highlight-item-title">Phục hồi thân tâm</h4>
+                        <p className="pd-highlight-item-desc">Liệu trình thiền định & yoga chữa lành chuyên sâu.</p>
                       </div>
 
                       <div className="pd-highlight-item">
-                        <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(176, 138, 70, 0.1)', color: '#B08A46', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
+                        <div className="pd-highlight-icon-wrap gold">
                           <ShieldCheck size={20} />
                         </div>
-                        <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#191c1c', margin: '0 0 6px' }}>Không gian biệt lập</h4>
-                        <p style={{ fontSize: '0.88rem', color: '#5b6561', margin: 0, lineHeight: 1.6 }}>Khu nghỉ dưỡng khép kín giữa thiên nhiên nguyên sơ.</p>
+                        <h4 className="pd-highlight-item-title">Không gian biệt lập</h4>
+                        <p className="pd-highlight-item-desc">Khu nghỉ dưỡng khép kín giữa thiên nhiên nguyên sơ.</p>
                       </div>
 
                       <div className="pd-highlight-item">
-                        <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(46, 134, 171, 0.1)', color: '#2E86AB', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
+                        <div className="pd-highlight-icon-wrap blue">
                           <UserCheck size={20} />
                         </div>
-                        <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#191c1c', margin: '0 0 6px' }}>Hướng dẫn viên 1:1</h4>
-                        <p style={{ fontSize: '0.88rem', color: '#5b6561', margin: 0, lineHeight: 1.6 }}>Đội ngũ chuyên gia am hiểu bản địa đồng hành.</p>
+                        <h4 className="pd-highlight-item-title">Hướng dẫn viên 1:1</h4>
+                        <p className="pd-highlight-item-desc">Đội ngũ chuyên gia am hiểu bản địa đồng hành.</p>
                       </div>
 
                       <div className="pd-highlight-item">
-                        <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(0, 109, 54, 0.08)', color: '#006d36', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
+                        <div className="pd-highlight-icon-wrap green">
                           <Tag size={20} />
                         </div>
-                        <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#191c1c', margin: '0 0 6px' }}>Thực dưỡng bản địa</h4>
-                        <p style={{ fontSize: '0.88rem', color: '#5b6561', margin: 0, lineHeight: 1.6 }}>Ẩm thực Farm-to-Table tươi ngon ngập năng lượng.</p>
+                        <h4 className="pd-highlight-item-title">Thực dưỡng bản địa</h4>
+                        <p className="pd-highlight-item-desc">Ẩm thực Farm-to-Table tươi ngon ngập năng lượng.</p>
                       </div>
                     </div>
                   </div>
                 </div>
               )}
 
-
               {/* TAB 2: LỊCH TRÌNH TRẢI NGHIỆM CHUYÊN SÂU (ROVER PLAN CONCEPT) */}
               {activeTab === 'Itinerary' && (
-                <div style={{ width: '100%', maxWidth: '100%', margin: '0' }}>
+                <div className="pd-tab-full-wrap">
 
                   {/* Top Cover & Summary Card (Rover Plan Style) */}
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'minmax(280px, 340px) 1fr',
-                    gap: '32px',
-                    background: '#dce7df',
-                    borderRadius: '24px',
-                    padding: '24px',
-                    border: '1px solid rgba(45, 90, 54, 0.18)',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
-                    marginBottom: '40px',
-                    alignItems: 'center'
-                  }}>
+                  <div className="pd-itinerary-top-card">
                     {/* Left Cover Image */}
-                    <div style={{ width: '100%', height: '220px', borderRadius: '18px', overflow: 'hidden' }}>
+                    <div className="pd-itinerary-cover-wrap">
                       <img
                         src={getImageUrl(pageData.heroImage)}
                         alt={pageData.title}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        className="pd-itinerary-cover-img"
                       />
-
                     </div>
 
                     {/* Right Summary Info */}
                     <div>
-                      <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', flexWrap: 'wrap' }}>
-                        <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontWeight: 800, fontSize: '0.78rem', padding: '4px 14px', borderRadius: '20px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      <div className="pd-itinerary-pills-row">
+                        <span className="pd-itinerary-badge-pill">
                           🌙 {pageData.duration}
                         </span>
-                        <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontWeight: 800, fontSize: '0.78rem', padding: '4px 14px', borderRadius: '20px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <span className="pd-itinerary-badge-pill">
                           🎯 {pageData.location}
                         </span>
                       </div>
 
-                      <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#10201B', margin: '0 0 10px 0', lineHeight: 1.3 }}>
+                      <h2 className="pd-itinerary-card-title">
                         {pageData.title}
                       </h2>
 
-                      <p style={{ fontSize: '0.88rem', color: '#415a47', margin: '0 0 16px 0', fontWeight: 500 }}>
-                        <strong style={{ color: '#10201B' }}>Lộ trình:</strong> {pageData.location} — {pageData.subtitle}
+                      <p className="pd-itinerary-route-text">
+                        <strong className="pd-strong-darkest">Lộ trình:</strong> {pageData.location} — {pageData.subtitle}
                       </p>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '14px', borderTop: '1px solid rgba(45, 90, 54, 0.18)' }}>
+                      <div className="pd-itinerary-author-box">
                         <img
                           src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=120&auto=format&fit=crop"
                           alt="Planner"
-                          style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover' }}
+                          className="pd-itinerary-author-avatar"
                         />
                         <div>
-                          <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#10201B' }}>Chuyên Gia 4U Retreat</div>
-                          <div style={{ fontSize: '0.78rem', color: '#527059' }}>Đã đồng hành 180+ chuyến đi thành công</div>
+                          <div className="pd-itinerary-author-name">Chuyên Gia 4U Retreat</div>
+                          <div className="pd-itinerary-author-sub">Đã đồng hành 180+ chuyến đi thành công</div>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Main Two-Column Days Navigation & Content Panel */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '48px', alignItems: 'start' }}>
+                  <div className="pd-itinerary-days-grid">
 
                     {/* Left Days Sidebar */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#10201B', marginBottom: '8px', paddingLeft: '8px' }}>
+                    <div className="pd-days-sidebar">
+                      <div className="pd-days-label">
                         Days
                       </div>
 
@@ -559,20 +466,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                           <button
                             key={idx}
                             onClick={() => setSelectedDayIndex(idx)}
-                            style={{
-                              width: '100%',
-                              padding: '12px 20px',
-                              borderRadius: '24px',
-                              border: isActive ? 'none' : '1px solid rgba(45, 90, 54, 0.18)',
-                              fontSize: '0.92rem',
-                              fontWeight: isActive ? 800 : 600,
-                              textAlign: 'left',
-                              cursor: 'pointer',
-                              background: isActive ? '#1e4a3d' : '#dce7df',
-                              color: isActive ? '#ffffff' : '#10201B',
-                              boxShadow: isActive ? '0 8px 20px rgba(30, 74, 61, 0.25)' : 'none',
-                              transition: 'all 0.2s ease',
-                            }}
+                            className={`pd-day-btn ${isActive ? 'active' : ''}`}
                           >
                             Ngày {idx + 1}
                           </button>
@@ -582,27 +476,14 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                       {/* Tips Tab */}
                       <button
                         onClick={() => setSelectedDayIndex(pageData.itinerary ? pageData.itinerary.length : 99)}
-                        style={{
-                          width: '100%',
-                          padding: '12px 20px',
-                          borderRadius: '24px',
-                          border: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? 'none' : '1px solid rgba(45, 90, 54, 0.18)',
-                          fontSize: '0.92rem',
-                          fontWeight: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? 800 : 600,
-                          textAlign: 'left',
-                          cursor: 'pointer',
-                          background: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? '#1e4a3d' : '#dce7df',
-                          color: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? '#ffffff' : '#10201B',
-                          boxShadow: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? '0 8px 20px rgba(30, 74, 61, 0.25)' : 'none',
-                          transition: 'all 0.2s ease',
-                        }}
+                        className={`pd-day-btn ${selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? 'active' : ''}`}
                       >
                         Lưu Ý & Mẹo
                       </button>
                     </div>
 
                     {/* Right Content Panel for Selected Day */}
-                    <div style={{ background: '#dce7df', borderRadius: '24px', padding: '36px', border: '1px solid rgba(45,90,54,0.18)', minHeight: '480px' }}>
+                    <div className="pd-day-detail-panel">
                       {selectedDayIndex < (pageData.itinerary ? pageData.itinerary.length : 0) ? (
                         (() => {
                           const currentDay = pageData.itinerary[selectedDayIndex];
@@ -619,20 +500,20 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                           return (
                             <div>
                               {/* Day Title */}
-                              <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: '0 0 18px 0' }}>
+                              <h3 className="pd-day-detail-title">
                                 {currentDay.title || `Ngày ${selectedDayIndex + 1}`}
                               </h3>
 
                               {/* Day Overview Paragraph */}
-                              <div style={{ fontSize: '0.98rem', color: '#475569', lineHeight: 1.85, marginBottom: '24px' }}>
+                              <div className="pd-day-detail-body">
                                 {currentDay.description && (
-                                  <p style={{ margin: '0 0 18px 0' }}>
+                                  <p>
                                     {currentDay.description}
                                   </p>
                                 )}
                                 {currentDay.activities && currentDay.activities.length > 0 && (
                                   currentDay.activities.map((activity: string, activityIdx: number) => (
-                                    <p key={activityIdx} style={{ margin: '0 0 12px 0' }}>
+                                    <p key={activityIdx}>
                                       • {activity}
                                     </p>
                                   ))
@@ -641,17 +522,17 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
 
                               {/* Moments Section - Only shown when images exist */}
                               {dayMoments.length > 0 && (
-                                <div style={{ marginBottom: '36px' }}>
-                                  <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 16px 0' }}>
+                                <div className="pd-moments-section">
+                                  <h4 className="pd-moments-title">
                                     Khoảnh Khắc Trong Ngày
                                   </h4>
-                                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
+                                  <div className="pd-moments-grid">
                                     {dayMoments.slice(0, 6).map((imgUrl: string, imgIdx: number) => (
-                                      <div key={imgIdx} style={{ width: '100%', height: '88px', borderRadius: '14px', overflow: 'hidden', background: '#f1f5f9' }}>
+                                      <div key={imgIdx} className="pd-moment-thumb-box">
                                         <img
                                           src={imgUrl}
                                           alt={`Khoảnh khắc ${imgIdx + 1}`}
-                                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                          className="pd-moment-thumb-img"
                                         />
                                       </div>
                                     ))}
@@ -661,13 +542,13 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
 
                               {/* Transport Section - Only shown when transport/culinary tags exist */}
                               {currentDay.transportAndCulinary && currentDay.transportAndCulinary.length > 0 && (
-                                <div style={{ marginBottom: '28px' }}>
-                                  <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#10201B', margin: '0 0 12px 0' }}>
+                                <div className="pd-transport-section">
+                                  <h4 className="pd-transport-title">
                                     Phương Tiện & Ẩm Thực
                                   </h4>
-                                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                  <div className="pd-tags-wrap">
                                     {currentDay.transportAndCulinary.map((tag: string, tagIdx: number) => (
-                                      <span key={tagIdx} style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
+                                      <span key={tagIdx} className="pd-tag-pill">
                                         {tag}
                                       </span>
                                     ))}
@@ -678,12 +559,12 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                               {/* Attractions Section - Only shown when attractions exist */}
                               {currentDay.attractions && currentDay.attractions.length > 0 && (
                                 <div>
-                                  <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#10201B', margin: '0 0 12px 0' }}>
+                                  <h4 className="pd-transport-title">
                                     Điểm Đến Nổi Bật
                                   </h4>
-                                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                  <div className="pd-tags-wrap">
                                     {currentDay.attractions.map((attraction: string, attractionIdx: number) => (
-                                      <span key={attractionIdx} style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
+                                      <span key={attractionIdx} className="pd-tag-pill">
                                         {attraction}
                                       </span>
                                     ))}
@@ -697,14 +578,14 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                       ) : (
                         /* Tips Panel */
                         <div>
-                          <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: '0 0 18px 0' }}>
+                          <h3 className="pd-day-detail-title">
                             Lưu Ý & Mẹo Cho Chuyến Đi
                           </h3>
-                          <div style={{ fontSize: '0.98rem', color: '#475569', lineHeight: 1.85, marginBottom: '24px' }}>
-                            <p style={{ marginBottom: '12px' }}>• <strong>Trang phục:</strong> Quý khách nên chuẩn bị quần áo rộng rãi, thoáng mát (vải lanh hoặc cotton) thích hợp cho các buổi tập thiền định & yoga.</p>
-                            <p style={{ marginBottom: '12px' }}>• <strong>Giày đi bộ:</strong> Mang theo 01 đôi giày đi bộ êm chân để tham gia hành trình tắm rừng Shinrin-Yoku.</p>
-                            <p style={{ marginBottom: '12px' }}>• <strong>Thiết bị điện tử:</strong> Khuyến khích hạn chế sử dụng điện thoại thông minh để tận hưởng sự thanh tĩnh trọn vẹn.</p>
-                            <p style={{ marginBottom: '12px' }}>• <strong>Sức khỏe:</strong> Đội ngũ 4U Retreat luôn trang bị đầy đủ dụng cụ sơ cứu y tế và nhân sự đồng hành 1:1.</p>
+                          <div className="pd-day-detail-body">
+                            <p>• <strong>Trang phục:</strong> Quý khách nên chuẩn bị quần áo rộng rãi, thoáng mát (vải lanh hoặc cotton) thích hợp cho các buổi tập thiền định & yoga.</p>
+                            <p>• <strong>Giày đi bộ:</strong> Mang theo 01 đôi giày đi bộ êm chân để tham gia hành trình tắm rừng Shinrin-Yoku.</p>
+                            <p>• <strong>Thiết bị điện tử:</strong> Khuyến khích hạn chế sử dụng điện thoại thông minh để tận hưởng sự thanh tĩnh trọn vẹn.</p>
+                            <p>• <strong>Sức khỏe:</strong> Đội ngũ 4U Retreat luôn trang bị đầy đủ dụng cụ sơ cứu y tế và nhân sự đồng hành 1:1.</p>
                           </div>
                         </div>
                       )}
@@ -718,13 +599,13 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
               {/* TAB 3: CHI TIẾT BẢNG GIÁ & QUYỀN LỢI */}
               {activeTab === 'PriceDescription' && (
                 <div className="pd-price-table-wrapper">
-                  <h3 style={{ fontSize: '1.6rem', fontWeight: '800', color: '#191c1c', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <Tag size={24} style={{ color: '#006d36' }} />
+                  <h3 className="pd-price-table-heading">
+                    <Tag size={24} className="pd-icon-green" />
                     Chi tiết bảng giá & quyền lợi chuyến đi
                   </h3>
 
                   {/* Enhanced Price Table */}
-                  <div style={{ marginBottom: '36px', overflowX: 'auto' }}>
+                  <div className="pd-price-table-scroll">
                     <table className="pd-price-table">
                       <thead>
                         <tr>
@@ -735,37 +616,37 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                       </thead>
                       <tbody>
                         <tr>
-                          <td style={{ fontWeight: '700' }}>Người lớn (Từ 12 tuổi)</td>
-                          <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.15rem' }}>{pageData.priceText}</td>
-                          <td style={{ color: '#5b6561' }}>{pageData.adultNote}</td>
+                          <td className="bold">Người lớn (Từ 12 tuổi)</td>
+                          <td className="price-green">{pageData.priceText}</td>
+                          <td className="note">{pageData.adultNote}</td>
                         </tr>
                         <tr>
-                          <td style={{ fontWeight: '700' }}>Trẻ em (5 - 11 tuổi)</td>
-                          <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.05rem' }}>{pageData.childPriceText}</td>
-                          <td style={{ color: '#5b6561' }}>{pageData.childNote}</td>
+                          <td className="bold">Trẻ em (5 - 11 tuổi)</td>
+                          <td className="price-sub">{pageData.childPriceText}</td>
+                          <td className="note">{pageData.childNote}</td>
                         </tr>
                         <tr>
-                          <td style={{ fontWeight: '700' }}>Em bé (&lt; 5 tuổi)</td>
-                          <td style={{ color: '#27ae60', fontWeight: '800', fontSize: '1.05rem' }}>{pageData.infantPriceText}</td>
-                          <td style={{ color: '#5b6561' }}>{pageData.infantNote}</td>
+                          <td className="bold">Em bé (&lt; 5 tuổi)</td>
+                          <td className="price-free">{pageData.infantPriceText}</td>
+                          <td className="note">{pageData.infantNote}</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
 
-                  <h4 style={{ fontSize: '1.2rem', fontWeight: '800', color: '#191c1c', marginBottom: '20px' }}>
+                  <h4 className="pd-inclusions-title">
                     Dịch vụ bao gồm nổi bật
                   </h4>
-                  <div className="pd-inclusions-grid" style={{ marginBottom: '32px' }}>
+                  <div className="pd-inclusions-grid">
                     {pageData.inclusions?.map((inc: string, idx: number) => (
-                      <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', fontSize: '0.98rem', color: '#1e4a3d', background: '#cbe0d0', padding: '12px 16px', borderRadius: '14px', border: '1px solid rgba(45, 90, 54, 0.18)' }}>
-                        <CheckCircle size={20} style={{ color: '#006d36', flexShrink: 0, marginTop: '2px' }} />
-                        <span style={{ fontWeight: '700' }}>{inc}</span>
+                      <div key={idx} className="pd-inclusion-card">
+                        <CheckCircle size={20} className="pd-icon-green pd-shrink-0 pd-mt-2" />
+                        <span>{inc}</span>
                       </div>
                     ))}
                   </div>
 
-                  <div style={{ background: 'rgba(0, 109, 54, 0.05)', border: '1px dashed #006d36', borderRadius: '16px', padding: '20px 24px', fontSize: '0.95rem', color: '#062c23', lineHeight: '1.6' }}>
+                  <div className="pd-policy-box">
                     <strong>Chính sách bảo lưu & Đổi ngày đặc quyền:</strong> {pageData.bookingPolicyNotes}
                   </div>
                 </div>
@@ -773,17 +654,17 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
 
               {/* TAB 4: BẢN ĐỒ & VỊ TRÍ KHU VỰC NGHỈ DƯỠNG */}
               {activeTab === 'MapsArea' && (
-                <div style={{ width: '100%', maxWidth: '100%', margin: 0 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+                <div className="pd-tab-full-wrap">
+                  <div className="pd-maps-header-row">
                     <div>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', backgroundColor: '#cbe0d0', color: '#1e4a3d', padding: '4px 14px', borderRadius: '20px', fontSize: '0.78rem', fontWeight: 800, marginBottom: '12px' }}>
+                      <div className="pd-maps-badge">
                         <Compass size={14} /> TỌA ĐỘ NGHỈ DƯỠNG
                       </div>
-                      <h3 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#10201B', margin: '0 0 8px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <MapPin size={28} style={{ color: '#1e4a3d' }} />
+                      <h3 className="pd-maps-title">
+                        <MapPin size={28} className="pd-icon-moss-dark" />
                         Vị Trí & Bản Đồ Tọa Độ {pageData.location}
                       </h3>
-                      <p style={{ fontSize: '1rem', color: '#415a47', margin: 0, lineHeight: '1.6', fontWeight: 500 }}>
+                      <p className="pd-maps-desc">
                         {pageData.title} — {pageData.location} ({product.country || 'Việt Nam'}). Di chuyển thuận tiện với xe đưa đón VIP riêng biệt.
                       </p>
                     </div>
@@ -792,20 +673,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                       href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(pageData.destinationMap && !pageData.destinationMap.startsWith('http') ? pageData.destinationMap : `${pageData.location}, ${product.country || 'Việt Nam'}`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        backgroundColor: '#10201B',
-                        color: '#ffffff',
-                        padding: '12px 22px',
-                        borderRadius: '30px',
-                        fontSize: '0.88rem',
-                        fontWeight: 700,
-                        textDecoration: 'none',
-                        boxShadow: '0 4px 14px rgba(16, 32, 27, 0.25)',
-                        transition: 'all 0.2s ease'
-                      }}
+                      className="pd-maps-btn"
                     >
                       <Navigation size={16} color="#4ade80" />
                       <span>Mở Chỉ Đường Google Maps</span>
@@ -813,24 +681,11 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                   </div>
 
                   {/* Interactive Google Maps Iframe */}
-                  <div
-                    style={{
-                      position: 'relative',
-                      width: '100%',
-                      height: '520px',
-                      borderRadius: '24px',
-                      overflow: 'hidden',
-                      border: '1px solid rgba(45, 90, 54, 0.18)',
-                      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.04)',
-                      backgroundColor: '#dce7df'
-                    }}
-                  >
+                  <div className="pd-maps-iframe-wrap">
                     <iframe
                       title={`Bản đồ ${pageData.location}`}
                       src={pageData.mapEmbedUrl}
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0, display: 'block' }}
+                      className="pd-maps-iframe"
                       allowFullScreen
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
@@ -838,18 +693,18 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                   </div>
 
                   {/* Location Quick Facts Info Box */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginTop: '24px' }}>
-                    <div style={{ background: '#dce7df', padding: '18px 22px', borderRadius: '20px', border: '1px solid rgba(45, 90, 54, 0.18)' }}>
-                      <div style={{ fontSize: '0.78rem', color: '#527059', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>Điểm đến</div>
-                      <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#10201B' }}>{pageData.location}</div>
+                  <div className="pd-facts-grid">
+                    <div className="pd-fact-card">
+                      <div className="pd-fact-label">Điểm đến</div>
+                      <div className="pd-fact-val">{pageData.location}</div>
                     </div>
-                    <div style={{ background: '#dce7df', padding: '18px 22px', borderRadius: '20px', border: '1px solid rgba(45, 90, 54, 0.18)' }}>
-                      <div style={{ fontSize: '0.78rem', color: '#527059', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>Phương tiện vận chuyển</div>
-                      <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#10201B' }}>{product.transportation || 'Xe VIP Limousine 4U'}</div>
+                    <div className="pd-fact-card">
+                      <div className="pd-fact-label">Phương tiện vận chuyển</div>
+                      <div className="pd-fact-val">{product.transportation || 'Xe VIP Limousine 4U'}</div>
                     </div>
-                    <div style={{ background: '#dce7df', padding: '18px 22px', borderRadius: '20px', border: '1px solid rgba(45, 90, 54, 0.18)' }}>
-                      <div style={{ fontSize: '0.78rem', color: '#527059', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>Khách sạn / Resort</div>
-                      <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#10201B' }}>{product.hotel || 'Resort 5 Sao Cao Cấp'}</div>
+                    <div className="pd-fact-card">
+                      <div className="pd-fact-label">Khách sạn / Resort</div>
+                      <div className="pd-fact-val">{product.hotel || 'Resort 5 Sao Cao Cấp'}</div>
                     </div>
                   </div>
                 </div>
@@ -860,55 +715,36 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
             {activeTab === 'PriceDescription' && (
               <div>
                 <div className="pd-sidebar-card">
-                  <div style={{ fontSize: '0.75rem', fontWeight: '700', color: '#5b6561', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '6px' }}>
+                  <div className="pd-sidebar-label">
                     GIÁ CHUYẾN ĐỊNH
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '24px' }}>
-                    <span style={{ fontSize: '2rem', fontWeight: '800', color: '#006d36' }}>{pageData.priceText}</span>
-                    <span style={{ fontSize: '0.85rem', color: '#5b6561' }}>/ Khách</span>
+                  <div className="pd-sidebar-price-row">
+                    <span className="pd-sidebar-price-val">{pageData.priceText}</span>
+                    <span className="pd-sidebar-price-unit">/ Khách</span>
                   </div>
 
                   {/* Booking Form Selectors */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
+                  <div className="pd-booking-form-group">
                     <div>
-                      <label style={{ fontSize: '0.8rem', fontWeight: '700', color: '#191c1c', display: 'block', marginBottom: '6px' }}>
+                      <label className="pd-form-label">
                         Chọn Ngày Khởi Hành Dự Kiến
                       </label>
                       <input
                         type="date"
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
-                        style={{
-                          width: '100%',
-                          padding: '12px 14px',
-                          borderRadius: '12px',
-                          border: '1px solid #c1c8c5',
-                          fontSize: '0.9rem',
-                          color: '#191c1c',
-                          outline: 'none',
-                          boxSizing: 'border-box'
-                        }}
+                        className="pd-form-input"
                       />
                     </div>
 
                     <div>
-                      <label style={{ fontSize: '0.8rem', fontWeight: '700', color: '#191c1c', display: 'block', marginBottom: '6px' }}>
+                      <label className="pd-form-label">
                         Số Lượng Tham Gia
                       </label>
                       <select
                         value={guests}
                         onChange={(e) => setGuests(e.target.value)}
-                        style={{
-                          width: '100%',
-                          padding: '12px 14px',
-                          borderRadius: '12px',
-                          border: '1px solid #c1c8c5',
-                          fontSize: '0.9rem',
-                          color: '#191c1c',
-                          outline: 'none',
-                          boxSizing: 'border-box',
-                          background: '#ffffff'
-                        }}
+                        className="pd-form-select"
                       >
                         <option value="1 Khách">1 Khách (Tự Túc)</option>
                         <option value="2 Khách">2 Khách (Cặp Đôi)</option>
@@ -935,46 +771,28 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                         });
                       }
                     }}
-                    style={{
-                      width: '100%',
-                      background: 'linear-gradient(135deg, #062c23 0%, #006d36 100%)',
-                      color: '#ffffff',
-                      border: 'none',
-                      padding: '16px',
-                      borderRadius: '30px',
-                      fontWeight: '800',
-                      fontSize: '1rem',
-                      cursor: 'pointer',
-                      boxShadow: '0 6px 20px rgba(6, 44, 35, 0.35)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px',
-                      transition: 'all 0.25s ease',
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
-                    onMouseLeave={e => e.currentTarget.style.transform = 'none'}
+                    className="pd-sidebar-submit-btn"
                   >
                     <span>Đặt Ngay</span>
                     <ArrowRight size={18} />
                   </button>
 
                   {/* Why choose us */}
-                  <div style={{ borderTop: '1px solid #e1e3e2', paddingTop: '24px', marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                    <p style={{ fontSize: '0.72rem', fontWeight: '700', color: '#414845', textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'center', margin: 0 }}>
+                  <div className="pd-why-choose-box">
+                    <p className="pd-why-choose-title">
                       VÌ SAO CHỌN 4U TOURS
                     </p>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#414845', fontSize: '0.9rem', fontWeight: '500' }}>
-                      <CheckCircle size={18} style={{ color: '#006d36', flexShrink: 0 }} />
+                    <div className="pd-why-choose-item">
+                      <CheckCircle size={18} className="pd-icon-green pd-shrink-0" />
                       <span>Hướng dẫn viên & Chuyên gia bản địa am hiểu</span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#414845', fontSize: '0.9rem', fontWeight: '500' }}>
-                      <CheckCircle size={18} style={{ color: '#006d36', flexShrink: 0 }} />
+                    <div className="pd-why-choose-item">
+                      <CheckCircle size={18} className="pd-icon-green pd-shrink-0" />
                       <span>Xe di chuyển riêng tư cao cấp suốt tuyến</span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#414845', fontSize: '0.9rem', fontWeight: '500' }}>
-                      <CheckCircle size={18} style={{ color: '#006d36', flexShrink: 0 }} />
+                    <div className="pd-why-choose-item">
+                      <CheckCircle size={18} className="pd-icon-green pd-shrink-0" />
                       <span>Quy mô nhóm nhỏ ấm cúng, thiết kế riêng</span>
                     </div>
                   </div>
@@ -990,28 +808,10 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
         {!hideTestimonials && <Testimonials />}
       </ScrollExpandMedia>
       {/* Mobile Floating Sticky Bar */}
-      <div
-        className="pd-mobile-floating-bar"
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 9000,
-          background: 'rgba(255, 255, 255, 0.96)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderTop: '1px solid rgba(45, 90, 54, 0.15)',
-          padding: '12px 20px',
-          display: 'none',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          boxShadow: '0 -6px 25px rgba(0, 0, 0, 0.08)'
-        }}
-      >
+      <div className="pd-mobile-floating-bar">
         <div>
-          <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Giá trọn gói từ</div>
-          <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#006d36' }}>{pageData.priceAdult}</div>
+          <div className="pd-mobile-price-lbl">Giá trọn gói từ</div>
+          <div className="pd-mobile-price-val">{pageData.priceAdult}</div>
         </div>
         <button
           type="button"
@@ -1027,20 +827,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
               });
             }
           }}
-          style={{
-            padding: '12px 26px',
-            borderRadius: '999px',
-            background: 'linear-gradient(135deg, #062c23 0%, #006d36 100%)',
-            color: '#ffffff',
-            fontWeight: 800,
-            fontSize: '0.92rem',
-            border: 'none',
-            cursor: 'pointer',
-            boxShadow: '0 4px 14px rgba(0, 109, 54, 0.35)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}
+          className="pd-mobile-cta-btn"
         >
           <span>Đặt Ngay</span>
           <ArrowRight size={16} />

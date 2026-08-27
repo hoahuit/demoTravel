@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import ScrollReveal from './ScrollReveal';
+import './DestinationsPage.css';
 import { DESTINATIONS_DATA, syncDestinationsDataFromApi, Destination } from '../data/destinationsData';
 import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
 import { fetchSectionItemsApi, fetchToursApi, getImageUrl } from '../services/apiService';

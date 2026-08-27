@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import EmptyState from '../ui/EmptyState';
+import './AdminShopOrdersManager.css';
 import {
   ShoppingBag,
   Clock,
@@ -88,23 +89,23 @@ export default function AdminShopOrdersManager({
   }, [shopOrdersList]);
 
   return (
-    <div style={{ width: '100%', boxSizing: 'border-box', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+    <div className="admin-shop-orders-root">
       {/* HEADER BAR */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '24px', paddingBottom: '20px', borderBottom: '1px solid #e2e8f0' }}>
+      <div className="admin-shop-orders-header">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, color: '#0f766e', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+          <div className="admin-shop-orders-meta-row">
+            <span className="admin-shop-orders-tag">
               4U RETREAT • KOLLECTION SHOP
             </span>
-            <span style={{ height: '4px', width: '4px', borderRadius: '50%', backgroundColor: '#cbd5e1' }} />
-            <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748b' }}>
+            <span className="admin-shop-orders-dot" />
+            <span className="admin-shop-orders-subtag">
               Đơn Mua Sắm Vật Phẩm
             </span>
           </div>
-          <h1 style={{ fontSize: '24px', margin: 0, color: '#0f172a', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.3 }}>
+          <h1 className="admin-shop-orders-title">
             Quản Lý Đơn Hàng Kollection 4U ({filteredItems.length})
           </h1>
-          <p style={{ margin: '4px 0 0 0', fontSize: '13.5px', color: '#64748b' }}>
+          <p className="admin-shop-orders-desc">
             Theo dõi danh sách đơn mua trang bị, vật phẩm tĩnh dưỡng và tiến độ giao hàng cho khách.
           </p>
         </div>
@@ -114,28 +115,7 @@ export default function AdminShopOrdersManager({
             type="button"
             onClick={onReload}
             disabled={isReloading}
-            style={{
-              backgroundColor: '#ffffff',
-              color: '#334155',
-              border: '1px solid #cbd5e1',
-              borderRadius: '8px',
-              padding: '8px 14px',
-              fontSize: '13px',
-              fontWeight: 600,
-              cursor: isReloading ? 'not-allowed' : 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.15s ease',
-              opacity: isReloading ? 0.7 : 1
-            }}
-            onMouseEnter={(e) => {
-              if (!isReloading) e.currentTarget.style.backgroundColor = '#f8fafc';
-            }}
-            onMouseLeave={(e) => {
-              if (!isReloading) e.currentTarget.style.backgroundColor = '#ffffff';
-            }}
+            className="admin-shop-orders-refresh-btn"
           >
             <RefreshCw size={14} color="#64748b" className={isReloading ? 'animate-spin' : ''} />
             <span>{isReloading ? 'Đang tải...' : 'Làm Mới'}</span>
@@ -144,97 +124,60 @@ export default function AdminShopOrdersManager({
       </div>
 
       {/* 4 Metrics Cards */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '16px',
-          marginBottom: '24px'
-        }}
-      >
-        <div style={{ background: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #e5e7eb', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#6b7280' }}>Tổng Đơn Hàng</span>
+      <div className="admin-shop-stats-grid">
+        <div className="admin-shop-stat-card">
+          <div className="admin-shop-stat-top">
+            <span className="admin-shop-stat-label">Tổng Đơn Hàng</span>
             <ShoppingBag size={18} color="#059669" />
           </div>
-          <div style={{ fontSize: '26px', fontWeight: 800, color: '#081f13' }}>{stats.total}</div>
+          <div className="admin-shop-stat-val">{stats.total}</div>
         </div>
 
-        <div style={{ background: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #fed7aa', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#9a3412' }}>Chờ Xác Nhận</span>
+        <div className="admin-shop-stat-card pending">
+          <div className="admin-shop-stat-top">
+            <span className="admin-shop-stat-label pending">Chờ Xác Nhận</span>
             <Clock size={18} color="#ea580c" />
           </div>
-          <div style={{ fontSize: '26px', fontWeight: 800, color: '#c2410c' }}>{stats.pending}</div>
+          <div className="admin-shop-stat-val pending">{stats.pending}</div>
         </div>
 
-        <div style={{ background: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #bae6fd', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#0369a1' }}>Đang Xử Lý / Giao</span>
+        <div className="admin-shop-stat-card delivering">
+          <div className="admin-shop-stat-top">
+            <span className="admin-shop-stat-label delivering">Đang Xử Lý / Giao</span>
             <Truck size={18} color="#0284c7" />
           </div>
-          <div style={{ fontSize: '26px', fontWeight: 800, color: '#0284c7' }}>{stats.delivering}</div>
+          <div className="admin-shop-stat-val delivering">{stats.delivering}</div>
         </div>
 
-        <div style={{ background: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #bbf7d0', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#15803d' }}>Doanh Thu Kollection</span>
+        <div className="admin-shop-stat-card revenue">
+          <div className="admin-shop-stat-top">
+            <span className="admin-shop-stat-label revenue">Doanh Thu Kollection</span>
             <DollarSign size={18} color="#16a34a" />
           </div>
-          <div style={{ fontSize: '22px', fontWeight: 800, color: '#16a34a' }}>
+          <div className="admin-shop-stat-val revenue">
             {stats.totalRevenue.toLocaleString('vi-VN')} ₫
           </div>
         </div>
       </div>
 
       {/* Filter & Search Bar */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '14px',
-          marginBottom: '20px'
-        }}
-      >
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+      <div className="admin-shop-filter-row">
+        <div className="admin-shop-tab-group">
           {[
             { id: 'all', label: 'Tất Cả', count: stats.total },
-            { id: 'pending', label: 'Chờ Xác Nhận', count: stats.pending, color: '#c2410c' },
-            { id: 'delivering', label: 'Đang Xử Lý / Giao', count: stats.delivering, color: '#0284c7' },
-            { id: 'completed', label: 'Đã Hoàn Tất', count: stats.completed, color: '#16a34a' }
+            { id: 'pending', label: 'Chờ Xác Nhận', count: stats.pending },
+            { id: 'delivering', label: 'Đang Xử Lý / Giao', count: stats.delivering },
+            { id: 'completed', label: 'Đã Hoàn Tất', count: stats.completed }
           ].map((tab) => {
             const isActive = selectedStatusTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => setSelectedStatusTab(tab.id)}
-                style={{
-                  padding: '8px 14px',
-                  borderRadius: '10px',
-                  border: isActive ? '1.5px solid #059669' : '1px solid #e5e7eb',
-                  background: isActive ? '#ecfdf5' : '#ffffff',
-                  color: isActive ? '#065f46' : '#4b5563',
-                  fontSize: '13px',
-                  fontWeight: isActive ? 700 : 500,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
+                className={`admin-shop-tab-btn ${isActive ? 'active' : ''}`}
               >
                 {tab.label}
-                <span
-                  style={{
-                    fontSize: '11px',
-                    padding: '1px 6px',
-                    borderRadius: '10px',
-                    background: isActive ? '#059669' : '#f3f4f6',
-                    color: isActive ? '#ffffff' : '#6b7280',
-                    fontWeight: 700
-                  }}
-                >
+                <span className="admin-shop-tab-badge">
                   {tab.count}
                 </span>
               </button>
@@ -242,35 +185,20 @@ export default function AdminShopOrdersManager({
           })}
         </div>
 
-        <div style={{ position: 'relative', minWidth: '280px' }}>
-          <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af' }} />
+        <div className="admin-shop-search-wrap">
+          <Search size={16} className="admin-shop-search-icon" />
           <input
             type="text"
             placeholder="Tìm theo mã đơn, tên khách, SĐT..."
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '9px 12px 9px 36px',
-              borderRadius: '10px',
-              border: '1px solid #cbd5e1',
-              fontSize: '13.5px',
-              boxSizing: 'border-box'
-            }}
+            className="admin-shop-search-input"
           />
         </div>
       </div>
 
       {/* Table Container */}
-      <div
-        style={{
-          background: '#ffffff',
-          borderRadius: '14px',
-          border: '1px solid #e5e7eb',
-          overflow: 'hidden',
-          boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
-        }}
-      >
+      <div className="admin-shop-table-container">
         {filteredItems.length === 0 ? (
           <div style={{ padding: '48px 24px', textAlign: 'center' }}>
             <EmptyState
@@ -280,45 +208,34 @@ export default function AdminShopOrdersManager({
             />
           </div>
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13.5px' }}>
+          <table className="admin-shop-table">
             <thead>
               <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e5e7eb' }}>
-                <th style={{ padding: '14px 20px', fontSize: '12px', fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em', width: '110px' }}>MÃ ĐƠN</th>
-                <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em' }}>KHÁCH HÀNG</th>
-                <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em' }}>SẢN PHẨM / SỐ LƯỢNG</th>
-                <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em' }}>TỔNG TIỀN & THANH TOÁN</th>
-                <th style={{ padding: '14px 16px', fontSize: '12px', fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em' }}>TRẠNG THÁI</th>
-                <th style={{ padding: '14px 20px', fontSize: '12px', fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right', width: '160px' }}>THAO TÁC</th>
+                <th className="admin-shop-th code">MÃ ĐƠN</th>
+                <th className="admin-shop-th">KHÁCH HÀNG</th>
+                <th className="admin-shop-th">SẢN PHẨM / SỐ LƯỢNG</th>
+                <th className="admin-shop-th">TỔNG TIỀN & THANH TOÁN</th>
+                <th className="admin-shop-th">TRẠNG THÁI</th>
+                <th className="admin-shop-th actions">THAO TÁC</th>
               </tr>
             </thead>
             <tbody>
               {filteredItems.map((item, idx) => {
-                const statusColor =
+                const statusType =
                   item.status === 'Đã hoàn tất'
-                    ? '#16a34a'
+                    ? 'completed'
                     : item.status === 'Đang giao hàng' || (item.status && item.status.includes('Đã thanh toán'))
-                    ? '#0284c7'
-                    : '#ea580c';
-                const statusBg =
-                  item.status === 'Đã hoàn tất'
-                    ? '#f0fdf4'
-                    : item.status === 'Đang giao hàng' || (item.status && item.status.includes('Đã thanh toán'))
-                    ? '#f0f9ff'
-                    : '#fff7ed';
+                    ? 'delivering'
+                    : 'pending';
 
                 const itemsCount = item.items?.length || 1;
 
                 return (
-                  <tr
-                    key={item.id || idx}
-                    style={{ borderBottom: '1px solid #f1f5f9', transition: 'background 0.15s ease' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = '#f9fafb')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = '#ffffff')}
-                  >
-                    <td style={{ padding: '14px 20px', verticalAlign: 'middle', fontWeight: 700, color: '#059669' }}>
+                  <tr key={item.id || idx} className="admin-shop-tr">
+                    <td className="admin-shop-td code">
                       {item.orderCode || `ORD-#${item.id}`}
                     </td>
-                    <td style={{ padding: '14px 16px', verticalAlign: 'middle' }}>
+                    <td className="admin-shop-td">
                       <div style={{ fontWeight: 700, color: '#111827' }}>{item.customerName}</div>
                       <div style={{ fontSize: '12.5px', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
                         <PhoneCall size={12} color="#059669" />
@@ -332,7 +249,7 @@ export default function AdminShopOrdersManager({
                         </button>
                       </div>
                     </td>
-                    <td style={{ padding: '14px 16px', verticalAlign: 'middle' }}>
+                    <td className="admin-shop-td">
                       <div style={{ fontWeight: 600, color: '#1f2937', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Package size={14} color="#059669" />
                         {itemsCount} sản phẩm
@@ -343,7 +260,7 @@ export default function AdminShopOrdersManager({
                         </div>
                       )}
                     </td>
-                    <td style={{ padding: '14px 16px', verticalAlign: 'middle' }}>
+                    <td className="admin-shop-td">
                       <div style={{ fontWeight: 800, color: '#081f13', fontSize: '14.5px' }}>
                         {(Number(item.totalAmount) || 0).toLocaleString('vi-VN')} ₫
                       </div>
@@ -351,20 +268,11 @@ export default function AdminShopOrdersManager({
                         {item.paymentMethod || 'COD'}
                       </div>
                     </td>
-                    <td style={{ padding: '14px 16px', verticalAlign: 'middle' }}>
+                    <td className="admin-shop-td">
                       <select
                         value={item.status || 'Chờ xác nhận'}
                         onChange={(e) => handleStatusUpdate && handleStatusUpdate(item, e.target.value)}
-                        style={{
-                          padding: '5px 10px',
-                          borderRadius: '8px',
-                          border: `1px solid ${statusColor}44`,
-                          background: statusBg,
-                          color: statusColor,
-                          fontSize: '12px',
-                          fontWeight: 700,
-                          cursor: 'pointer'
-                        }}
+                        className={`admin-shop-status-select ${statusType}`}
                       >
                         <option value="Chờ xác nhận">Chờ xác nhận</option>
                         <option value="Đã thanh toán (Chờ giao)">Đã thanh toán (Chờ giao)</option>
@@ -373,41 +281,19 @@ export default function AdminShopOrdersManager({
                         <option value="Đã hủy">Đã hủy</option>
                       </select>
                     </td>
-                    <td style={{ padding: '14px 20px', verticalAlign: 'middle', textAlign: 'right' }}>
+                    <td className="admin-shop-td actions">
                       <div style={{ display: 'inline-flex', gap: '6px', justifyContent: 'flex-end' }}>
                         <button
                           onClick={() => setSelectedDetailItem(item)}
                           title="Xem chi tiết đơn"
-                          style={{
-                            width: '50px',
-                            height: '32px',
-                            borderRadius: '8px',
-                            border: '1px solid #e5e7eb',
-                            background: '#f9fafb',
-                            color: '#374151',
-                            cursor: 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                          }}
+                          className="admin-shop-btn-view"
                         >
                           <Eye size={14} />
                         </button>
                         <button
                           onClick={() => handleDeleteItem('shop-orders', String(item.id))}
                           title="Xóa đơn hàng"
-                          style={{
-                            width: '50px',
-                            height: '32px',
-                            borderRadius: '8px',
-                            border: '1px solid #fecaca',
-                            background: '#fff1f2',
-                            color: '#b91c1c',
-                            cursor: 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                          }}
+                          className="admin-shop-btn-delete"
                         >
                           <Trash2 size={14} />
                         </button>
@@ -424,68 +310,49 @@ export default function AdminShopOrdersManager({
       {/* Order Detail Modal */}
       {selectedDetailItem && (
         <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 99999,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px'
-          }}
+          className="admin-shop-modal-backdrop"
           onClick={() => setSelectedDetailItem(null)}
         >
           <div
-            style={{
-              background: '#ffffff',
-              borderRadius: '16px',
-              maxWidth: '650px',
-              width: '100%',
-              padding: '28px',
-              boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)',
-              boxSizing: 'border-box',
-              maxHeight: '90vh',
-              overflowY: 'auto'
-            }}
+            className="admin-shop-modal-box"
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px', borderBottom: '1px solid #e5e7eb', paddingBottom: '14px' }}>
+            <div className="admin-shop-modal-header">
               <div>
-                <span style={{ fontSize: '12px', fontWeight: 800, color: '#059669', textTransform: 'uppercase' }}>
+                <span className="admin-shop-modal-code">
                   {selectedDetailItem.orderCode || `ORD-#${selectedDetailItem.id}`}
                 </span>
-                <h2 style={{ margin: '4px 0 0 0', fontSize: '20px', color: '#111827' }}>
+                <h2 className="admin-shop-modal-title">
                   Chi Tiết Đơn Hàng Kollection 4U
                 </h2>
               </div>
               <button
                 onClick={() => setSelectedDetailItem(null)}
-                style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: '#6b7280' }}
+                className="admin-shop-modal-close-btn"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+            <div className="admin-shop-modal-grid">
               <div>
-                <span style={{ fontSize: '12px', color: '#6b7280', display: 'block' }}>Khách hàng</span>
+                <span className="admin-shop-modal-field-label">Khách hàng</span>
                 <strong style={{ fontSize: '15px', color: '#111827' }}>{selectedDetailItem.customerName}</strong>
               </div>
               <div>
-                <span style={{ fontSize: '12px', color: '#6b7280', display: 'block' }}>Số điện thoại</span>
+                <span className="admin-shop-modal-field-label">Số điện thoại</span>
                 <strong style={{ fontSize: '15px', color: '#059669' }}>{selectedDetailItem.customerPhone}</strong>
               </div>
-              <div style={{ gridColumn: 'span 2' }}>
-                <span style={{ fontSize: '12px', color: '#6b7280', display: 'block' }}>Địa chỉ giao hàng</span>
+              <div className="admin-shop-modal-full-col">
+                <span className="admin-shop-modal-field-label">Địa chỉ giao hàng</span>
                 <strong style={{ fontSize: '14px', color: '#111827' }}>{selectedDetailItem.shippingAddress || 'Chưa cung cấp'}</strong>
               </div>
               <div>
-                <span style={{ fontSize: '12px', color: '#6b7280', display: 'block' }}>Phương thức thanh toán</span>
+                <span className="admin-shop-modal-field-label">Phương thức thanh toán</span>
                 <strong style={{ fontSize: '14px', color: '#111827' }}>{selectedDetailItem.paymentMethod || 'COD'}</strong>
               </div>
               <div>
-                <span style={{ fontSize: '12px', color: '#6b7280', display: 'block' }}>Ngày đặt hàng</span>
+                <span className="admin-shop-modal-field-label">Ngày đặt hàng</span>
                 <span style={{ fontSize: '13px', color: '#6b7280' }}>
                   {selectedDetailItem.createdAt ? new Date(selectedDetailItem.createdAt).toLocaleString('vi-VN') : '--'}
                 </span>
@@ -493,20 +360,17 @@ export default function AdminShopOrdersManager({
             </div>
 
             {/* Ordered Items Table */}
-            <div style={{ marginBottom: '20px' }}>
-              <h4 style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#111827', fontWeight: 700 }}>
+            <div className="admin-shop-modal-items-wrap">
+              <h4 className="admin-shop-modal-items-title">
                 Danh Sách Sản Phẩm Đặt Mua
               </h4>
-              <div style={{ background: '#f8fafc', borderRadius: '10px', padding: '12px', border: '1px solid #e2e8f0' }}>
+              <div className="admin-shop-modal-items-box">
                 {Array.isArray(selectedDetailItem.items) && selectedDetailItem.items.length > 0 ? (
                   selectedDetailItem.items.map((prod: any, pIdx: number) => (
                     <div
                       key={prod.id || pIdx}
+                      className="admin-shop-modal-item-row"
                       style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        padding: '8px 0',
                         borderBottom: pIdx < selectedDetailItem.items.length - 1 ? '1px solid #e2e8f0' : 'none'
                       }}
                     >
@@ -525,7 +389,7 @@ export default function AdminShopOrdersManager({
                   <div style={{ fontSize: '13px', color: '#64748b' }}>{selectedDetailItem.orderNotes || 'Không có chi tiết sản phẩm'}</div>
                 )}
 
-                <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1.5px dashed #cbd5e1', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="admin-shop-modal-total-row">
                   <strong style={{ fontSize: '14px', color: '#0f172a' }}>Tổng Tiền Đơn Hàng:</strong>
                   <strong style={{ fontSize: '18px', color: '#059669' }}>
                     {(Number(selectedDetailItem.totalAmount) || 0).toLocaleString('vi-VN')} ₫
@@ -534,19 +398,10 @@ export default function AdminShopOrdersManager({
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <div className="admin-shop-modal-footer">
               <button
                 onClick={() => setSelectedDetailItem(null)}
-                style={{
-                  padding: '9px 18px',
-                  borderRadius: '8px',
-                  border: '1px solid #cbd5e1',
-                  background: '#ffffff',
-                  color: '#475569',
-                  fontSize: '13.5px',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
+                className="admin-shop-modal-dismiss-btn"
               >
                 Đóng
               </button>

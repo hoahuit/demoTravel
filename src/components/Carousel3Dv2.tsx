@@ -3,6 +3,7 @@ import { ChevronRight, Sparkles, MapPin, Clock } from "lucide-react";
 import { CoverflowCarousel, CoverflowSlide } from "@/components/ui/coverflow-carousel";
 import { TOURS_DATA, syncToursDataFromApi, TourPackage } from "../data/toursData";
 import { fetchToursApi, getImageUrl } from "../services/apiService";
+import './Carousel3Dv2.css';
 
 export interface Carousel3Dv2Props {
   onOpenBooking?: (tourData?: any) => void;
@@ -92,51 +93,38 @@ export default function Carousel3Dv2({ onOpenBooking, onOpenConsultation, onNavi
 
       {/* Active Selected Tour Details Card */}
       {activeTour && (
-        <div
-          style={{
-            margin: '20px auto 0',
-            background: 'transparent',
-            padding: '12px 16px',
-            border: 'none',
-            boxShadow: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '20px',
-            flexWrap: 'wrap'
-          }}
-        >
-          <div style={{ flex: 1, minWidth: '260px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
-              <span style={{ background: 'rgba(45, 90, 54, 0.12)', color: '#1e4a3d', fontSize: '11px', fontWeight: 800, padding: '3px 12px', borderRadius: '999px', textTransform: 'uppercase' }}>
+        <div className="c3d2-detail-bar">
+          <div className="c3d2-info-col">
+            <div className="c3d2-meta-row">
+              <span className="c3d2-category-pill">
                 {activeTour.category || "Retreat"}
               </span>
-              <span style={{ fontSize: '12px', color: '#527059', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span className="c3d2-meta-item">
                 <MapPin size={14} color="#006d36" /> {activeTour.city}
               </span>
-              <span style={{ fontSize: '12px', color: '#527059', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span className="c3d2-meta-item">
                 <Clock size={14} color="#006d36" /> {activeTour.duration}
               </span>
             </div>
 
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#142619', margin: '0 0 4px 0', lineHeight: 1.3 }}>
+            <h3 className="c3d2-tour-title">
               {activeTour.title}
             </h3>
 
-            <p style={{ fontSize: '0.85rem', color: '#525a54', margin: 0, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+            <p className="c3d2-tour-desc">
               {activeTour.subtitle || activeTour.highlights?.[0] || "Hành trình tĩnh dưỡng giữa thiên nhiên kiệt tác."}
             </p>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', fontWeight: 700 }}>Giá trọn gói từ</div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#006d36' }}>
+          <div className="c3d2-actions-wrap">
+            <div className="c3d2-price-box">
+              <div className="c3d2-price-label">Giá trọn gói từ</div>
+              <div className="c3d2-price-val">
                 {activeTour.price ? activeTour.price.toLocaleString("vi-VN") : "3.450.000"} VNĐ
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div className="c3d2-buttons-group">
               <button
                 type="button"
                 onClick={() => {
@@ -144,17 +132,7 @@ export default function Carousel3Dv2({ onOpenBooking, onOpenConsultation, onNavi
                     onNavigate(`/sanpham/${activeTour.slug}`);
                   }
                 }}
-                style={{
-                  padding: '9px 18px',
-                  borderRadius: '12px',
-                  background: '#f1f5f9',
-                  color: '#081f13',
-                  fontSize: '13px',
-                  fontWeight: 700,
-                  border: '1px solid rgba(8, 31, 19, 0.12)',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap'
-                }}
+                className="c3d2-btn-secondary"
               >
                 Xem Chi Tiết
               </button>
@@ -173,23 +151,10 @@ export default function Carousel3Dv2({ onOpenBooking, onOpenConsultation, onNavi
                     });
                   }
                 }}
-                style={{
-                  padding: '9px 20px',
-                  borderRadius: '12px',
-                  background: '#1e4a3d',
-                  color: '#ffffff',
-                  fontSize: '13px',
-                  fontWeight: 800,
-                  border: 'none',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  boxShadow: '0 4px 14px rgba(30, 74, 61, 0.25)'
-                }}
+                className="c3d2-btn-primary"
               >
-                Nhận Tư Vấn <ChevronRight size={16} />
+                <span>Tư Vấn Ngay</span>
+                <ChevronRight size={14} />
               </button>
             </div>
           </div>

@@ -1,0 +1,7 @@
+/* App.css - Toàn bộ cấu trúc ứng dụng chính */
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+}

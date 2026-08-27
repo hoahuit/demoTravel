@@ -1,0 +1,91 @@
+/* ==========================================================================
+   InfiniteSlider.css
+   Dải Logo Đối Tác & Thương Hiệu Đồng Hành
+   ========================================================================== */
+
+.infinite-slider-section {
+    width: 100%;
+    padding: 40px 0 30px 0;
+    background: #f5f5f7;
+    overflow: hidden;
+}
+
+.infinite-slider-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.infinite-slider-badge {
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #86868b;
+    letter-spacing: 0.14em;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.infinite-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 10px 0;
+}
+
+.infinite-slider-vignette-left {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 160px;
+    background: linear-gradient(to right, #f5f5f7 30%, transparent 100%);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.infinite-slider-vignette-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 160px;
+    background: linear-gradient(to right, transparent 0%, #f5f5f7 70%);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.infinite-slider-track-wrap {
+    display: flex;
+    width: 100%;
+    position: relative;
+}
+
+.infinite-slider-viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
+.infinite-slider-track {
+    display: flex;
+    gap: 60px;
+    align-items: center;
+    width: max-content;
+    animation: infiniteSliderScroll 28s linear infinite;
+}
+
+.infinite-slider-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 24px;
+}
+
+@keyframes infiniteSliderScroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-33.333%);
+    }
+}

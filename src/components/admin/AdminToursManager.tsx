@@ -16,6 +16,7 @@ import { getAllLandingSectionTemplates } from '../../data/landingSectionData';
 import ProductDetail from '../ProductDetail';
 import EmptyState from '../ui/EmptyState';
 import AdminPriceInput from './AdminPriceInput';
+import './AdminToursManager.css';
 
 interface AdminToursManagerProps {
   onNavigate?: (path: string) => void;

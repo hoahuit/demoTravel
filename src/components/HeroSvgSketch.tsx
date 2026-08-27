@@ -1,5 +1,6 @@
 import React from 'react';
 import tracedPaths from '../data/tracedPaths.json';
+import './HeroSvgSketch.css';
 
 interface HeroSvgSketchProps {
   isDissolving?: boolean;

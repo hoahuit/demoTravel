@@ -25,6 +25,7 @@ import {
   LucideIcon
 } from 'lucide-react';
 import { fetchMenuCategoriesApi, MenuCategoryItem } from '../services/apiService';
+import './Header.css';
 
 export interface HeaderProps {
   currentPath?: string;
@@ -336,13 +337,10 @@ export default function Header({
   }, [liveCategories]);
 
   const activeCategoryData = menuData.find((m) => m.id === activeCategory);
-  const showLandingSubmenu = isDetailPage && scrolled;
-  const isRow2Open = showLandingSubmenu || row2Visible;
-
-  return (
+    return (
     <>
       <div
-        className="apple-header-wrapper"
+        className={`apple-header-wrapper ${scrolled ? 'is-scrolled' : ''} ${activeCategory ? 'has-active-menu' : ''}`}
         onMouseEnter={() => {
           if (!row2Visible) setRow2Visible(true);
         }}
@@ -352,42 +350,8 @@ export default function Header({
             setRow2Visible(false);
           }
         }}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 10000,
-          background: activeCategory
-            ? 'rgba(13, 23, 16, 0.88)'
-            : scrolled
-              ? 'rgba(13, 23, 16, 0.88)'
-              : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%)',
-          backdropFilter:
-            activeCategory || scrolled ? 'blur(24px) saturate(180%)' : 'none',
-          WebkitBackdropFilter:
-            activeCategory || scrolled ? 'blur(24px) saturate(180%)' : 'none',
-          borderBottom: scrolled
-            ? '1px solid rgba(74, 124, 89, 0.28)'
-            : 'none',
-          boxShadow: scrolled ? '0 10px 30px rgba(0, 0, 0, 0.45)' : 'none',
-          padding: scrolled ? '12px 44px' : '16px 44px',
-          fontFamily:
-            '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans", sans-serif',
-          transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
-        }}
       >
-        <div
-          style={{
-            width: '100%',
-            maxWidth: '100%',
-            padding: '0 40px',
-            margin: '0 auto',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '24px'
-          }}
-        >
+        <div className="apple-header-container">
           {/* 1. Left Column: Logo */}
           <a
             href="/"
@@ -395,61 +359,22 @@ export default function Header({
               e.preventDefault();
               if (onNavigate) onNavigate('/');
             }}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textDecoration: 'none',
-              flexShrink: 0,
-              cursor: 'pointer',
-              transition: 'opacity 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              setActiveCategory(null);
-              e.currentTarget.style.opacity = '1';
-            }}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.92')}
+            className="apple-header-logo-link"
+            onMouseEnter={() => setActiveCategory(null)}
           >
             <img
               src="/Logo-4U-Wellness.png"
               alt="4U Wellness Logo"
-              style={{
-                height: '46px',
-                width: 'auto',
-                objectFit: 'contain',
-                display: 'block'
-              }}
+              className="apple-header-logo-img"
             />
           </a>
 
           {/* 2. Middle Column: Navigation */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flex: 1,
-              minWidth: 0,
-              gap: '6px'
-            }}
-          >
+          <div className="apple-header-nav-col">
             {/* Row 1: Fixed Badges */}
             <div
-              className="hide-mobile"
+              className="apple-header-row1 hide-mobile"
               onMouseEnter={() => setActiveCategory(null)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexWrap: 'nowrap',
-                whiteSpace: 'nowrap',
-                gap: '34px',
-                fontSize: '0.94rem',
-                fontWeight: '700',
-                letterSpacing: '0.01em',
-                minHeight: '34px'
-              }}
             >
               {fixedBadges.map((b, idx) => (
                 <a
@@ -462,88 +387,27 @@ export default function Header({
                     }
                     setActiveCategory(null);
                   }}
-                  style={{
-                    color:
-                      b.isHighlight && !activeCategory ? '#4ade80' : '#ffffff',
-                    background: 'transparent',
-                    border: 'none',
-                    padding: '0',
-                    textDecoration: 'none',
-                    transition: 'all 0.25s ease',
-                    opacity: 1,
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    whiteSpace: 'nowrap',
-                    fontWeight: b.isHighlight ? 800 : 700
-                  }}
-                  onMouseEnter={(e) => {
-                    setActiveCategory(null);
-                    e.currentTarget.style.transform = 'translateY(-1px)';
-                    e.currentTarget.style.color = '#4ade80';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'none';
-                    e.currentTarget.style.color =
-                      b.isHighlight && !activeCategory ? '#4ade80' : '#ffffff';
-                  }}
+                  className={`apple-header-badge-link ${b.isHighlight ? 'is-highlight' : ''}`}
+                  onMouseEnter={() => setActiveCategory(null)}
                 >
                   {b.isHighlight && (
                     <Crown
                       size={15}
-                      style={{
-                        color: '#facc15',
-                        fill: '#facc15',
-                        marginRight: '5px'
-                      }}
+                      className="apple-header-crown-icon"
                     />
                   )}
-                  <span style={{ whiteSpace: 'nowrap' }}>{b.label}</span>
+                  <span className="apple-nowrap-text">{b.label}</span>
                 </a>
               ))}
             </div>
 
             {/* Row 2: Main Navigation Items / Landing Page Submenus on Detail Page */}
             <div
-              style={{
-                maxHeight: isRow2Open ? '48px' : '0px',
-                opacity: isRow2Open ? 1 : 0,
-                overflow: 'hidden',
-                pointerEvents: isRow2Open ? 'auto' : 'none',
-                transition:
-                  'max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                whiteSpace: 'nowrap',
-                minHeight: isRow2Open ? '34px' : '0px'
-              }}
+              className={`apple-header-row2 ${row2Visible ? 'is-open' : ''}`}
             >
-              {showLandingSubmenu ? (
-                <nav
-                  className="hide-mobile"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%'
-                  }}
-                >
-                  <div
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      background: 'rgba(16, 26, 20, 0.7)',
-                      backdropFilter: 'blur(20px)',
-                      WebkitBackdropFilter: 'blur(20px)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '9999px',
-                      padding: '3px 5px',
-                      gap: '4px',
-                      boxShadow: '0 4px 24px rgba(0, 0, 0, 0.3)'
-                    }}
-                  >
+              {isDetailPage ? (
+                <nav className="apple-landing-subnav-wrap hide-mobile">
+                  <div className="apple-landing-pill-container">
                     {LANDING_PAGE_SUBMENUS.map((item) => {
                       const isActive = activeLandingSection === item.targetId;
                       return (
@@ -551,28 +415,7 @@ export default function Header({
                           key={item.id}
                           type="button"
                           onClick={() => handleScrollToLandingSection(item.targetId)}
-                          style={{
-                            background: isActive
-                              ? 'linear-gradient(135deg, rgba(74, 222, 128, 0.22) 0%, rgba(34, 197, 94, 0.15) 100%)'
-                              : 'transparent',
-                            border: isActive
-                              ? '1px solid rgba(74, 222, 128, 0.45)'
-                              : '1px solid transparent',
-                            borderRadius: '9999px',
-                            color: isActive ? '#4ade80' : 'rgba(255, 255, 255, 0.72)',
-                            fontSize: '0.88rem',
-                            fontWeight: isActive ? 700 : 500,
-                            letterSpacing: '0.01em',
-                            padding: '5px 18px',
-                            cursor: 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            whiteSpace: 'nowrap',
-                            outline: 'none',
-                            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                            boxShadow: isActive ? '0 2px 10px rgba(74, 222, 128, 0.2)' : 'none'
-                          }}
+                          className={`apple-landing-pill-btn ${isActive ? 'is-active' : ''}`}
                         >
                           <span>{item.label}</span>
                         </button>
@@ -581,17 +424,7 @@ export default function Header({
                   </div>
                 </nav>
               ) : (
-                <nav
-                  className="hide-mobile"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexWrap: 'nowrap',
-                    whiteSpace: 'nowrap',
-                    gap: '28px'
-                  }}
-                >
+                <nav className="apple-header-main-nav hide-mobile">
                   {menuData.map((item) => (
                     <div
                       key={item.id}
@@ -600,13 +433,7 @@ export default function Header({
                           ? setActiveCategory(item.id)
                           : setActiveCategory(null)
                       }
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        position: 'relative',
-                        whiteSpace: 'nowrap',
-                        flexShrink: 0
-                      }}
+                      className="apple-nav-item-wrap"
                     >
                       {item.hasSubmenu ? (
                         <button
@@ -621,47 +448,14 @@ export default function Header({
                               );
                             }
                           }}
-                          style={{
-                            background: 'none',
-                            border: 'none',
-                            color:
-                              activeCategory === item.id ? '#4ade80' : '#ffffff',
-                            fontSize: '1.02rem',
-                            fontWeight: '700',
-                            cursor: 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '6px',
-                            padding: '0',
-                            whiteSpace: 'nowrap',
-                            transition: 'color 0.2s ease'
-                          }}
-                          onMouseEnter={(e) =>
-                            (e.currentTarget.style.color = '#4ade80')
-                          }
-                          onMouseLeave={(e) => {
-                            if (activeCategory !== item.id)
-                              e.currentTarget.style.color = '#ffffff';
-                          }}
+                          className={`apple-nav-btn ${activeCategory === item.id ? 'is-active' : ''}`}
                         >
-                          <span style={{ whiteSpace: 'nowrap' }}>
+                          <span className="apple-nowrap-text">
                             {item.title}
                           </span>
                           <ChevronDown
                             size={14}
-                            style={{
-                              transform:
-                                activeCategory === item.id
-                                  ? 'rotate(180deg)'
-                                  : 'none',
-                              transition: 'transform 0.25s ease',
-                              opacity: 0.85,
-                              color:
-                                activeCategory === item.id
-                                  ? '#4ade80'
-                                  : 'currentColor',
-                              flexShrink: 0
-                            }}
+                            className={`apple-chevron-arrow ${activeCategory === item.id ? 'rotated' : ''}`}
                           />
                         </button>
                       ) : (
@@ -674,26 +468,9 @@ export default function Header({
                             }
                             setActiveCategory(null);
                           }}
-                          style={{
-                            color: '#ffffff',
-                            fontSize: '1.02rem',
-                            fontWeight: '700',
-                            textDecoration: 'none',
-                            padding: '0',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            whiteSpace: 'nowrap',
-                            transition: 'color 0.2s ease'
-                          }}
-                          onMouseEnter={(e) =>
-                            (e.currentTarget.style.color = '#4ade80')
-                          }
-                          onMouseLeave={(e) => {
-                            if (activeCategory !== item.id)
-                              e.currentTarget.style.color = '#ffffff';
-                          }}
+                          className="apple-nav-link"
                         >
-                          <span style={{ whiteSpace: 'nowrap' }}>
+                          <span className="apple-nowrap-text">
                             {item.title}
                           </span>
                         </a>
@@ -706,15 +483,7 @@ export default function Header({
           </div>
 
           {/* 3. Right Column: Action Buttons */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              flexShrink: 0,
-              gap: '10px'
-            }}
-          >
+          <div className="apple-header-actions-col">
             {/* Button Lịch Khởi Hành */}
             <button
               type="button"
@@ -726,47 +495,10 @@ export default function Header({
                   onNavigate('/retreat/sapkhoihanh');
                 }
               }}
-              className="hide-mobile"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '7px',
-                height: '38px',
-                padding: '0 18px',
-                borderRadius: '999px',
-                background: 'linear-gradient(135deg, #c27803 0%, #854d0e 100%)',
-                color: '#ffffff',
-                fontSize: '0.88rem',
-                fontWeight: '700',
-                letterSpacing: '0.01em',
-                textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
-                boxShadow: '0 6px 20px rgba(133, 77, 14, 0.45)',
-                border: '1px solid rgba(254, 240, 138, 0.45)',
-                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                flexShrink: 0
-              }}
-              onMouseEnter={(e) => {
-                setActiveCategory(null);
-                e.currentTarget.style.background =
-                  'linear-gradient(135deg, #d97706 0%, #9a3412 100%)';
-                e.currentTarget.style.borderColor = '#fef08a';
-                e.currentTarget.style.transform = 'scale(1.03)';
-                e.currentTarget.style.boxShadow =
-                  '0 8px 24px rgba(217, 119, 6, 0.55)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background =
-                  'linear-gradient(135deg, #c27803 0%, #854d0e 100%)';
-                e.currentTarget.style.borderColor = 'rgba(254, 240, 138, 0.45)';
-                e.currentTarget.style.transform = 'none';
-                e.currentTarget.style.boxShadow =
-                  '0 6px 20px rgba(133, 77, 14, 0.45)';
-              }}
+              className="apple-btn-calendar hide-mobile"
+              onMouseEnter={() => setActiveCategory(null)}
             >
-              <Calendar size={15} style={{ color: '#fef08a' }} />
+              <Calendar size={15} color="#fef08a" />
               <span>Lịch khởi hành</span>
             </button>
 
@@ -776,64 +508,17 @@ export default function Header({
               onClick={() => {
                 if (onOpenBooking) onOpenBooking();
               }}
-              className="hide-mobile"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                height: '38px',
-                padding: '0 20px',
-                borderRadius: '999px',
-                background: 'linear-gradient(135deg, #436e55 0%, #284c39 100%)',
-                color: '#ffffff',
-                fontWeight: '700',
-                fontSize: '0.88rem',
-                letterSpacing: '0.01em',
-                textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
-                boxShadow: '0 6px 20px rgba(40, 76, 57, 0.4)',
-                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                border: '1px solid rgba(163, 184, 153, 0.45)',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap'
-              }}
-              onMouseEnter={(e) => {
-                setActiveCategory(null);
-                e.currentTarget.style.background =
-                  'linear-gradient(135deg, #4f8064 0%, #305842 100%)';
-                e.currentTarget.style.borderColor = '#86efac';
-                e.currentTarget.style.transform = 'scale(1.03)';
-                e.currentTarget.style.boxShadow =
-                  '0 8px 24px rgba(67, 110, 85, 0.5)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background =
-                  'linear-gradient(135deg, #436e55 0%, #284c39 100%)';
-                e.currentTarget.style.borderColor =
-                  'rgba(163, 184, 153, 0.45)';
-                e.currentTarget.style.transform = 'none';
-                e.currentTarget.style.boxShadow =
-                  '0 6px 20px rgba(40, 76, 57, 0.4)';
-              }}
+              className="apple-btn-consultation hide-mobile"
+              onMouseEnter={() => setActiveCategory(null)}
             >
-              <Sparkles size={15} style={{ color: '#fde047' }} />
-              <span style={{ whiteSpace: 'nowrap' }}>Đặt Lịch & Tư Vấn</span>
+              <Sparkles size={15} color="#fde047" />
+              <span className="apple-nowrap-text">Đặt Lịch & Tư Vấn</span>
             </button>
 
             {/* Mobile Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              style={{
-                display: 'none',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '4px',
-                color: '#ffffff',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-              className="mobile-toggle-btn"
+              className="apple-mobile-toggle-btn mobile-toggle-btn"
             >
               {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
@@ -842,103 +527,37 @@ export default function Header({
 
         {/* Dynamic Multi-Column Luxury Card Mega Menu */}
         {activeCategory && activeCategoryData && activeCategoryData.hasSubmenu && (
-          <div
-            style={{
-              position: 'absolute',
-              top: '100%',
-              left: 0,
-              right: 0,
-              background: 'rgba(13, 23, 16, 0.94)',
-              backdropFilter: 'blur(28px) saturate(190%)',
-              WebkitBackdropFilter: 'blur(28px) saturate(190%)',
-              borderBottom: '1px solid rgba(74, 124, 89, 0.28)',
-              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.55)',
-              zIndex: 9995,
-              animation: 'fadeInFlyout 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-          >
-            <div
-              style={{
-                maxWidth: '1280px',
-                margin: '0 auto',
-                padding: '24px 36px 28px'
-              }}
-            >
+          <div className="apple-megamenu-panel">
+            <div className="apple-megamenu-inner">
               {activeCategoryData.columns && activeCategoryData.columns.length > 0 && (
                 <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: `repeat(${activeCategoryData.columns.length}, 1fr)`,
-                    gap: '20px'
-                  }}
+                  className="apple-megamenu-grid"
+                  style={{ '--cols': activeCategoryData.columns.length } as React.CSSProperties}
                 >
                   {activeCategoryData.columns.map((col) => {
                     return (
                       <div
                         key={col.id}
+                        className="apple-megamenu-col-card"
                         style={{
-                          background: 'rgba(255, 255, 255, 0.03)',
-                          border: `1px solid ${col.borderColor}`,
-                          borderRadius: '16px',
-                          padding: '16px 16px 14px',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          backdropFilter: 'blur(12px)',
-                          transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                          cursor: col.directHref ? 'pointer' : 'default'
-                        }}
+                          '--col-border': col.borderColor,
+                          '--col-color': col.color,
+                          '--col-cursor': col.directHref ? 'pointer' : 'default'
+                        } as React.CSSProperties}
                         onClick={() => {
                           if (col.directHref) {
                             if (onNavigate) onNavigate(col.directHref);
                             setActiveCategory(null);
                           }
                         }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'translateY(-2px)';
-                          e.currentTarget.style.background =
-                            'rgba(255, 255, 255, 0.06)';
-                          e.currentTarget.style.borderColor = col.color;
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'none';
-                          e.currentTarget.style.background =
-                            'rgba(255, 255, 255, 0.03)';
-                          e.currentTarget.style.borderColor = col.borderColor;
-                        }}
                       >
                         {/* Column Header */}
-                        <div
-                          style={{
-                            paddingBottom: col.items.length > 0 ? '10px' : '0',
-                            marginBottom: col.items.length > 0 ? '10px' : '0',
-                            borderBottom:
-                              col.items.length > 0
-                                ? '1px solid rgba(255, 255, 255, 0.08)'
-                                : 'none',
-                            userSelect: 'none'
-                          }}
-                        >
-                          <h4
-                            style={{
-                              margin: 0,
-                              fontSize: '1rem',
-                              fontWeight: 800,
-                              color: col.color,
-                              letterSpacing: '-0.01em'
-                            }}
-                          >
+                        <div className={`apple-megamenu-col-header ${col.items.length > 0 ? 'has-divider' : ''}`}>
+                          <h4 className="apple-megamenu-col-title">
                             {col.title}
                           </h4>
                           {col.subtitle && (
-                            <p
-                              style={{
-                                margin: '4px 0 0',
-                                fontSize: '0.78rem',
-                                color: 'rgba(255, 255, 255, 0.6)',
-                                fontWeight: 400,
-                                lineHeight: 1.35
-                              }}
-                            >
+                            <p className="apple-megamenu-col-subtitle">
                               {col.subtitle}
                             </p>
                           )}
@@ -946,13 +565,7 @@ export default function Header({
 
                         {/* Sub-items if present */}
                         {col.items.length > 0 && (
-                          <div
-                            style={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                              gap: '4px'
-                            }}
-                          >
+                          <div className="apple-megamenu-subitems-list">
                             {col.items.map((sub, sIdx) => (
                               <a
                                 key={sIdx}
@@ -962,46 +575,17 @@ export default function Header({
                                   if (onNavigate) onNavigate(sub.href);
                                   setActiveCategory(null);
                                 }}
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'space-between',
-                                  padding: '5px 0',
-                                  color: 'rgba(255, 255, 255, 0.92)',
-                                  textDecoration: 'none',
-                                  fontSize: '0.92rem',
-                                  fontWeight: 600,
-                                  transition: 'all 0.2s ease',
-                                  background: 'transparent',
-                                  border: 'none'
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.color = col.color;
-                                  e.currentTarget.style.transform =
-                                    'translateX(4px)';
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.color =
-                                    'rgba(255, 255, 255, 0.92)';
-                                  e.currentTarget.style.transform =
-                                    'translateX(0)';
-                                }}
+                                className="apple-megamenu-sublink"
                               >
                                 <span>{sub.label}</span>
                                 {sub.badge && (
                                   <span
+                                    className="apple-megamenu-badge"
                                     style={{
-                                      fontSize: '0.62rem',
-                                      fontWeight: 800,
-                                      padding: '1px 6px',
-                                      borderRadius: '999px',
-                                      backgroundColor: `${sub.badgeColor || col.color
-                                        }22`,
-                                      color: sub.badgeColor || col.color,
-                                      border: `1px solid ${sub.badgeColor || col.color
-                                        }44`,
-                                      letterSpacing: '0.04em'
-                                    }}
+                                      '--badge-bg': `${sub.badgeColor || col.color}22`,
+                                      '--badge-color': sub.badgeColor || col.color,
+                                      '--badge-border': `${sub.badgeColor || col.color}44`
+                                    } as React.CSSProperties}
                                   >
                                     {sub.badge}
                                   </span>
@@ -1024,42 +608,15 @@ export default function Header({
       {activeCategory && (
         <div
           onClick={() => setActiveCategory(null)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0, 0, 0, 0.7)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            zIndex: 9990
-          }}
+          className="apple-megamenu-backdrop"
         />
       )}
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            top: '84px',
-            background: 'rgba(10, 15, 11, 0.98)',
-            backdropFilter: 'blur(24px)',
-            zIndex: 9999,
-            padding: '24px 20px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px',
-            overflowY: 'auto'
-          }}
-        >
+        <div className="apple-mobile-drawer">
           {/* Top 4 Parent Menus in Mobile Drawer */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '8px',
-            paddingBottom: '14px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.12)'
-          }}>
+          <div className="apple-mobile-fixed-grid">
             {fixedBadges.map((b, idx) => (
               <a
                 key={idx}
@@ -1071,21 +628,9 @@ export default function Header({
                   }
                   setMobileMenuOpen(false);
                 }}
-                style={{
-                  backgroundColor: b.isHighlight ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255, 255, 255, 0.05)',
-                  border: b.isHighlight ? '1px solid rgba(74, 222, 128, 0.4)' : '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '10px',
-                  padding: '10px 12px',
-                  color: b.isHighlight ? '#4ade80' : '#ffffff',
-                  fontSize: '0.85rem',
-                  fontWeight: 700,
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
+                className={`apple-mobile-fixed-link ${b.isHighlight ? 'is-highlight' : ''}`}
               >
-                {b.isHighlight && <Crown size={14} style={{ color: '#facc15' }} />}
+                {b.isHighlight && <Crown size={14} color="#facc15" />}
                 <span>{b.label}</span>
               </a>
             ))}
@@ -1093,17 +638,11 @@ export default function Header({
 
           {/* If on Detail Page: Display the 4 Landing Page Submenus in Mobile Drawer */}
           {isDetailPage && (
-            <div style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.03)',
-              borderRadius: '16px',
-              padding: '12px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              marginBottom: '12px'
-            }}>
-              <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px', paddingLeft: '4px' }}>
+            <div className="apple-mobile-landing-card">
+              <div className="apple-mobile-landing-title">
                 Mục nổi bật trong trang
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+              <div className="apple-mobile-landing-grid">
                 {LANDING_PAGE_SUBMENUS.map((item) => {
                   const isActive = activeLandingSection === item.targetId;
                   return (
@@ -1111,22 +650,7 @@ export default function Header({
                       key={item.id}
                       type="button"
                       onClick={() => handleScrollToLandingSection(item.targetId)}
-                      style={{
-                        background: isActive ? 'rgba(74, 222, 128, 0.18)' : 'rgba(255, 255, 255, 0.04)',
-                        border: isActive ? '1px solid rgba(74, 222, 128, 0.45)' : '1px solid rgba(255, 255, 255, 0.06)',
-                        borderRadius: '10px',
-                        padding: '9px 12px',
-                        color: isActive ? '#4ade80' : 'rgba(255, 255, 255, 0.75)',
-                        fontSize: '0.85rem',
-                        fontWeight: isActive ? 700 : 500,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        textAlign: 'center',
-                        transition: 'all 0.2s ease',
-                        outline: 'none'
-                      }}
+                      className={`apple-mobile-landing-btn ${isActive ? 'is-active' : ''}`}
                     >
                       <span>{item.label}</span>
                     </button>
@@ -1139,7 +663,7 @@ export default function Header({
           {menuData.map((cat, idx) => (
             <div
               key={idx}
-              style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+              className="apple-mobile-cat-row"
             >
               {cat.hasSubmenu ? (
                 <>
@@ -1149,82 +673,36 @@ export default function Header({
                         mobileExpandedCat === cat.id ? null : cat.id
                       )
                     }
-                    style={{
-                      width: '100%',
-                      padding: '14px 0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      background: 'none',
-                      border: 'none',
-                      color: '#ffffff',
-                      fontSize: '1.05rem',
-                      fontWeight: '600',
-                      cursor: 'pointer'
-                    }}
+                    className="apple-mobile-cat-toggle"
                   >
                     <span>{cat.title}</span>
                     <ChevronDown
                       size={16}
-                      style={{
-                        transform:
-                          mobileExpandedCat === cat.id
-                            ? 'rotate(180deg)'
-                            : 'none',
-                        transition: 'transform 0.2s',
-                        color: '#4ade80'
-                      }}
+                      className={`apple-chevron-arrow ${mobileExpandedCat === cat.id ? 'rotated' : ''}`}
                     />
                   </button>
 
                   {mobileExpandedCat === cat.id && (
-                    <div
-                      style={{
-                        padding: '0 0 14px 10px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '12px'
-                      }}
-                    >
+                    <div className="apple-mobile-subcols-wrap">
                       {cat.columns &&
                         cat.columns.map((col) => (
                           <div
                             key={col.id}
+                            className="apple-mobile-subcol-card"
                             style={{
-                              background: 'rgba(255,255,255,0.03)',
-                              borderRadius: '12px',
-                              padding: '12px',
                               border: `1px solid ${col.borderColor}`
                             }}
                           >
-                            <div
-                              style={{
-                                marginBottom: col.items.length > 0 ? '8px' : '0',
-                                paddingBottom: col.items.length > 0 ? '6px' : '0',
-                                borderBottom:
-                                  col.items.length > 0
-                                    ? '1px solid rgba(255,255,255,0.08)'
-                                    : 'none'
-                              }}
-                            >
+                            <div className={`apple-mobile-subcol-header ${col.items.length > 0 ? 'has-divider' : ''}`}>
                               <span
-                                style={{
-                                  fontWeight: 800,
-                                  color: col.color,
-                                  fontSize: '0.92rem'
-                                }}
+                                className="apple-mobile-subcol-title"
+                                style={{ color: col.color }}
                               >
                                 {col.title}
                               </span>
                             </div>
                             {col.items.length > 0 && (
-                              <div
-                                style={{
-                                  display: 'grid',
-                                  gridTemplateColumns: '1fr 1fr',
-                                  gap: '6px'
-                                }}
-                              >
+                              <div className="apple-mobile-subitems-grid">
                                 {col.items.map((sub, sIdx) => (
                                   <a
                                     key={sIdx}
@@ -1234,13 +712,7 @@ export default function Header({
                                       if (onNavigate) onNavigate(sub.href);
                                       setMobileMenuOpen(false);
                                     }}
-                                    style={{
-                                      color: 'rgba(255,255,255,0.85)',
-                                      textDecoration: 'none',
-                                      fontSize: '0.82rem',
-                                      padding: '4px 6px',
-                                      display: 'block'
-                                    }}
+                                    className="apple-mobile-subitem-link"
                                   >
                                     <span>{sub.label}</span>
                                   </a>
@@ -1262,14 +734,7 @@ export default function Header({
                     }
                     setMobileMenuOpen(false);
                   }}
-                  style={{
-                    fontSize: '1.05rem',
-                    fontWeight: '600',
-                    color: '#ffffff',
-                    textDecoration: 'none',
-                    padding: '14px 0',
-                    display: 'block'
-                  }}
+                  className="apple-mobile-cat-link"
                 >
                   {cat.title}
                 </a>
@@ -1277,7 +742,7 @@ export default function Header({
             </div>
           ))}
 
-          <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+          <div className="apple-mobile-bottom-actions">
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
@@ -1287,23 +752,9 @@ export default function Header({
                   onNavigate('/retreat/sapkhoihanh');
                 }
               }}
-              style={{
-                flex: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                padding: '12px 16px',
-                borderRadius: '999px',
-                background: 'rgba(255, 255, 255, 0.12)',
-                color: '#ffffff',
-                fontWeight: '700',
-                fontSize: '0.88rem',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                cursor: 'pointer'
-              }}
+              className="apple-mobile-action-calendar"
             >
-              <Calendar size={16} style={{ color: '#4ade80' }} />
+              <Calendar size={16} color="#4ade80" />
               <span>Lịch khởi hành</span>
             </button>
 
@@ -1312,21 +763,7 @@ export default function Header({
                 setMobileMenuOpen(false);
                 if (onOpenBooking) onOpenBooking();
               }}
-              style={{
-                flex: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                padding: '12px 16px',
-                borderRadius: '999px',
-                background: 'linear-gradient(135deg, #4ade80 0%, #22c55e 100%)',
-                color: '#09150c',
-                fontWeight: '800',
-                fontSize: '0.88rem',
-                border: 'none',
-                cursor: 'pointer'
-              }}
+              className="apple-mobile-action-consult"
             >
               Nhận tư vấn
             </button>

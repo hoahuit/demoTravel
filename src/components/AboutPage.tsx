@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './AboutPage.css';
 import {
   ShieldCheck,
   Award,
@@ -153,88 +154,28 @@ export default function AboutPage({ onNavigate, onOpenBooking }: AboutPageProps)
   ];
 
   return (
-    <div style={{ backgroundColor: '#ffffff', color: '#10201B', fontFamily: "'Plus Jakarta Sans', sans-serif", width: '100%', overflowX: 'hidden' }}>
+    <div className="about-page-root">
 
       {/* 1. CINEMATIC HERO SECTION */}
-      <section style={{
-        position: 'relative',
-        width: '100%',
-        minHeight: '80vh',
-        backgroundImage: `linear-gradient(180deg, rgba(16, 32, 27, 0.7) 0%, rgba(16, 32, 27, 0.85) 100%), url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=85&w=2560&auto=format&fit=crop')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center 35%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '120px 24px 100px',
-        boxSizing: 'border-box',
-        color: '#ffffff',
-        textAlign: 'center'
-      }}>
-        <div style={{ maxWidth: '980px', margin: '0 auto' }}>
+      <section className="about-hero">
+        <div className="about-hero-inner">
           <ScrollReveal>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '6px 20px',
-              borderRadius: '999px',
-              background: 'rgba(255, 255, 255, 0.12)',
-              border: '1px solid rgba(255, 255, 255, 0.25)',
-              backdropFilter: 'blur(10px)',
-              color: '#a7f3d0',
-              fontSize: '12px',
-              fontWeight: 800,
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              marginBottom: '24px'
-            }}>
+            <div className="about-hero-badge">
               ✦ TRIẾT LÝ NGHỈ DƯỠNG MAY ĐO ĐỘC BẢN
             </div>
 
-            <h1 style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontSize: 'clamp(36px, 5.5vw, 68px)',
-              fontWeight: 600,
-              lineHeight: 1.15,
-              margin: '0 0 24px 0',
-              letterSpacing: '-0.02em',
-              fontStyle: 'italic'
-            }}>
-              Vì Sao Chọn <span style={{ color: '#6ee7b7', fontStyle: 'normal', fontWeight: 800 }}>4U Retreat</span>?
+            <h1 className="about-hero-title">
+              Vì Sao Chọn <span className="about-hero-title-highlight">4U Retreat</span>?
             </h1>
 
-            <p style={{
-              fontSize: 'clamp(16px, 2vw, 20px)',
-              lineHeight: 1.7,
-              color: 'rgba(255, 255, 255, 0.9)',
-              maxWidth: '820px',
-              margin: '0 auto 36px',
-              fontWeight: 400
-            }}>
+            <p className="about-hero-desc">
               Không chỉ là một chuyến đi du lịch thông thường, mỗi hành trình của 4U là một liệu pháp phục hồi năng lượng sống nguyên bản, may đo độc bản và đánh thức những giá trị bình yên nhất trong tâm hồn.
             </p>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center' }}>
+            <div className="about-hero-btn-group">
               <button
                 onClick={() => onOpenBooking ? onOpenBooking() : (onNavigate && onNavigate('/retreats-doc-quyen'))}
-                style={{
-                  background: '#006d36',
-                  color: '#ffffff',
-                  border: 'none',
-                  padding: '15px 36px',
-                  borderRadius: '999px',
-                  fontSize: '15px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  boxShadow: '0 8px 24px rgba(0, 109, 54, 0.4)',
-                  transition: 'all 0.3s ease',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                className="about-primary-btn"
               >
                 <span>Nhận Tư Vấn May Đo 1:1</span>
                 <ArrowRight size={16} />
@@ -245,20 +186,7 @@ export default function AboutPage({ onNavigate, onOpenBooking }: AboutPageProps)
                   const el = document.getElementById('triet-ly-4u');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  color: '#ffffff',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  backdropFilter: 'blur(10px)',
-                  padding: '15px 32px',
-                  borderRadius: '999px',
-                  fontSize: '15px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
+                className="about-secondary-btn"
               >
                 Khám Phá Triết Lý 4U
               </button>
@@ -268,94 +196,51 @@ export default function AboutPage({ onNavigate, onOpenBooking }: AboutPageProps)
       </section>
 
       {/* 2. STATS FLOATING BANNER */}
-      <div style={{ maxWidth: '1240px', margin: '-50px auto 0', padding: '0 24px', position: 'relative', zIndex: 10 }}>
-        <div style={{
-          background: '#ffffff',
-          borderRadius: '24px',
-          padding: '40px 32px',
-          boxShadow: '0 20px 60px rgba(16, 32, 27, 0.08)',
-          border: '1px solid rgba(16, 32, 27, 0.08)',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '32px',
-          textAlign: 'center'
-        }}>
+      <div className="about-stats-wrap">
+        <div className="about-stats-grid">
           <div>
-            <div style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '44px', fontWeight: 800, color: '#006d36', lineHeight: 1 }}>14+</div>
-            <div style={{ fontSize: '13px', fontWeight: 700, color: '#64748b', marginTop: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Năm Kinh Nghiệm Lữ Hành</div>
+            <div className="about-stat-number">14+</div>
+            <div className="about-stat-label">Năm Kinh Nghiệm Lữ Hành</div>
           </div>
           <div>
-            <div style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '44px', fontWeight: 800, color: '#006d36', lineHeight: 1 }}>100%</div>
-            <div style={{ fontSize: '13px', fontWeight: 700, color: '#64748b', marginTop: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Điểm Đến Biệt Lập Nguyên Sơ</div>
+            <div className="about-stat-number">100%</div>
+            <div className="about-stat-label">Điểm Đến Biệt Lập Nguyên Sơ</div>
           </div>
           <div>
-            <div style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '44px', fontWeight: 800, color: '#006d36', lineHeight: 1 }}>4.98 / 5</div>
-            <div style={{ fontSize: '13px', fontWeight: 700, color: '#64748b', marginTop: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Mức Độ Hài Lòng Tuyệt Đối</div>
+            <div className="about-stat-number">4.98 / 5</div>
+            <div className="about-stat-label">Mức Độ Hài Lòng Tuyệt Đối</div>
           </div>
           <div>
-            <div style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '44px', fontWeight: 800, color: '#006d36', lineHeight: 1 }}>1 : 1</div>
-            <div style={{ fontSize: '13px', fontWeight: 700, color: '#64748b', marginTop: '8px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Thiết Kế May Đo Chuyên Sâu</div>
+            <div className="about-stat-number">1 : 1</div>
+            <div className="about-stat-label">Thiết Kế May Đo Chuyên Sâu</div>
           </div>
         </div>
       </div>
 
       {/* 3. CORE PILLARS SECTION (THÂN - TÂM - TRÍ - BẢO TỒN) */}
-      <section id="triet-ly-4u" style={{ padding: '120px 0 100px', background: '#ffffff' }}>
-        <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 24px' }}>
+      <section id="triet-ly-4u" className="about-pillars-section">
+        <div className="about-pillars-container">
           <ScrollReveal>
-            <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '6px 16px',
-                borderRadius: '999px',
-                background: 'rgba(0, 109, 54, 0.08)',
-                color: '#006d36',
-                fontSize: '12px',
-                fontWeight: 800,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                marginBottom: '14px'
-              }}>
+            <div className="about-section-header">
+              <div className="about-section-pill">
                 ✦ 4 TRỤ CỘT CHĂM SÓC
               </div>
-              <h2 style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
-                fontSize: 'clamp(32px, 4vw, 48px)',
-                fontStyle: 'italic',
-                fontWeight: 600,
-                color: '#10201B',
-                margin: '0 0 16px 0'
-              }}>
+              <h2 className="about-section-title">
                 Nền Tảng Trải Nghiệm Tại 4U Retreat
               </h2>
-              <p style={{ maxWidth: '680px', margin: '0 auto', fontSize: '16px', color: '#525a54', lineHeight: 1.7 }}>
+              <p className="about-section-desc">
                 Mỗi hành trình được kiến tạo xung quanh 4 trụ cột cốt lõi nhằm đem lại sự chuyển hóa toàn diện và năng lượng sống tích cực.
               </p>
             </div>
           </ScrollReveal>
 
           {/* Pillar Tabs */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '40px' }}>
+          <div className="about-pillar-tabs">
             {pillars.map((pillar, idx) => (
               <button
                 key={pillar.id}
                 onClick={() => setActivePillarTab(idx)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '12px 24px',
-                  borderRadius: '999px',
-                  border: activePillarTab === idx ? '2px solid #006d36' : '1px solid #e2e8f0',
-                  background: activePillarTab === idx ? '#006d36' : '#ffffff',
-                  color: activePillarTab === idx ? '#ffffff' : '#334155',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  cursor: 'pointer',
-                  transition: 'all 0.25s ease'
-                }}
+                className={`about-pillar-tab-btn ${activePillarTab === idx ? 'active' : ''}`}
               >
                 <span>{pillar.icon}</span>
                 <span>{pillar.title}</span>
@@ -365,47 +250,33 @@ export default function AboutPage({ onNavigate, onOpenBooking }: AboutPageProps)
 
           {/* Active Pillar Card */}
           <ScrollReveal>
-            <div style={{
-              background: '#f8faf9',
-              borderRadius: '28px',
-              border: '1px solid rgba(0, 109, 54, 0.12)',
-              overflow: 'hidden',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-              boxShadow: '0 12px 36px rgba(16, 32, 27, 0.05)'
-            }}>
-              <div style={{ padding: '48px 40px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ fontSize: '13px', fontWeight: 800, color: '#006d36', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>
+            <div className="about-pillar-card">
+              <div className="about-pillar-info">
+                <div className="about-pillar-sub">
                   {pillars[activePillarTab].sub}
                 </div>
-                <h3 style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: '32px',
-                  fontWeight: 700,
-                  color: '#10201B',
-                  margin: '0 0 16px 0'
-                }}>
+                <h3 className="about-pillar-heading">
                   {pillars[activePillarTab].title}
                 </h3>
-                <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.7, margin: '0 0 28px 0' }}>
+                <p className="about-pillar-summary">
                   {pillars[activePillarTab].summary}
                 </p>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div className="about-pillar-points">
                   {pillars[activePillarTab].points.map((pt, pIdx) => (
-                    <div key={pIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                      <CheckCircle2 size={18} color="#006d36" style={{ flexShrink: 0, marginTop: '3px' }} />
-                      <span style={{ fontSize: '14.5px', color: '#334155', lineHeight: 1.6 }}>{pt}</span>
+                    <div key={pIdx} className="about-pillar-point-item">
+                      <CheckCircle2 size={18} color="#006d36" className="about-pillar-point-icon" />
+                      <span className="about-pillar-point-text">{pt}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div style={{ minHeight: '380px', position: 'relative' }}>
+              <div className="about-pillar-img-wrap">
                 <img
                   src={pillars[activePillarTab].image}
                   alt={pillars[activePillarTab].title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  className="about-pillar-img"
                 />
               </div>
             </div>
@@ -414,98 +285,40 @@ export default function AboutPage({ onNavigate, onOpenBooking }: AboutPageProps)
       </section>
 
       {/* 4. WHY WE STAND OUT — 6 REASONS BENTO GRID */}
-      <section style={{ padding: '110px 0 120px', background: '#e5efe8' }}>
-        <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 24px' }}>
+      <section className="about-reasons-section">
+        <div className="about-pillars-container">
           <ScrollReveal>
-            <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '6px 16px',
-                borderRadius: '999px',
-                background: 'rgba(45, 90, 54, 0.1)',
-                color: '#2d5a36',
-                fontSize: '12px',
-                fontWeight: 800,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                marginBottom: '14px'
-              }}>
+            <div className="about-section-header">
+              <div className="about-section-pill">
                 ✦ GIÁ TRỊ VƯỢT TRỘI
               </div>
-              <h2 style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
-                fontSize: 'clamp(32px, 4vw, 48px)',
-                fontStyle: 'italic',
-                fontWeight: 600,
-                color: '#10201B',
-                margin: '0 0 16px 0'
-              }}>
+              <h2 className="about-section-title">
                 6 Đặc Quyền Khác Biệt Tại 4U
               </h2>
-              <p style={{ maxWidth: '640px', margin: '0 auto', fontSize: '16px', color: '#527059', lineHeight: 1.7 }}>
+              <p className="about-section-desc">
                 Những tiêu chuẩn khắt khe tạo nên đẳng cấp và sự hài lòng trọn vẹn trong từng chuyến đi.
               </p>
             </div>
           </ScrollReveal>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-            gap: '28px'
-          }}>
+          <div className="about-reasons-grid">
             {reasons.map((item, idx) => (
               <ScrollReveal key={idx} delay={idx * 80}>
-                <div style={{
-                  background: '#ffffff',
-                  borderRadius: '20px',
-                  padding: '36px 30px',
-                  border: '1px solid rgba(16, 32, 27, 0.08)',
-                  boxShadow: '0 6px 20px rgba(16, 32, 27, 0.03)',
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  boxSizing: 'border-box',
-                  transition: 'transform 0.3s ease, box-shadow 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-6px)';
-                  e.currentTarget.style.boxShadow = '0 16px 32px rgba(16, 32, 27, 0.08)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 32, 27, 0.03)';
-                }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                    <div style={{
-                      width: '52px',
-                      height: '52px',
-                      borderRadius: '14px',
-                      background: 'rgba(0, 109, 54, 0.08)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
+                <div className="about-reason-card">
+                  <div className="about-reason-top">
+                    <div className="about-reason-icon-box">
                       {item.icon}
                     </div>
-                    <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '28px', fontWeight: 800, color: 'rgba(0, 109, 54, 0.25)' }}>
+                    <span className="about-reason-num">
                       {item.num}
                     </span>
                   </div>
 
-                  <h3 style={{
-                    fontSize: '20px',
-                    fontWeight: 700,
-                    color: '#10201B',
-                    margin: '0 0 12px 0',
-                    lineHeight: 1.35
-                  }}>
+                  <h3 className="about-reason-title">
                     {item.title}
                   </h3>
 
-                  <p style={{ fontSize: '14.5px', color: '#525a54', lineHeight: 1.65, margin: 0 }}>
+                  <p className="about-reason-desc">
                     {item.desc}
                   </p>
                 </div>
@@ -516,88 +329,46 @@ export default function AboutPage({ onNavigate, onOpenBooking }: AboutPageProps)
       </section>
 
       {/* 5. GUEST TESTIMONIALS (TIẾNG NÓI KHÁCH HÀNG) */}
-      <section style={{ padding: '120px 0 110px', background: '#ffffff' }}>
-        <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 24px' }}>
+      <section className="about-testimonials-section">
+        <div className="about-pillars-container">
           <ScrollReveal>
-            <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '6px 16px',
-                borderRadius: '999px',
-                background: 'rgba(0, 109, 54, 0.08)',
-                color: '#006d36',
-                fontSize: '12px',
-                fontWeight: 800,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                marginBottom: '14px'
-              }}>
+            <div className="about-section-header">
+              <div className="about-section-pill">
                 ✦ CẢM NHẬN KHÁCH HÀNG
               </div>
-              <h2 style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
-                fontSize: 'clamp(32px, 4vw, 48px)',
-                fontStyle: 'italic',
-                fontWeight: 600,
-                color: '#10201B',
-                margin: '0 0 16px 0'
-              }}>
+              <h2 className="about-section-title">
                 Hành Trình Tái Sinh Qua Lời Kể
               </h2>
             </div>
           </ScrollReveal>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '32px'
-          }}>
+          <div className="about-testimonials-grid">
             {testimonials.map((item, idx) => (
               <ScrollReveal key={idx} delay={idx * 100}>
-                <div style={{
-                  background: '#fcfdfc',
-                  border: '1px solid rgba(0, 109, 54, 0.12)',
-                  borderRadius: '24px',
-                  padding: '36px 30px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  height: '100%',
-                  boxSizing: 'border-box'
-                }}>
-                  <div style={{ display: 'flex', gap: '4px', marginBottom: '16px' }}>
+                <div className="about-testimonial-card">
+                  <div className="about-testimonial-stars">
                     {[...Array(item.rating)].map((_, sIdx) => (
                       <Star key={sIdx} size={16} fill="#facc15" color="#facc15" />
                     ))}
                   </div>
 
-                  <p style={{ fontSize: '15px', color: '#334155', lineHeight: 1.7, fontStyle: 'italic', margin: '0 0 24px 0', flexGrow: 1 }}>
+                  <p className="about-testimonial-quote">
                     "{item.quote}"
                   </p>
 
-                  <div style={{
-                    fontSize: '11.5px',
-                    fontWeight: 700,
-                    color: '#006d36',
-                    background: 'rgba(0, 109, 54, 0.08)',
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    marginBottom: '18px',
-                    width: 'fit-content'
-                  }}>
+                  <div className="about-testimonial-trip">
                     {item.trip}
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px', borderTop: '1px solid #f1f5f9', paddingTop: '16px' }}>
+                  <div className="about-testimonial-author">
                     <img
                       src={item.avatar}
                       alt={item.author}
-                      style={{ width: '46px', height: '46px', borderRadius: '50%', objectFit: 'cover' }}
+                      className="about-testimonial-avatar"
                     />
                     <div>
-                      <div style={{ fontSize: '15px', fontWeight: 700, color: '#10201B' }}>{item.author}</div>
-                      <div style={{ fontSize: '12.5px', color: '#64748b' }}>{item.role}</div>
+                      <div className="about-author-name">{item.author}</div>
+                      <div className="about-author-role">{item.role}</div>
                     </div>
                   </div>
                 </div>
@@ -608,98 +379,47 @@ export default function AboutPage({ onNavigate, onOpenBooking }: AboutPageProps)
       </section>
 
       {/* 6. LEGAL CERTIFICATION & STRATEGIC PARTNERS */}
-      <section style={{ padding: '80px 0 100px', background: '#f8faf9', borderTop: '1px solid rgba(16, 32, 27, 0.06)' }}>
-        <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
-          <div style={{ maxWidth: '780px', margin: '0 auto 48px' }}>
-            <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '26px', fontWeight: 700, color: '#10201B', margin: '0 0 12px 0' }}>
-              Bảo Chứng Pháp Lý & An Toàn Tuyệt Đối
-            </h3>
-            <p style={{ fontSize: '14.5px', color: '#64748b', lineHeight: 1.6, margin: 0 }}>
-              Công Ty Cổ Phần Lữ Hành & Nghỉ Dưỡng 4U Tours hoạt động theo Giấy phép Kinh Doanh Lữ Hành Quốc Tế số <strong>79-367 / 2012 / TCDL-GP LHQT</strong> do Cục Du Lịch Quốc Gia Việt Nam cấp phép.
-            </p>
-          </div>
+      <section className="about-legal-section">
+        <div className="about-legal-header">
+          <h3 className="about-legal-title">
+            Bảo Chứng Pháp Lý & An Toàn Tuyệt Đối
+          </h3>
+          <p className="about-legal-desc">
+            Công Ty Cổ Phần Lữ Hành & Nghỉ Dưỡng 4U Tours hoạt động theo Giấy phép Kinh Doanh Lữ Hành Quốc Tế số <strong>79-367 / 2012 / TCDL-GP LHQT</strong> do Cục Du Lịch Quốc Gia Việt Nam cấp phép.
+          </p>
+        </div>
 
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '40px',
-            opacity: 0.85
-          }}>
-            <span style={{ fontSize: '18px', fontWeight: 800, color: '#1e3a29', letterSpacing: '0.05em' }}>SIX SENSES</span>
-            <span style={{ fontSize: '18px', fontWeight: 800, color: '#1e3a29', letterSpacing: '0.05em' }}>PARADISE CRUISES</span>
-            <span style={{ fontSize: '18px', fontWeight: 800, color: '#1e3a29', letterSpacing: '0.05em' }}>LEGACY YÊN TỬ</span>
-            <span style={{ fontSize: '18px', fontWeight: 800, color: '#1e3a29', letterSpacing: '0.05em' }}>VIETNAM AIRLINES</span>
-            <span style={{ fontSize: '18px', fontWeight: 800, color: '#1e3a29', letterSpacing: '0.05em' }}>BIC INSURANCE</span>
-          </div>
+        <div className="about-partners-logos">
+          <span className="about-partner-name">SIX SENSES</span>
+          <span className="about-partner-name">PARADISE CRUISES</span>
+          <span className="about-partner-name">LEGACY YÊN TỬ</span>
+          <span className="about-partner-name">VIETNAM AIRLINES</span>
+          <span className="about-partner-name">BIC INSURANCE</span>
         </div>
       </section>
 
       {/* 7. FINAL CTA BANNER */}
-      <section style={{
-        background: 'linear-gradient(135deg, #006d36 0%, #142619 100%)',
-        color: '#ffffff',
-        padding: '90px 24px',
-        textAlign: 'center'
-      }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+      <section className="about-cta-section">
+        <div className="about-cta-inner">
           <ScrollReveal>
-            <h2 style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontSize: 'clamp(32px, 4vw, 50px)',
-              fontStyle: 'italic',
-              fontWeight: 600,
-              margin: '0 0 20px 0'
-            }}>
+            <h2 className="about-cta-title">
               Sẵn Sàng Cho Hành Trình Tái Sinh Của Bạn?
             </h2>
-            <p style={{ fontSize: '17px', color: 'rgba(255, 255, 255, 0.9)', lineHeight: 1.7, margin: '0 0 36px 0' }}>
+            <p className="about-cta-desc">
               Hãy để chuyên gia 4U thiết kế một kỳ nghỉ may đo dành riêng cho bạn và người thân. Trải nghiệm tĩnh dưỡng đẳng cấp bắt đầu từ đây.
             </p>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center' }}>
+            <div className="about-hero-btn-group">
               <button
                 onClick={() => onOpenBooking ? onOpenBooking() : (onNavigate && onNavigate('/retreats-doc-quyen'))}
-                style={{
-                  background: '#ffffff',
-                  color: '#006d36',
-                  border: 'none',
-                  padding: '16px 36px',
-                  borderRadius: '999px',
-                  fontSize: '15px',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
-                  transition: 'transform 0.2s ease'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.04)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                className="about-cta-white-btn"
               >
                 Đặt Lịch Tư Vấn May Đo 1:1
               </button>
 
               <button
                 onClick={() => onNavigate ? onNavigate('/tours') : null}
-                style={{
-                  background: 'transparent',
-                  color: '#ffffff',
-                  border: '1.5px solid rgba(255,255,255,0.6)',
-                  padding: '16px 32px',
-                  borderRadius: '999px',
-                  fontSize: '15px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-                  e.currentTarget.style.borderColor = '#ffffff';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent';
-                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.6)';
-                }}
+                className="about-cta-outline-btn"
               >
                 Xem Toàn Bộ Hành Trình
               </button>

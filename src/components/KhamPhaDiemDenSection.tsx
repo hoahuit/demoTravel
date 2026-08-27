@@ -3,6 +3,7 @@ import ScrollReveal from './ScrollReveal';
 import { DESTINATIONS_DATA, syncDestinationsDataFromApi, Destination } from '../data/destinationsData';
 import { fetchSectionItemsApi, getImageUrl } from '../services/apiService';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import './KhamPhaDiemDenSection.css';
 
 export interface KhamPhaDiemDenSectionProps {
   onNavigate?: (path: string) => void;
@@ -44,245 +45,66 @@ export default function KhamPhaDiemDenSection({
   return (
     <section
       id="kham-pha-diem-den"
-      style={{
-        background: '#e5efe8',
-        color: '#10201B',
-        fontFamily: "'Work Sans', 'Plus Jakarta Sans', sans-serif",
-        width: '100%',
-        overflow: 'hidden',
-        borderTop: '1px solid rgba(16, 32, 27, 0.06)'
-      }}
+      className="kpdd-section-root"
     >
-      <style>{`
-        /* ETHEREAL LUXURY TYPOGRAPHY & HOVER */
-        .zannier-title-italic {
-          font-family: 'Libre Caslon Text', 'Playfair Display', Georgia, serif;
-          font-style: italic;
-          font-weight: 400;
-        }
-
-        .hover-lift {
-          transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.6s ease;
-        }
-        .hover-lift:hover {
-          transform: translateY(-5px);
-        }
-
-        .zannier-img-zoom {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-          transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
-        }
-        .zannier-card:hover .zannier-img-zoom {
-          transform: scale(1.04);
-        }
-
-        .zannier-underline-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 11.5px;
-          font-weight: 700;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          color: #10201B;
-          text-decoration: none;
-          border-bottom: 1.5px solid #10201B;
-          padding-bottom: 3px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          width: fit-content;
-        }
-        .zannier-card:hover .zannier-underline-link,
-        .zannier-underline-link:hover {
-          color: #006d36;
-          border-bottom-color: #006d36;
-          letter-spacing: 0.18em;
-        }
-
-        @media (max-width: 900px) {
-          .zannier-grid-2col {
-            grid-template-columns: 1fr !important;
-            gap: 56px !important;
-          }
-          .zannier-stagger-col {
-            margin-top: 0 !important;
-          }
-          .zannier-container {
-            padding: 0 20px !important;
-          }
-          .zannier-hero-inner {
-            padding: 0 20px 48px !important;
-          }
-        }
-      `}</style>
-
       {/* ══════════════════════════════════════════════════════════════
           SECTION 1: HERO (CINEMATIC SUNSET VILLA PANORAMA)
       ══════════════════════════════════════════════════════════════ */}
-      <div
-        style={{
-          position: 'relative',
-          width: '100%',
-          minHeight: '85vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          overflow: 'hidden',
-          paddingBottom: '80px',
-          paddingTop: '100px'
-        }}
-      >
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+      <div className="kpdd-hero-wrap">
+        <div className="kpdd-hero-bg">
           <img
             src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=85&w=2560&auto=format&fit=crop"
             alt="Zannier Retreat Sanctuary"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center',
-              filter: 'brightness(0.72)'
-            }}
+            className="kpdd-hero-bg-img"
           />
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(180deg, rgba(6, 16, 11, 0.85) 0%, rgba(6, 16, 11, 0.45) 40%, rgba(16, 32, 27, 0.88) 75%, #e5efe8 100%)'
-            }}
-          />
+          <div className="kpdd-hero-gradient" />
         </div>
 
         <ScrollReveal>
-          <div
-            className="zannier-hero-inner"
-            style={{
-              position: 'relative',
-              zIndex: 10,
-              textAlign: 'center',
-              maxWidth: '920px',
-              padding: '0 32px'
-            }}
-          >
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                background: 'rgba(74, 222, 128, 0.22)',
-                border: '1px solid rgba(74, 222, 128, 0.5)',
-                backdropFilter: 'blur(12px)',
-                color: '#4ade80',
-                fontSize: '12px',
-                fontWeight: 800,
-                letterSpacing: '0.18em',
-                padding: '8px 24px',
-                borderRadius: '999px',
-                textTransform: 'uppercase',
-                marginBottom: '20px',
-                boxShadow: '0 4px 18px rgba(0, 0, 0, 0.25)'
-              }}
-            >
+          <div className="zannier-hero-inner">
+            <span className="kpdd-hero-badge">
               <Sparkles size={14} />
               DESTINATIONS COLLECTION • HÀNH TRÌNH DANH THẮNG
             </span>
 
-            <h1
-              className="zannier-title-italic"
-              style={{
-                fontSize: 'clamp(42px, 5.5vw, 72px)',
-                color: '#ffffff',
-                textShadow: '0 4px 30px rgba(0, 0, 0, 0.7), 0 1px 4px rgba(0, 0, 0, 0.8)',
-                lineHeight: 1.12,
-                margin: '0 0 20px 0',
-                letterSpacing: '-0.02em'
-              }}
-            >
+            <h1 className="zannier-title-italic kpdd-hero-title">
               Độc Bản Từng Điểm Đến.<br />Hội Tụ Trọn Tinh Hoa
             </h1>
 
-            <p
-              style={{
-                fontSize: 'clamp(16px, 1.8vw, 19.5px)',
-                color: 'rgba(255, 255, 255, 0.95)',
-                textShadow: '0 2px 14px rgba(0, 0, 0, 0.7)',
-                maxWidth: '740px',
-                margin: '0 auto',
-                lineHeight: 1.7,
-                fontWeight: 400
-              }}
-            >
+            <p className="kpdd-hero-desc">
               Hành trình tĩnh dưỡng độc bản qua những miền di sản và danh thắng kỳ vĩ của Việt Nam — nơi kiến tạo những khoảnh khắc chữa lành sâu sắc.
             </p>
           </div>
         </ScrollReveal>
       </div>
 
-
       {/* ══════════════════════════════════════════════════════════════
           MAIN CONTENT CONTAINER (100% FULL WIDTH EDGE-TO-EDGE)
       ══════════════════════════════════════════════════════════════ */}
-      <div
-        className="zannier-container"
-        style={{
-          width: '100%',
-          maxWidth: '100%',
-          margin: '0',
-          padding: '0 48px',
-          boxSizing: 'border-box'
-        }}
-      >
+      <div className="zannier-container">
 
         {/* ──────────────────────────────────────────────────────────────
             SECTION 2: "THIẾT KẾ ĐỂ ĐÁNH THỨC TÂM HỒN" (TEXT LEFT, DESERT RIGHT)
         ────────────────────────────────────────────────────────────── */}
-        <div style={{ padding: '120px 0 140px' }}>
+        <div className="kpdd-intro-wrap">
           <ScrollReveal>
-            <div
-              className="zannier-grid-2col"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1.25fr',
-                gap: '64px',
-                alignItems: 'center'
-              }}
-            >
+            <div className="zannier-grid-intro">
               <div>
-                <h2
-                  className="zannier-title-italic"
-                  style={{
-                    fontSize: 'clamp(32px, 3.6vw, 48px)',
-                    color: '#10201B',
-                    lineHeight: 1.2,
-                    margin: '0 0 28px 0'
-                  }}
-                >
+                <h2 className="zannier-title-italic kpdd-intro-title">
                   Thiết Kế Để Đánh Thức Tâm Hồn
                 </h2>
 
-                <p
-                  style={{
-                    fontSize: '16px',
-                    lineHeight: 1.75,
-                    color: '#405246',
-                    margin: 0,
-                    fontWeight: 400
-                  }}
-                >
+                <p className="kpdd-intro-desc">
                   Kể từ khi khởi dựng những hành trình tĩnh dưỡng đầu tiên, đội ngũ nghệ nhân của 4U đã chu du khắp các miền danh thắng để kiến tạo nên những không gian nghỉ dưỡng độc bản. Từ non cao Hoàng Liên Sơn, vịnh ngọc Hạ Long đến miệt vườn sông nước Cửu Long. Nơi thiên nhiên nguyên sơ, di sản văn hóa truyền thống và tinh thần chăm sóc Thân - Tâm - Trí hòa quyện làm một.
                 </p>
               </div>
 
-              <div className="hover-lift" style={{ borderRadius: '12px', overflow: 'hidden', boxShadow: '0 16px 45px rgba(16,32,27,0.1)' }}>
-                <div style={{ width: '100%', aspectRatio: '16 / 10', overflow: 'hidden' }}>
+              <div className="hover-lift kpdd-intro-img-card">
+                <div className="kpdd-intro-img-box">
                   <img
                     src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=85&w=1600&auto=format&fit=crop"
                     alt="Thiết kế để đánh thức tâm hồn"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    className="kpdd-intro-img"
                   />
                 </div>
               </div>
@@ -290,19 +112,11 @@ export default function KhamPhaDiemDenSection({
           </ScrollReveal>
         </div>
 
-
         {/* ──────────────────────────────────────────────────────────────
             COLLECTION PAIR 1 (DESTINATION 1 & 2: STAGGERED 2-COLUMN)
         ────────────────────────────────────────────────────────────── */}
-        <div style={{ paddingBottom: '140px' }}>
-          <div
-            className="zannier-grid-2col"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '64px 48px'
-            }}
-          >
+        <div className="kpdd-pair-wrap">
+          <div className="zannier-grid-2col">
             {/* Property 1 (Left - Vịnh Hạ Long) */}
             {(() => {
               const d = getDest(0);
@@ -310,20 +124,9 @@ export default function KhamPhaDiemDenSection({
                 <ScrollReveal>
                   <div
                     className="zannier-card"
-                    style={{ cursor: 'pointer' }}
                     onClick={() => handleDestinationClick(d)}
                   >
-                    <div
-                      className="hover-lift"
-                      style={{
-                        width: '100%',
-                        aspectRatio: '4 / 3',
-                        overflow: 'hidden',
-                        borderRadius: '8px',
-                        marginBottom: '24px',
-                        boxShadow: '0 14px 40px rgba(16,32,27,0.08)'
-                      }}
-                    >
+                    <div className="hover-lift kpdd-card-img-box">
                       <img
                         className="zannier-img-zoom"
                         src={getImageUrl(d.heroImage)}
@@ -331,43 +134,16 @@ export default function KhamPhaDiemDenSection({
                       />
                     </div>
 
-                    <div style={{ padding: '0 4px' }}>
-                      <span
-                        style={{
-                          display: 'block',
-                          fontSize: '12px',
-                          fontWeight: 600,
-                          letterSpacing: '0.12em',
-                          textTransform: 'uppercase',
-                          color: '#527059',
-                          marginBottom: '12px'
-                        }}
-                      >
+                    <div className="kpdd-card-content">
+                      <span className="kpdd-card-region">
                         {d.region}, {d.country}
                       </span>
 
-                      <h3
-                        className="zannier-title-italic"
-                        style={{
-                          fontSize: '32px',
-                          color: '#10201B',
-                          margin: '0 0 14px 0',
-                          lineHeight: 1.25
-                        }}
-                      >
+                      <h3 className="zannier-title-italic kpdd-card-title">
                         {d.name}
                       </h3>
 
-                      <p
-                        style={{
-                          fontSize: '15px',
-                          lineHeight: 1.65,
-                          color: '#405246',
-                          margin: '0 0 20px 0',
-                          fontWeight: 400,
-                          maxWidth: '460px'
-                        }}
-                      >
+                      <p className="kpdd-card-desc">
                         {d.overview}
                       </p>
 
@@ -387,23 +163,9 @@ export default function KhamPhaDiemDenSection({
                 <ScrollReveal delay={120}>
                   <div
                     className="zannier-card zannier-stagger-col"
-                    style={{
-                      cursor: 'pointer',
-                      marginTop: '96px'
-                    }}
                     onClick={() => handleDestinationClick(d)}
                   >
-                    <div
-                      className="hover-lift"
-                      style={{
-                        width: '100%',
-                        aspectRatio: '4 / 3',
-                        overflow: 'hidden',
-                        borderRadius: '8px',
-                        marginBottom: '24px',
-                        boxShadow: '0 14px 40px rgba(16,32,27,0.08)'
-                      }}
-                    >
+                    <div className="hover-lift kpdd-card-img-box">
                       <img
                         className="zannier-img-zoom"
                         src={getImageUrl(d.heroImage)}
@@ -411,43 +173,16 @@ export default function KhamPhaDiemDenSection({
                       />
                     </div>
 
-                    <div style={{ padding: '0 4px' }}>
-                      <span
-                        style={{
-                          display: 'block',
-                          fontSize: '12px',
-                          fontWeight: 600,
-                          letterSpacing: '0.12em',
-                          textTransform: 'uppercase',
-                          color: '#527059',
-                          marginBottom: '12px'
-                        }}
-                      >
+                    <div className="kpdd-card-content">
+                      <span className="kpdd-card-region">
                         {d.region}, {d.country}
                       </span>
 
-                      <h3
-                        className="zannier-title-italic"
-                        style={{
-                          fontSize: '32px',
-                          color: '#10201B',
-                          margin: '0 0 14px 0',
-                          lineHeight: 1.25
-                        }}
-                      >
+                      <h3 className="zannier-title-italic kpdd-card-title">
                         {d.name}
                       </h3>
 
-                      <p
-                        style={{
-                          fontSize: '15px',
-                          lineHeight: 1.65,
-                          color: '#405246',
-                          margin: '0 0 20px 0',
-                          fontWeight: 400,
-                          maxWidth: '460px'
-                        }}
-                      >
+                      <p className="kpdd-card-desc">
                         {d.overview}
                       </p>
 
@@ -462,75 +197,36 @@ export default function KhamPhaDiemDenSection({
           </div>
         </div>
 
-
         {/* ──────────────────────────────────────────────────────────────
             GRAND FEATURE 1 (DESTINATION 3: FULL WIDTH PANORAMA - HỘI AN)
         ────────────────────────────────────────────────────────────── */}
         {(() => {
           const d = getDest(9); // Hội An
           return (
-            <div style={{ paddingBottom: '140px' }}>
+            <div className="kpdd-pair-wrap">
               <ScrollReveal>
                 <div
                   className="zannier-card"
-                  style={{ cursor: 'pointer' }}
                   onClick={() => handleDestinationClick(d)}
                 >
-                  <div
-                    className="hover-lift"
-                    style={{
-                      width: '100%',
-                      height: 'clamp(380px, 65vh, 680px)',
-                      overflow: 'hidden',
-                      borderRadius: '12px',
-                      marginBottom: '32px',
-                      boxShadow: '0 20px 55px rgba(16,32,27,0.1)'
-                    }}
-                  >
+                  <div className="hover-lift kpdd-grand-panorama-img-box">
                     <img
                       className="zannier-img-zoom"
                       src={getImageUrl(d.heroImage)}
                       alt={d.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                   </div>
 
-                  <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto' }}>
-                    <span
-                      style={{
-                        display: 'block',
-                        fontSize: '12px',
-                        fontWeight: 600,
-                        letterSpacing: '0.12em',
-                        textTransform: 'uppercase',
-                        color: '#527059',
-                        marginBottom: '14px'
-                      }}
-                    >
+                  <div className="kpdd-grand-content">
+                    <span className="kpdd-card-region">
                       {d.region}, {d.country}
                     </span>
 
-                    <h2
-                      className="zannier-title-italic"
-                      style={{
-                        fontSize: 'clamp(32px, 3.8vw, 48px)',
-                        color: '#10201B',
-                        margin: '0 0 16px 0',
-                        lineHeight: 1.2
-                      }}
-                    >
+                    <h2 className="zannier-title-italic kpdd-grand-title">
                       {d.name}
                     </h2>
 
-                    <p
-                      style={{
-                        fontSize: '15.5px',
-                        lineHeight: 1.7,
-                        color: '#405246',
-                        margin: '0 auto 24px auto',
-                        fontWeight: 400
-                      }}
-                    >
+                    <p className="kpdd-grand-desc">
                       {d.overview}
                     </p>
 
@@ -544,19 +240,11 @@ export default function KhamPhaDiemDenSection({
           );
         })()}
 
-
         {/* ──────────────────────────────────────────────────────────────
             COLLECTION PAIR 2 (DESTINATION 4 & 5: STAGGERED 2-COLUMN)
         ────────────────────────────────────────────────────────────── */}
-        <div style={{ paddingBottom: '140px' }}>
-          <div
-            className="zannier-grid-2col"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '64px 48px'
-            }}
-          >
+        <div className="kpdd-pair-wrap">
+          <div className="zannier-grid-2col">
             {/* Property 3 (Đà Lạt) */}
             {(() => {
               const d = getDest(3);
@@ -564,20 +252,9 @@ export default function KhamPhaDiemDenSection({
                 <ScrollReveal>
                   <div
                     className="zannier-card"
-                    style={{ cursor: 'pointer' }}
                     onClick={() => handleDestinationClick(d)}
                   >
-                    <div
-                      className="hover-lift"
-                      style={{
-                        width: '100%',
-                        aspectRatio: '4 / 3',
-                        overflow: 'hidden',
-                        borderRadius: '8px',
-                        marginBottom: '24px',
-                        boxShadow: '0 14px 40px rgba(16,32,27,0.08)'
-                      }}
-                    >
+                    <div className="hover-lift kpdd-card-img-box">
                       <img
                         className="zannier-img-zoom"
                         src={getImageUrl(d.heroImage)}
@@ -585,43 +262,16 @@ export default function KhamPhaDiemDenSection({
                       />
                     </div>
 
-                    <div style={{ padding: '0 4px' }}>
-                      <span
-                        style={{
-                          display: 'block',
-                          fontSize: '12px',
-                          fontWeight: 600,
-                          letterSpacing: '0.12em',
-                          textTransform: 'uppercase',
-                          color: '#527059',
-                          marginBottom: '12px'
-                        }}
-                      >
+                    <div className="kpdd-card-content">
+                      <span className="kpdd-card-region">
                         {d.region}, {d.country}
                       </span>
 
-                      <h3
-                        className="zannier-title-italic"
-                        style={{
-                          fontSize: '32px',
-                          color: '#10201B',
-                          margin: '0 0 14px 0',
-                          lineHeight: 1.25
-                        }}
-                      >
+                      <h3 className="zannier-title-italic kpdd-card-title">
                         {d.name}
                       </h3>
 
-                      <p
-                        style={{
-                          fontSize: '15px',
-                          lineHeight: 1.65,
-                          color: '#405246',
-                          margin: '0 0 20px 0',
-                          fontWeight: 400,
-                          maxWidth: '460px'
-                        }}
-                      >
+                      <p className="kpdd-card-desc">
                         {d.overview}
                       </p>
 
@@ -641,23 +291,9 @@ export default function KhamPhaDiemDenSection({
                 <ScrollReveal delay={120}>
                   <div
                     className="zannier-card zannier-stagger-col"
-                    style={{
-                      cursor: 'pointer',
-                      marginTop: '96px'
-                    }}
                     onClick={() => handleDestinationClick(d)}
                   >
-                    <div
-                      className="hover-lift"
-                      style={{
-                        width: '100%',
-                        aspectRatio: '4 / 3',
-                        overflow: 'hidden',
-                        borderRadius: '8px',
-                        marginBottom: '24px',
-                        boxShadow: '0 14px 40px rgba(16,32,27,0.08)'
-                      }}
-                    >
+                    <div className="hover-lift kpdd-card-img-box">
                       <img
                         className="zannier-img-zoom"
                         src={getImageUrl(d.heroImage)}
@@ -665,43 +301,16 @@ export default function KhamPhaDiemDenSection({
                       />
                     </div>
 
-                    <div style={{ padding: '0 4px' }}>
-                      <span
-                        style={{
-                          display: 'block',
-                          fontSize: '12px',
-                          fontWeight: 600,
-                          letterSpacing: '0.12em',
-                          textTransform: 'uppercase',
-                          color: '#527059',
-                          marginBottom: '12px'
-                        }}
-                      >
+                    <div className="kpdd-card-content">
+                      <span className="kpdd-card-region">
                         {d.region}, {d.country}
                       </span>
 
-                      <h3
-                        className="zannier-title-italic"
-                        style={{
-                          fontSize: '32px',
-                          color: '#10201B',
-                          margin: '0 0 14px 0',
-                          lineHeight: 1.25
-                        }}
-                      >
+                      <h3 className="zannier-title-italic kpdd-card-title">
                         {d.name}
                       </h3>
 
-                      <p
-                        style={{
-                          fontSize: '15px',
-                          lineHeight: 1.65,
-                          color: '#405246',
-                          margin: '0 0 20px 0',
-                          fontWeight: 400,
-                          maxWidth: '460px'
-                        }}
-                      >
+                      <p className="kpdd-card-desc">
                         {d.overview}
                       </p>
 
@@ -716,36 +325,18 @@ export default function KhamPhaDiemDenSection({
           </div>
         </div>
 
-
         {/* ──────────────────────────────────────────────────────────────
             VIEW ALL 20+ RETREAT DESTINATIONS CTA
         ────────────────────────────────────────────────────────────── */}
         <ScrollReveal delay={100}>
-          <div style={{ textAlign: 'center', paddingBottom: '120px' }}>
+          <div className="kpdd-bottom-cta-wrap">
             <button
               onClick={() => {
                 if (onOpenCustomTour) onOpenCustomTour('Việt Nam');
                 else if (onNavigate) onNavigate('/diem-den');
                 else if (onOpenBooking) onOpenBooking();
               }}
-              style={{
-                background: '#1E4A3D',
-                color: '#ffffff',
-                border: 'none',
-                padding: '16px 42px',
-                borderRadius: '999px',
-                fontSize: '13.5px',
-                fontWeight: 700,
-                letterSpacing: '0.06em',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                boxShadow: '0 10px 30px rgba(30, 74, 61, 0.25)',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
-              onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+              className="kpdd-btn-all"
             >
               <span>Khám phá toàn bộ 20+ điểm đến retreat</span>
               <ArrowRight size={16} />

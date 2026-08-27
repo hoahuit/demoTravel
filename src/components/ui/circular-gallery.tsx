@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Compass } from 'lucide-react';
+import './circular-gallery.css';
 
 const cn = (...classes: (string | undefined | false)[]) => classes.filter(Boolean).join(' ');
 
@@ -122,8 +123,8 @@ export const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryP
         ref={containerRef}
         role="region"
         aria-label="Coverflow 3D Gallery"
-        className={cn("relative w-full flex items-center justify-center overflow-visible select-none", className)}
-        style={{ perspective: '1800px', paddingTop: '0px', paddingBottom: '0px', height: isMobile ? '360px' : '500px' }}
+        className={cn("circular-gallery-container", className)}
+        style={{ '--gallery-height': isMobile ? '360px' : '500px' } as React.CSSProperties}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -136,27 +137,8 @@ export const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryP
         <button
           onClick={handlePrev}
           aria-label="Previous Card"
-          style={{
-            position: 'absolute',
-            left: '24px',
-            top: '38%',
-            transform: 'translateY(-50%)',
-            zIndex: 50,
-            width: btnSize + 'px',
-            height: btnSize + 'px',
-            borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.95)',
-            border: '1px solid rgba(0, 0, 0, 0.08)',
-            boxShadow: '0 12px 32px rgba(0, 0, 0, 0.15)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            color: '#1d1d1f',
-            transition: 'all 0.25s ease'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'}
-          onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(-50%) scale(1)'}
+          className="circular-gallery-nav-btn prev"
+          style={{ '--btn-size': `${btnSize}px` } as React.CSSProperties}
         >
           <ChevronLeft size={28} />
         </button>
@@ -165,39 +147,16 @@ export const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryP
         <button
           onClick={handleNext}
           aria-label="Next Card"
-          style={{
-            position: 'absolute',
-            right: '24px',
-            top: '38%',
-            transform: 'translateY(-50%)',
-            zIndex: 50,
-            width: btnSize + 'px',
-            height: btnSize + 'px',
-            borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.95)',
-            border: '1px solid rgba(0, 0, 0, 0.08)',
-            boxShadow: '0 12px 32px rgba(0, 0, 0, 0.15)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            color: '#1d1d1f',
-            transition: 'all 0.25s ease'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)'}
-          onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(-50%) scale(1)'}
+          className="circular-gallery-nav-btn next"
+          style={{ '--btn-size': `${btnSize}px` } as React.CSSProperties}
         >
           <ChevronRight size={28} />
         </button>
 
         {/* 3D Coverflow Container */}
         <div
-          className="relative w-full h-full"
-          style={{
-            transform: `rotateY(${rotation}deg)`,
-            transformStyle: 'preserve-3d',
-            transition: isDraggingRef.current ? 'none' : 'transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)'
-          }}
+          className={`circular-gallery-3d-stage ${isDraggingRef.current ? 'is-dragging' : ''}`}
+          style={{ '--rot-y': `${rotation}deg` } as React.CSSProperties}
         >
           {items.map((item, i) => {
             const itemAngle = i * anglePerItem;
@@ -216,35 +175,22 @@ export const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryP
                 key={i}
                 role="group"
                 aria-label={item.common}
+                className="circular-gallery-item-slot"
                 style={{
-                  position: 'absolute',
-                  width: cardW + 'px',
-                  height: cardH + 'px',
-                  transform: `rotateY(${itemAngle}deg) translateZ(${radius}px) rotateY(${cardRotateY}deg) scale(${scale})`,
-                  left: '50%',
-                  top: '50%',
-                  marginLeft: -(cardW / 2) + 'px',
-                  marginTop: -(cardH / 2) + 'px',
-                  opacity: opacity,
-                  visibility: opacity < 0.05 ? 'hidden' : 'visible',
-                  transition: 'all 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
-                  backfaceVisibility: 'hidden',
-                  cursor: 'grab',
-                  zIndex: isCenter ? 30 : 10
-                }}
+                  '--card-w': `${cardW}px`,
+                  '--card-h': `${cardH}px`,
+                  '--item-angle': `${itemAngle}deg`,
+                  '--radius': `${radius}px`,
+                  '--card-rotate-y': `${cardRotateY}deg`,
+                  '--scale': `${scale}`,
+                  '--opacity': `${opacity}`,
+                  '--z-idx': `${isCenter ? 30 : 10}`,
+                  '--obj-pos': item.photo.pos || 'center',
+                  visibility: opacity < 0.05 ? 'hidden' : 'visible'
+                } as React.CSSProperties}
               >
                 <div
-                  className="apple-squircle"
-                  style={{
-                    position: 'relative',
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '28px',
-                    boxShadow: isCenter ? '0 30px 70px rgba(0, 0, 0, 0.35)' : '0 12px 30px rgba(0, 0, 0, 0.15)',
-                    overflow: 'hidden',
-                    background: '#ffffff',
-                    border: isCenter ? '2px solid rgba(212, 175, 55, 0.7)' : '1px solid rgba(255, 255, 255, 0.4)'
-                  }}
+                  className={`apple-squircle circular-gallery-card-squircle ${isCenter ? 'center' : 'non-center'}`}
                 >
                   <img
                     src={item.photo.url}
@@ -255,66 +201,27 @@ export const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryP
                         e.currentTarget.src = item.photo.fallback;
                       }
                     }}
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      objectPosition: item.photo.pos || 'center',
-                      filter: isCenter ? 'none' : 'brightness(0.85)'
-                    }}
+                    className={`circular-gallery-card-img ${isCenter ? 'center' : 'non-center'}`}
                   />
 
                   {/* Card Vignette */}
-                  <div style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to top, rgba(13,13,18,0.92) 0%, rgba(13,13,18,0.3) 55%, transparent 100%)'
-                  }}></div>
+                  <div className="circular-gallery-card-vignette"></div>
 
                   {/* Card Content Overlay */}
-                  <div style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    padding: '24px',
-                    color: '#ffffff'
-                  }}>
-                    <span style={{
-                      display: 'inline-block',
-                      background: 'linear-gradient(135deg, #d4af37 0%, #aa820a 100%)',
-                      color: '#ffffff',
-                      fontSize: '0.72rem',
-                      fontWeight: '800',
-                      padding: '4px 10px',
-                      borderRadius: '999px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.08em',
-                      marginBottom: '8px'
-                    }}>
+                  <div className="circular-gallery-card-overlay">
+                    <span className="circular-gallery-badge">
                       4U Collection
                     </span>
 
-                    <h3 style={{ fontSize: '1.45rem', fontWeight: '800', margin: 0, color: '#ffffff', letterSpacing: '-0.02em', lineHeight: '1.2' }}>
+                    <h3 className="circular-gallery-card-title">
                       {item.common}
                     </h3>
 
-                    <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.85)', fontStyle: 'italic', marginTop: '3px' }}>
+                    <div className="circular-gallery-card-sub">
                       {item.binomial}
                     </div>
 
-                    <div style={{
-                      fontSize: '0.78rem',
-                      color: 'rgba(255,255,255,0.7)',
-                      marginTop: '8px',
-                      paddingTop: '8px',
-                      borderTop: '1px solid rgba(255,255,255,0.15)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px'
-                    }}>
+                    <div className="circular-gallery-card-author">
                       <Compass size={13} color="#c9a050" /> {item.photo.by}
                     </div>
                   </div>

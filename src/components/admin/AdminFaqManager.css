@@ -1,0 +1,204 @@
+/* ==========================================================================
+   AdminFaqManager.css
+   Quản lý Câu Hỏi Thường Gặp FAQ Admin
+   ========================================================================== */
+
+.admin-faq-root {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.admin-faq-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-faq-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.admin-faq-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0f766e;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.admin-faq-dot {
+    height: 4px;
+    width: 4px;
+    border-radius: 50%;
+    background-color: #cbd5e1;
+}
+
+.admin-faq-subtag {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.admin-faq-title {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 24px;
+    margin: 0;
+    color: #0f172a;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+}
+
+.admin-faq-desc {
+    margin: 4px 0 0 0;
+    font-size: 13.5px;
+    color: #64748b;
+}
+
+.admin-faq-btn-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.admin-faq-refresh-btn {
+    background-color: #ffffff;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: background-color 0.15s ease;
+}
+
+.admin-faq-refresh-btn:hover {
+    background-color: #f8fafc;
+}
+
+.admin-faq-add-btn {
+    background-color: #0f766e;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(15, 118, 110, 0.2);
+    transition: background-color 0.15s ease;
+}
+
+.admin-faq-add-btn:hover {
+    background-color: #115e59;
+}
+
+.admin-faq-search-wrap {
+    margin-bottom: 20px;
+}
+
+.admin-faq-search-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(6, 27, 14, 0.15);
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.admin-faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.admin-faq-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(6, 27, 14, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.admin-faq-category {
+    font-size: 11px;
+    font-weight: 700;
+    color: #059669;
+    text-transform: uppercase;
+}
+
+.admin-faq-card-question {
+    font-size: 16px;
+    font-weight: 700;
+    color: #081f13;
+    margin: 4px 0 8px 0;
+}
+
+.admin-faq-card-answer {
+    font-size: 14px;
+    color: #525a54;
+    margin: 0;
+}
+
+.admin-faq-card-actions {
+    display: flex;
+    gap: 8px;
+    min-width: 110px;
+    justify-content: flex-end;
+}
+
+.admin-faq-edit-btn {
+    width: 50px;
+    height: 32px;
+    background-color: #081f13;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.admin-faq-edit-btn:hover {
+    background-color: #1a422a;
+}
+
+.admin-faq-delete-btn {
+    width: 50px;
+    height: 32px;
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.admin-faq-delete-btn:hover {
+    background-color: #fecaca;
+}

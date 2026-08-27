@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { TOURS_DATA, syncToursDataFromApi, TourPackage } from "../data/toursData";
 import { fetchToursApi } from "../services/apiService";
+import './Carousel3D.css';
 
 interface CardItem {
   id: number;

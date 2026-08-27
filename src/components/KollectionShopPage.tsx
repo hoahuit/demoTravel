@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import ScrollReveal from './ScrollReveal';
+import './KollectionShopPage.css';
 import {
   fetchProductsApi,
   createShopOrderApi,
@@ -561,116 +562,19 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: '#f8f9fa',
-        color: '#191c1d',
-        fontFamily: "'Plus Jakarta Sans', 'Be Vietnam Pro', sans-serif",
-        minHeight: '100vh',
-        width: '100%',
-        overflowX: 'hidden'
-      }}
-    >
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap');
-
-        .font-headline {
-          font-family: 'Be Vietnam Pro', sans-serif;
-        }
-
-        .zannier-title-italic {
-          font-family: 'Libre Caslon Text', 'Playfair Display', Georgia, serif;
-          font-style: italic;
-          font-weight: 400;
-        }
-
-        .nomad-card {
-          background: transparent !important;
-          border: none !important;
-          box-shadow: none !important;
-        }
-        .nomad-card:hover {
-          background: transparent !important;
-          box-shadow: none !important;
-        }
-
-        .nomad-img-zoom {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-          transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
-        }
-        .nomad-card:hover .nomad-img-zoom {
-          transform: scale(1.05);
-        }
-
-        .kollection-grid-2col {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 64px 48px;
-          width: 100%;
-        }
-
-        @media (max-width: 992px) {
-          .kollection-grid-2col {
-            grid-template-columns: 1fr !important;
-            gap: 40px !important;
-          }
-          .kollection-full-padding {
-            padding-left: 20px !important;
-            padding-right: 20px !important;
-          }
-        }
-      `}</style>
-
+    <div className="kshop-page-root">
       {/* ══════════════════════════════════════════════════════════════
           1. FLOATING SHOPPING CART BUTTON (BOTTOM-LEFT / FREE OF OVERLAPS)
       ══════════════════════════════════════════════════════════════ */}
       <button
         onClick={() => setCartOpen(true)}
         aria-label="Xem giỏ hàng"
-        style={{
-          position: 'fixed',
-          bottom: '28px',
-          left: '28px',
-          zIndex: 9990,
-          backgroundColor: '#065f46',
-          color: '#ffffff',
-          border: '2px solid rgba(255, 255, 255, 0.3)',
-          borderRadius: '9999px',
-          padding: '13px 22px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          boxShadow: '0 10px 30px rgba(6, 95, 70, 0.45), 0 4px 12px rgba(0,0,0,0.15)',
-          cursor: 'pointer',
-          fontSize: '14px',
-          fontWeight: 700,
-          transition: 'all 0.25s cubic-bezier(.22,.61,.36,1)'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-3px) scale(1.04)';
-          e.currentTarget.style.backgroundColor = '#044e39';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateY(0) scale(1)';
-          e.currentTarget.style.backgroundColor = '#065f46';
-        }}
+        className="kshop-floating-cart-btn"
       >
         <ShoppingCart size={19} />
         <span>Giỏ hàng</span>
         {cartTotalItems > 0 && (
-          <span style={{
-            backgroundColor: '#ffffff',
-            color: '#065f46',
-            fontSize: '12px',
-            fontWeight: 800,
-            padding: '2px 8px',
-            borderRadius: '9999px',
-            marginLeft: '2px',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
-          }}>
+          <span className="kshop-cart-badge">
             {cartTotalItems}
           </span>
         )}
@@ -679,103 +583,32 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
       {/* ══════════════════════════════════════════════════════════════
           2. HERO BANNER (ALPINE EXPLORER CINEMATIC SUNRISE)
       ══════════════════════════════════════════════════════════════ */}
-      <header
-        style={{
-          position: 'relative',
-          width: '100%',
-          minHeight: '614px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-          padding: '140px 20px 80px 20px',
-          boxSizing: 'border-box'
-        }}
-      >
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+      <header className="kshop-hero-header">
+        <div className="kshop-hero-bg-wrap">
           <img
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcszqcldVLF0EfwlO2-_4xCGXnH3xjDxiNGdwigmieC2iBThbIkf5XXjSd63-QuD0tXb4b58-CntnZYwIsIJb-2difqWQpGBLQ9xksr0LFrNpqmrHRv2H0fHSvtaQ5BNR3E1ZG2IVcduNmSlRO-ZsoJ-QSH9nwR56Oev4xvsOTMpOfpLXWWnPvbhpWdkMamQbu_hJaY5x9cZjF9HGXjIqrWUfsIZ3tptTPkzGTSXqL6CwbiDEnnBF_"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2560&q=85';
             }}
             alt="Alpine Explorer Mountain Sunrise"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center',
-              filter: 'brightness(0.85)'
-            }}
+            className="kshop-hero-img"
           />
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.42)'
-            }}
-          />
+          <div className="kshop-hero-overlay" />
         </div>
 
         <ScrollReveal>
-          <div
-            style={{
-              position: 'relative',
-              zIndex: 10,
-              textAlign: 'center',
-              maxWidth: '820px',
-              margin: '0 auto',
-              padding: '0 20px'
-            }}
-          >
-            <h1
-              className="font-headline"
-              style={{
-                fontSize: 'clamp(34px, 4.5vw, 48px)',
-                lineHeight: '56px',
-                letterSpacing: '-0.02em',
-                fontWeight: 700,
-                color: '#ffffff',
-                marginBottom: '24px',
-                textShadow: '0 3px 20px rgba(0,0,0,0.6)'
-              }}
-            >
+          <div className="kshop-hero-content">
+            <h1 className="font-headline kshop-hero-title">
               Trang bị cho chuyến phiêu lưu tiếp theo
             </h1>
 
-            <p
-              style={{
-                fontSize: 'clamp(16px, 1.6vw, 18px)',
-                lineHeight: '28px',
-                color: 'rgba(255, 255, 255, 0.92)',
-                marginBottom: '48px',
-                textShadow: '0 2px 10px rgba(0,0,0,0.5)',
-                maxWidth: '680px',
-                margin: '0 auto 36px auto'
-              }}
-            >
+            <p className="kshop-hero-desc">
               Các sản phẩm du lịch được tuyển chọn kỹ lưỡng, quà lưu niệm thủ công và những vật dụng thiết yếu được thiết kế cho người khám phá hiện đại.
             </p>
 
             <button
               onClick={() => scrollToSection('product-catalog')}
-              style={{
-                backgroundColor: '#065f46',
-                color: '#ffffff',
-                padding: '14px 36px',
-                borderRadius: '0.25rem',
-                fontSize: '14px',
-                fontWeight: 600,
-                letterSpacing: '0.01em',
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 4px 14px rgba(6, 95, 70, 0.45)',
-                transition: 'all 0.2s ease',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.03)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              className="kshop-hero-btn"
             >
               <span>Khám phá Bộ sưu tập</span>
             </button>
@@ -786,32 +619,14 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
       {/* ══════════════════════════════════════════════════════════════
           3. MAIN CONTENT (FULL WIDTH EDGE-TO-EDGE)
       ══════════════════════════════════════════════════════════════ */}
-      <main style={{ width: '100%', padding: '48px 0 80px 0' }}>
+      <main className="kshop-main-content">
 
         {/* ──────────────────────────────────────────────────────────────
             3.1 CATEGORY SELECTION (BENTO GRID 3-COLUMN)
         ────────────────────────────────────────────────────────────── */}
-        <section
-          className="kollection-full-padding"
-          style={{
-            width: '100%',
-            maxWidth: '100%',
-            margin: '0 auto 48px auto',
-            padding: '0 48px',
-            boxSizing: 'border-box'
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '24px' }}>
-            <h2
-              className="font-headline"
-              style={{
-                fontSize: '32px',
-                lineHeight: '40px',
-                fontWeight: 700,
-                color: '#191c1d',
-                margin: 0
-              }}
-            >
+        <section className="kollection-full-padding">
+          <div className="kshop-featured-header-row">
+            <h2 className="font-headline kshop-featured-title">
               Danh mục nổi bật
             </h2>
 
@@ -820,17 +635,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                 setSelectedCategory('All');
                 scrollToSection('product-catalog');
               }}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: '#004532',
-                fontSize: '14px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '4px'
-              }}
+              className="kshop-featured-all-btn"
             >
               <span>Xem tất cả</span>
               <ArrowRight size={16} />
@@ -838,7 +643,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
           </div>
 
           {/* 3 Bento Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', minHeight: '300px' }}>
+          <div className="kshop-bento-grid">
             {FEATURED_CATEGORIES.map((cat) => (
               <div
                 key={cat.id}
@@ -846,15 +651,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                   setSelectedCategory(cat.categoryKey);
                   scrollToSection('product-catalog');
                 }}
-                className="group"
-                style={{
-                  position: 'relative',
-                  height: '300px',
-                  borderRadius: '16px',
-                  overflow: 'hidden',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.06)'
-                }}
+                className="group kshop-bento-card"
               >
                 <img
                   src={cat.image}
@@ -862,37 +659,14 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                     (e.currentTarget as HTMLImageElement).src = cat.fallbackImage;
                   }}
                   alt={cat.name}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    transition: 'transform 0.7s ease'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  className="kshop-bento-img"
                 />
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)',
-                    pointerEvents: 'none'
-                  }}
-                />
-                <div style={{ position: 'absolute', bottom: 0, left: 0, padding: '24px', zIndex: 2 }}>
-                  <h3
-                    className="font-headline"
-                    style={{
-                      fontSize: '24px',
-                      lineHeight: '32px',
-                      fontWeight: 600,
-                      color: '#ffffff',
-                      margin: '0 0 2px 0'
-                    }}
-                  >
+                <div className="kshop-bento-gradient" />
+                <div className="kshop-bento-info">
+                  <h3 className="font-headline kshop-bento-card-title">
                     {cat.name}
                   </h3>
-                  <p style={{ fontSize: '16px', lineHeight: '24px', color: 'rgba(255,255,255,0.8)', margin: 0 }}>
+                  <p className="kshop-bento-card-sub">
                     {cat.subtitle}
                   </p>
                 </div>
@@ -907,33 +681,12 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
         <div
           id="product-catalog"
           className="kollection-full-padding"
-          style={{
-            width: '100%',
-            maxWidth: '100%',
-            padding: '0 48px 120px',
-            boxSizing: 'border-box'
-          }}
         >
           {/* Top Filters Bar */}
-          <div
-            style={{
-              backgroundColor: '#ffffff',
-              padding: '16px 24px',
-              borderRadius: '20px',
-              border: '1px solid rgba(190, 201, 194, 0.3)',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '16px',
-              marginBottom: '40px'
-            }}
-          >
+          <div className="kshop-filter-bar">
             {/* Filter Selects */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px' }}>
-              <span className="font-headline" style={{ fontSize: '16px', fontWeight: 700, color: '#191c1d' }}>
+            <div className="kshop-filters-left">
+              <span className="font-headline kshop-filter-label">
                 Bộ lọc:
               </span>
 
@@ -941,17 +694,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                style={{
-                  borderRadius: '999px',
-                  border: '1px solid rgba(16, 32, 27, 0.15)',
-                  backgroundColor: '#ffffff',
-                  fontSize: '14px',
-                  color: '#191c1d',
-                  padding: '9px 18px',
-                  outline: 'none',
-                  cursor: 'pointer',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.04)'
-                }}
+                className="kshop-select"
               >
                 <option value="All">Danh mục: Tất cả</option>
                 <option value="doc-quyen">✨ Sản phẩm Độc quyền</option>
@@ -965,17 +708,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
               <select
                 value={selectedPriceRange}
                 onChange={(e) => setSelectedPriceRange(e.target.value)}
-                style={{
-                  borderRadius: '999px',
-                  border: '1px solid rgba(16, 32, 27, 0.15)',
-                  backgroundColor: '#ffffff',
-                  fontSize: '14px',
-                  color: '#191c1d',
-                  padding: '9px 18px',
-                  outline: 'none',
-                  cursor: 'pointer',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.04)'
-                }}
+                className="kshop-select"
               >
                 <option value="All">Giá: Tất cả</option>
                 <option value="under-500k">Dưới 500.000 ₫</option>
@@ -985,25 +718,15 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
             </div>
 
             {/* Counter & Sort */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px' }}>
-              <p style={{ fontSize: '14px', color: '#555f6d', margin: 0 }}>
-                Hiển thị <strong style={{ color: '#006d36' }}>{filteredProducts.length}</strong> sản phẩm tinh tuyển
+            <div className="kshop-filters-right">
+              <p className="kshop-count-text">
+                Hiển thị <strong className="kshop-count-highlight">{filteredProducts.length}</strong> sản phẩm tinh tuyển
               </p>
 
               <select
                 value={sortBy}
                 onChange={(e: any) => setSortBy(e.target.value)}
-                style={{
-                  borderRadius: '999px',
-                  border: '1px solid rgba(16, 32, 27, 0.15)',
-                  backgroundColor: '#ffffff',
-                  fontSize: '14px',
-                  color: '#191c1d',
-                  padding: '9px 18px',
-                  outline: 'none',
-                  cursor: 'pointer',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.04)'
-                }}
+                className="kshop-select"
               >
                 <option value="newest">Mới nhất</option>
                 <option value="featured">Bán chạy nhất</option>
@@ -1015,28 +738,28 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
 
           {/* Product Grid (2 columns full width) */}
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '80px 20px' }}>
-              <RefreshCw size={36} className="spin" style={{ color: '#065f46', margin: '0 auto 16px auto' }} />
-              <p style={{ fontSize: '16px', color: '#555f6d' }}>Đang nạp danh mục sản phẩm...</p>
+            <div className="kshop-loading-box">
+              <RefreshCw size={36} className="spin kshop-loading-spinner" />
+              <p className="kshop-count-text">Đang nạp danh mục sản phẩm...</p>
             </div>
           ) : filteredProducts.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '80px 20px', backgroundColor: '#ffffff', borderRadius: '24px', border: '1px solid rgba(190, 201, 194, 0.3)' }}>
-              <ShoppingBag size={44} style={{ color: '#555f6d', opacity: 0.5, margin: '0 auto 14px auto' }} />
-              <h3 className="font-headline" style={{ fontSize: '20px', fontWeight: 600, color: '#191c1d', margin: '0 0 6px 0' }}>
+            <div className="kshop-empty-box">
+              <ShoppingBag size={44} className="kshop-empty-icon" />
+              <h3 className="font-headline kshop-empty-title">
                 Không tìm thấy sản phẩm phù hợp
               </h3>
-              <p style={{ color: '#555f6d', fontSize: '14px', margin: '0 0 16px 0' }}>
+              <p className="kshop-empty-desc">
                 Hãy thử chọn mức giá hoặc danh mục khác.
               </p>
               <button
                 onClick={() => { setSelectedCategory('All'); setSelectedPriceRange('All'); setSearchQuery(''); }}
-                style={{ padding: '10px 24px', borderRadius: '999px', backgroundColor: '#065f46', color: '#ffffff', fontWeight: 600, border: 'none', cursor: 'pointer' }}
+                className="kshop-empty-btn"
               >
                 Xem tất cả sản phẩm
               </button>
             </div>
           ) : (
-            <div className="kollection-grid-2col">
+            <div className="kshop-product-grid">
               {filteredProducts.map((product, pIdx) => {
                 const discountPercent = product.originalPrice && product.originalPrice > product.price
                   ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -1050,82 +773,37 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                     <div
                       className="nomad-card"
                       onClick={() => setActiveProduct({ ...product, title: displayTitle, heroImage: displayImage })}
-                      style={{
-                        background: 'transparent',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
-                        height: '100%',
-                        cursor: 'pointer'
-                      }}
                     >
                       <div>
-                        {/* Image Frame: Full-bleed clamp(440px, 52vh, 580px) */}
-                        <div
-                          style={{
-                            position: 'relative',
-                            width: '100%',
-                            height: 'clamp(440px, 52vh, 580px)',
-                            backgroundColor: '#f3f4f5',
-                            overflow: 'hidden',
-                            borderRadius: '24px',
-                            marginBottom: '26px',
-                            boxShadow: '0 20px 50px rgba(16, 32, 27, 0.12)'
-                          }}
-                        >
-                          {/* Top Left Badges: Exclusive / Sale / Best Seller / New */}
-                          <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 10, display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        {/* Image Frame */}
+                        <div className="kshop-card-img-box">
+                          {/* Top Left Badges */}
+                          <div className="kshop-card-badges-top-left">
                             {product.isExclusive && (
-                              <span
-                                style={{
-                                  backgroundColor: '#004532',
-                                  color: '#a6f2d1',
-                                  border: '1px solid rgba(166, 242, 209, 0.4)',
-                                  padding: '6px 14px',
-                                  borderRadius: '999px',
-                                  fontSize: '12px',
-                                  fontWeight: 700,
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
-                                  boxShadow: '0 2px 8px rgba(0, 69, 50, 0.4)'
-                                }}
-                              >
+                              <span className="kshop-badge-exclusive">
                                 <Sparkles size={12} /> Độc quyền
                               </span>
                             )}
                             {discountPercent > 0 && (
-                              <span style={{ backgroundColor: '#ba1a1a', color: '#ffffff', padding: '6px 14px', borderRadius: '999px', fontSize: '12px', fontWeight: 700 }}>
+                              <span className="kshop-badge-discount">
                                 -{discountPercent}%
                               </span>
                             )}
                             {product.isBestSeller && (
-                              <span style={{ backgroundColor: '#065f46', color: '#ffffff', padding: '6px 14px', borderRadius: '999px', fontSize: '12px', fontWeight: 600 }}>
+                              <span className="kshop-badge-bestseller">
                                 Bán chạy
                               </span>
                             )}
                             {product.isNewArrival && (
-                              <span style={{ backgroundColor: '#ffb960', color: '#563400', padding: '6px 14px', borderRadius: '999px', fontSize: '12px', fontWeight: 700 }}>
+                              <span className="kshop-badge-new">
                                 Mới
                               </span>
                             )}
                           </div>
 
                           {/* Top Right Category Pill */}
-                          <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10, display: 'flex', gap: '6px' }}>
-                            <span
-                              style={{
-                                backgroundColor: 'rgba(248, 249, 250, 0.92)',
-                                color: '#191c1d',
-                                backdropFilter: 'blur(8px)',
-                                padding: '6px 16px',
-                                borderRadius: '9999px',
-                                fontSize: '12px',
-                                fontWeight: 700,
-                                border: '1px solid rgba(190, 201, 194, 0.3)',
-                                boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
-                              }}
-                            >
+                          <div className="kshop-card-category-pill">
+                            <span className="kshop-category-pill-tag">
                               {product.category || 'Retreat'}
                             </span>
                           </div>
@@ -1138,80 +816,37 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                             onError={(e) => {
                               (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=1000&q=85';
                             }}
-                            style={{
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'cover'
-                            }}
                           />
                         </div>
 
                         {/* Card Content Body */}
-                        <div style={{ padding: '0 4px' }}>
-                          <span
-                            style={{
-                              display: 'block',
-                              fontSize: '12px',
-                              fontWeight: 700,
-                              letterSpacing: '0.12em',
-                              textTransform: 'uppercase',
-                              color: '#527059',
-                              marginBottom: '8px'
-                            }}
-                          >
+                        <div className="kshop-card-body">
+                          <span className="kshop-card-eyebrow">
                             KOLLECTION 4U • {product.category || 'Thủ Công Tinh Tuyển'}
                           </span>
 
-                          <h3
-                            className="zannier-title-italic"
-                            style={{
-                              fontSize: 'clamp(26px, 2.6vw, 36px)',
-                              color: '#10201B',
-                              margin: '0 0 10px 0',
-                              lineHeight: 1.25
-                            }}
-                          >
+                          <h3 className="zannier-title-italic kshop-card-title">
                             {displayTitle}
                           </h3>
 
-                          <p
-                            style={{
-                              fontSize: '15.5px',
-                              lineHeight: 1.75,
-                              color: '#405246',
-                              margin: '0 0 18px 0',
-                              display: '-webkit-box',
-                              WebkitLineClamp: 2,
-                              WebkitBoxOrient: 'vertical',
-                              overflow: 'hidden'
-                            }}
-                          >
+                          <p className="kshop-card-desc">
                             {product.subtitle || product.description}
                           </p>
                         </div>
                       </div>
 
                       {/* Price and Cart Button Action Row */}
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          paddingTop: '16px',
-                          borderTop: '1px solid rgba(16, 32, 27, 0.1)',
-                          marginTop: '12px'
-                        }}
-                      >
+                      <div className="kshop-card-action-bar">
                         <div>
-                          <span style={{ fontSize: '11px', color: '#527059', display: 'block', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                          <span className="kshop-price-label">
                             Giá niêm yết
                           </span>
-                          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                            <strong style={{ fontSize: '22px', fontWeight: 800, color: '#006d36' }}>
+                          <div className="kshop-price-box">
+                            <strong className="kshop-price-current">
                               {formatVnd(product.price)}
                             </strong>
                             {product.originalPrice && product.originalPrice > product.price && (
-                              <span style={{ fontSize: '14px', color: '#88988e', textDecoration: 'line-through' }}>
+                              <span className="kshop-price-orig">
                                 {formatVnd(product.originalPrice)}
                               </span>
                             )}
@@ -1224,38 +859,14 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                               e.stopPropagation();
                               setActiveProduct({ ...product, title: displayTitle, heroImage: displayImage });
                             }}
-                            style={{
-                              background: 'transparent',
-                              border: '1px solid rgba(16, 32, 27, 0.2)',
-                              color: '#10201B',
-                              padding: '10px 20px',
-                              borderRadius: '999px',
-                              fontSize: '13px',
-                              fontWeight: 700,
-                              cursor: 'pointer',
-                              transition: 'all 0.2s ease'
-                            }}
+                            className="kshop-btn-detail"
                           >
                             Chi tiết
                           </button>
                           <button
                             aria-label="Thêm vào giỏ hàng"
                             onClick={(e) => handleAddToCart({ ...product, title: displayTitle, heroImage: displayImage }, 1, e)}
-                            style={{
-                              backgroundColor: '#006d36',
-                              color: '#ffffff',
-                              padding: '10px 22px',
-                              borderRadius: '999px',
-                              border: 'none',
-                              cursor: 'pointer',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '8px',
-                              fontSize: '13px',
-                              fontWeight: 700,
-                              boxShadow: '0 4px 14px rgba(0, 109, 54, 0.25)',
-                              transition: 'transform 0.2s ease'
-                            }}
+                            className="kshop-btn-buy"
                           >
                             <ShoppingCart size={16} />
                             <span>Chọn mua</span>
@@ -1275,55 +886,37 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
           4. SLIDE-OVER SHOPPING CART DRAWER
       ══════════════════════════════════════════════════════════════ */}
       {cartOpen && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          backdropFilter: 'blur(4px)',
-          zIndex: 10000,
-          display: 'flex',
-          justifyContent: 'flex-end'
-        }}>
-          <div style={{
-            width: '100%',
-            maxWidth: '440px',
-            backgroundColor: '#ffffff',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            boxShadow: '-10px 0 30px rgba(0,0,0,0.15)',
-            padding: '28px',
-            boxSizing: 'border-box'
-          }}>
+        <div className="kshop-cart-backdrop">
+          <div className="kshop-cart-drawer">
             {/* Drawer Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #f0f0f0', paddingBottom: '16px', marginBottom: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '18px', fontWeight: 700, color: '#191c1d' }}>
-                <ShoppingCart size={20} style={{ color: '#065f46' }} /> Giỏ hàng của bạn ({cartTotalItems})
+            <div className="kshop-cart-header">
+              <div className="kshop-cart-title">
+                <ShoppingCart size={20} color="#065f46" /> Giỏ hàng của bạn ({cartTotalItems})
               </div>
-              <button onClick={() => setCartOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#555f6d' }}>
+              <button onClick={() => setCartOpen(false)} className="kshop-cart-close">
                 <X size={20} />
               </button>
             </div>
 
             {/* Cart Items List */}
-            <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div className="kshop-cart-list">
               {cartItems.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '60px 0', color: '#555f6d' }}>
-                  <ShoppingBag size={40} style={{ margin: '0 auto 12px auto', opacity: 0.5 }} />
+                <div className="kshop-cart-empty">
+                  <ShoppingBag size={40} className="kshop-empty-icon" />
                   <p style={{ fontSize: '15px', margin: 0 }}>Chưa có sản phẩm nào trong giỏ hàng</p>
                 </div>
               ) : (
                 cartItems.map(({ product, quantity }) => (
-                  <div key={product.id || product.slug} style={{ display: 'flex', gap: '12px', alignItems: 'center', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '0.375rem', border: '1px solid #edeeef' }}>
-                    <img src={getMerchandiseImage(product)} alt="" style={{ width: '60px', height: '60px', borderRadius: '0.25rem', objectFit: 'cover' }} />
+                  <div key={product.id || product.slug} className="kshop-cart-item">
+                    <img src={getMerchandiseImage(product)} alt="" className="kshop-cart-item-img" />
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: '14px', fontWeight: 600, color: '#191c1d', lineHeight: 1.3 }}>{product.title || (product as any).name}</div>
                       <div style={{ fontSize: '14px', fontWeight: 700, color: '#004532', marginTop: '3px' }}>{formatVnd(product.price)}</div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #bec9c2', borderRadius: '0.25rem', overflow: 'hidden' }}>
-                      <button onClick={() => handleUpdateCartQty(product.id, product.slug, -1)} style={{ padding: '4px 8px', background: '#ffffff', border: 'none', cursor: 'pointer' }}><Minus size={12} /></button>
-                      <span style={{ padding: '0 8px', fontSize: '12px', fontWeight: 700 }}>{quantity}</span>
-                      <button onClick={() => handleUpdateCartQty(product.id, product.slug, 1)} style={{ padding: '4px 8px', background: '#ffffff', border: 'none', cursor: 'pointer' }}><Plus size={12} /></button>
+                    <div className="kshop-cart-qty-ctrl">
+                      <button onClick={() => handleUpdateCartQty(product.id, product.slug, -1)} className="kshop-cart-qty-btn"><Minus size={12} /></button>
+                      <span className="kshop-cart-qty-val">{quantity}</span>
+                      <button onClick={() => handleUpdateCartQty(product.id, product.slug, 1)} className="kshop-cart-qty-btn"><Plus size={12} /></button>
                     </div>
                   </div>
                 ))
@@ -1332,29 +925,14 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
 
             {/* Drawer Footer & Checkout */}
             {cartItems.length > 0 && (
-              <div style={{ borderTop: '1px solid #edeeef', paddingTop: '16px', marginTop: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '15px', fontWeight: 600, marginBottom: '14px' }}>
+              <div className="kshop-cart-footer">
+                <div className="kshop-cart-total-row">
                   <span>Tổng tiền thanh toán:</span>
-                  <span style={{ fontSize: '18px', fontWeight: 700, color: '#004532' }}>{formatVnd(cartTotalPrice)}</span>
+                  <span className="kshop-cart-total-val">{formatVnd(cartTotalPrice)}</span>
                 </div>
                 <button
                   onClick={handleOpenCheckout}
-                  style={{
-                    width: '100%',
-                    padding: '12px',
-                    borderRadius: '0.25rem',
-                    backgroundColor: '#065f46',
-                    color: '#ffffff',
-                    fontSize: '15px',
-                    fontWeight: 600,
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px',
-                    boxShadow: '0 4px 14px rgba(6, 95, 70, 0.3)'
-                  }}
+                  className="kshop-cart-checkout-btn"
                 >
                   <ShoppingBag size={18} /> Tiến hành đặt hàng
                 </button>
@@ -1369,47 +947,26 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
           5. PRODUCT DETAIL LIGHTBOX MODAL
       ══════════════════════════════════════════════════════════════ */}
       {activeProduct && !checkoutModalOpen && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: 'rgba(0,0,0,0.65)',
-          backdropFilter: 'blur(4px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 10000,
-          padding: '20px'
-        }}>
-          <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: '0.5rem',
-            width: '100%',
-            maxWidth: '860px',
-            maxHeight: '90vh',
-            overflowY: 'auto',
-            boxShadow: '0 25px 60px rgba(0,0,0,0.25)',
-            display: 'grid',
-            gridTemplateColumns: '1.1fr 1.3fr',
-            position: 'relative'
-          }}>
+        <div className="kshop-detail-backdrop">
+          <div className="kshop-detail-card">
             <button
               onClick={() => setActiveProduct(null)}
-              style={{ position: 'absolute', top: '16px', right: '16px', background: '#f3f4f5', border: 'none', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10 }}
+              className="kshop-detail-close"
             >
               <X size={18} />
             </button>
 
-            <div style={{ padding: '24px', backgroundColor: '#f8f9fa', borderRight: '1px solid #edeeef' }}>
-              <div style={{ width: '100%', height: '340px', borderRadius: '0.25rem', overflow: 'hidden', marginBottom: '12px', backgroundColor: '#ffffff' }}>
-                <img src={getMerchandiseImage(activeProduct)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <div className="kshop-detail-left">
+              <div className="kshop-detail-main-img-box">
+                <img src={getMerchandiseImage(activeProduct)} alt="" className="kshop-detail-main-img" />
               </div>
               {getProductGallery(activeProduct).length > 1 && (
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div className="kshop-detail-gallery-row">
                   {getProductGallery(activeProduct).map((img, idx) => (
                     <div
                       key={idx}
                       onClick={() => setActiveImageIndex(idx)}
-                      style={{ width: '56px', height: '56px', borderRadius: '0.25rem', overflow: 'hidden', cursor: 'pointer', border: activeImageIndex === idx ? '2px solid #065f46' : '1px solid #bec9c2' }}
+                      className={`kshop-detail-gallery-thumb ${activeImageIndex === idx ? 'active' : ''}`}
                     >
                       <img src={getImageUrl(img)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
@@ -1418,63 +975,48 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
               )}
             </div>
 
-            <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div className="kshop-detail-right">
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#065f46', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  <span className="kshop-detail-category-badge">
                     {activeProduct.category}
                   </span>
                   {activeProduct.isExclusive && (
-                    <span style={{ backgroundColor: '#004532', color: '#a6f2d1', padding: '2px 8px', borderRadius: '0.25rem', fontSize: '11px', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                    <span className="kshop-detail-exclusive-tag">
                       <Sparkles size={10} /> Độc quyền
                     </span>
                   )}
                 </div>
-                <h2 className="font-headline" style={{ fontSize: '26px', fontWeight: 700, color: '#191c1d', margin: '4px 0 12px 0', lineHeight: 1.25 }}>
+                <h2 className="font-headline kshop-detail-title">
                   {activeProduct.title || (activeProduct as any).name}
                 </h2>
-                <div style={{ fontSize: '22px', fontWeight: 700, color: '#004532', marginBottom: '16px' }}>
+                <div className="kshop-detail-price">
                   {formatVnd(activeProduct.price)}
                   {activeProduct.originalPrice && activeProduct.originalPrice > activeProduct.price && (
-                    <span style={{ fontSize: '15px', color: '#555f6d', textDecoration: 'line-through', marginLeft: '10px' }}>
+                    <span className="kshop-detail-price-orig">
                       {formatVnd(activeProduct.originalPrice)}
                     </span>
                   )}
                 </div>
 
-                <p style={{ fontSize: '15px', color: '#555f6d', lineHeight: 1.6, margin: '0 0 24px 0' }}>
+                <p className="kshop-detail-desc">
                   {activeProduct.description || activeProduct.subtitle}
                 </p>
               </div>
 
               <div>
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #bec9c2', borderRadius: '0.25rem', overflow: 'hidden' }}>
-                    <button onClick={() => setDetailQuantity(Math.max(1, detailQuantity - 1))} style={{ padding: '8px 14px', background: '#ffffff', border: 'none', cursor: 'pointer' }}><Minus size={14} /></button>
-                    <span style={{ padding: '0 12px', fontSize: '14px', fontWeight: 700 }}>{detailQuantity}</span>
-                    <button onClick={() => setDetailQuantity(detailQuantity + 1)} style={{ padding: '8px 14px', background: '#ffffff', border: 'none', cursor: 'pointer' }}><Plus size={14} /></button>
+                <div className="kshop-detail-qty-box">
+                  <div className="kshop-cart-qty-ctrl">
+                    <button onClick={() => setDetailQuantity(Math.max(1, detailQuantity - 1))} className="kshop-cart-qty-btn"><Minus size={14} /></button>
+                    <span className="kshop-cart-qty-val">{detailQuantity}</span>
+                    <button onClick={() => setDetailQuantity(detailQuantity + 1)} className="kshop-cart-qty-btn"><Plus size={14} /></button>
                   </div>
                   <button
                     onClick={() => {
                       handleAddToCart(activeProduct, detailQuantity);
                       setActiveProduct(null);
                     }}
-                    style={{
-                      flex: 1,
-                      padding: '12px 24px',
-                      borderRadius: '0.25rem',
-                      backgroundColor: '#065f46',
-                      color: '#ffffff',
-                      fontSize: '14px',
-                      fontWeight: 600,
-                      border: 'none',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px',
-                      boxShadow: '0 4px 14px rgba(6, 95, 70, 0.35)'
-                    }}
+                    className="kshop-detail-add-btn"
                   >
                     <ShoppingCart size={16} /> Thêm vào giỏ hàng
                   </button>
@@ -1490,55 +1032,15 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
           6. FAST CHECKOUT & UPSELL MODAL (MULTI-STEP FLOW)
       ══════════════════════════════════════════════════════════════ */}
       {checkoutModalOpen && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: 'rgba(0,0,0,0.65)',
-          backdropFilter: 'blur(5px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 10000,
-          padding: 'clamp(10px, 2vh, 20px)',
-          boxSizing: 'border-box'
-        }}>
-          <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: '20px',
-            width: '100%',
-            maxWidth: checkoutStep === 'UPSELL' ? '680px' : '560px',
-            maxHeight: '96vh',
-            overflowY: 'auto',
-            boxShadow: '0 30px 70px rgba(0, 0, 0, 0.35)',
-            padding: 'clamp(20px, 3vh, 32px) clamp(18px, 3vw, 30px)',
-            position: 'relative',
-            boxSizing: 'border-box',
-            fontFamily: "'Work Sans', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-            transition: 'max-width 0.3s ease'
-          }}>
+        <div className="kshop-checkout-backdrop">
+          <div className={`kshop-checkout-card ${checkoutStep === 'UPSELL' ? 'upsell-mode' : ''}`}>
             <button
               onClick={() => {
                 setCheckoutModalOpen(false);
                 setCheckoutStep('FORM');
                 setUpsellSelectedMap({});
               }}
-              style={{
-                position: 'absolute',
-                top: 'clamp(14px, 2vh, 20px)',
-                right: 'clamp(14px, 2vw, 20px)',
-                background: '#f3f4f5',
-                border: 'none',
-                borderRadius: '50%',
-                width: '34px',
-                height: '34px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                color: '#4b5563',
-                transition: 'all 0.2s ease',
-                zIndex: 10
-              }}
+              className="kshop-checkout-close"
             >
               <X size={18} />
             </button>
@@ -1549,127 +1051,107 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
             {checkoutStep === 'FORM' && (
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#004532', backgroundColor: '#e8f5e9', padding: '3px 10px', borderRadius: '999px', letterSpacing: '0.05em' }}>
+                  <span className="kshop-checkout-badge">
                     BƯỚC 1/2 • THÔNG TIN ĐẶT HÀNG
                   </span>
                 </div>
-                <h2 className="font-headline" style={{ fontSize: 'clamp(20px, 2.6vh, 24px)', fontWeight: 800, color: '#111827', margin: '0 0 4px 0', letterSpacing: '-0.01em' }}>
+                <h2 className="font-headline kshop-checkout-title">
                   Xác nhận đơn hàng
                 </h2>
-                <p style={{ fontSize: 'clamp(12px, 1.5vh, 13.5px)', color: '#64748b', margin: '0 0 clamp(12px, 1.8vh, 18px) 0', lineHeight: 1.4 }}>
+                <p className="kshop-checkout-subtitle">
                   Vui lòng cung cấp thông tin để 4U chuẩn bị và đóng gói giao hàng tận nơi.
                 </p>
 
-                <form onSubmit={handleProceedToUpsell} style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(10px, 1.4vh, 14px)' }}>
+                <form onSubmit={handleProceedToUpsell} className="kshop-checkout-form">
                   {/* 2-Column Responsive Inputs: Họ tên + Số điện thoại */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'clamp(8px, 1.2vh, 14px)' }}>
+                  <div className="kshop-checkout-grid2">
                     <div>
-                      <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>Họ và tên *</label>
+                      <label className="kshop-checkout-label">Họ và tên *</label>
                       <input
                         type="text"
                         required
                         placeholder="Nguyễn Văn A"
                         value={orderForm.fullName}
                         onChange={e => setOrderForm({ ...orderForm, fullName: e.target.value })}
-                        style={{ width: '100%', padding: 'clamp(8px, 1.2vh, 11px) 12px', borderRadius: '6px', border: '1px solid #bec9c2', fontSize: '13.5px', boxSizing: 'border-box', outline: 'none' }}
+                        className="kshop-checkout-input"
                       />
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>Số điện thoại nhận hàng *</label>
+                      <label className="kshop-checkout-label">Số điện thoại nhận hàng *</label>
                       <input
                         type="tel"
                         required
                         placeholder="0987 654 321"
                         value={orderForm.phone}
                         onChange={e => setOrderForm({ ...orderForm, phone: e.target.value })}
-                        style={{ width: '100%', padding: 'clamp(8px, 1.2vh, 11px) 12px', borderRadius: '6px', border: '1px solid #bec9c2', fontSize: '13.5px', boxSizing: 'border-box', outline: 'none' }}
+                        className="kshop-checkout-input"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>Địa chỉ nhận hàng chi tiết</label>
+                    <label className="kshop-checkout-label">Địa chỉ nhận hàng chi tiết</label>
                     <input
                       type="text"
                       placeholder="Số nhà, Tên đường, Phường/Xã, Tỉnh/Thành"
                       value={orderForm.address}
                       onChange={e => setOrderForm({ ...orderForm, address: e.target.value })}
-                      style={{ width: '100%', padding: 'clamp(8px, 1.2vh, 11px) 12px', borderRadius: '6px', border: '1px solid #bec9c2', fontSize: '13.5px', boxSizing: 'border-box', outline: 'none' }}
+                      className="kshop-checkout-input"
                     />
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>Ghi chú đơn hàng</label>
+                    <label className="kshop-checkout-label">Ghi chú đơn hàng</label>
                     <textarea
                       rows={2}
                       placeholder="Ghi chú thêm về thời gian nhận hàng hoặc đóng gói quà..."
                       value={orderForm.notes}
                       onChange={e => setOrderForm({ ...orderForm, notes: e.target.value })}
-                      style={{ width: '100%', padding: 'clamp(7px, 1vh, 10px) 12px', borderRadius: '6px', border: '1px solid #bec9c2', fontSize: '13.5px', boxSizing: 'border-box', outline: 'none', resize: 'vertical' }}
+                      className="kshop-checkout-textarea"
                     />
                   </div>
 
                   {/* Cart Summary Card */}
-                  <div style={{ backgroundColor: '#f8f9fa', padding: 'clamp(10px, 1.5vh, 14px) 16px', borderRadius: '8px', border: '1px solid #edeeef' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13.5px', color: '#555f6d', marginBottom: '4px' }}>
+                  <div className="kshop-checkout-summary-box">
+                    <div className="kshop-summary-row">
                       <span>Số lượng hiện tại:</span>
                       <strong>{cartTotalItems} sản phẩm</strong>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'clamp(15px, 2vh, 17px)', fontWeight: 700, color: '#004532' }}>
+                    <div className="kshop-summary-total-row">
                       <span>Tổng tiền hàng:</span>
                       <span>{formatVnd(cartTotalPrice)}</span>
                     </div>
                   </div>
 
                   {/* QR PAYMENT OPTION PREVIEW */}
-                  <div style={{
-                    backgroundColor: '#f4f7f5',
-                    border: '1px solid #cce3d4',
-                    borderRadius: '12px',
-                    padding: 'clamp(10px, 1.5vh, 14px) 16px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 'clamp(6px, 1vh, 10px)'
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <QrCode size={18} style={{ color: '#065f46' }} />
-                        <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#081f13', textTransform: 'uppercase' }}>
+                  <div className="kshop-checkout-qr-box">
+                    <div className="kshop-qr-head-row">
+                      <div className="kshop-qr-title-box">
+                        <QrCode size={18} color="#065f46" />
+                        <span className="kshop-qr-title">
                           Quét Mã QR Chuyển Khoản Nhanh
                         </span>
                       </div>
-                      <span style={{ fontSize: '11px', fontWeight: 700, backgroundColor: '#dcfce7', color: '#15803d', padding: '2px 8px', borderRadius: '999px', border: '1px solid #bbf7d0' }}>
+                      <span className="kshop-qr-badge">
                         VietQR 24/7
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
-                      <div style={{
-                        width: 'clamp(90px, 12vh, 110px)',
-                        height: 'clamp(90px, 12vh, 110px)',
-                        backgroundColor: '#ffffff',
-                        borderRadius: '8px',
-                        border: '1px solid #cbd5e1',
-                        padding: '4px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                        flexShrink: 0
-                      }}>
+                    <div className="kshop-qr-content-row">
+                      <div className="kshop-checkout-qr-img-box">
                         <img
                           src={`https://api.vietqr.io/image/970422-0987654321-compact.png?amount=${cartTotalPrice}&addInfo=${encodeURIComponent('4U ' + (orderForm.phone ? orderForm.phone.replace(/\s+/g, '') : 'KOLLECTION'))}&accountName=4U%20WELLNESS%20RETREAT`}
                           alt="Mã QR Chuyển Khoản"
-                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                          className="kshop-qr-img"
                         />
                       </div>
 
-                      <div style={{ flex: 1, minWidth: '160px', fontSize: '12px', color: '#334155', display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                        <div><span style={{ color: '#64748b' }}>Ngân hàng:</span> <strong style={{ color: '#081f13' }}>MB Bank</strong></div>
-                        <div><span style={{ color: '#64748b' }}>Số tài khoản:</span> <strong style={{ color: '#065f46', fontFamily: 'monospace', fontSize: '13px' }}>0987 654 321</strong></div>
-                        <div><span style={{ color: '#64748b' }}>Chủ tài khoản:</span> <strong style={{ color: '#081f13' }}>4U WELLNESS & RETREAT</strong></div>
-                        <div><span style={{ color: '#64748b' }}>Số tiền:</span> <strong style={{ color: '#065f46', fontSize: '13px' }}>{formatVnd(cartTotalPrice)}</strong></div>
+                      <div className="kshop-qr-info-col">
+                        <div><span className="kshop-qr-label">Ngân hàng:</span> <strong style={{ color: '#081f13' }}>MB Bank</strong></div>
+                        <div><span className="kshop-qr-label">Số tài khoản:</span> <strong className="kshop-qr-acc-num">0987 654 321</strong></div>
+                        <div><span className="kshop-qr-label">Chủ tài khoản:</span> <strong style={{ color: '#081f13' }}>4U WELLNESS & RETREAT</strong></div>
+                        <div><span className="kshop-qr-label">Số tiền:</span> <strong className="kshop-qr-amount">{formatVnd(cartTotalPrice)}</strong></div>
                       </div>
                     </div>
 
@@ -1694,23 +1176,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                           }));
                         }
                       }}
-                      style={{
-                        width: '100%',
-                        padding: 'clamp(7px, 1.1vh, 10px) 12px',
-                        borderRadius: '8px',
-                        border: hasTransferred ? '2px solid #059669' : '1px solid #94a3b8',
-                        backgroundColor: hasTransferred ? '#ecfdf5' : '#ffffff',
-                        color: hasTransferred ? '#065f46' : '#1e293b',
-                        fontWeight: 700,
-                        fontSize: '12px',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '6px',
-                        transition: 'all 0.2s ease',
-                        marginTop: '2px'
-                      }}
+                      className={`kshop-qr-confirm-btn ${hasTransferred ? 'active' : ''}`}
                     >
                       {hasTransferred ? <CheckCircle2 size={16} color="#059669" /> : <CreditCard size={16} />}
                       {hasTransferred ? '✓ Tôi Đã Chuyển Khoản QR Thành Công' : '👉 Bấm vào đây nếu bạn muốn Chuyển Khoản QR ngay'}
@@ -1720,23 +1186,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                   {/* Submit Button to go to Step 2 UPSELL */}
                   <button
                     type="submit"
-                    style={{
-                      width: '100%',
-                      padding: 'clamp(11px, 1.6vh, 14px) 20px',
-                      borderRadius: '8px',
-                      backgroundColor: '#004532',
-                      color: '#ffffff',
-                      fontSize: 'clamp(13.5px, 1.6vh, 15px)',
-                      fontWeight: 700,
-                      border: 'none',
-                      cursor: 'pointer',
-                      boxShadow: '0 4px 14px rgba(0, 69, 50, 0.25)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px',
-                      transition: 'all 0.2s ease'
-                    }}
+                    className="kshop-checkout-submit-btn"
                   >
                     <span>Tiếp tục • Hoàn tất đặt hàng</span>
                     <ArrowRight size={18} />
@@ -1751,31 +1201,23 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
             {checkoutStep === 'UPSELL' && (
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#059669', backgroundColor: '#dcfce7', padding: '3px 10px', borderRadius: '999px', letterSpacing: '0.05em' }}>
+                  <span className="kshop-checkout-badge-upsell">
                     BƯỚC 2/2 • GỢI Ý MUA KÈM ƯU ĐÃI
                   </span>
-                  <span style={{ fontSize: '11px', fontWeight: 700, backgroundColor: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '6px', border: '1px solid #fde68a' }}>
+                  <span className="kshop-checkout-badge-freeship">
                     ⚡ Miễn Phí Giao Chung Đơn
                   </span>
                 </div>
 
-                <h2 className="font-headline" style={{ fontSize: 'clamp(20px, 2.6vh, 24px)', fontWeight: 800, color: '#111827', margin: '0 0 4px 0' }}>
+                <h2 className="font-headline kshop-checkout-title">
                   Mua Kèm Ưu Đãi Đặc Quyền
                 </h2>
-                <p style={{ fontSize: 'clamp(12.5px, 1.5vh, 13.5px)', color: '#64748b', margin: '0 0 clamp(14px, 2vh, 18px) 0', lineHeight: 1.45 }}>
+                <p className="kshop-checkout-subtitle">
                   Chọn thêm các sản phẩm yêu thích cùng bộ sưu tập dưới đây để nhận ưu đãi freeship và quà đóng gói cao cấp.
                 </p>
 
                 {/* Upsell Products Cards Grid */}
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                  gap: '12px',
-                  marginBottom: '16px',
-                  maxHeight: '340px',
-                  overflowY: 'auto',
-                  paddingRight: '4px'
-                }}>
+                <div className="kshop-upsell-grid">
                   {recommendedUpsellProducts.map((recProd) => {
                     const key = String(recProd.id || recProd.slug);
                     const isSelectedQty = upsellSelectedMap[key] || 0;
@@ -1783,76 +1225,28 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                     return (
                       <div
                         key={key}
-                        style={{
-                          backgroundColor: isSelectedQty > 0 ? '#f0fdf4' : '#ffffff',
-                          borderRadius: '12px',
-                          border: isSelectedQty > 0 ? '2px solid #059669' : '1px solid #e2e8f0',
-                          padding: '12px',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          justifyContent: 'space-between',
-                          transition: 'all 0.2s ease',
-                          boxShadow: isSelectedQty > 0 ? '0 4px 12px rgba(5, 150, 105, 0.15)' : '0 2px 6px rgba(0,0,0,0.02)'
-                        }}
+                        className={`kshop-upsell-card ${isSelectedQty > 0 ? 'selected' : ''}`}
                       >
                         <div>
-                          <div style={{
-                            width: '100%',
-                            height: '110px',
-                            borderRadius: '8px',
-                            overflow: 'hidden',
-                            backgroundColor: '#f1f5f9',
-                            marginBottom: '8px',
-                            position: 'relative'
-                          }}>
+                          <div className="kshop-upsell-img-box">
                             <img
                               src={getMerchandiseImage(recProd)}
                               alt={recProd.title}
-                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              className="kshop-upsell-img"
                             />
-                            <span style={{
-                              position: 'absolute',
-                              top: '6px',
-                              left: '6px',
-                              fontSize: '10px',
-                              fontWeight: 700,
-                              backgroundColor: 'rgba(5, 150, 105, 0.9)',
-                              color: '#ffffff',
-                              padding: '2px 6px',
-                              borderRadius: '4px'
-                            }}>
+                            <span className="kshop-upsell-badge-cat">
                               {recProd.category || 'Tĩnh Dưỡng'}
                             </span>
                             {isSelectedQty > 0 && (
-                              <span style={{
-                                position: 'absolute',
-                                top: '6px',
-                                right: '6px',
-                                fontSize: '10px',
-                                fontWeight: 800,
-                                backgroundColor: '#059669',
-                                color: '#ffffff',
-                                padding: '2px 6px',
-                                borderRadius: '4px'
-                              }}>
+                              <span className="kshop-upsell-badge-qty">
                                 Đã chọn x{isSelectedQty}
                               </span>
                             )}
                           </div>
-                          <h4 style={{
-                            fontSize: '13px',
-                            fontWeight: 700,
-                            color: '#111827',
-                            margin: '0 0 4px 0',
-                            lineHeight: 1.3,
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden'
-                          }}>
+                          <h4 className="kshop-upsell-title">
                             {recProd.title || (recProd as any).name}
                           </h4>
-                          <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#059669', marginBottom: '8px' }}>
+                          <div className="kshop-upsell-price">
                             {formatVnd(recProd.price)}
                           </div>
                         </div>
@@ -1861,74 +1255,27 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                           <button
                             type="button"
                             onClick={() => handleToggleUpsellItem(recProd, 1)}
-                            style={{
-                              width: '100%',
-                              padding: '8px 10px',
-                              borderRadius: '6px',
-                              backgroundColor: '#ecfdf5',
-                              border: '1px solid #a7f3d0',
-                              color: '#065f46',
-                              fontSize: '12px',
-                              fontWeight: 700,
-                              cursor: 'pointer',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              gap: '4px',
-                              transition: 'all 0.15s ease'
-                            }}
+                            className="kshop-upsell-btn-add"
                           >
                             <Plus size={14} />
                             <span>+ Thêm mua kèm (+{formatVnd(recProd.price)})</span>
                           </button>
                         ) : (
-                          <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            backgroundColor: '#ffffff',
-                            border: '1px solid #059669',
-                            borderRadius: '6px',
-                            padding: '3px 6px'
-                          }}>
+                          <div className="kshop-upsell-qty-ctrl">
                             <button
                               type="button"
                               onClick={() => handleToggleUpsellItem(recProd, -1)}
-                              style={{
-                                border: 'none',
-                                background: '#f1f5f9',
-                                color: '#1e293b',
-                                width: '26px',
-                                height: '26px',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontWeight: 800
-                              }}
+                              className="kshop-upsell-qty-btn-minus"
                             >
                               <Minus size={13} />
                             </button>
-                            <span style={{ fontSize: '13px', fontWeight: 800, color: '#059669' }}>
+                            <span className="kshop-upsell-qty-val">
                               {isSelectedQty}
                             </span>
                             <button
                               type="button"
                               onClick={() => handleToggleUpsellItem(recProd, 1)}
-                              style={{
-                                border: 'none',
-                                background: '#059669',
-                                color: '#ffffff',
-                                width: '26px',
-                                height: '26px',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontWeight: 800
-                              }}
+                              className="kshop-upsell-qty-btn-plus"
                             >
                               <Plus size={13} />
                             </button>
@@ -1940,20 +1287,14 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                 </div>
 
                 {/* DYNAMIC REAL-TIME PRICE CALCULATION SUMMARY */}
-                <div style={{
-                  backgroundColor: '#f0fdf4',
-                  borderRadius: '12px',
-                  border: '1px solid #bbf7d0',
-                  padding: '14px 18px',
-                  marginBottom: '18px'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#475569', marginBottom: '4px' }}>
+                <div className="kshop-upsell-summary-box">
+                  <div className="kshop-summary-row">
                     <span>Đơn hàng ban đầu ({cartTotalItems} món):</span>
                     <span style={{ fontWeight: 600 }}>{formatVnd(cartTotalPrice)}</span>
                   </div>
 
                   {activeUpsellItems.length > 0 && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#059669', marginBottom: '4px' }}>
+                    <div className="kshop-summary-row" style={{ color: '#059669' }}>
                       <span>Sản phẩm mua kèm thêm (+{activeUpsellItems.reduce((a,c) => a + c.quantity, 0)} món):</span>
                       <strong style={{ color: '#059669' }}>+ {formatVnd(upsellTotalPrice)}</strong>
                     </div>
@@ -1965,14 +1306,14 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                     </div>
                   )}
 
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#475569', marginBottom: '6px' }}>
+                  <div className="kshop-summary-row">
                     <span>Phí vận chuyển:</span>
                     <span style={{ color: '#059669', fontWeight: 700 }}>0 ₫ (Miễn phí toàn quốc)</span>
                   </div>
 
-                  <div style={{ height: '1px', backgroundColor: '#bbf7d0', margin: '8px 0' }} />
+                  <div className="kshop-receipt-divider" />
 
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div className="kshop-receipt-total-row">
                     <div>
                       <span style={{ fontSize: '14px', fontWeight: 800, color: '#081f13', display: 'block' }}>
                         TỔNG THANH TOÁN MỚI:
@@ -1993,23 +1334,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                     type="button"
                     disabled={orderSubmitting}
                     onClick={() => handleConfirmFinalOrder(true)}
-                    style={{
-                      width: '100%',
-                      padding: '13px 20px',
-                      borderRadius: '8px',
-                      backgroundColor: '#004532',
-                      color: '#ffffff',
-                      fontSize: '15px',
-                      fontWeight: 800,
-                      border: 'none',
-                      cursor: orderSubmitting ? 'not-allowed' : 'pointer',
-                      boxShadow: '0 4px 14px rgba(0, 69, 50, 0.25)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px',
-                      transition: 'all 0.2s ease'
-                    }}
+                    className="kshop-checkout-submit-btn"
                   >
                     {orderSubmitting ? <RefreshCw size={18} className="spin" /> : <ShieldCheck size={18} />}
                     <span>
@@ -2024,18 +1349,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                       type="button"
                       disabled={orderSubmitting}
                       onClick={() => handleConfirmFinalOrder(false)}
-                      style={{
-                        width: '100%',
-                        padding: '9px 16px',
-                        borderRadius: '8px',
-                        backgroundColor: '#f8fafc',
-                        border: '1px solid #cbd5e1',
-                        color: '#475569',
-                        fontSize: '13px',
-                        fontWeight: 600,
-                        cursor: orderSubmitting ? 'not-allowed' : 'pointer',
-                        textAlign: 'center'
-                      }}
+                      className="kshop-upsell-skip-btn"
                     >
                       Bỏ qua mua kèm, chỉ đặt đơn ban đầu ({formatVnd(cartTotalPrice)})
                     </button>
@@ -2043,15 +1357,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                     <button
                       type="button"
                       onClick={() => setCheckoutStep('FORM')}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        color: '#64748b',
-                        fontSize: '13px',
-                        cursor: 'pointer',
-                        textAlign: 'center',
-                        padding: '4px'
-                      }}
+                      className="kshop-upsell-back-btn"
                     >
                       ← Quay lại chỉnh sửa thông tin giao hàng
                     </button>
@@ -2066,49 +1372,32 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
             {checkoutStep === 'SUCCESS' && (
               <div style={{ padding: 'clamp(6px, 1vh, 12px) 0' }}>
                 <div style={{ textAlign: 'center', marginBottom: 'clamp(14px, 2vh, 20px)' }}>
-                  <div style={{
-                    width: '56px',
-                    height: '56px',
-                    borderRadius: '50%',
-                    backgroundColor: '#ecfdf5',
-                    color: '#059669',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 12px auto',
-                    boxShadow: '0 4px 14px rgba(5, 150, 105, 0.2)'
-                  }}>
+                  <div className="kshop-success-icon-wrap">
                     <CheckCircle2 size={32} />
                   </div>
-                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.08em', backgroundColor: '#dcfce7', padding: '3px 12px', borderRadius: '999px' }}>
+                  <span className="kshop-success-badge">
                     {lastOrderCode ? `Mã Đơn: ${lastOrderCode}` : 'Đặt Hàng Thành Công'}
                   </span>
-                  <h3 className="font-headline" style={{ fontSize: 'clamp(20px, 2.5vh, 24px)', fontWeight: 800, color: '#111827', margin: '8px 0 6px 0' }}>
+                  <h3 className="font-headline kshop-success-title">
                     Cảm Ơn Bạn Đã Tin Chọn Kollection 4U!
                   </h3>
-                  <p style={{ fontSize: '13.5px', color: '#64748b', lineHeight: 1.5, margin: 0, maxWidth: '480px', marginLeft: 'auto', marginRight: 'auto' }}>
+                  <p className="kshop-success-desc">
                     Đội ngũ chuyên viên 4U sẽ liên hệ số điện thoại <strong>{lastPlacedOrder?.customerPhone || orderForm.phone || 'của bạn'}</strong> trong vòng 15-30 phút để xác nhận và đóng gói giao hàng tận nơi.
                   </p>
                 </div>
 
                 {/* Ordered Items Receipt Box */}
-                <div style={{
-                  backgroundColor: '#f8fafc',
-                  borderRadius: '12px',
-                  border: '1px solid #e2e8f0',
-                  padding: '14px 16px',
-                  marginBottom: '16px'
-                }}>
-                  <div style={{ fontSize: '12px', fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
+                <div className="kshop-success-receipt">
+                  <div className="kshop-receipt-title">
                     Chi tiết đơn hàng ({lastPlacedOrder?.items?.length || 0} mục):
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '160px', overflowY: 'auto', marginBottom: '10px' }}>
+                  <div className="kshop-receipt-list">
                     {lastPlacedOrder?.items?.map((item: any, idx: number) => (
-                      <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
-                          <span style={{ fontWeight: 700, color: '#059669' }}>{item.quantity}x</span>
-                          <span style={{ color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <div key={idx} className="kshop-receipt-item">
+                        <div className="kshop-receipt-item-title-box">
+                          <span className="kshop-receipt-item-qty">{item.quantity}x</span>
+                          <span className="kshop-receipt-item-name">
                             {item.product?.title || (item.product as any)?.name || 'Sản phẩm 4U'}
                           </span>
                         </div>
@@ -2129,42 +1418,6 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                   </div>
                 </div>
 
-                {/* Optional QR Payment Transfer Details */}
-                <div style={{
-                  backgroundColor: '#f4f7f5',
-                  border: '1px solid #cce3d4',
-                  borderRadius: '12px',
-                  padding: '12px 16px',
-                  marginBottom: '18px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '14px'
-                }}>
-                  <div style={{
-                    width: '80px',
-                    height: '80px',
-                    backgroundColor: '#ffffff',
-                    borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
-                    padding: '3px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}>
-                    <img
-                      src={`https://api.vietqr.io/image/970422-0987654321-compact.png?amount=${lastPlacedOrder?.totalAmount || finalCombinedTotalPrice}&addInfo=${encodeURIComponent('4U ' + (lastOrderCode || 'KOLLECTION'))}&accountName=4U%20WELLNESS%20RETREAT`}
-                      alt="Mã QR Chuyển Khoản"
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    />
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#334155', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                    <div><span style={{ color: '#64748b' }}>MB Bank:</span> <strong style={{ fontFamily: 'monospace', color: '#065f46' }}>0987 654 321</strong></div>
-                    <div><span style={{ color: '#64748b' }}>Chủ TK:</span> <strong>4U WELLNESS & RETREAT</strong></div>
-                    <div><span style={{ color: '#64748b' }}>Nội dung:</span> <code style={{ backgroundColor: '#ffffff', padding: '1px 5px', borderRadius: '3px' }}>4U {lastOrderCode || 'KOLLECTION'}</code></div>
-                  </div>
-                </div>
-
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                   <button
                     onClick={() => {
@@ -2172,18 +1425,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                       setCheckoutStep('FORM');
                       setUpsellSelectedMap({});
                     }}
-                    style={{
-                      width: '100%',
-                      padding: '12px 28px',
-                      borderRadius: '8px',
-                      backgroundColor: '#004532',
-                      color: '#ffffff',
-                      fontWeight: 700,
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      boxShadow: '0 4px 12px rgba(0,69,50,0.2)'
-                    }}
+                    className="kshop-success-done-btn"
                   >
                     Hoàn tất & Tiếp tục mua sắm
                   </button>

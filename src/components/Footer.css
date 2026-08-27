@@ -69,6 +69,10 @@
   color: #ffffff;
 }
 
+.footer-bold-text {
+  font-weight: 600;
+}
+
 .footer-col-title {
   font-size: 30px;
   font-weight: 700;

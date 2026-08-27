@@ -1,0 +1,269 @@
+/* ==========================================================================
+   AdminVisualLandingEditor.css
+   Chuyên biệt cho Visual Inline WYSIWYG Editor của Landing Page
+   ========================================================================== */
+
+.admin-visual-editor-root {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    position: relative !important;
+}
+
+/* Inline Editable Text Hover & Focus States */
+.admin-inline-editable {
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    outline: none;
+    min-width: 20px;
+    cursor: text;
+}
+
+.admin-inline-editable:hover {
+    outline: 2px dashed #006d36 !important;
+    background-color: rgba(0, 109, 54, 0.08) !important;
+    box-shadow: 0 0 0 2px rgba(0, 109, 54, 0.15);
+    cursor: text;
+}
+
+.admin-inline-editable:focus {
+    outline: 2px solid #006d36 !important;
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    box-shadow: 0 4px 16px rgba(0, 109, 54, 0.2);
+    padding: 2px 6px;
+}
+
+/* Card Container with Delete Action */
+.admin-card-container {
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-card-delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    color: #dc2626;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.15s ease, background-color 0.15s ease;
+    z-index: 10;
+}
+
+.admin-card-container:hover .admin-card-delete-btn {
+    opacity: 1;
+}
+
+.admin-card-delete-btn:hover {
+    background: #dc2626;
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
+.admin-faq-delete-btn {
+    top: 16px !important;
+    right: 48px !important;
+}
+
+/* Add Item Button in Grid / Sections */
+.admin-add-item-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 28px 20px;
+    border-radius: 20px;
+    border: 2px dashed #86efac;
+    background-color: rgba(0, 109, 54, 0.03);
+    color: #006d36;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    min-height: 140px;
+}
+
+.admin-add-item-card:hover {
+    background-color: rgba(0, 109, 54, 0.08);
+    border-color: #006d36;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 109, 54, 0.1);
+}
+
+/* Image Replacement Hover Overlay */
+.admin-img-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.admin-img-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+    border-radius: inherit;
+    z-index: 5;
+}
+
+.admin-img-wrap:hover .admin-img-overlay {
+    opacity: 1;
+}
+
+.admin-img-badge {
+    background: #006d36;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.admin-change-about-img-btn {
+    background: #006d36;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+/* Section Add Buttons */
+.admin-section-add-bar {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.admin-section-add-btn {
+    background-color: #f0fdf4;
+    border: 2px dashed #86efac;
+    color: #166534;
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-section-add-btn:hover {
+    background-color: #dcfce7;
+    border-color: #22c55e;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(22, 101, 52, 0.1);
+}
+
+.admin-faq-add-btn {
+    background-color: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    color: #475569;
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-faq-add-btn:hover {
+    background-color: #f1f5f9;
+    border-color: #94a3b8;
+    color: #0f172a;
+}
+
+/* Helper Spacing and Layout Classes */
+.zen-avatar-circle-1 {
+    background-color: #dcebe2 !important;
+}
+
+.zen-avatar-circle-2 {
+    background-color: #cbe0d3 !important;
+}
+
+.zen-avatar-circle-3 {
+    background-color: #b7d4c2 !important;
+}
+
+.admin-about-grid-spacing {
+    margin-bottom: 60px !important;
+}
+
+.admin-section-header-spacing {
+    margin-bottom: 40px !important;
+}
+
+.admin-headline-spacing {
+    margin-bottom: 20px !important;
+}
+
+.admin-body-spacing {
+    margin-bottom: 20px !important;
+}
+
+.admin-m-0 {
+    margin: 0 !important;
+}
+
+.admin-inline-flex {
+    display: inline-flex !important;
+}
+
+.admin-full-width {
+    width: 100% !important;
+}
+
+.admin-mt-16 {
+    margin-top: 16px !important;
+}
+
+/* Pain Point Icon Colors */
+.zen-pain-icon-0 {
+    background-color: #ffdad6 !important;
+    color: #93000a !important;
+}
+
+.zen-pain-icon-1 {
+    background-color: #d9e5e1 !important;
+    color: #5b6764 !important;
+}
+
+.zen-pain-icon-2 {
+    background-color: #ffdad6 !important;
+    color: #93000a !important;
+}
+
+.zen-pain-icon-3 {
+    background-color: #182723 !important;
+    color: #7e8f89 !important;
+}

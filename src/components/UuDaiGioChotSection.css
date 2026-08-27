@@ -1,0 +1,326 @@
+/* ==========================================================================
+   UuDaiGioChotSection.css
+   Section Ưu Đãi Giờ Chót - Limited Sanctuary Offers
+   ========================================================================== */
+
+.udgc-section-root {
+    background: #e5efe8;
+    padding: 120px 0 130px;
+    color: #10201B;
+    font-family: 'Work Sans', 'Plus Jakarta Sans', sans-serif;
+    width: 100%;
+    overflow: hidden;
+    border-top: 1px solid rgba(16, 32, 27, 0.08);
+}
+
+.udgc-full-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 48px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+    .udgc-full-container {
+        padding: 0 20px !important;
+    }
+}
+
+.udgc-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 28px;
+    margin-bottom: 64px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid rgba(16, 32, 27, 0.12);
+}
+
+.udgc-badge {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #527059;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.udgc-title {
+    font-family: 'Libre Caslon Text', 'Playfair Display', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.15;
+    color: #10201B;
+    margin: 0;
+}
+
+.udgc-timer-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.udgc-timer-label-box {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #10201B;
+}
+
+.udgc-timer-label {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #10201B;
+}
+
+.udgc-timer-digits {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.udgc-timer-block {
+    background-color: #d8e5dc;
+    border: 1px solid rgba(16, 32, 27, 0.15);
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-family: 'Libre Caslon Text', Georgia, serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #10201B;
+}
+
+.udgc-timer-block.dark {
+    background-color: #10201B;
+    color: #ffffff;
+}
+
+.udgc-timer-colon {
+    font-weight: 700;
+    color: #10201B;
+}
+
+.udgc-editorial-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 64px 44px;
+}
+
+@media (max-width: 900px) {
+    .udgc-editorial-grid {
+        grid-template-columns: 1fr !important;
+        gap: 56px !important;
+    }
+}
+
+.udgc-editorial-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    background: transparent;
+}
+
+.udgc-editorial-img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #d8e5dc;
+}
+
+.udgc-editorial-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.udgc-editorial-card:hover .udgc-editorial-img-wrap img {
+    transform: scale(1.05);
+}
+
+.udgc-badges-top-left {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.udgc-discount-badge {
+    background: #ba1a1a;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 6px 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-transform: uppercase;
+}
+
+.udgc-flash-badge {
+    background: rgba(16, 32, 27, 0.85);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 6px 14px;
+    border-radius: 4px;
+}
+
+.udgc-cat-badge-top-right {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);
+    backdrop-filter: blur(10px);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 6px 14px;
+    text-transform: uppercase;
+    border-radius: 6px;
+    border: 1px solid rgba(254, 202, 202, 0.45);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+    display: inline-flex;
+    align-items: center;
+}
+
+.udgc-card-meta {
+    margin-top: 24px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.udgc-card-meta-text {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #527059;
+}
+
+.udgc-card-title {
+    font-family: 'Libre Caslon Text', 'Playfair Display', Georgia, serif;
+    font-size: clamp(22px, 2.2vw, 28px);
+    font-weight: 400;
+    line-height: 1.25;
+    color: #10201B;
+    margin: 0 0 12px 0;
+}
+
+.udgc-card-desc {
+    font-size: 14.5px;
+    color: #405246;
+    line-height: 1.65;
+    margin: 0 0 24px 0;
+    font-weight: 400;
+    min-height: 46px;
+}
+
+.udgc-card-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid rgba(16, 32, 27, 0.1);
+}
+
+.udgc-orig-price {
+    display: block;
+    font-size: 12px;
+    text-decoration: line-through;
+    color: rgba(16, 32, 27, 0.45);
+    margin-bottom: 2px;
+}
+
+.udgc-current-price {
+    font-family: 'Libre Caslon Text', Georgia, serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #10201B;
+}
+
+.udgc-current-price.discount {
+    color: #ba1a1a;
+}
+
+.udgc-editorial-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #10201B;
+    text-decoration: none;
+    border-bottom: 1.5px solid #10201B;
+    padding-bottom: 4px;
+    transition: all 0.25s ease;
+    margin-top: auto;
+}
+
+.udgc-editorial-card:hover .udgc-editorial-link {
+    color: #006d36;
+    border-bottom-color: #006d36;
+}
+
+.udgc-actions-center {
+    text-align: center;
+    margin-top: 64px;
+}
+
+.udgc-editorial-btn-more {
+    padding: 14px 38px;
+    border: 1.5px solid #10201B;
+    background: transparent;
+    color: #10201B;
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.udgc-editorial-btn-more:hover {
+    background: #10201B;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(16, 32, 27, 0.18);
+}
+
+.udgc-chevron-icon {
+    transition: transform 0.3s ease;
+}
+
+.udgc-chevron-icon.rotate {
+    transform: rotate(180deg);
+}

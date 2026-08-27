@@ -2,6 +2,7 @@ import React from 'react';
 import { RefreshCw, Plus, Edit2, Trash2 } from 'lucide-react';
 import { getImageUrl } from '../../services/apiService';
 import EmptyState from '../ui/EmptyState';
+import './AdminBlogManager.css';
 
 interface AdminBlogManagerProps {
   blogsList: any[];
@@ -27,46 +28,30 @@ export default function AdminBlogManager({
   );
 
   return (
-    <div style={{ width: '100%', boxSizing: 'border-box' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '24px', paddingBottom: '20px', borderBottom: '1px solid #e2e8f0' }}>
+    <div className="admin-blog-root">
+      <div className="admin-blog-header">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, color: '#0f766e', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+          <div className="admin-blog-meta-row">
+            <span className="admin-blog-tag">
               4U RETREAT • TIN TỨC & CẨM NANG
             </span>
-            <span style={{ height: '4px', width: '4px', borderRadius: '50%', backgroundColor: '#cbd5e1' }} />
-            <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748b' }}>
+            <span className="admin-blog-dot" />
+            <span className="admin-blog-subtag">
               Điều Hay & Chữa Lành
             </span>
           </div>
-          <h1 style={{ fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif", fontSize: '24px', margin: 0, color: '#0f172a', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.3 }}>
+          <h1 className="admin-blog-title">
             Quản Lý Bài Viết ({filtered.length})
           </h1>
-          <p style={{ margin: '4px 0 0 0', fontSize: '13.5px', color: '#64748b' }}>
+          <p className="admin-blog-desc">
             Biên tập, phân loại và quản lý các bài viết cẩm nang, lối sống tĩnh dưỡng của 4U Retreat.
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <div className="admin-blog-btn-group">
           <button
             type="button"
             onClick={() => window.location.reload()}
-            style={{
-              backgroundColor: '#ffffff',
-              color: '#334155',
-              border: '1px solid #cbd5e1',
-              borderRadius: '8px',
-              padding: '8px 14px',
-              fontSize: '13px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.15s ease'
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f8fafc')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ffffff')}
+            className="admin-blog-refresh-btn"
           >
             <RefreshCw size={14} color="#64748b" />
             <span>Làm Mới</span>
@@ -75,24 +60,7 @@ export default function AdminBlogManager({
           <button
             type="button"
             onClick={() => openCreateModal('blog')}
-            style={{
-              backgroundColor: '#0f766e',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '8px 16px',
-              fontSize: '13px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              whiteSpace: 'nowrap',
-              boxShadow: '0 1px 3px rgba(15, 118, 110, 0.2)',
-              transition: 'all 0.15s ease'
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#115e59')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#0f766e')}
+            className="admin-blog-add-btn"
           >
             <Plus size={15} />
             <span>Thêm Mới</span>
@@ -100,13 +68,13 @@ export default function AdminBlogManager({
         </div>
       </div>
 
-      <div style={{ marginBottom: '20px' }}>
+      <div className="admin-blog-search-wrap">
         <input
           type="text"
           placeholder="Tìm bài viết theo tiêu đề, danh mục..."
           value={searchFilter}
           onChange={(e) => setSearchFilter(e.target.value)}
-          style={{ width: '100%', maxWidth: '400px', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '14px' }}
+          className="admin-blog-search-input"
         />
       </div>
 
@@ -119,51 +87,29 @@ export default function AdminBlogManager({
           transparent={true}
         />
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+        <div className="admin-blog-grid">
           {filtered.map((blog) => (
-            <div key={blog.id} style={{ backgroundColor: '#ffffff', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(6, 27, 14, 0.08)', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ height: '160px', width: '100%', overflow: 'hidden' }}>
-                <img src={getImageUrl(blog.heroImage)} alt={blog.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <div key={blog.id} className="admin-blog-card">
+              <div className="admin-blog-card-img-wrap">
+                <img src={getImageUrl(blog.heroImage)} alt={blog.title} className="admin-blog-card-img" />
               </div>
-              <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
+              <div className="admin-blog-card-body">
                 <div>
-                  <span style={{ fontSize: '10px', fontWeight: 700, color: '#059669', textTransform: 'uppercase' }}>{blog.category}</span>
-                  <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '18px', color: '#081f13', margin: '4px 0 6px 0' }}>{blog.title}</h3>
-                  <p style={{ fontSize: '13px', color: '#525a54', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{blog.subtitle}</p>
+                  <span className="admin-blog-card-category">{blog.category}</span>
+                  <h3 className="admin-blog-card-title">{blog.title}</h3>
+                  <p className="admin-blog-card-sub">{blog.subtitle}</p>
                 </div>
-                <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                <div className="admin-blog-card-actions">
                   <button
                     onClick={() => openEditModal('blog', blog)}
-                    style={{
-                      width: '50px',
-                      height: '32px',
-                      backgroundColor: '#081f13',
-                      color: '#ffffff',
-                      border: 'none',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
+                    className="admin-blog-edit-btn"
                     title="Chỉnh sửa"
                   >
                     <Edit2 size={14} />
                   </button>
                   <button
                     onClick={() => handleDeleteItem('blog', blog.id)}
-                    style={{
-                      width: '50px',
-                      height: '32px',
-                      backgroundColor: '#fee2e2',
-                      color: '#dc2626',
-                      border: '1px solid #fca5a5',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
+                    className="admin-blog-delete-btn"
                     title="Xóa"
                   >
                     <Trash2 size={14} />

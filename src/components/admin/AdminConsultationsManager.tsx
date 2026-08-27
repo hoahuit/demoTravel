@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import EmptyState from '../ui/EmptyState';
+import './AdminConsultationsManager.css';
 import {
   Phone,
   Clock,
@@ -101,23 +102,23 @@ export default function AdminConsultationsManager({
   };
 
   return (
-    <div style={{ width: '100%', boxSizing: 'border-box' }}>
+    <div className="admin-consult-root">
       {/* HEADER BAR */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '24px', paddingBottom: '20px', borderBottom: '1px solid #e2e8f0' }}>
+      <div className="admin-consult-header">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, color: '#0f766e', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+          <div className="admin-consult-meta-row">
+            <span className="admin-consult-tag">
               4U RETREAT • QUẢN TRỊ KHÁCH HÀNG
             </span>
-            <span style={{ height: '4px', width: '4px', borderRadius: '50%', backgroundColor: '#cbd5e1' }} />
-            <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748b' }}>
+            <span className="admin-consult-dot" />
+            <span className="admin-consult-subtag">
               Lịch Hẹn Gọi Tư Vấn
             </span>
           </div>
-          <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '24px', margin: 0, color: '#0f172a', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.3 }}>
+          <h1 className="admin-consult-title">
             Quản Lý Lịch Hẹn Tư Vấn Tour
           </h1>
-          <p style={{ margin: '4px 0 0 0', fontSize: '13.5px', color: '#64748b' }}>
+          <p className="admin-consult-desc">
             Theo dõi danh sách khách hàng đăng ký nhận tư vấn lộ trình và khung giờ hẹn gọi lại.
           </p>
         </div>
@@ -127,28 +128,7 @@ export default function AdminConsultationsManager({
             type="button"
             onClick={onReload}
             disabled={isReloading}
-            style={{
-              backgroundColor: '#ffffff',
-              color: '#334155',
-              border: '1px solid #cbd5e1',
-              borderRadius: '8px',
-              padding: '8px 14px',
-              fontSize: '13px',
-              fontWeight: 600,
-              cursor: isReloading ? 'not-allowed' : 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.15s ease',
-              opacity: isReloading ? 0.7 : 1
-            }}
-            onMouseEnter={(e) => {
-              if (!isReloading) e.currentTarget.style.backgroundColor = '#f8fafc';
-            }}
-            onMouseLeave={(e) => {
-              if (!isReloading) e.currentTarget.style.backgroundColor = '#ffffff';
-            }}
+            className="admin-consult-refresh-btn"
           >
             <RefreshCw size={14} color="#64748b" className={isReloading ? 'animate-spin' : ''} />
             <span>{isReloading ? 'Đang tải...' : 'Làm Mới'}</span>
@@ -157,51 +137,51 @@ export default function AdminConsultationsManager({
       </div>
 
       {/* METRICS 4-CARDS ROW (RULE 85) */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '24px' }}>
-        <div style={{ backgroundColor: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #e5e7eb', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', marginBottom: '6px' }}>
+      <div className="admin-consult-metrics-grid">
+        <div className="admin-consult-metric-card">
+          <div className="admin-consult-metric-label">
             Tổng Lịch Hẹn
           </div>
-          <div style={{ fontSize: '26px', fontWeight: 800, color: '#081f13' }}>
+          <div className="admin-consult-metric-val">
             {metrics.total}
           </div>
-          <div style={{ fontSize: '11.5px', color: '#94a3b8', marginTop: '4px' }}>Cuộc hẹn từ website</div>
+          <div className="admin-consult-metric-sub">Cuộc hẹn từ website</div>
         </div>
 
-        <div style={{ backgroundColor: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #e5e7eb', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: '#b45309', textTransform: 'uppercase', marginBottom: '6px' }}>
+        <div className="admin-consult-metric-card">
+          <div className="admin-consult-metric-label pending">
             Chưa Tư Vấn
           </div>
-          <div style={{ fontSize: '26px', fontWeight: 800, color: '#b45309' }}>
+          <div className="admin-consult-metric-val pending">
             {metrics.pending}
           </div>
-          <div style={{ fontSize: '11.5px', color: '#b45309', marginTop: '4px' }}>Cần liên hệ sớm</div>
+          <div className="admin-consult-metric-sub pending">Cần liên hệ sớm</div>
         </div>
 
-        <div style={{ backgroundColor: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #e5e7eb', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: '#0369a1', textTransform: 'uppercase', marginBottom: '6px' }}>
+        <div className="admin-consult-metric-card">
+          <div className="admin-consult-metric-label processing">
             Đang Xử Lý
           </div>
-          <div style={{ fontSize: '26px', fontWeight: 800, color: '#0369a1' }}>
+          <div className="admin-consult-metric-val processing">
             {metrics.processing}
           </div>
-          <div style={{ fontSize: '11.5px', color: '#0369a1', marginTop: '4px' }}>Đang chăm sóc khách</div>
+          <div className="admin-consult-metric-sub processing">Đang chăm sóc khách</div>
         </div>
 
-        <div style={{ backgroundColor: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #e5e7eb', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: '#15803d', textTransform: 'uppercase', marginBottom: '6px' }}>
+        <div className="admin-consult-metric-card">
+          <div className="admin-consult-metric-label completed">
             Đã Hoàn Tất
           </div>
-          <div style={{ fontSize: '26px', fontWeight: 800, color: '#15803d' }}>
+          <div className="admin-consult-metric-val completed">
             {metrics.completed}
           </div>
-          <div style={{ fontSize: '11.5px', color: '#15803d', marginTop: '4px' }}>Tư vấn thành công</div>
+          <div className="admin-consult-metric-sub completed">Tư vấn thành công</div>
         </div>
       </div>
 
       {/* FILTER TABS & SEARCH BAR */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+      <div className="admin-consult-filter-row">
+        <div className="admin-consult-tabs">
           {[
             { id: 'all', label: `Tất Cả (${metrics.total})` },
             { id: 'pending', label: `Chờ Tư Vấn (${metrics.pending})` },
@@ -211,70 +191,52 @@ export default function AdminConsultationsManager({
             <button
               key={tab.id}
               onClick={() => setSelectedStatusTab(tab.id)}
-              style={{
-                padding: '7px 14px',
-                borderRadius: '8px',
-                border: selectedStatusTab === tab.id ? '1px solid #0f766e' : '1px solid #e2e8f0',
-                backgroundColor: selectedStatusTab === tab.id ? '#0f766e' : '#ffffff',
-                color: selectedStatusTab === tab.id ? '#ffffff' : '#475569',
-                fontSize: '12.5px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
+              className={`admin-consult-tab-btn ${selectedStatusTab === tab.id ? 'active' : ''}`}
             >
               {tab.label}
             </button>
           ))}
         </div>
 
-        <div style={{ position: 'relative', width: '280px' }}>
-          <Search size={15} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+        <div className="admin-consult-search-wrap">
+          <Search size={15} color="#94a3b8" className="admin-consult-search-icon" />
           <input
             type="text"
             placeholder="Tìm theo tên, SĐT, tour..."
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '8px 12px 8px 36px',
-              borderRadius: '8px',
-              border: '1px solid #cbd5e1',
-              fontSize: '13px',
-              outline: 'none',
-              boxSizing: 'border-box'
-            }}
+            className="admin-consult-search-input"
           />
         </div>
       </div>
 
       {/* TABLE CONTAINER & CARD (RULE 85) */}
-      <div style={{ background: '#ffffff', borderRadius: '14px', border: '1px solid #e5e7eb', overflow: 'hidden', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
+      <div className="admin-consult-table-wrap">
         {filteredConsultations.length === 0 ? (
           <EmptyState
             title="Không tìm thấy lịch hẹn tư vấn nào"
             description="Chưa có khách hàng đăng ký hoặc không có dữ liệu phù hợp với bộ lọc hiện tại."
           />
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+          <table className="admin-consult-table">
             <thead>
               <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e5e7eb' }}>
-                <th style={{ padding: '14px 20px', textAlign: 'left', fontSize: '12px', fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <th className="admin-consult-th customer">
                   Khách Hàng
                 </th>
-                <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '12px', fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <th className="admin-consult-th">
                   Tour Quan Tâm
                 </th>
-                <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '12px', fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <th className="admin-consult-th">
                   Khung Giờ Hẹn
                 </th>
-                <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '12px', fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <th className="admin-consult-th">
                   Ghi Chú Nhu Cầu
                 </th>
-                <th style={{ padding: '14px 16px', textAlign: 'left', fontSize: '12px', fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <th className="admin-consult-th">
                   Trạng Thái
                 </th>
-                <th style={{ padding: '14px 20px', textAlign: 'center', fontSize: '12px', fontWeight: 800, color: '#4b5563', textTransform: 'uppercase', letterSpacing: '0.05em', width: '130px' }}>
+                <th className="admin-consult-th actions">
                   Thao Tác
                 </th>
               </tr>
@@ -282,7 +244,6 @@ export default function AdminConsultationsManager({
             <tbody>
               {filteredConsultations.map((item, idx) => {
                 const badge = getStatusBadge(item.status);
-                const BadgeIcon = badge.icon;
                 const custName = item.customerName || item.name || 'Khách hàng 4U';
                 const custPhone = item.customerPhone || item.phone || 'Chưa cung cấp';
                 const custEmail = item.customerEmail || item.email || '';
@@ -291,21 +252,16 @@ export default function AdminConsultationsManager({
                 const note = item.note || item.message || '';
 
                 return (
-                  <tr
-                    key={item.id || idx}
-                    style={{ borderBottom: '1px solid #f1f5f9', verticalAlign: 'middle', transition: 'background 0.15s ease' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = '#f9fafb')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
-                  >
+                  <tr key={item.id || idx} className="admin-consult-tr">
                     {/* Customer Info */}
-                    <td style={{ padding: '14px 20px' }}>
+                    <td className="admin-consult-td customer">
                       <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '13.5px' }}>
                         {custName}
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px' }}>
                         <a
                           href={`tel:${custPhone}`}
-                          style={{ fontSize: '12px', color: '#0f766e', fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                          className="admin-consult-phone-link"
                         >
                           <Phone size={12} />
                           <span>{custPhone}</span>
@@ -314,7 +270,7 @@ export default function AdminConsultationsManager({
                           type="button"
                           onClick={(e) => handleCopyText(custPhone, `phone-${item.id || idx}`, e)}
                           title="Sao chép SĐT"
-                          style={{ background: 'none', border: 'none', padding: '2px', cursor: 'pointer', color: '#94a3b8' }}
+                          className="admin-consult-copy-btn"
                         >
                           {copiedKey === `phone-${item.id || idx}` ? <Check size={12} color="#16a34a" /> : <Copy size={12} />}
                         </button>
@@ -327,47 +283,42 @@ export default function AdminConsultationsManager({
                     </td>
 
                     {/* Tour Name */}
-                    <td style={{ padding: '14px 16px' }}>
-                      <div style={{ fontSize: '13px', fontWeight: 600, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <td className="admin-consult-td">
+                      <div className="admin-consult-tour-badge">
                         <Compass size={14} color="#0f766e" style={{ flexShrink: 0 }} />
                         <span>{tourName}</span>
                       </div>
                     </td>
 
                     {/* Preferred Call Time */}
-                    <td style={{ padding: '14px 16px' }}>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '12px', fontWeight: 600, color: '#475569', backgroundColor: '#f1f5f9', padding: '4px 10px', borderRadius: '6px' }}>
+                    <td className="admin-consult-td">
+                      <div className="admin-consult-time-tag">
                         <Clock size={12} />
                         <span>{callTime}</span>
                       </div>
                     </td>
 
                     {/* Customer Notes */}
-                    <td style={{ padding: '14px 16px', maxWidth: '240px' }}>
+                    <td className="admin-consult-td" style={{ maxWidth: '240px' }}>
                       {note ? (
-                        <div style={{ fontSize: '12px', color: '#475569', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                        <div className="admin-consult-note-text">
                           {note}
                         </div>
                       ) : (
-                        <span style={{ fontSize: '11.5px', color: '#94a3b8', fontStyle: 'italic' }}>Không có ghi chú thêm</span>
+                        <span className="admin-consult-note-empty">Không có ghi chú thêm</span>
                       )}
                     </td>
 
                     {/* Status Dropdown / Badge */}
-                    <td style={{ padding: '14px 16px' }}>
+                    <td className="admin-consult-td">
                       <select
                         value={item.status || 'Chưa tư vấn'}
                         onChange={(e) => handleStatusUpdate && handleStatusUpdate(item, e.target.value)}
+                        className="admin-consult-status-select"
                         style={{
-                          padding: '5px 10px',
-                          borderRadius: '6px',
                           border: `1px solid ${badge.border}`,
                           backgroundColor: badge.bg,
-                          color: badge.text,
-                          fontSize: '12px',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                          outline: 'none'
+                          color: badge.text
                         }}
                       >
                         <option value="Chưa tư vấn">Chưa tư vấn</option>
@@ -378,33 +329,13 @@ export default function AdminConsultationsManager({
                     </td>
 
                     {/* ACTION BUTTONS (RULE 85: 50px x 32px) */}
-                    <td style={{ padding: '14px 20px', textAlign: 'center' }}>
+                    <td className="admin-consult-td actions">
                       <div style={{ display: 'flex', justifyContent: 'center', gap: '6px' }}>
                         <button
                           type="button"
                           onClick={() => setSelectedDetailItem(item)}
                           title="Xem chi tiết cuộc hẹn"
-                          style={{
-                            width: '50px',
-                            height: '32px',
-                            borderRadius: '8px',
-                            border: '1px solid #e5e7eb',
-                            background: '#f9fafb',
-                            color: '#374151',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = '#f3f4f6';
-                            e.currentTarget.style.borderColor = '#d1d5db';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = '#f9fafb';
-                            e.currentTarget.style.borderColor = '#e5e7eb';
-                          }}
+                          className="admin-consult-btn-view"
                         >
                           <Eye size={15} />
                         </button>
@@ -413,21 +344,7 @@ export default function AdminConsultationsManager({
                           type="button"
                           onClick={() => handleDeleteItem('consultations', item.id)}
                           title="Xóa lịch hẹn"
-                          style={{
-                            width: '50px',
-                            height: '32px',
-                            borderRadius: '8px',
-                            border: '1px solid #fecaca',
-                            background: '#fff1f2',
-                            color: '#b91c1c',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            transition: 'all 0.15s ease'
-                          }}
-                          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#fee2e2')}
-                          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#fff1f2')}
+                          className="admin-consult-btn-delete"
                         >
                           <Trash2 size={15} />
                         </button>
@@ -443,34 +360,34 @@ export default function AdminConsultationsManager({
 
       {/* DETAIL MODAL FOR CONSULTATION */}
       {selectedDetailItem && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '16px' }}>
-          <div style={{ backgroundColor: '#ffffff', borderRadius: '16px', width: '100%', maxWidth: '540px', boxShadow: '0 20px 50px rgba(0,0,0,0.2)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        <div className="admin-consult-modal-backdrop">
+          <div className="admin-consult-modal-box">
             {/* Header */}
-            <div style={{ padding: '18px 24px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#f8fafc' }}>
+            <div className="admin-consult-modal-header">
               <div>
-                <h3 style={{ margin: 0, fontSize: '17px', fontWeight: 800, color: '#0f172a' }}>
+                <h3 className="admin-consult-modal-title">
                   Chi Tiết Lịch Hẹn Tư Vấn
                 </h3>
-                <span style={{ fontSize: '12px', color: '#64748b' }}>
+                <span className="admin-consult-modal-code">
                   Mã cuộc hẹn: #{selectedDetailItem.id || 'N/A'}
                 </span>
               </div>
               <button
                 onClick={() => setSelectedDetailItem(null)}
-                style={{ width: '32px', height: '32px', borderRadius: '50%', border: 'none', background: '#e2e8f0', color: '#475569', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                className="admin-consult-modal-close-btn"
               >
                 <X size={16} />
               </button>
             </div>
 
             {/* Body */}
-            <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div className="admin-consult-modal-body">
               {/* Customer Box */}
-              <div style={{ backgroundColor: '#f8fafc', borderRadius: '10px', padding: '14px 16px', border: '1px solid #e2e8f0' }}>
-                <div style={{ fontSize: '11px', fontWeight: 800, color: '#0f766e', textTransform: 'uppercase', marginBottom: '8px' }}>
+              <div className="admin-consult-modal-cust-box">
+                <div className="admin-consult-modal-cust-tag">
                   Thông Tin Khách Hàng
                 </div>
-                <div style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>
+                <div className="admin-consult-modal-cust-name">
                   {selectedDetailItem.customerName || selectedDetailItem.name || 'Khách hàng 4U'}
                 </div>
                 <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', fontSize: '13px', color: '#475569' }}>
@@ -489,7 +406,7 @@ export default function AdminConsultationsManager({
               {/* Consultation Details */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '13px' }}>
                 <div>
-                  <span style={{ color: '#64748b', display: 'block', fontSize: '11.5px', textTransform: 'uppercase', fontWeight: 700, marginBottom: '2px' }}>
+                  <span className="admin-consult-modal-field-title">
                     Tour Quan Tâm
                   </span>
                   <div style={{ fontWeight: 700, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -499,27 +416,27 @@ export default function AdminConsultationsManager({
                 </div>
 
                 <div>
-                  <span style={{ color: '#64748b', display: 'block', fontSize: '11.5px', textTransform: 'uppercase', fontWeight: 700, marginBottom: '2px' }}>
+                  <span className="admin-consult-modal-field-title">
                     Khung Giờ Hẹn Gọi Lại
                   </span>
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: 600, color: '#334155', backgroundColor: '#f1f5f9', padding: '4px 10px', borderRadius: '6px' }}>
+                  <div className="admin-consult-time-tag">
                     <Clock size={13} color="#0f766e" />
                     <span>{selectedDetailItem.preferredCallTime || 'Sáng (8h - 12h)'}</span>
                   </div>
                 </div>
 
                 <div>
-                  <span style={{ color: '#64748b', display: 'block', fontSize: '11.5px', textTransform: 'uppercase', fontWeight: 700, marginBottom: '2px' }}>
+                  <span className="admin-consult-modal-field-title">
                     Ghi Chú Nhu Cầu Của Khách
                   </span>
-                  <div style={{ backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '10px 12px', color: '#334155', lineHeight: 1.5, minHeight: '60px' }}>
+                  <div className="admin-consult-modal-note-box">
                     {selectedDetailItem.note || selectedDetailItem.message || 'Khách hàng không để lại ghi chú thêm.'}
                   </div>
                 </div>
               </div>
 
               {/* Status Update Dropdown */}
-              <div style={{ paddingTop: '10px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="admin-consult-modal-status-row">
                 <span style={{ fontSize: '13px', fontWeight: 600, color: '#475569' }}>Cập nhật trạng thái:</span>
                 <select
                   value={selectedDetailItem.status || 'Chưa tư vấn'}
@@ -530,7 +447,7 @@ export default function AdminConsultationsManager({
                     }
                     setSelectedDetailItem({ ...selectedDetailItem, status: newStatus });
                   }}
-                  style={{ padding: '6px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 700, color: '#0f172a', outline: 'none' }}
+                  className="admin-consult-modal-status-select"
                 >
                   <option value="Chưa tư vấn">Chưa tư vấn</option>
                   <option value="Đang xử lý">Đang liên hệ</option>
@@ -541,16 +458,16 @@ export default function AdminConsultationsManager({
             </div>
 
             {/* Footer Actions */}
-            <div style={{ padding: '14px 24px', backgroundColor: '#f8fafc', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <div className="admin-consult-modal-footer">
               <button
                 onClick={() => setSelectedDetailItem(null)}
-                style={{ padding: '8px 18px', borderRadius: '8px', border: '1px solid #cbd5e1', backgroundColor: '#ffffff', color: '#334155', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}
+                className="admin-consult-modal-dismiss-btn"
               >
                 Đóng
               </button>
               <a
                 href={`tel:${selectedDetailItem.customerPhone || selectedDetailItem.phone}`}
-                style={{ padding: '8px 18px', borderRadius: '8px', border: 'none', backgroundColor: '#0f766e', color: '#ffffff', fontSize: '13px', fontWeight: 700, cursor: 'pointer', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                className="admin-consult-modal-call-btn"
               >
                 <PhoneCall size={14} />
                 <span>Gọi Khách Ngay</span>

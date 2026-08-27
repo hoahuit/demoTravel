@@ -1,5 +1,6 @@
 import React from 'react';
 import ToursPage from '../../../components/ToursPage';
+import './UuDaiGioChot.css';
 
 interface UuDaiGioChotProps {
   onNavigate: (path: string) => void;

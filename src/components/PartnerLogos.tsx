@@ -101,9 +101,9 @@ export default function PartnerLogos() {
 
         <div className="partner-logos-track-wrap">
           <div className="partner-logos-track-overflow">
-            <div className="infinite-slider-track" style={{ display: 'flex', gap: '60px', alignItems: 'center', width: 'max-content' }}>
+            <div className="infinite-slider-track">
               {duplicatedLogos.map((brand, idx) => (
-                <div key={idx} className="partner-logos-item" style={{ fontSize: '20px', fontWeight: 700, color: '#1E4A3D' }}>
+                <div key={idx} className="partner-logos-item">
                   {brand.svg ? brand.svg : brand.name || brand.logoText}
                 </div>
               ))}

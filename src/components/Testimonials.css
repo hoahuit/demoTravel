@@ -1,3 +1,42 @@
+.testimonials-section {
+  background: #e5efe8;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #10201B;
+  padding: 90px 0 100px 0;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.testimonials-header-container {
+  max-width: 640px;
+  margin: 0 auto 64px;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.testimonials-header-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.15;
+  margin-bottom: 18px;
+  color: #10201B;
+  letter-spacing: -0.01em;
+}
+
+.testimonials-title-accent {
+  color: #2D5A36;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.testimonials-header-desc {
+  font-size: 15.5px;
+  color: rgba(16, 32, 27, 0.6);
+  line-height: 1.6;
+  margin: 0;
+}
+
 .testimonials-header-badge {
   display: inline-flex;
   align-items: center;
@@ -29,6 +68,13 @@
   padding: 24px 0 32px;
   mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+.testimonials-track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  will-change: transform;
 }
 
 .testimonial-card {
@@ -76,10 +122,18 @@
   transition: border-color 0.45s ease;
 }
 
+.testimonial-img-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .testimonial-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  background: #1e4a3d;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -102,42 +156,53 @@
   color: #10201B;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+  margin-bottom: 2px;
+  transition: color 0.45s ease;
 }
 
 .testimonial-verified {
-  width: 13px;
-  height: 13px;
+  width: 15px;
+  height: 15px;
   fill: #2D5A36;
 }
 
 .testimonial-card .who span {
-  font-size: 12px;
+  font-size: 12.5px;
   color: rgba(16, 32, 27, 0.5);
-  margin-top: 1px;
+  transition: color 0.45s ease;
 }
 
-.testimonial-card.is-active {
-  background: #ffffff;
-  border-color: rgba(45, 90, 54, 0.28);
-  box-shadow: 0 20px 45px rgba(16, 32, 27, 0.09), 0 0 0 1px rgba(45, 90, 54, 0.15);
-}
-
+/* Active Highlight Style (Green card) */
+.testimonial-card.is-active,
 .testimonial-card.is-hovered {
-  filter: none !important;
-  opacity: 1 !important;
-  transform: translateY(-16px) scale(1.1) !important;
-  z-index: 5;
+  background: #14382c;
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 40px rgba(12, 38, 32, 0.35);
+  transform: translateY(-4px) scale(1.02);
 }
 
-@media(max-width: 640px) {
-  .testimonial-card {
-    flex: 0 0 280px;
-    padding: 22px 20px 20px;
-  }
+.testimonial-card.is-active blockquote,
+.testimonial-card.is-hovered blockquote {
+  color: #f1f5f3;
+}
 
-  .testimonial-card blockquote {
-    min-height: auto;
-    font-size: 14px;
-  }
+.testimonial-card.is-active .person,
+.testimonial-card.is-hovered .person {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.testimonial-card.is-active .who strong,
+.testimonial-card.is-hovered .who strong {
+  color: #ffffff;
+}
+
+.testimonial-card.is-active .who span,
+.testimonial-card.is-hovered .who span {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.testimonial-card.is-active .testimonial-verified,
+.testimonial-card.is-hovered .testimonial-verified {
+  fill: #6ee7b7;
 }

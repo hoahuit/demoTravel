@@ -1,0 +1,89 @@
+/* ==========================================================================
+   testimonials-columns-1.css
+   Cột chuyển động đánh giá khách hàng (Infinite Marquee Column)
+   ========================================================================== */
+
+.testimonials-column-wrapper {
+    width: 100%;
+    min-width: 0;
+}
+
+.testimonials-motion-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-bottom: 24px;
+    width: 100%;
+}
+
+.testimonial-quote-card {
+    background: #ffffff;
+    border: 1px solid rgba(74, 124, 89, 0.2);
+    border-radius: 24px;
+    padding: 28px 24px;
+    box-shadow: 0 10px 30px rgba(22, 48, 29, 0.05);
+    width: 100%;
+    box-sizing: border-box;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonial-quote-stars {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 14px;
+}
+
+.testimonial-quote-text {
+    font-size: 0.96rem;
+    line-height: 1.65;
+    color: #142619;
+    font-weight: 400;
+    margin: 0 0 20px 0;
+}
+
+.testimonial-author-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(74, 124, 89, 0.12);
+}
+
+.testimonial-author-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid #2d5a36;
+    flex-shrink: 0;
+}
+
+.testimonial-author-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.testimonial-author-name {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #142619;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.testimonial-author-name-icon {
+    flex-shrink: 0;
+}
+
+.testimonial-author-role {
+    font-size: 0.78rem;
+    color: #527059;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

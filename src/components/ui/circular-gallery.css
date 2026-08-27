@@ -1,0 +1,169 @@
+/* ==========================================================================
+   circular-gallery.css
+   Băng xoay ảnh 3D tròn (Apple VisionPro 3D Carousel Gallery)
+   ========================================================================== */
+
+.circular-gallery-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    user-select: none;
+    perspective: 1800px;
+    padding-top: 0;
+    padding-bottom: 0;
+    height: var(--gallery-height, 500px);
+}
+
+.circular-gallery-nav-btn {
+    position: absolute;
+    top: 38%;
+    transform: translateY(-50%);
+    z-index: 50;
+    width: var(--btn-size, 54px);
+    height: var(--btn-size, 54px);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #1d1d1f;
+    transition: all 0.25s ease;
+}
+
+.circular-gallery-nav-btn.prev {
+    left: 24px;
+}
+
+.circular-gallery-nav-btn.next {
+    right: 24px;
+}
+
+.circular-gallery-nav-btn:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
+.circular-gallery-3d-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform: rotateY(var(--rot-y, 0deg));
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.circular-gallery-3d-stage.is-dragging {
+    transition: none;
+}
+
+.circular-gallery-item-slot {
+    position: absolute;
+    width: var(--card-w, 360px);
+    height: var(--card-h, 480px);
+    transform: rotateY(var(--item-angle, 0deg)) translateZ(var(--radius, 600px)) rotateY(var(--card-rotate-y, 0deg)) scale(var(--scale, 1));
+    left: 50%;
+    top: 50%;
+    margin-left: calc(var(--card-w, 360px) / -2);
+    margin-top: calc(var(--card-h, 480px) / -2);
+    opacity: var(--opacity, 1);
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    backface-visibility: hidden;
+    cursor: grab;
+    z-index: var(--z-idx, 10);
+}
+
+.circular-gallery-card-squircle {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 28px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.circular-gallery-card-squircle.center {
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
+    border: 2px solid rgba(212, 175, 55, 0.7);
+}
+
+.circular-gallery-card-squircle.non-center {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.circular-gallery-card-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--obj-pos, center);
+}
+
+.circular-gallery-card-img.center {
+    filter: none;
+}
+
+.circular-gallery-card-img.non-center {
+    filter: brightness(0.85);
+}
+
+.circular-gallery-card-vignette {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(13, 13, 18, 0.92) 0%, rgba(13, 13, 18, 0.3) 55%, transparent 100%);
+}
+
+.circular-gallery-card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+    color: #ffffff;
+}
+
+.circular-gallery-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+}
+
+.circular-gallery-card-title {
+    font-size: 1.45rem;
+    font-weight: 800;
+    margin: 0;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.circular-gallery-card-sub {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-style: italic;
+    margin-top: 3px;
+}
+
+.circular-gallery-card-author {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}

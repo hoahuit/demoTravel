@@ -6,6 +6,7 @@ import {
   deleteMenuCategoryApi,
   MenuCategoryItem
 } from '../../services/apiService';
+import './AdminCategoriesManager.css';
 import {
   FolderTree,
   Plus,
@@ -235,73 +236,36 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
 
   const renderIcon = (iconName?: string, color?: string, size = 16) => {
     const IconComponent = (iconName && AVAILABLE_ICONS[iconName]) || FolderTree;
-    return <IconComponent size={size} style={{ color: color || '#4ade80' }} />;
+    return <IconComponent size={size} color={color || '#4ade80'} />;
   };
 
   return (
-    <div style={{ width: '100%', boxSizing: 'border-box' }}>
+    <div className="admin-categories-root">
       {/* Header & Controls */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          flexWrap: 'wrap',
-          gap: '16px',
-          marginBottom: '24px',
-          paddingBottom: '20px',
-          borderBottom: '1px solid #e2e8f0'
-        }}
-      >
+      <div className="admin-categories-header">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, color: '#0f766e', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+          <div className="admin-categories-meta-row">
+            <span className="admin-categories-tag">
               4U RETREAT • ĐIỀU HƯỚNG & DANH MỤC
             </span>
-            <span style={{ height: '4px', width: '4px', borderRadius: '50%', backgroundColor: '#cbd5e1' }} />
-            <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748b' }}>
+            <span className="admin-categories-dot" />
+            <span className="admin-categories-subtag">
               Header & Mega Menu
             </span>
           </div>
-          <h1
-            style={{
-              fontSize: '24px',
-              fontWeight: 700,
-              color: '#0f172a',
-              fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-              margin: '0 0 4px 0',
-              letterSpacing: '-0.02em',
-              lineHeight: 1.3
-            }}
-          >
+          <h1 className="admin-categories-title">
             Danh Mục Menu
           </h1>
-          <p style={{ fontSize: '13.5px', color: '#64748b', margin: 0 }}>
+          <p className="admin-categories-desc">
             Quản lý quan hệ Cha - Con cho Menu Header và phân loại nhiều danh mục cho từng gói Tour.
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <div className="admin-categories-btn-group">
           <button
             type="button"
             onClick={() => loadCategories(true)}
-            style={{
-              backgroundColor: '#ffffff',
-              color: '#334155',
-              border: '1px solid #cbd5e1',
-              borderRadius: '8px',
-              padding: '8px 14px',
-              fontSize: '13px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.15s ease'
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f8fafc')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ffffff')}
+            className="admin-categories-refresh-btn"
           >
             <RefreshCw size={14} color="#64748b" />
             <span>Làm Mới</span>
@@ -310,23 +274,7 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
           <button
             type="button"
             onClick={() => handleOpenCreate(null, 'mega_menu')}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              backgroundColor: '#0f766e',
-              color: '#ffffff',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '8px',
-              fontWeight: 600,
-              fontSize: '13px',
-              cursor: 'pointer',
-              boxShadow: '0 1px 3px rgba(15, 118, 110, 0.2)',
-              transition: 'all 0.15s ease'
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#115e59')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#0f766e')}
+            className="admin-categories-add-btn"
           >
             <Plus size={15} />
             <span>Thêm Mới</span>
@@ -335,43 +283,19 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
       </div>
 
       {/* Filter Bar */}
-      <div
-        style={{
-          backgroundColor: '#ffffff',
-          borderRadius: '14px',
-          padding: '14px 18px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-          marginBottom: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px'
-        }}
-      >
-        <Search size={18} style={{ color: '#819986' }} />
+      <div className="admin-categories-search-bar">
+        <Search size={18} color="#819986" />
         <input
           type="text"
           placeholder="Tìm kiếm danh mục theo tên, slug, mô tả..."
           value={searchFilter}
           onChange={(e) => setSearchFilter(e.target.value)}
-          style={{
-            border: 'none',
-            outline: 'none',
-            fontSize: '14px',
-            width: '100%',
-            color: '#081f13'
-          }}
+          className="admin-categories-search-input"
         />
         {searchFilter && (
           <button
             onClick={() => setSearchFilter('')}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#819986',
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontWeight: 600
-            }}
+            className="admin-categories-clear-filter-btn"
           >
             Xóa lọc
           </button>
@@ -385,53 +309,26 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           {/* SECTION 1: FIXED TOP BADGES */}
-          <div
-            style={{
-              backgroundColor: '#ffffff',
-              borderRadius: '16px',
-              padding: '20px',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
-              border: '1px solid rgba(8, 31, 19, 0.08)'
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '16px',
-                borderBottom: '1px solid #edf2ee',
-                paddingBottom: '12px'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Crown size={18} style={{ color: '#e5a50a' }} />
-                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#081f13' }}>
+          <div className="admin-categories-section-card">
+            <div className="admin-categories-card-header">
+              <div className="admin-categories-card-title-wrap">
+                <Crown size={18} color="#e5a50a" />
+                <h3 className="admin-categories-card-title">
                   Menu Cố Định Hàng Trên (Fixed Top Badges)
                 </h3>
               </div>
               <button
                 onClick={() => handleOpenCreate(null, 'fixed_top')}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#059669',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
+                className="admin-categories-quick-add-btn"
               >
                 <Plus size={14} /> Thêm Mục Hàng Trên
               </button>
             </div>
 
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+              <table className="admin-categories-table">
                 <thead>
-                  <tr style={{ backgroundColor: '#f7f9f7', color: '#4d6453', textAlign: 'left' }}>
+                  <tr className="admin-categories-th-row">
                     <th style={{ padding: '10px 14px', borderRadius: '6px 0 0 6px' }}>Icon</th>
                     <th style={{ padding: '10px 14px' }}>Tên Danh Mục</th>
                     <th style={{ padding: '10px 14px' }}>Slug Định Danh</th>
@@ -455,15 +352,7 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                         <td style={{ padding: '12px 14px' }}>{renderIcon(item.icon, item.color, 18)}</td>
                         <td style={{ padding: '12px 14px', fontWeight: 700, color: '#081f13' }}>{item.name}</td>
                         <td style={{ padding: '12px 14px' }}>
-                          <code
-                            style={{
-                              backgroundColor: '#edf4ef',
-                              color: '#084826',
-                              padding: '3px 8px',
-                              borderRadius: '6px',
-                              fontSize: '12px'
-                            }}
-                          >
+                          <code className="admin-categories-slug-badge">
                             {item.slug}
                           </code>
                         </td>
@@ -472,36 +361,14 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                           <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
                             <button
                               onClick={() => handleOpenEdit(item)}
-                              style={{
-                                width: '50px',
-                                height: '32px',
-                                background: '#e8ece9',
-                                border: '1px solid rgba(8, 31, 19, 0.12)',
-                                color: '#081f13',
-                                borderRadius: '8px',
-                                cursor: 'pointer',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
+                              className="admin-categories-btn-edit"
                               title="Chỉnh sửa"
                             >
                               <Edit2 size={14} />
                             </button>
                             <button
                               onClick={() => handleDelete(item)}
-                              style={{
-                                width: '50px',
-                                height: '32px',
-                                background: '#fee2e2',
-                                border: '1px solid #fecdd3',
-                                color: '#dc2626',
-                                borderRadius: '8px',
-                                cursor: 'pointer',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
+                              className="admin-categories-btn-delete"
                               title="Xóa"
                             >
                               <Trash2 size={14} />
@@ -517,53 +384,26 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
           </div>
 
           {/* SECTION 2: MAIN MEGA MENUS (TREE VIEW CHA - CON) */}
-          <div
-            style={{
-              backgroundColor: '#ffffff',
-              borderRadius: '16px',
-              padding: '20px',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
-              border: '1px solid rgba(8, 31, 19, 0.08)'
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '16px',
-                borderBottom: '1px solid #edf2ee',
-                paddingBottom: '12px'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Layers size={18} style={{ color: '#059669' }} />
-                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#081f13' }}>
+          <div className="admin-categories-section-card">
+            <div className="admin-categories-card-header">
+              <div className="admin-categories-card-title-wrap">
+                <Layers size={18} color="#059669" />
+                <h3 className="admin-categories-card-title">
                   Menu Hàng Dưới & Danh Mục Phân Cấp (Mega Menu)
                 </h3>
               </div>
               <button
                 onClick={() => handleOpenCreate(null, 'mega_menu')}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#059669',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
+                className="admin-categories-quick-add-btn"
               >
                 <Plus size={14} /> Thêm Menu Cha
               </button>
             </div>
 
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+              <table className="admin-categories-table">
                 <thead>
-                  <tr style={{ backgroundColor: '#f7f9f7', color: '#4d6453', textAlign: 'left' }}>
+                  <tr className="admin-categories-th-row">
                     <th style={{ padding: '10px 14px', borderRadius: '6px 0 0 6px', width: '60px' }}>Icon</th>
                     <th style={{ padding: '10px 14px' }}>Cấu Trúc Danh Mục (Cha & Con)</th>
                     <th style={{ padding: '10px 14px' }}>Slug Định Danh</th>
@@ -613,15 +453,7 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                               </div>
                             </td>
                             <td style={{ padding: '14px' }}>
-                              <code
-                                style={{
-                                  backgroundColor: '#edf4ef',
-                                  color: '#084826',
-                                  padding: '3px 8px',
-                                  borderRadius: '6px',
-                                  fontSize: '12px'
-                                }}
-                              >
+                              <code className="admin-categories-slug-badge">
                                 {parent.slug}
                               </code>
                             </td>
@@ -635,54 +467,20 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                               <div style={{ display: 'inline-flex', gap: '8px' }}>
                                 <button
                                   onClick={() => handleOpenCreate(parent.slug, 'mega_menu')}
-                                  style={{
-                                    background: '#dcfce7',
-                                    border: '1px solid #bbf7d0',
-                                    color: '#15803d',
-                                    padding: '6px 12px',
-                                    borderRadius: '6px',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '4px',
-                                    fontSize: '12px',
-                                    fontWeight: 700
-                                  }}
+                                  className="admin-categories-btn-add-sub"
                                 >
                                   <Plus size={13} /> Thêm Con
                                 </button>
                                 <button
                                   onClick={() => handleOpenEdit(parent)}
-                                  style={{
-                                    width: '50px',
-                                    height: '32px',
-                                    background: '#e8ece9',
-                                    border: '1px solid rgba(8, 31, 19, 0.12)',
-                                    color: '#081f13',
-                                    borderRadius: '8px',
-                                    cursor: 'pointer',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                  }}
+                                  className="admin-categories-btn-edit"
                                   title="Chỉnh sửa"
                                 >
                                   <Edit2 size={14} />
                                 </button>
                                 <button
                                   onClick={() => handleDelete(parent)}
-                                  style={{
-                                    width: '50px',
-                                    height: '32px',
-                                    background: '#fee2e2',
-                                    border: '1px solid #fecdd3',
-                                    color: '#dc2626',
-                                    borderRadius: '8px',
-                                    cursor: 'pointer',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                  }}
+                                  className="admin-categories-btn-delete"
                                   title="Xóa"
                                 >
                                   <Trash2 size={14} />
@@ -705,23 +503,14 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                               </td>
                               <td style={{ padding: '10px 14px' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingLeft: '16px' }}>
-                                  <CornerDownRight size={14} style={{ color: '#059669' }} />
+                                  <CornerDownRight size={14} color="#059669" />
                                   <span style={{ fontWeight: 600, color: '#1e293b', fontSize: '13px' }}>
                                     {sub.name}
                                   </span>
                                 </div>
                               </td>
                               <td style={{ padding: '10px 14px' }}>
-                                <code
-                                  style={{
-                                    backgroundColor: '#f8fafc',
-                                    border: '1px solid #e2e8f0',
-                                    color: '#334155',
-                                    padding: '2px 6px',
-                                    borderRadius: '4px',
-                                    fontSize: '11px'
-                                  }}
-                                >
+                                <code className="admin-categories-sub-slug-badge">
                                   {sub.slug}
                                 </code>
                               </td>
@@ -735,36 +524,14 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                                 <div style={{ display: 'inline-flex', gap: '6px' }}>
                                   <button
                                     onClick={() => handleOpenEdit(sub)}
-                                    style={{
-                                      width: '50px',
-                                      height: '32px',
-                                      background: '#f1f5f9',
-                                      border: '1px solid #cbd5e1',
-                                      color: '#334155',
-                                      borderRadius: '8px',
-                                      cursor: 'pointer',
-                                      display: 'inline-flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center'
-                                    }}
+                                    className="admin-categories-btn-edit"
                                     title="Chỉnh sửa"
                                   >
                                     <Edit2 size={13} />
                                   </button>
                                   <button
                                     onClick={() => handleDelete(sub)}
-                                    style={{
-                                      width: '50px',
-                                      height: '32px',
-                                      background: '#fee2e2',
-                                      border: '1px solid #fecdd3',
-                                      color: '#dc2626',
-                                      borderRadius: '8px',
-                                      cursor: 'pointer',
-                                      display: 'inline-flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center'
-                                    }}
+                                    className="admin-categories-btn-delete"
                                     title="Xóa"
                                   >
                                     <Trash2 size={13} />
@@ -786,49 +553,16 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
 
       {/* CREATE / EDIT MODAL */}
       {modalOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(0,0,0,0.65)',
-            backdropFilter: 'blur(5px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 10000,
-            padding: '20px'
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: '#ffffff',
-              borderRadius: '18px',
-              padding: '28px',
-              width: '100%',
-              maxWidth: '560px',
-              maxHeight: '90vh',
-              overflowY: 'auto',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.25)'
-            }}
-          >
-            <h2
-              style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
-                fontSize: '20px',
-                fontWeight: 700,
-                color: '#081f13',
-                margin: '0 0 20px 0',
-                borderBottom: '1px solid #edf2ee',
-                paddingBottom: '12px'
-              }}
-            >
+        <div className="admin-categories-modal-backdrop">
+          <div className="admin-categories-modal-box">
+            <h2 className="admin-categories-modal-title">
               {isEditing ? 'Chỉnh Sửa Danh Mục' : 'Thêm Danh Mục Mới'}
             </h2>
 
-            <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <form onSubmit={handleSave} className="admin-categories-modal-form">
               {/* Tên Danh Mục */}
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                <label className="admin-categories-modal-label">
                   Tên Danh Mục <span style={{ color: '#ef4444' }}>*</span>
                 </label>
                 <input
@@ -837,13 +571,13 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                   placeholder="Ví dụ: Retreat Chữa Lành, Yoga & Spa..."
                   value={editingItem.name || ''}
                   onChange={(e) => handleNameChange(e.target.value)}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(8, 31, 19, 0.18)', fontSize: '14px', outline: 'none' }}
+                  className="admin-categories-modal-input"
                 />
               </div>
 
               {/* Slug */}
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                <label className="admin-categories-modal-label">
                   Slug Định Danh (Dùng trong URL & Tour Categories) <span style={{ color: '#ef4444' }}>*</span>
                 </label>
                 <input
@@ -852,20 +586,21 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                   placeholder="chua-lanh"
                   value={editingItem.slug || ''}
                   onChange={(e) => setEditingItem({ ...editingItem, slug: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(8, 31, 19, 0.18)', fontSize: '14px', outline: 'none', fontFamily: 'monospace' }}
+                  className="admin-categories-modal-input"
+                  style={{ fontFamily: 'monospace' }}
                 />
               </div>
 
               {/* Menu Type & Menu Cha */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                 <div>
-                  <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                  <label className="admin-categories-modal-label">
                     Vị Trí Menu
                   </label>
                   <select
                     value={editingItem.menuType || 'mega_menu'}
                     onChange={(e) => setEditingItem({ ...editingItem, menuType: e.target.value, parentSlug: e.target.value === 'fixed_top' ? null : editingItem.parentSlug })}
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(8, 31, 19, 0.18)', fontSize: '14px', backgroundColor: '#ffffff', outline: 'none' }}
+                    className="admin-categories-modal-select"
                   >
                     <option value="mega_menu">Hàng Dưới (Mega Menu)</option>
                     <option value="fixed_top">Hàng Trên (Menu Cố Định)</option>
@@ -873,14 +608,15 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                  <label className="admin-categories-modal-label">
                     Menu Cha (Parent)
                   </label>
                   <select
                     disabled={editingItem.menuType === 'fixed_top'}
                     value={editingItem.parentSlug || ''}
                     onChange={(e) => setEditingItem({ ...editingItem, parentSlug: e.target.value ? e.target.value : null })}
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(8, 31, 19, 0.18)', fontSize: '14px', backgroundColor: editingItem.menuType === 'fixed_top' ? '#f1f5f9' : '#ffffff', outline: 'none' }}
+                    className="admin-categories-modal-select"
+                    style={{ backgroundColor: editingItem.menuType === 'fixed_top' ? '#f1f5f9' : '#ffffff' }}
                   >
                     <option value="">-- Là Menu Cha (Không có cha) --</option>
                     {potentialParents.map((p) => (
@@ -895,13 +631,13 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
               {/* Icon & Màu Sắc & Thứ Tự */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' }}>
                 <div>
-                  <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                  <label className="admin-categories-modal-label">
                     Icon
                   </label>
                   <select
                     value={editingItem.icon || 'Leaf'}
                     onChange={(e) => setEditingItem({ ...editingItem, icon: e.target.value })}
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(8, 31, 19, 0.18)', fontSize: '14px', backgroundColor: '#ffffff', outline: 'none' }}
+                    className="admin-categories-modal-select"
                   >
                     {Object.keys(AVAILABLE_ICONS).map((iconName) => (
                       <option key={iconName} value={iconName}>
@@ -912,7 +648,7 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                  <label className="admin-categories-modal-label">
                     Màu Sắc
                   </label>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -926,27 +662,28 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                       type="text"
                       value={editingItem.color || '#4ade80'}
                       onChange={(e) => setEditingItem({ ...editingItem, color: e.target.value })}
-                      style={{ flex: 1, padding: '10px 10px', borderRadius: '8px', border: '1px solid rgba(8, 31, 19, 0.18)', fontSize: '13px', fontFamily: 'monospace' }}
+                      className="admin-categories-modal-input"
+                      style={{ fontFamily: 'monospace' }}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                  <label className="admin-categories-modal-label">
                     Thứ Tự Sắp Xếp
                   </label>
                   <input
                     type="number"
                     value={editingItem.orderIndex ?? 1}
                     onChange={(e) => setEditingItem({ ...editingItem, orderIndex: parseInt(e.target.value, 10) || 0 })}
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(8, 31, 19, 0.18)', fontSize: '14px', outline: 'none' }}
+                    className="admin-categories-modal-input"
                   />
                 </div>
               </div>
 
               {/* Mô Tả */}
               <div>
-                <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                <label className="admin-categories-modal-label">
                   Mô Tả Ngắn (Hiển thị Tooltip hoặc Subtitle)
                 </label>
                 <textarea
@@ -954,7 +691,7 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                   placeholder="Mô tả trải nghiệm của danh mục..."
                   value={editingItem.description || ''}
                   onChange={(e) => setEditingItem({ ...editingItem, description: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(8, 31, 19, 0.18)', fontSize: '14px', outline: 'none', resize: 'vertical' }}
+                  className="admin-categories-modal-textarea"
                 />
               </div>
 
@@ -963,31 +700,13 @@ export default function AdminCategoriesManager({ toast }: AdminCategoriesManager
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  style={{
-                    backgroundColor: '#ffffff',
-                    color: '#4d6453',
-                    border: '1px solid rgba(8,31,19,0.18)',
-                    padding: '10px 18px',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontWeight: 600,
-                    fontSize: '13px'
-                  }}
+                  className="admin-categories-modal-dismiss-btn"
                 >
                   Hủy Bỏ
                 </button>
                 <button
                   type="submit"
-                  style={{
-                    backgroundColor: '#081f13',
-                    color: '#ffffff',
-                    border: 'none',
-                    padding: '10px 22px',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontWeight: 700,
-                    fontSize: '13px'
-                  }}
+                  className="admin-categories-modal-save-btn"
                 >
                   {isEditing ? 'Lưu Thay Đổi' : 'Tạo Danh Mục'}
                 </button>

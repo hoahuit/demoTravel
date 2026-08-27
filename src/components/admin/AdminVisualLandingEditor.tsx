@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../SectionLandingPage.css';
+import './AdminVisualLandingEditor.css';
 import {
     ArrowRight,
     PlayCircle,
@@ -261,7 +262,6 @@ export default function AdminVisualLandingEditor({
         onSave,
         as: Component = 'span',
         className = '',
-        style,
         placeholder = 'Nhấp để nhập chữ...',
         children
     }: {
@@ -269,7 +269,6 @@ export default function AdminVisualLandingEditor({
         onSave: (val: string) => void;
         as?: any;
         className?: string;
-        style?: React.CSSProperties;
         placeholder?: string;
         children?: React.ReactNode;
     }) => {
@@ -278,15 +277,6 @@ export default function AdminVisualLandingEditor({
                 contentEditable
                 suppressContentEditableWarning
                 className={`admin-inline-editable ${className}`}
-                style={{
-                    ...style,
-                    outline: 'none',
-                    minWidth: '20px',
-                    display: style?.display || (Component === 'span' ? 'inline-block' : undefined),
-                    borderRadius: '4px',
-                    transition: 'all 0.15s ease',
-                    cursor: 'text'
-                }}
                 onBlur={(e: React.FocusEvent<HTMLElement>) => {
                     const newText = e.currentTarget.innerText.trim();
                     if (newText !== (value || '')) {
@@ -306,11 +296,11 @@ export default function AdminVisualLandingEditor({
     const ABOUT_IMG = about.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCugcyFbQTVlM8o720zc8FSyMRmNEAxlQL9nGYt69uUjZMLJJ5W9ohqxiIg2wKUN_a1c3qG0df0X-rOlykE6j_ATlcu6BY1XoDwPIsniF4TS7jpnpDezoTGoGKxsAX0ayi4YspWBzbkct8MbGIdC4fRb-VUt-1wRx2tWcbQKUetl3l08xXSW5-URAM3XcpJwuL2y0e35PjVKlo6QFP7ILGxDYFfY1nFmGICBqmWQPTwQXUngMj1vEbq';
     const EXPERT_IMG = trust.teacher.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCiExjxiVWNasHsG7LcpWyLE27qaLpzuRJfa9v53eT143AyOnE1neNwY4iv5563rN5p2hTKuTfouR14V46H7LDE6lTjF4Rp3k3Oh4uEZpjuRi7-ROTbGf67LsvVcCi7U6JtD6TvN2n5Tg2AGsAdx8xW6IYD0UdpenFRtD0Wfs_UtxPUBAF8tlowm-p31ncG99UOt-CoL_UOf4aDyuZ2BP0HH9rpw1nhyHptJGCQ7incu8EHkbo1aSs5';
 
-    const getPainIconColor = (idx: number) => {
-        if (idx === 0) return { bg: '#ffdad6', color: '#93000a', icon: <Frown size={32} /> };
-        if (idx === 1) return { bg: '#d9e5e1', color: '#5b6764', icon: <Moon size={32} /> };
-        if (idx === 2) return { bg: '#ffdad6', color: '#93000a', icon: <Activity size={32} /> };
-        return { bg: '#182723', color: '#7e8f89', icon: <BatteryCharging size={32} /> };
+    const getPainIconInfo = (idx: number) => {
+        if (idx === 0) return { className: 'zen-pain-icon-0', icon: <Frown size={32} /> };
+        if (idx === 1) return { className: 'zen-pain-icon-1', icon: <Moon size={32} /> };
+        if (idx === 2) return { className: 'zen-pain-icon-2', icon: <Activity size={32} /> };
+        return { className: 'zen-pain-icon-3', icon: <BatteryCharging size={32} /> };
     };
 
     const getBenefitIcon = (idx: number) => {
@@ -318,43 +308,26 @@ export default function AdminVisualLandingEditor({
         return icons[idx % icons.length];
     };
 
-    const getPillarSpanStyle = (idx: number, total: number): string => {
-        if (total === 1) return 'span 6';
-        if (total === 2) return 'span 3';
-        if (total === 3) return 'span 2'; // 3 thẻ hàng 1 (mỗi thẻ 1/3)
-        if (total === 4) return 'span 3'; // 2 thẻ hàng 1, 2 thẻ hàng 2 (mỗi thẻ 1/2)
+    const getPillarSpanClass = (idx: number, total: number) => {
+        if (total === 1) return 'zen-span-6';
+        if (total === 2) return 'zen-span-3';
+        if (total === 3) return 'zen-span-2'; // 3 thẻ hàng 1 (mỗi thẻ 1/3)
+        if (total === 4) return 'zen-span-3'; // 2 thẻ hàng 1, 2 thẻ hàng 2 (mỗi thẻ 1/2)
         if (total === 5) {
             // Hàng 1: 3 thẻ (span 2 mỗi thẻ = 100%)
             // Hàng 2: 2 thẻ (span 3 mỗi thẻ = 100% -> CO GIÃN TO RA FULL BẰNG WIDTH 3 THẺ TRÊN!)
-            return idx < 3 ? 'span 2' : 'span 3';
+            return idx < 3 ? 'zen-span-2' : 'zen-span-3';
         }
-        if (total === 6) return 'span 2'; // 3 trên, 3 dưới
+        if (total === 6) return 'zen-span-2'; // 3 trên, 3 dưới
         if (total === 7) {
-            if (idx < 3) return 'span 2';
-            return 'span 3';
+            if (idx < 3) return 'zen-span-2';
+            return 'zen-span-3';
         }
         if (total === 8) {
-            if (idx < 6) return 'span 2';
-            return 'span 3';
+            if (idx < 6) return 'zen-span-2';
+            return 'zen-span-3';
         }
-        return 'span 2';
-    };
-
-    const getBenefitSpanStyle = (idx: number, total: number): string => {
-        if (total === 1) return 'span 6';
-        if (total === 2) return 'span 3';
-        if (total === 3) return 'span 2';
-        if (total === 4) return 'span 3'; // 2 2 layout (2 to x 2 rows)
-        if (total === 5) return idx < 2 ? 'span 3' : 'span 2'; // 2 to, 3 nhỏ (2 3 layout)
-        if (total === 6) return 'span 2'; // 3 3 layout (3 nhỏ x 2 rows)
-        if (total === 7) {
-            // 2 to (span 3) + 3 nhỏ (span 2) + 2 to (span 3) => 2 3 2 layout
-            if (idx < 2) return 'span 3';
-            if (idx < 5) return 'span 2';
-            return 'span 3';
-        }
-        if (total === 8) return idx < 2 ? 'span 3' : 'span 2'; // 2 3 3 layout
-        return 'span 2';
+        return 'zen-span-2';
     };
 
     const getBenefitSpanClass = (idx: number, total: number) => {
@@ -375,90 +348,7 @@ export default function AdminVisualLandingEditor({
     };
 
     return (
-        <div className="zen-root admin-visual-editor-root" style={{ width: '100%', maxWidth: '100%', margin: 0, position: 'relative' }}>
-            <style>{`
-                .admin-inline-editable:hover {
-                    outline: 2px dashed #006d36 !important;
-                    background-color: rgba(0, 109, 54, 0.08) !important;
-                    box-shadow: 0 0 0 2px rgba(0, 109, 54, 0.15);
-                }
-                .admin-inline-editable:focus {
-                    outline: 2px solid #006d36 !important;
-                    background-color: #ffffff !important;
-                    color: #0f172a !important;
-                    box-shadow: 0 4px 16px rgba(0, 109, 54, 0.2);
-                    padding: 2px 6px;
-                }
-                .admin-card-container {
-                    position: relative;
-                    transition: transform 0.2s ease, box-shadow 0.2s ease;
-                }
-                .admin-card-delete-btn {
-                    position: absolute;
-                    top: 10px;
-                    right: 10px;
-                    width: 28px;
-                    height: 28px;
-                    border-radius: 50%;
-                    background: #fee2e2;
-                    border: 1px solid #fca5a5;
-                    color: #dc2626;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    opacity: 0;
-                    transition: opacity 0.2s ease, transform 0.15s ease, background-color 0.15s ease;
-                    z-index: 10;
-                }
-                .admin-card-container:hover .admin-card-delete-btn {
-                    opacity: 1;
-                }
-                .admin-card-delete-btn:hover {
-                    background: #dc2626;
-                    color: #ffffff;
-                    transform: scale(1.1);
-                }
-                .admin-add-item-card {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 8px;
-                    padding: 28px 20px;
-                    border-radius: 20px;
-                    border: 2px dashed #86efac;
-                    background-color: rgba(0, 109, 54, 0.03);
-                    color: #006d36;
-                    cursor: pointer;
-                    font-size: 14px;
-                    font-weight: 700;
-                    transition: all 0.2s ease;
-                    min-height: 140px;
-                }
-                .admin-add-item-card:hover {
-                    background-color: rgba(0, 109, 54, 0.08);
-                    border-color: #006d36;
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(0, 109, 54, 0.1);
-                }
-                .admin-img-overlay {
-                    position: absolute;
-                    inset: 0;
-                    background: rgba(0, 0, 0, 0.4);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    opacity: 0;
-                    transition: opacity 0.2s ease;
-                    border-radius: inherit;
-                    cursor: pointer;
-                }
-                .admin-img-wrap:hover .admin-img-overlay {
-                    opacity: 1;
-                }
-            `}</style>
-
+        <div className="zen-root admin-visual-editor-root">
             <main>
                 {/* ── 1. Hero Section ── */}
                 <section className="zen-hero zen-hero-clean">
@@ -521,13 +411,13 @@ export default function AdminVisualLandingEditor({
 
                             <div className="zen-hero-social-proof zen-hero-social-proof-centered">
                                 <div className="zen-avatar-cluster">
-                                    <div className="zen-avatar-circle" style={{ backgroundColor: '#dcebe2' }}>
+                                    <div className="zen-avatar-circle zen-avatar-circle-1">
                                         <User size={18} />
                                     </div>
-                                    <div className="zen-avatar-circle" style={{ backgroundColor: '#cbe0d3' }}>
+                                    <div className="zen-avatar-circle zen-avatar-circle-2">
                                         <User size={18} />
                                     </div>
-                                    <div className="zen-avatar-circle" style={{ backgroundColor: '#b7d4c2' }}>
+                                    <div className="zen-avatar-circle zen-avatar-circle-3">
                                         <User size={18} />
                                     </div>
                                 </div>
@@ -562,7 +452,7 @@ export default function AdminVisualLandingEditor({
 
                         <div className="zen-pain-grid">
                             {signals.items.map((item, idx) => {
-                                const styleInfo = getPainIconColor(idx);
+                                const iconInfo = getPainIconInfo(idx);
                                 const cleanTitle = item.title.replace(/^"|"$/g, '');
                                 return (
                                     <div key={idx} className="zen-pain-card admin-card-container">
@@ -575,10 +465,9 @@ export default function AdminVisualLandingEditor({
                                             <X size={15} />
                                         </button>
                                         <div
-                                            className="zen-pain-icon"
-                                            style={{ backgroundColor: styleInfo.bg, color: styleInfo.color }}
+                                            className={`zen-pain-icon ${iconInfo.className}`}
                                         >
-                                            {styleInfo.icon}
+                                            {iconInfo.icon}
                                         </div>
                                         <h3 className="zen-headline-md zen-font-serif">
                                             <EditableText
@@ -586,7 +475,7 @@ export default function AdminVisualLandingEditor({
                                                 onSave={(val) => updateSignalItem(idx, 'title', val)}
                                             />
                                         </h3>
-                                        <p className="zen-body-md" style={{ margin: 0 }}>
+                                        <p className="zen-body-md admin-m-0">
                                             <EditableText
                                                 value={item.description}
                                                 onSave={(val) => updateSignalItem(idx, 'description', val)}
@@ -598,23 +487,11 @@ export default function AdminVisualLandingEditor({
                         </div>
 
                         {/* Add Pain Point Button Outside Grid */}
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                        <div className="admin-section-add-bar">
                             <button
                                 type="button"
                                 onClick={addSignalItem}
-                                style={{
-                                    padding: '10px 24px',
-                                    borderRadius: '999px',
-                                    border: '1.5px dashed #006d36',
-                                    backgroundColor: '#e8f5e9',
-                                    color: '#006d36',
-                                    fontSize: '13.5px',
-                                    fontWeight: 700,
-                                    cursor: 'pointer',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '8px'
-                                }}
+                                className="admin-section-add-btn"
                             >
                                 <PlusCircle size={18} />
                                 <span>+ Thêm Tín Hiệu Cơ Thể</span>
@@ -646,7 +523,6 @@ export default function AdminVisualLandingEditor({
                                 <div
                                     key={idx}
                                     className={`zen-benefit-card admin-card-container ${getBenefitSpanClass(idx, benefits.items.length)}`}
-                                    style={{ gridColumn: getBenefitSpanStyle(idx, benefits.items.length) }}
                                 >
                                     <button
                                         type="button"
@@ -678,23 +554,11 @@ export default function AdminVisualLandingEditor({
                         </div>
 
                         {/* Add Benefit Button Outside Grid */}
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                        <div className="admin-section-add-bar">
                             <button
                                 type="button"
                                 onClick={addBenefitItem}
-                                style={{
-                                    padding: '10px 24px',
-                                    borderRadius: '999px',
-                                    border: '1.5px dashed #006d36',
-                                    backgroundColor: '#e8f5e9',
-                                    color: '#006d36',
-                                    fontSize: '13.5px',
-                                    fontWeight: 700,
-                                    cursor: 'pointer',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '8px'
-                                }}
+                                className="admin-section-add-btn"
                             >
                                 <PlusCircle size={18} />
                                 <span>+ Thêm Lợi Ích 21 Ngày</span>
@@ -706,8 +570,8 @@ export default function AdminVisualLandingEditor({
                 {/* ── 4. Method (3 Pillars) ── */}
                 <section id="method" className="zen-section">
                     <div className="zen-container">
-                        <div id="about-3d" className="zen-about-grid" style={{ marginBottom: '60px' }}>
-                            <div className="zen-about-col admin-img-wrap" style={{ position: 'relative' }}>
+                        <div id="about-3d" className="zen-about-grid admin-about-grid-spacing">
+                            <div className="zen-about-col admin-img-wrap">
                                 <img
                                     src={ABOUT_IMG}
                                     alt="Zen garden & restorative wellness"
@@ -721,7 +585,7 @@ export default function AdminVisualLandingEditor({
                                         if (newUrl && newUrl.trim()) updateAboutField('image', newUrl.trim());
                                     }}
                                 >
-                                    <button type="button" style={{ background: '#006d36', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '999px', fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                                    <button type="button" className="admin-change-about-img-btn">
                                         <Camera size={16} />
                                         <span>Đổi ảnh Giới thiệu</span>
                                     </button>
@@ -735,13 +599,13 @@ export default function AdminVisualLandingEditor({
                                         onSave={(val) => updateAboutField('eyebrow', val)}
                                     />
                                 </span>
-                                <h2 className="zen-headline-lg" style={{ marginBottom: '20px' }}>
+                                <h2 className="zen-headline-lg admin-headline-spacing">
                                     <EditableText
                                         value={about.heading || 'Phương Pháp 3Đ Là Gì?'}
                                         onSave={(val) => updateAboutField('heading', val)}
                                     />
                                 </h2>
-                                <p className="zen-body-lg" style={{ marginBottom: '20px' }}>
+                                <p className="zen-body-lg admin-body-spacing">
                                     <EditableText
                                         value={about.para1 || 'Dựa trên nền tảng triết lý Sivananda với hơn 5,000 năm lịch sử, phương pháp 3Đ tập trung vào việc khôi phục khả năng tự chữa lành của cơ thể thông qua ba trụ cột cốt lõi.'}
                                         onSave={(val) => updateAboutField('para1', val)}
@@ -771,7 +635,7 @@ export default function AdminVisualLandingEditor({
                             </div>
                         </div>
 
-                        <div className="zen-section-header" style={{ marginBottom: '40px' }}>
+                        <div className="zen-section-header admin-section-header-spacing">
                             <h2 className="zen-headline-lg">
                                 <EditableText
                                     value={method.heading || '3 Trụ Cột Vàng Cho Sức Khỏe'}
@@ -790,8 +654,7 @@ export default function AdminVisualLandingEditor({
                             {method.items.map((mItem, idx) => (
                                 <div
                                     key={idx}
-                                    className="zen-pillar-card zen-pillar-card-clean admin-card-container"
-                                    style={{ gridColumn: getPillarSpanStyle(idx, method.items.length) }}
+                                    className={`zen-pillar-card zen-pillar-card-clean admin-card-container ${getPillarSpanClass(idx, method.items.length)}`}
                                 >
                                     <button
                                         type="button"
@@ -817,7 +680,7 @@ export default function AdminVisualLandingEditor({
                                                 onSave={(val) => updateMethodItem(idx, 'title', val)}
                                             />
                                         </h3>
-                                        <p className="zen-body-md" style={{ margin: 0 }}>
+                                        <p className="zen-body-md admin-m-0">
                                             <EditableText
                                                 value={mItem.description}
                                                 onSave={(val) => updateMethodItem(idx, 'description', val)}
@@ -829,23 +692,11 @@ export default function AdminVisualLandingEditor({
                         </div>
 
                         {/* Add Pillar Button Outside Grid */}
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                        <div className="admin-section-add-bar">
                             <button
                                 type="button"
                                 onClick={addMethodItem}
-                                style={{
-                                    padding: '10px 24px',
-                                    borderRadius: '999px',
-                                    border: '1.5px dashed #006d36',
-                                    backgroundColor: '#e8f5e9',
-                                    color: '#006d36',
-                                    fontSize: '13.5px',
-                                    fontWeight: 700,
-                                    cursor: 'pointer',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '8px'
-                                }}
+                                className="admin-section-add-btn"
                             >
                                 <PlusCircle size={18} />
                                 <span>+ Thêm Trụ Cột Phương Pháp</span>
@@ -858,7 +709,7 @@ export default function AdminVisualLandingEditor({
                 <section id="ve-chung-toi" className="zen-section">
                     <div className="zen-container">
                         <div className="zen-trust-container-full">
-                            <div className="zen-section-header" style={{ marginBottom: '40px' }}>
+                            <div className="zen-section-header admin-section-header-spacing">
                                 <h2 className="zen-headline-lg">
                                     <EditableText
                                         value={trust.teacher.title ? trust.teacher.title.toUpperCase() : 'CHUYÊN GIA HƯỚNG DẪN'}
@@ -868,7 +719,7 @@ export default function AdminVisualLandingEditor({
                             </div>
 
                             <div className="zen-expert-row-centered">
-                                <div className="admin-img-wrap" style={{ position: 'relative', display: 'inline-block' }}>
+                                <div className="admin-img-wrap">
                                     <img
                                         src={EXPERT_IMG}
                                         alt="Chuyên gia hướng dẫn Sivananda"
@@ -882,34 +733,35 @@ export default function AdminVisualLandingEditor({
                                             if (newUrl && newUrl.trim()) updateTeacherField('image', newUrl.trim());
                                         }}
                                     >
-                                        <button type="button" style={{ background: '#006d36', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '999px', fontSize: '11.5px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
+                                        <div className="admin-img-badge">
                                             <Camera size={14} />
-                                            <span>Đổi ảnh</span>
-                                        </button>
+                                            <span>Đổi Ảnh Avatar</span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="zen-expert-info">
-                                    <h3 className="zen-headline-md" style={{ marginBottom: '8px' }}>
+                                <div className="zen-expert-content">
+                                    <div className="zen-badge-pill admin-inline-flex">
+                                        <Sparkles size={14} className="zen-badge-sparkle" />
+                                        <span>
+                                            <EditableText
+                                                value={trust.teacher.badge || 'CHUYÊN GIA HƯỚNG DẪN'}
+                                                onSave={(val) => updateTeacherField('badge', val)}
+                                            />
+                                        </span>
+                                    </div>
+                                    <h3 className="zen-expert-name">
                                         <EditableText
-                                            value={trust.teacher.title || 'Chuyên gia hướng dẫn'}
+                                            value={trust.teacher.title || 'Cô Đinh Kim Dung'}
                                             onSave={(val) => updateTeacherField('title', val)}
                                         />
                                     </h3>
-                                    <p className="zen-body-md" style={{ marginBottom: '14px', width: '100%', fontSize: 'clamp(16px, 1.2vw, 18px)', lineHeight: 1.7 }}>
+                                    <p className="zen-expert-bio">
                                         <EditableText
-                                            value={trust.teacher.bio || 'Được đào tạo và truyền thừa trực tiếp từ Hệ phái Sivananda, chuyên sâu về Vận động Asana, Hít thở Pranayama và Thư giãn Savasana. Hơn 10 năm Kinh nghiệm hướng dẫn Học viên Văn phòng và Người có Bệnh nền tại Việt Nam.'}
+                                            value={trust.teacher.bio || 'Chuyên gia Yoga & Thiền Sivananda quốc tế với hơn 15 năm kinh nghiệm đồng hành.'}
                                             onSave={(val) => updateTeacherField('bio', val)}
                                         />
                                     </p>
-                                    <div className="zen-expert-tag">
-                                        <span style={{ fontFamily: 'var(--zen-font-serif)', fontWeight: 700, color: 'var(--zen-primary)' }}>
-                                            4U Wellness
-                                        </span>
-                                        <span style={{ fontSize: '11px', backgroundColor: 'rgba(35, 79, 47, 0.12)', padding: '2px 8px', borderRadius: '4px', color: 'var(--zen-moss-darkest)', fontWeight: 600 }}>
-                                            Non-profit
-                                        </span>
-                                    </div>
                                 </div>
                             </div>
 
@@ -935,8 +787,8 @@ export default function AdminVisualLandingEditor({
                     </div>
                 </section>
 
-                {/* ── 6. Steps (Roadmap) ── */}
-                <section id="lich-trinh" className="zen-section">
+                {/* ── 6. 4 Steps ── */}
+                <section id="process" className="zen-section">
                     <div className="zen-container">
                         <div className="zen-section-header">
                             <h2 className="zen-headline-lg">
@@ -950,7 +802,7 @@ export default function AdminVisualLandingEditor({
                             </p>
                         </div>
 
-                        <div className="zen-steps-container" style={{ flexWrap: 'wrap', gap: '20px' }}>
+                        <div className="zen-steps-container">
                             <div className="zen-steps-line"></div>
 
                             {steps.items.map((stepItem, idx) => (
@@ -980,23 +832,11 @@ export default function AdminVisualLandingEditor({
                             ))}
 
                             {/* Add Step Button */}
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', marginTop: '16px' }}>
+                            <div className="admin-section-add-bar admin-full-width admin-mt-16">
                                 <button
                                     type="button"
                                     onClick={addStepItem}
-                                    style={{
-                                        padding: '10px 24px',
-                                        borderRadius: '999px',
-                                        border: '1.5px dashed #006d36',
-                                        backgroundColor: '#e8f5e9',
-                                        color: '#006d36',
-                                        fontSize: '13.5px',
-                                        fontWeight: 700,
-                                        cursor: 'pointer',
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '8px'
-                                    }}
+                                    className="admin-section-add-btn"
                                 >
                                     <PlusCircle size={18} />
                                     <span>+ Thêm Bước Mới Vào Lộ Trình</span>
@@ -1026,8 +866,7 @@ export default function AdminVisualLandingEditor({
                                 <div key={idx} className="zen-faq-row admin-card-container">
                                     <button
                                         type="button"
-                                        className="admin-card-delete-btn"
-                                        style={{ top: '16px', right: '48px' }}
+                                        className="admin-card-delete-btn admin-faq-delete-btn"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             removeFaqItem(idx);
@@ -1061,26 +900,11 @@ export default function AdminVisualLandingEditor({
                             ))}
 
                             {/* Add FAQ Button */}
-                            <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                            <div className="admin-section-add-bar">
                                 <button
                                     type="button"
                                     onClick={addFaqItem}
-                                    style={{
-                                        padding: '12px 28px',
-                                        borderRadius: '12px',
-                                        border: '2px dashed #006d36',
-                                        backgroundColor: 'rgba(0, 109, 54, 0.04)',
-                                        color: '#006d36',
-                                        fontSize: '14px',
-                                        fontWeight: 700,
-                                        cursor: 'pointer',
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '8px',
-                                        transition: 'all 0.15s ease'
-                                    }}
-                                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(0, 109, 54, 0.1)')}
-                                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(0, 109, 54, 0.04)')}
+                                    className="admin-faq-add-btn"
                                 >
                                     <PlusCircle size={18} />
                                     <span>+ Thêm Câu Hỏi & Trả Lời FAQ Mới</span>

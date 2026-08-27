@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShieldCheck } from 'lucide-react';
+import './InfiniteSlider.css';
 
 interface BrandLogo {
   name: string;
@@ -72,79 +73,26 @@ export default function InfiniteSlider() {
   const duplicatedLogos = [...brandLogos, ...brandLogos, ...brandLogos];
 
   return (
-    <div style={{
-      width: '100%',
-      padding: '40px 0 30px 0',
-      background: '#f5f5f7',
-      overflow: 'hidden'
-    }}>
-      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-        <div style={{
-          fontSize: '0.78rem',
-          fontWeight: '800',
-          textTransform: 'uppercase',
-          color: '#86868b',
-          letterSpacing: '0.14em',
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '8px'
-        }}>
+    <div className="infinite-slider-section">
+      <div className="infinite-slider-header">
+        <div className="infinite-slider-badge">
           <ShieldCheck size={16} color="#2d5a36" /> ĐỐI TÁC DOANH NGHIỆP & THƯƠNG HIỆU ĐỒNG HÀNH
         </div>
       </div>
 
-      <div style={{
-        position: 'relative',
-        width: '100%',
-        overflow: 'hidden',
-        padding: '10px 0'
-      }}>
+      <div className="infinite-slider-container">
         {/* Left Vignette Fade */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          width: '160px',
-          background: 'linear-gradient(to right, #f5f5f7 30%, transparent 100%)',
-          zIndex: 10,
-          pointerEvents: 'none'
-        }} />
+        <div className="infinite-slider-vignette-left" />
 
         {/* Right Vignette Fade */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          bottom: 0,
-          right: 0,
-          width: '160px',
-          background: 'linear-gradient(to right, transparent 0%, #f5f5f7 70%)',
-          zIndex: 10,
-          pointerEvents: 'none'
-        }} />
+        <div className="infinite-slider-vignette-right" />
 
         {/* Infinite Slider Track */}
-        <div style={{ display: 'flex', width: '100%', position: 'relative' }}>
-          <div style={{ overflow: 'hidden', width: '100%' }}>
-            <div
-              className="infinite-slider-track"
-              style={{
-                display: 'flex',
-                gap: '60px',
-                alignItems: 'center',
-                width: 'max-content'
-              }}
-            >
+        <div className="infinite-slider-track-wrap">
+          <div className="infinite-slider-viewport">
+            <div className="infinite-slider-track">
               {duplicatedLogos.map((brand, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '8px 24px'
-                  }}
-                >
+                <div key={idx} className="infinite-slider-item">
                   {brand.svg}
                 </div>
               ))}

@@ -4,6 +4,7 @@ import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData
 import { fetchToursApi, getImageUrl } from '../services/apiService';
 import { Star, ArrowRight, ChevronDown, Sparkles } from 'lucide-react';
 import EmptyState from './ui/EmptyState';
+import './KhongTheBoLoSection.css';
 
 export interface KhongTheBoLoSectionProps {
   onOpenBooking?: (tourData?: any) => void;
@@ -33,153 +34,24 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
   return (
     <section
       id="khong-the-bo-lo"
-      style={{
-        background: '#e5efe8',
-        padding: '120px 0 130px',
-        color: '#10201B',
-        fontFamily: "'Work Sans', 'Plus Jakarta Sans', sans-serif",
-        width: '100%',
-        overflow: 'hidden',
-        borderTop: '1px solid rgba(16, 32, 27, 0.08)'
-      }}
+      className="ktbl-section-root"
     >
-      <style>{`
-        .ktbl-editorial-card {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-          cursor: pointer;
-          text-decoration: none;
-          color: inherit;
-          background: transparent;
-        }
-        .ktbl-editorial-img-wrap {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 16 / 10;
-          overflow: hidden;
-          background: #d8e5dc;
-        }
-        .ktbl-editorial-img-wrap img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-          transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .ktbl-editorial-card:hover .ktbl-editorial-img-wrap img {
-          transform: scale(1.05);
-        }
-        .ktbl-editorial-link {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          font-family: 'Work Sans', sans-serif;
-          font-size: 11.5px;
-          font-weight: 700;
-          letter-spacing: 0.16em;
-          text-transform: uppercase;
-          color: '#10201B';
-          text-decoration: none;
-          border-bottom: 1.5px solid #10201B;
-          padding-bottom: 4px;
-          transition: all 0.25s ease;
-          margin-top: auto;
-        }
-        .ktbl-editorial-card:hover .ktbl-editorial-link {
-          color: #006d36;
-          border-bottom-color: #006d36;
-        }
-        .ktbl-editorial-btn-more {
-          padding: 14px 38px;
-          border: 1.5px solid #10201B;
-          background: transparent;
-          color: #10201B;
-          font-family: 'Work Sans', sans-serif;
-          font-weight: 700;
-          font-size: 12px;
-          letter-spacing: 0.16em;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .ktbl-editorial-btn-more:hover {
-          background: #10201B;
-          color: #ffffff;
-          transform: translateY(-2px);
-          box-shadow: 0 10px 24px rgba(16, 32, 27, 0.18);
-        }
-        @media (max-width: 900px) {
-          .ktbl-editorial-grid {
-            grid-template-columns: 1fr !important;
-            gap: 56px !important;
-          }
-          .ktbl-full-container {
-            padding: 0 20px !important;
-          }
-        }
-      `}</style>
-
       {/* ── 100% FULL WIDTH CONTAINER ── */}
-      <div style={{ width: '100%', maxWidth: '100%', padding: '0 48px', boxSizing: 'border-box' }} className="ktbl-full-container">
+      <div className="ktbl-full-container">
 
         {/* ── 1. SECTION HEADER (DESTINATION FORMAT) ── */}
         <ScrollReveal>
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              alignItems: 'flex-end',
-              gap: '24px',
-              marginBottom: '64px',
-              paddingBottom: '32px',
-              borderBottom: '1px solid rgba(16, 32, 27, 0.12)'
-            }}
-          >
+          <div className="ktbl-header-row">
             <div>
-              <span
-                style={{
-                  fontFamily: "'Work Sans', sans-serif",
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
-                  color: '#527059',
-                  display: 'block',
-                  marginBottom: '10px'
-                }}
-              >
+              <span className="ktbl-subtitle-tag">
                 Signature Retreats 2026
               </span>
-              <h2
-                style={{
-                  fontFamily: "'Libre Caslon Text', 'Playfair Display', Georgia, serif",
-                  fontWeight: 400,
-                  fontSize: 'clamp(32px, 4vw, 48px)',
-                  lineHeight: 1.15,
-                  color: '#10201B',
-                  margin: 0
-                }}
-              >
+              <h2 className="ktbl-title-serif">
                 Trải Nghiệm Retreat Không Thể Bỏ Lỡ
               </h2>
             </div>
 
-            <p
-              style={{
-                fontFamily: "'Work Sans', sans-serif",
-                fontSize: '15px',
-                color: '#405246',
-                margin: 0,
-                maxWidth: '480px',
-                lineHeight: 1.65,
-                fontWeight: 400
-              }}
-            >
+            <p className="ktbl-header-desc">
               Tuyển tập những hành trình được tinh tuyển khắt khe, kết hợp nghệ thuật trị liệu thiên nhiên và dịch vụ chuẩn mực.
             </p>
           </div>
@@ -193,14 +65,7 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
             transparent={true}
           />
         ) : (
-          <div
-            className="ktbl-editorial-grid"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '64px 44px'
-            }}
-          >
+          <div className="ktbl-editorial-grid">
             {visibleTours.map((tour, index) => {
               const heroImg = getImageUrl(tour.heroImage);
               const priceText = tour.price ? `${tour.price.toLocaleString('vi-VN')} ₫` : 'Liên hệ';
@@ -223,111 +88,41 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
                       <img src={heroImg} alt={tour.title} loading="lazy" />
 
                       {/* Top Badges */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: '16px',
-                          left: '16px',
-                          background: 'rgba(16, 32, 27, 0.85)',
-                          backdropFilter: 'blur(8px)',
-                          color: '#ffffff',
-                          fontSize: '11px',
-                          fontWeight: 700,
-                          letterSpacing: '0.08em',
-                          padding: '6px 14px',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          textTransform: 'uppercase'
-                        }}
-                      >
+                      <div className="ktbl-badge-special">
                         <Sparkles size={13} color="#facc15" />
                         <span>Đặc Tuyển</span>
                       </div>
 
                       {/* Top Right Category Tag */}
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: '16px',
-                          right: '16px',
-                          background: 'linear-gradient(135deg, #b45309 0%, #451a03 100%)',
-                          backdropFilter: 'blur(10px)',
-                          color: '#ffffff',
-                          fontSize: '11px',
-                          fontWeight: 700,
-                          letterSpacing: '0.1em',
-                          padding: '6px 14px',
-                          textTransform: 'uppercase',
-                          borderRadius: '6px',
-                          border: '1px solid rgba(251, 191, 36, 0.45)',
-                          boxShadow: '0 6px 20px rgba(180, 83, 9, 0.35)',
-                          display: 'inline-flex',
-                          alignItems: 'center'
-                        }}
-                      >
+                      <div className="ktbl-badge-hot">
                         Không Thể Bỏ Lỡ
                       </div>
                     </div>
 
                     {/* Meta Label */}
-                    <div style={{ marginTop: '24px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span
-                        style={{
-                          fontFamily: "'Work Sans', sans-serif",
-                          fontSize: '11px',
-                          fontWeight: 700,
-                          letterSpacing: '0.14em',
-                          textTransform: 'uppercase',
-                          color: '#527059'
-                        }}
-                      >
+                    <div className="ktbl-card-meta">
+                      <span className="ktbl-card-meta-text">
                         {tour.city || 'Việt Nam'} • {tour.duration || 'Nghỉ Dưỡng'}
                       </span>
                     </div>
 
                     {/* Title Serif */}
-                    <h3
-                      style={{
-                        fontFamily: "'Libre Caslon Text', 'Playfair Display', Georgia, serif",
-                        fontSize: 'clamp(22px, 2.2vw, 28px)',
-                        fontWeight: 400,
-                        lineHeight: 1.25,
-                        color: '#10201B',
-                        margin: '0 0 12px 0'
-                      }}
-                    >
+                    <h3 className="ktbl-card-title">
                       {tour.title}
                     </h3>
 
                     {/* Description */}
-                    <p
-                      style={{
-                        fontSize: '14.5px',
-                        color: '#405246',
-                        lineHeight: 1.65,
-                        margin: '0 0 18px 0',
-                        fontWeight: 400,
-                        minHeight: '46px'
-                      }}
-                    >
+                    <p className="ktbl-card-desc">
                       {tour.subtitle || 'Hành trình được chăm chút tỉ mỉ từ không gian lưu trú đến các liệu trình chữa lành nguyên bản.'}
                     </p>
 
                     {/* Highlights chips */}
                     {highlights.length > 0 && (
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '24px' }}>
+                      <div className="ktbl-highlights-row">
                         {highlights.map((h, hIdx) => (
                           <span
                             key={hIdx}
-                            style={{
-                              fontSize: '12px',
-                              backgroundColor: '#d8e5dc',
-                              color: '#10201B',
-                              padding: '4px 12px',
-                              borderRadius: '4px',
-                              fontWeight: 500
-                            }}
+                            className="ktbl-highlight-chip"
                           >
                             • {h}
                           </span>
@@ -336,39 +131,12 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
                     )}
 
                     {/* Bottom: Price & Underline Action */}
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'flex-end',
-                        justifyContent: 'space-between',
-                        gap: '16px',
-                        marginTop: 'auto',
-                        paddingTop: '18px',
-                        borderTop: '1px solid rgba(16, 32, 27, 0.1)'
-                      }}
-                    >
+                    <div className="ktbl-card-action-bar">
                       <div>
-                        <span
-                          style={{
-                            display: 'block',
-                            fontSize: '10.5px',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.12em',
-                            color: '#527059',
-                            fontWeight: 700,
-                            marginBottom: '2px'
-                          }}
-                        >
+                        <span className="ktbl-price-label">
                           Giá trải nghiệm
                         </span>
-                        <span
-                          style={{
-                            fontFamily: "'Libre Caslon Text', Georgia, serif",
-                            fontSize: '22px',
-                            fontWeight: 700,
-                            color: '#10201B'
-                          }}
-                        >
+                        <span className="ktbl-price-val">
                           {priceText}
                         </span>
                       </div>
@@ -388,7 +156,7 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
         {/* ── 3. VIEW ALL / COLLAPSE BUTTON ── */}
         {unmissableTours.length > 4 && (
           <ScrollReveal>
-            <div style={{ textAlign: 'center', marginTop: '64px' }}>
+            <div className="ktbl-btn-center">
               <button
                 className="ktbl-editorial-btn-more"
                 onClick={() => setShowAll(!showAll)}
@@ -396,10 +164,7 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
                 <span>{showAll ? 'Thu Gọn Lịch Trình' : `Xem Thêm Tất Cả (${unmissableTours.length})`}</span>
                 <ChevronDown
                   size={15}
-                  style={{
-                    transform: showAll ? 'rotate(180deg)' : 'none',
-                    transition: 'transform 0.3s ease'
-                  }}
+                  className={`ktbl-chevron-icon ${showAll ? 'is-open' : ''}`}
                 />
               </button>
             </div>

@@ -21,6 +21,8 @@ import AdminProductsManager from './admin/AdminProductsManager';
 import AdminUsersManager from './admin/AdminUsersManager';
 import AdminLandingSectionManager from './admin/AdminLandingSectionManager';
 import AdminLoginPage from './admin/AdminLoginPage';
+import './AdminDashboard.css';
+import './Admin.css';
 
 import { useAuth } from '../context/AuthContext';
 import { ROLE_LABELS } from '../services/authService';
@@ -418,9 +420,9 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
 
   if (isLoading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#081f13', color: '#ffffff', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <div className="admin-loading-screen">
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px' }}>
-          <div style={{ width: '36px', height: '36px', borderRadius: '50%', border: '3px solid #0f766e', borderTopColor: 'transparent', animation: 'spin 0.6s linear infinite' }} />
+          <div className="admin-loading-spinner" />
           <span style={{ fontSize: '13.5px', color: '#94a3b8' }}>Đang xác thực quyền truy cập quản trị...</span>
         </div>
       </div>
@@ -436,41 +438,26 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
   return (
     <div className="serene-admin-layout">
       {/* UNIFIED TOP BRAND HEADER BAR */}
-      <header className="serene-top-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 28px', backgroundColor: '#081f13', color: '#ffffff', height: '64px', position: 'sticky', top: 0, zIndex: 100 }}>
+      <header className="serene-top-bar">
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <img
             src="/Logo-4U-Wellness.png"
             alt="4U Wellness Logo"
-            style={{ height: '45px', width: 'auto', objectFit: 'contain', display: 'block' }}
+            className="admin-logo-img"
           />
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#e2e8f0', fontSize: '13px' }}>
-            <span style={{ color: '#94a3b8' }}>Xin chào,</span>
-            <strong style={{ color: '#ffffff' }}>{user.fullName}</strong>
+          <div className="admin-user-greeting">
+            <span>Xin chào,</span>
+            <strong>{user.fullName}</strong>
           </div>
 
           <button
             type="button"
             onClick={handleLogout}
             title="Đăng xuất khỏi hệ thống"
-            style={{
-              backgroundColor: 'rgba(239, 68, 68, 0.15)',
-              color: '#f87171',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-              borderRadius: '6px',
-              padding: '6px 12px',
-              fontSize: '12.5px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              transition: 'all 0.15s ease'
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.25)')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.15)')}
+            className="admin-logout-btn"
           >
             <LogOut size={13} />
             <span>Đăng Xuất</span>
@@ -478,48 +465,14 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
         </div>
       </header>
 
-      <div style={{ display: 'flex', flex: 1 }}>
+      <div className="admin-layout-body">
         {/* UNIFIED SINGLE SIDEBAR MENU */}
-        <aside
-          className="serene-sidebar"
-          style={{
-            width: '260px',
-            minWidth: '260px',
-            flexShrink: 0,
-            backgroundColor: '#06170e',
-            padding: '24px 16px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '6px',
-            position: 'sticky',
-            top: '64px',
-            height: 'calc(100vh - 64px)',
-            alignSelf: 'flex-start',
-            overflowY: 'auto',
-            boxSizing: 'border-box'
-          }}
-        >
+        <aside className="serene-sidebar">
           {permittedSections.map((sec) => (
             <button
               key={sec.id}
               onClick={() => handleSelectSection(sec.id)}
               className={`serene-sidebar-item ${activeSection === sec.id ? 'active' : ''}`}
-              style={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '10px 14px',
-                borderRadius: '8px',
-                border: 'none',
-                backgroundColor: activeSection === sec.id ? '#081f13' : 'transparent',
-                color: activeSection === sec.id ? '#ffffff' : '#a1bfa9',
-                fontSize: '13.5px',
-                fontWeight: activeSection === sec.id ? 700 : 500,
-                cursor: 'pointer',
-                textAlign: 'left',
-                transition: 'all 0.2s ease'
-              }}
             >
               <span>{sec.label}</span>
             </button>

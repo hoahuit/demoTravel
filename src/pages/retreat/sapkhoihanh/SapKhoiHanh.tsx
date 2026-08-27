@@ -1,5 +1,6 @@
 import React from 'react';
 import ToursPage from '../../../components/ToursPage';
+import './SapKhoiHanh.css';
 
 interface SapKhoiHanhProps {
   onNavigate: (path: string) => void;

@@ -4,6 +4,7 @@ import * as React from "react";
 import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import './coverflow-carousel.css';
 
 const useIsoLayoutEffect =
   typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
@@ -260,19 +261,10 @@ export function CoverflowCarousel({
               nudge(1);
             }
           }}
-          className="cursor-grab overflow-hidden py-10 outline-none active:cursor-grabbing"
-          style={{
-            perspective: `calc(var(--cf-card) * ${perspective})`,
-            touchAction: "pan-y",
-          }}
+          className="coverflow-carousel-frame"
+          style={{ ["--cf-perspective" as string]: perspective }}
         >
-          <div
-            className="relative select-none"
-            style={{
-              height: "calc(var(--cf-card) * 1.36)",
-              transformStyle: "preserve-3d",
-            }}
-          >
+          <div className="coverflow-carousel-track">
             {slides.map((slide, index) => (
               <div
                 key={index}
@@ -290,82 +282,33 @@ export function CoverflowCarousel({
                 aria-roledescription="slide"
                 aria-label={`${index + 1} of ${count}`}
                 className={cn(
-                  "absolute left-1/2 top-0 aspect-[3/4] cursor-pointer will-change-transform",
+                  "coverflow-slide-card",
+                  index === selected ? "selected" : "",
                   cardClassName,
                 )}
-                style={{
-                  width: "var(--cf-card)",
-                  borderRadius: "24px",
-                  overflow: "hidden",
-                  boxShadow: index === selected ? "0 24px 60px rgba(8, 31, 19, 0.35)" : "0 12px 32px rgba(0, 0, 0, 0.18)",
-                  border: index === selected ? "2px solid rgba(255, 255, 255, 0.85)" : "1px solid rgba(255, 255, 255, 0.3)"
-                }}
               >
                 <img
                   src={slide.src}
                   alt={slide.alt}
                   draggable={false}
-                  className="h-full w-full select-none object-cover"
-                  style={{ borderRadius: "24px" }}
+                  className="coverflow-slide-img"
                 />
 
                 {/* Top Badge: Độc Quyền */}
-                <div style={{ position: 'absolute', top: '14px', left: '14px', zIndex: 10 }}>
-                  <span
-                    style={{
-                      backgroundColor: 'rgba(6, 40, 28, 0.88)',
-                      color: '#4ade80',
-                      border: '1px solid rgba(74, 222, 128, 0.45)',
-                      padding: '4px 10px',
-                      borderRadius: '999px',
-                      fontSize: '11px',
-                      fontWeight: 800,
-                      letterSpacing: '0.04em',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      boxShadow: '0 4px 14px rgba(0, 0, 0, 0.4)',
-                      backdropFilter: 'blur(6px)',
-                      WebkitBackdropFilter: 'blur(6px)'
-                    }}
-                  >
+                <div className="coverflow-card-badge-wrap">
+                  <span className="coverflow-card-badge">
                     <Sparkles size={11} /> {slide.badge || 'Độc quyền'}
                   </span>
                 </div>
 
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    borderRadius: '24px',
-                    background: 'linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(8,31,19,0.92) 100%)',
-                    padding: '16px 18px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                    color: '#ffffff'
-                  }}
-                >
+                <div className="coverflow-card-overlay">
                   {slide.subtitle && (
-                    <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#4ade80', letterSpacing: '0.08em', marginBottom: '6px' }}>
+                    <span className="coverflow-card-sub">
                       {slide.subtitle}
                     </span>
                   )}
                   {slide.title && (
-                    <h3
-                      style={{
-                        fontSize: '0.98rem',
-                        fontWeight: 800,
-                        color: '#ffffff',
-                        margin: 0,
-                        lineHeight: 1.35,
-                        textShadow: '0 2px 4px rgba(0,0,0,0.6)',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden'
-                      }}
-                    >
+                    <h3 className="coverflow-card-title">
                       {slide.title}
                     </h3>
                   )}
@@ -381,25 +324,7 @@ export function CoverflowCarousel({
               type="button"
               aria-label="Previous slide"
               onClick={() => nudge(-1)}
-              style={{
-                position: 'absolute',
-                left: '16px',
-                top: '46%',
-                transform: 'translateY(-50%)',
-                zIndex: 200,
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
-                backgroundColor: '#ffffff',
-                color: '#142619',
-                border: '1px solid rgba(0,0,0,0.1)',
-                boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
+              className="coverflow-nav-btn prev"
             >
               <ChevronLeft size={22} color="#142619" />
             </button>
@@ -407,25 +332,7 @@ export function CoverflowCarousel({
               type="button"
               aria-label="Next slide"
               onClick={() => nudge(1)}
-              style={{
-                position: 'absolute',
-                right: '16px',
-                top: '46%',
-                transform: 'translateY(-50%)',
-                zIndex: 200,
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
-                backgroundColor: '#ffffff',
-                color: '#142619',
-                border: '1px solid rgba(0,0,0,0.1)',
-                boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
+              className="coverflow-nav-btn next"
             >
               <ChevronRight size={22} color="#142619" />
             </button>
@@ -434,22 +341,14 @@ export function CoverflowCarousel({
       </div>
 
       {showPagination && (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '20px' }}>
+        <div className="coverflow-pagination">
           {slides.map((_, index) => (
             <button
               key={index}
               type="button"
               aria-label={`Go to slide ${index + 1}`}
               onClick={() => goTo(index)}
-              style={{
-                height: '8px',
-                borderRadius: '999px',
-                backgroundColor: index === selected ? '#1e4a3d' : 'rgba(0, 0, 0, 0.2)',
-                width: index === selected ? '24px' : '8px',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
-              }}
+              className={`coverflow-dot-btn ${index === selected ? 'active' : ''}`}
             />
           ))}
         </div>

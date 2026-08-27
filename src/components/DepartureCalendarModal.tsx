@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { X, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, ArrowRight, Sparkles, Filter } from 'lucide-react';
 import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
 import { fetchToursApi, getImageUrl } from '../services/apiService';
+import './DepartureCalendarModal.css';
 
 export interface DepartureCalendarModalProps {
   isOpen: boolean;
