@@ -620,7 +620,10 @@ export async function fetchSectionItemsApi(section: string, forceRefresh = false
         return setCachedQuery(cacheKey, getSectionMockFallback(section));
       }
       const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
+      if (Array.isArray(data)) {
+        return setCachedQuery(cacheKey, data);
+      }
+      if (data && typeof data === 'object') {
         return setCachedQuery(cacheKey, data);
       }
       return setCachedQuery(cacheKey, getSectionMockFallback(section));
@@ -760,8 +763,15 @@ export async function saveSectionItemApi(
 // MENU CATEGORIES CRUD API CALLS
 // --------------------------------------------------------------------------
 
+export interface MenuSubItemLink {
+  label: string;
+  href: string;
+  badge?: string;
+  badgeColor?: string;
+}
+
 export interface MenuCategoryItem {
-  id?: number;
+  id?: number | string;
   name: string;
   slug: string;
   parentSlug?: string | null;
@@ -769,7 +779,9 @@ export interface MenuCategoryItem {
   orderIndex?: number;
   icon?: string;
   color?: string;
+  iconColor?: string;
   description?: string;
+  subItems?: MenuSubItemLink[];
 }
 
 export async function fetchMenuCategoriesApi(forceRefresh = false): Promise<MenuCategoryItem[]> {

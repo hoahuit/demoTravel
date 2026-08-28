@@ -3,6 +3,7 @@ import ScrollReveal from './ScrollReveal';
 import {
   fetchProductsApi,
   createShopOrderApi,
+  fetchMenuCategoriesApi,
   getImageUrl,
   KollectionProduct
 } from '../services/apiService';
@@ -68,115 +69,7 @@ export const FEATURED_CATEGORIES = [
 ];
 
 export const DEFAULT_NOMAD_PRODUCTS: KollectionProduct[] = [
-  {
-    id: 1,
-    slug: 'binh-giu-nhiet-alpine',
-    title: 'Bình giữ nhiệt Alpine',
-    name: 'Bình giữ nhiệt Alpine',
-    subtitle: 'Giữ nhiệt hoàn hảo trên mọi chặng đường',
-    category: 'Phụ kiện du lịch',
-    price: 850000,
-    originalPrice: 1000000,
-    heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDAjTRcfdF6_yplK4VT-RChhxc_dz4gKf_iF0t-dDv6SZypoAbltGUIxc3lRHFKv4nZMF8Tsgu9Ba9S-MWfpU_W1_iDsxBoKe7dTpT1ogIu35me-nmxxS1IuybSM54_lEQKNizMTQX-K7xK8F-BBqBu6VbChNnNZNrY7fEoNsFJ75b1abxFjuX1yoWrrAdSUPEtpWd6tu5Wz8ul1E4qEvYXYbASQwPiWN4yvaxn9oLlfQZdQjR7y9O2',
-    isBestSeller: true,
-    isFeatured: true,
-    isExclusive: true,
-    description: 'Thép không gỉ 304 cao cấp 2 lớp cách nhiệt chân không màu xanh rêu Alpine, giữ nóng 12h và giữ lạnh 24h, kèm quai xách công thái học chắc chắn.'
-  },
-  {
-    id: 2,
-    slug: 'dung-cu-da-nang-explorer',
-    title: 'Dụng cụ đa năng Explorer',
-    name: 'Dụng cụ đa năng Explorer',
-    subtitle: 'Tiện ích tối đa trong thiết kế nhỏ gọn',
-    category: 'Trang bị',
-    price: 1200000,
-    heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCl2RytbicQSz-WIZdQH-PivcpvDy2Awo_yBLeSkqUrh-Pk8fThJJFSNjrqEdKPEZzjJk2FyOXoQZnHffSjs-MybP0WsMRPyua9rr3KYevhuE80GhbDQqNj26IdKplnl0fqBnBig3L_s8rL5ppSreTiWolguuT0VVj8oLfEJT2018Tf7zB8mg7A_RMmv2EYUf66AvUcRN0PRV63NUHmHkRKYm574-XAcX5mOHyNkds6e_qGRtxMtRho',
-    isNewArrival: true,
-    isExclusive: true,
-    description: 'Bộ công cụ đa năng 18 trong 1 tích hợp kìm lực, dao thép không gỉ, cưa gỗ, mở nắp và vít đa cạnh chuyên dụng cho dã ngoại khám phá.'
-  },
-  {
-    id: 3,
-    slug: 'set-tui-phan-loai-hanh-ly',
-    title: 'Set túi phân loại hành lý',
-    name: 'Set túi phân loại hành lý',
-    subtitle: 'Ngăn nắp và khoa học cho mọi chuyến đi',
-    category: 'Thiết yếu',
-    price: 680000,
-    heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB2KcU5rhNDPLymv81SVNzvhlWhBkB6-B-EJcP40aT9gTUcsZ62E73wO_GdxI6PZlG6jPv4cJqquEUFRZZI3pnRUdpBsitzoyhPUpioKYxUUFE58LnPHzQTDY8I0BT0O4G39IJcaxZKjBZpektsdVRT410YvQCOfpupbH3Fzl2jQN4smIUosHWVWNVA-B3rFK6kEo_fqzlS7P5Hw-26FFqxElBWlZHQ_S0hmseFhJTrwOm6F3zaNsd9',
-    isNewArrival: true,
-    description: 'Bộ 5 túi nén hành lý chống thấm nước siêu nhẹ, giúp tiết kiệm 60% không gian vali và giữ quần áo luôn phẳng phiu, khô thoáng.'
-  },
-  {
-    id: 4,
-    slug: 'balo-canvas-sap-ong-alpine',
-    title: 'Balo Canvas Sáp Ong Alpine',
-    name: 'Balo Canvas Sáp Ong Alpine',
-    subtitle: 'Bền bỉ vượt thời gian, chống nước tự nhiên',
-    category: 'Trang bị',
-    price: 1850000,
-    originalPrice: 2200000,
-    heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAlyoRRMDdrEh1tEdYk_hR089ATUbOba9k2ZLY4EEOt7vStwznpSaiyIxKVKJPaLLya2UilfXbxnjGpi3yvXvBjeMczyjijEQ3PPzRZlxNWPoJlS3FhCQwy5_dACe_mP_T60HyDUUQvhJX_zQ8OwwJhx4vuZQunPrrw4HoVWGq6U1Nz3l55gqrSDP8QZWu6xaHPvIJHqNxGuG4SOYKVnHBRpnPuwBd_zcicEI79s2MGlZl4FfJmLNNy',
-    isBestSeller: true,
-    isExclusive: true,
-    description: 'Vải canvas phủ sáp ong tự nhiên kết hợp da bò thuộc thảo mộc mộc mạc, sức chứa 28L tối ưu cho chuyến đi 2-4 ngày.'
-  },
-  {
-    id: 5,
-    slug: 'so-da-du-ky-thu-cong-vintage',
-    title: 'Sổ Da Du Ký Thủ Công Vintage',
-    name: 'Sổ Da Du Ký Thủ Công Vintage',
-    subtitle: 'Lưu giữ những khoảnh khắc khám phá vô giá',
-    category: 'Quà lưu niệm',
-    price: 450000,
-    heroImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCVR3VFpWr8SwWK1opXwuR34WlEa_pEUzTOZOz8bEvmPcmZ6tN8x6eAPxZJIyzTd4d_EMB3NGcdNfosZigQb9e5wsoWCOgklW0ZHZwU2WXFyN814powhrVfOdI0ADpb7YphPJvid6U8YHEkrRCnN9U4rh7JOx8E3ZtPpppulAo3fYK83rAvN9ZLCJ85yh_iGf31IukX-u_afPkbmdz-jTKk12fLzicU97kTtyXtsep-XZw1vLA6TWIr',
-    isFeatured: true,
-    description: 'Gia công thủ công tỉ mỉ từ bìa da bò nguyên tấm và 200 trang giấy mỹ thuật mộc mạc không axit.'
-  },
-  {
-    id: 6,
-    slug: 'tra-shan-tuyet-co-thu-suoi-giang',
-    title: 'Trà Búp Cổ Thụ Shan Tuyết Suối Giàng',
-    name: 'Trà Búp Cổ Thụ Shan Tuyết Suối Giàng',
-    subtitle: 'Búp trà phủ lông tơ bạc từ cây chè 300 năm tuổi',
-    category: 'Quà lưu niệm',
-    price: 1450000,
-    originalPrice: 1800000,
-    heroImage: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=1000&q=85',
-    isFeatured: true,
-    isBestSeller: true,
-    isExclusive: true,
-    description: 'Búp trà 1 tôm 2 lá thu hái từ những cây chè cổ thụ trên 300 năm tuổi ở độ cao 2.200m quanh năm mây phủ.'
-  },
-  {
-    id: 7,
-    slug: 'nen-thom-hoang-dan-tram-huong',
-    title: 'Nến Thơm Hoàng Đàn & Trầm Hương',
-    name: 'Nến Thơm Hoàng Đàn & Trầm Hương',
-    subtitle: 'Sáp đậu nành thiên nhiên hòa quyện tinh dầu trầm',
-    category: 'Thiết yếu',
-    price: 890000,
-    originalPrice: 1100000,
-    heroImage: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=85',
-    isBestSeller: true,
-    isExclusive: true,
-    description: 'Sáp đậu nành thiên nhiên hòa quyện cùng tinh dầu hoàng đàn Lạng Sơn và trầm hương nguyên chất, giúp thanh lọc không gian và an định tinh thần.'
-  },
-  {
-    id: 8,
-    slug: 'bo-thien-phuc-linen-tu-nhien',
-    title: 'Bộ Thiền Phục Linen Tự Nhiên',
-    name: 'Bộ Thiền Phục Linen Tự Nhiên',
-    subtitle: 'Chất liệu sợi lanh hữu cơ mềm mại thoáng khí',
-    category: 'Trang bị',
-    price: 1850000,
-    originalPrice: 2200000,
-    heroImage: 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=1000&q=85',
-    isBestSeller: true,
-    isExclusive: true,
-    description: 'Chất liệu sợi lanh hữu cơ tự nhiên thoáng mát, đường may thủ công tối giản mang lại sự nhẹ nhàng, thanh thoát tối đa khi thiền định hay dạo mát.'
-  }
+
 ];
 
 export default function KollectionShopPage({ currentPath = '/kollection-4u', onNavigate }: KollectionShopPageProps) {
@@ -184,6 +77,11 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
   const [products, setProducts] = useState<KollectionProduct[]>(DEFAULT_NOMAD_PRODUCTS);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [kollectionCategories, setKollectionCategories] = useState<string[]>([
+    'Quà lưu niệm',
+    'Trang bị',
+    'Thiết yếu'
+  ]);
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<'newest' | 'price-asc' | 'price-desc' | 'featured'>('newest');
@@ -269,13 +167,12 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
   const loadProducts = async () => {
     setLoading(true);
     try {
-      const data = await fetchProductsApi();
+      const data = await fetchProductsApi(true);
       if (Array.isArray(data) && data.length > 0) {
-        // Map products so every item has clean title and merchandise image
-        const normalized: KollectionProduct[] = data.map((item, idx) => {
-          const resolvedTitle = item.title || item.name || DEFAULT_NOMAD_PRODUCTS[idx % DEFAULT_NOMAD_PRODUCTS.length].title;
+        const normalized: KollectionProduct[] = data.map((item) => {
+          const resolvedTitle = item.title || item.name || 'Sản phẩm Kollection 4U';
           const resolvedHero = getMerchandiseImage(item);
-          const isItemExclusive = item.isExclusive !== undefined ? item.isExclusive : DEFAULT_NOMAD_PRODUCTS.some(dp => dp.slug === item.slug && dp.isExclusive);
+          const isItemExclusive = item.isExclusive !== undefined ? item.isExclusive : false;
 
           return {
             ...item,
@@ -285,14 +182,9 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
             isExclusive: isItemExclusive
           };
         });
-
-        // Ensure we always have full product collection
-        DEFAULT_NOMAD_PRODUCTS.forEach(dp => {
-          if (!normalized.some(p => (p.slug && p.slug === dp.slug) || (p.title && p.title === dp.title))) {
-            normalized.push(dp);
-          }
-        });
         setProducts(normalized);
+      } else if (Array.isArray(data) && data.length === 0) {
+        setProducts([]);
       } else {
         setProducts(DEFAULT_NOMAD_PRODUCTS);
       }
@@ -305,7 +197,56 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
 
   useEffect(() => {
     loadProducts();
+
+    // Fetch ONLY sub-categories that belong to kollection-4u from DB
+    fetchMenuCategoriesApi()
+      .then((menuCats) => {
+        if (Array.isArray(menuCats) && menuCats.length > 0) {
+          const kollectionSubCats = menuCats
+            .filter(c => c.parentSlug === 'kollection-4u' || c.parentSlug === 'kollection')
+            .map(c => c.name);
+
+          if (kollectionSubCats.length > 0) {
+            setKollectionCategories(Array.from(new Set(['Quà lưu niệm', 'Trang bị', 'Thiết yếu', ...kollectionSubCats])));
+          }
+        }
+      })
+      .catch(() => { });
   }, []);
+
+  // Sync category filter from URL path (e.g. /kollection-4u/qua-luu-niem -> 'Quà lưu niệm')
+  useEffect(() => {
+    if (!currentPath) return;
+    const cleanPath = currentPath.split(/[?#]/)[0].replace(/\/+$/, '');
+    const segments = cleanPath.split('/').filter(Boolean);
+
+    if (segments.length >= 2 && (segments[0] === 'kollection-4u' || segments[0] === 'kollection')) {
+      const subSlug = segments[1].toLowerCase();
+      if (subSlug === 'qua-luu-niem' || subSlug === 'souvenirs') {
+        setSelectedCategory('Quà lưu niệm');
+      } else if (subSlug === 'trang-bi' || subSlug === 'gear') {
+        setSelectedCategory('Trang bị');
+      } else if (subSlug === 'thiet-yeu' || subSlug === 'essentials') {
+        setSelectedCategory('Thiết yếu');
+      } else if (subSlug === 'doc-quyen' || subSlug === 'dac-tuyen') {
+        setSelectedCategory('doc-quyen');
+      } else {
+        setSelectedCategory(subSlug);
+      }
+    } else if (segments.length === 1 && (segments[0] === 'kollection-4u' || segments[0] === 'kollection')) {
+      setSelectedCategory('All');
+    }
+  }, [currentPath]);
+
+  // Helper normalize function for loose matching
+  const normalizeStr = (str = '') =>
+    str
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/đ/g, 'd')
+      .replace(/[-_]/g, ' ')
+      .trim();
 
   // Filter & Sort Products
   const filteredProducts = useMemo(() => {
@@ -316,8 +257,17 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
       if (selectedCategory === 'doc-quyen') {
         list = list.filter(p => p.isExclusive === true || (p as any).badge === 'Độc Quyền' || (p as any).badge === 'Đặc Tuyển');
       } else {
-        const catQuery = selectedCategory.toLowerCase();
-        list = list.filter(p => (p.category || '').toLowerCase().includes(catQuery));
+        const normQuery = normalizeStr(selectedCategory);
+        list = list.filter(p => {
+          const normCat = normalizeStr(p.category || '');
+          const catsArray = Array.isArray((p as any).categories) ? (p as any).categories : [];
+          return (
+            normCat.includes(normQuery) ||
+            normQuery.includes(normCat) ||
+            catsArray.some((c: string) => normalizeStr(c).includes(normQuery)) ||
+            (p.slug && normalizeStr(p.slug).includes(normQuery))
+          );
+        });
       }
     }
 
@@ -955,10 +905,9 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
               >
                 <option value="All">Danh mục: Tất cả</option>
                 <option value="doc-quyen">✨ Sản phẩm Độc quyền</option>
-                <option value="Phụ kiện du lịch">Phụ kiện du lịch</option>
-                <option value="Trang bị">Trang bị</option>
-                <option value="Thiết yếu">Thiết yếu</option>
-                <option value="Quà lưu niệm">Quà lưu niệm</option>
+                {kollectionCategories.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
               </select>
 
               {/* Price Filter */}
@@ -1954,7 +1903,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
 
                   {activeUpsellItems.length > 0 && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#059669', marginBottom: '4px' }}>
-                      <span>Sản phẩm mua kèm thêm (+{activeUpsellItems.reduce((a,c) => a + c.quantity, 0)} món):</span>
+                      <span>Sản phẩm mua kèm thêm (+{activeUpsellItems.reduce((a, c) => a + c.quantity, 0)} món):</span>
                       <strong style={{ color: '#059669' }}>+ {formatVnd(upsellTotalPrice)}</strong>
                     </div>
                   )}

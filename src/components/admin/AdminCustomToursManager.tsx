@@ -99,7 +99,7 @@ export default function AdminCustomToursManager({
             </span>
           </div>
           <h1 style={{ fontSize: '24px', margin: 0, color: '#0f172a', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.3 }}>
-            Quản Lý Yêu Cầu Thiết Kế Lịch Trình ({filteredItems.length})
+            Quản Lý lịch trình thiết kế ({filteredItems.length})
           </h1>
           <p style={{ margin: '4px 0 0 0', fontSize: '13.5px', color: '#64748b' }}>
             Tổng hợp các hồ sơ yêu cầu may đo tour riêng, điểm đến mong muốn và ngân sách dự kiến của khách.
@@ -292,14 +292,14 @@ export default function AdminCustomToursManager({
                   item.status === 'Đã hoàn tất' || item.status === 'Đã chốt tour'
                     ? '#16a34a'
                     : item.status === 'Đang thiết kế'
-                    ? '#0284c7'
-                    : '#ea580c';
+                      ? '#0284c7'
+                      : '#ea580c';
                 const statusBg =
                   item.status === 'Đã hoàn tất' || item.status === 'Đã chốt tour'
                     ? '#f0fdf4'
                     : item.status === 'Đang thiết kế'
-                    ? '#f0f9ff'
-                    : '#fff7ed';
+                      ? '#f0f9ff'
+                      : '#fff7ed';
 
                 return (
                   <tr

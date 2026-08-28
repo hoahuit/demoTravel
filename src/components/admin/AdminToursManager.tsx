@@ -393,51 +393,21 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
 
           {/* Search & Category Filter Pills */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
-            <div style={{ position: 'relative', width: '100%', maxWidth: '380px' }}>
-              <input
-                type="text"
-                placeholder="Tìm tour theo tên, địa danh, loại hình..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '10px 16px',
-                  borderRadius: '12px',
-                  border: '1px solid rgba(8, 31, 19, 0.12)',
-                  backgroundColor: '#f3f4f1',
-                  fontSize: '14px',
-                  outline: 'none'
-                }}
-              />
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-              {[
-                { id: 'All', label: 'Tất cả Packages' },
-                { id: 'Exclusive', label: '1. Retreats Độc Quyền' },
-                { id: 'Featured', label: '2. Sắp Khởi Hành' },
-                { id: 'Hot', label: '3. Không Thể Bỏ Lỡ' },
-                { id: 'Deals', label: '4. Ưu Đãi Giờ Chót' },
-              ].map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setCategoryFilter(cat.id)}
-                  style={{
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    padding: '7px 16px',
-                    borderRadius: '999px',
-                    border: '1px solid rgba(8, 31, 19, 0.1)',
-                    cursor: 'pointer',
-                    backgroundColor: categoryFilter === cat.id ? '#081f13' : '#ffffff',
-                    color: categoryFilter === cat.id ? '#ffffff' : '#4d6453',
-                    transition: 'all 0.15s ease'
-                  }}
-                >
-                  {cat.label}
-                </button>
-              ))}
-            </div>
+            <input
+              type="text"
+              placeholder="Tìm tour theo tên, địa danh, loại hình..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '10px 16px',
+                borderRadius: '12px',
+                border: '1px solid rgba(8, 31, 19, 0.12)',
+                backgroundColor: '#f3f4f1',
+                fontSize: '14px',
+                outline: 'none'
+              }}
+            />
           </div>
 
           {/* 4 Bento Overview Stat Cards */}
@@ -610,82 +580,111 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
             ))}
           </div>
         </>
-      )}
+      )
+      }
 
       {/* ── TOUR DETAIL EDITOR FORM ── */}
-      {selectedSlug && tourDraft && (
-        <>
-          {/* Top Sticky Header Bar (Serene Operator Glassmorphism Style) */}
-          <div style={{
-            position: 'sticky',
-            top: '64px',
-            zIndex: 90,
-            backgroundColor: 'rgba(249, 250, 247, 0.92)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            borderBottom: '1px solid rgba(8, 31, 19, 0.08)',
-            padding: '12px 24px',
-            margin: '-28px -28px 24px -28px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: '16px',
-            boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.04)'
-          }}>
-            {/* Left side: Back Icon Button & Title */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <button
-                type="button"
-                title="Quay lại danh sách"
-                onClick={handleBackToList}
-                style={{
-                  border: '1px solid rgba(8, 31, 19, 0.15)',
-                  backgroundColor: '#ffffff',
-                  color: '#081f13',
-                  borderRadius: '10px',
-                  width: '38px',
-                  height: '38px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease'
-                }}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M19 12H5M12 19l-7-7 7-7" />
-                </svg>
-              </button>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', margin: 0, color: '#081f13', fontWeight: 600 }}>
-                  {isCreatingNew ? 'Tạo Tour Retreat Mới' : 'Chỉnh Sửa Chi Tiết Tour'}
-                </h2>
-                <span style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  padding: '4px 12px',
-                  borderRadius: '999px',
-                  backgroundColor: isCreatingNew ? '#dcfce7' : '#e0f2fe',
-                  color: isCreatingNew ? '#15803d' : '#0369a1',
-                  border: isCreatingNew ? '1px solid #bbf7d0' : '1px solid #bae6fd'
-                }}>
-                  {isCreatingNew ? '✨ Chế độ tạo mới' : '🟢 Chế độ chỉnh sửa'}
-                </span>
-              </div>
-            </div>
-
-            {/* Right side: Action Icon Buttons pushed to far right */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
-              {!isCreatingNew && (
+      {
+        selectedSlug && tourDraft && (
+          <>
+            {/* Top Sticky Header Bar (Serene Operator Glassmorphism Style) */}
+            <div style={{
+              position: 'sticky',
+              top: '64px',
+              zIndex: 90,
+              backgroundColor: 'rgba(249, 250, 247, 0.92)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              borderBottom: '1px solid rgba(8, 31, 19, 0.08)',
+              padding: '12px 24px',
+              margin: '-28px -28px 24px -28px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: '16px',
+              boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.04)'
+            }}>
+              {/* Left side: Back Icon Button & Title */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                 <button
                   type="button"
-                  title="Xóa Tour"
-                  onClick={() => handleDeleteTour(tourDraft!)}
+                  title="Quay lại danh sách"
+                  onClick={handleBackToList}
                   style={{
-                    backgroundColor: '#fff1f2',
-                    color: '#e11d48',
-                    border: '1px solid #fecdd3',
+                    border: '1px solid rgba(8, 31, 19, 0.15)',
+                    backgroundColor: '#ffffff',
+                    color: '#081f13',
+                    borderRadius: '10px',
+                    width: '38px',
+                    height: '38px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                  </svg>
+                </button>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', margin: 0, color: '#081f13', fontWeight: 600 }}>
+                    {isCreatingNew ? 'Tạo Tour Retreat Mới' : 'Chỉnh Sửa Chi Tiết Tour'}
+                  </h2>
+                  <span style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    padding: '4px 12px',
+                    borderRadius: '999px',
+                    backgroundColor: isCreatingNew ? '#dcfce7' : '#e0f2fe',
+                    color: isCreatingNew ? '#15803d' : '#0369a1',
+                    border: isCreatingNew ? '1px solid #bbf7d0' : '1px solid #bae6fd'
+                  }}>
+                    {isCreatingNew ? '✨ Chế độ tạo mới' : '🟢 Chế độ chỉnh sửa'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Right side: Action Icon Buttons pushed to far right */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
+                {!isCreatingNew && (
+                  <button
+                    type="button"
+                    title="Xóa Tour"
+                    onClick={() => handleDeleteTour(tourDraft!)}
+                    style={{
+                      backgroundColor: '#fff1f2',
+                      color: '#e11d48',
+                      border: '1px solid #fecdd3',
+                      borderRadius: '10px',
+                      width: '38px',
+                      height: '38px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  title="Hủy Bỏ / Hoàn Tác"
+                  onClick={handleCancel}
+                  style={{
+                    backgroundColor: '#ffffff',
+                    color: '#475569',
+                    border: '1px solid rgba(8, 31, 19, 0.12)',
                     borderRadius: '10px',
                     width: '38px',
                     height: '38px',
@@ -697,1029 +696,1218 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                   }}
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    <line x1="10" y1="11" x2="10" y2="17"></line>
-                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                    <path d="M3 3v5h5"></path>
                   </svg>
                 </button>
-              )}
 
-              <button
-                type="button"
-                title="Hủy Bỏ / Hoàn Tác"
-                onClick={handleCancel}
-                style={{
-                  backgroundColor: '#ffffff',
-                  color: '#475569',
-                  border: '1px solid rgba(8, 31, 19, 0.12)',
-                  borderRadius: '10px',
-                  width: '38px',
-                  height: '38px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease'
-                }}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                  <path d="M3 3v5h5"></path>
-                </svg>
-              </button>
-
-              <button
-                type="button"
-                title="Lưu Thay Đổi"
-                onClick={handleSave}
-                style={{
-                  backgroundColor: isCreatingNew ? '#059669' : '#081f13',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '10px',
-                  height: '38px',
-                  padding: '0 20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  fontSize: '13px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  boxShadow: isCreatingNew ? '0 4px 14px rgba(5, 150, 105, 0.25)' : '0 4px 14px rgba(8, 31, 19, 0.2)'
-                }}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                  <polyline points="7 3 7 8 15 8"></polyline>
-                </svg>
-                <span>Lưu Thay Đổi</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Sleek Segmented Tab Bar (Serene Operator Style) */}
-          <div style={{ marginBottom: '24px' }}>
-            <div style={{
-              display: 'inline-flex',
-              backgroundColor: '#edeeeb',
-              padding: '4px',
-              borderRadius: '14px',
-              gap: '3px'
-            }}>
-              {[
-                { id: 'basic-info', label: 'Thông Tin & Phân Phối' },
-                { id: 'pricing-status', label: 'Bảng Giá & Dịch Vụ' },
-                { id: 'highlights', label: 'Điểm Nổi Bật' },
-                { id: 'itinerary', label: 'Lịch Trình Chi Tiết' },
-                { id: 'gallery', label: 'Bộ Sưu Tập Ảnh' },
-                { id: 'live-preview', label: 'Xem Trước Chi Tiết' },
-              ].map((tab) => (
                 <button
-                  key={tab.id}
                   type="button"
-                  onClick={() => handleSwitchTab(tab.id)}
+                  title="Lưu Thay Đổi"
+                  onClick={handleSave}
                   style={{
+                    backgroundColor: isCreatingNew ? '#059669' : '#081f13',
+                    color: '#ffffff',
                     border: 'none',
-                    backgroundColor: activeSection === tab.id ? '#ffffff' : 'transparent',
-                    color: activeSection === tab.id ? '#081f13' : '#4d6453',
                     borderRadius: '10px',
-                    padding: '8px 18px',
+                    height: '38px',
+                    padding: '0 20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
                     fontSize: '13px',
-                    fontWeight: activeSection === tab.id ? 700 : 500,
+                    fontWeight: 700,
                     cursor: 'pointer',
-                    boxShadow: activeSection === tab.id ? '0 2px 8px rgba(8,31,19,0.08)' : 'none',
-                    transition: 'all 0.15s ease'
+                    boxShadow: isCreatingNew ? '0 4px 14px rgba(5, 150, 105, 0.25)' : '0 4px 14px rgba(8, 31, 19, 0.2)'
                   }}
                 >
-                  {tab.label}
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                    <polyline points="7 3 7 8 15 8"></polyline>
+                  </svg>
+                  <span>Lưu Thay Đổi</span>
                 </button>
-              ))}
+              </div>
             </div>
-          </div>
 
-          {/* TAB 1: BASIC INFORMATION */}
-          {activeSection === 'basic-info' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              {/* Hero Banner Cover Upload Card */}
+            {/* Sleek Segmented Tab Bar (Serene Operator Style) */}
+            <div style={{ marginBottom: '24px' }}>
               <div style={{
-                position: 'relative',
-                height: '240px',
-                borderRadius: '24px',
-                overflow: 'hidden',
-                backgroundColor: '#081f13',
-                boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.1)'
+                display: 'inline-flex',
+                backgroundColor: '#edeeeb',
+                padding: '4px',
+                borderRadius: '14px',
+                gap: '3px'
               }}>
-                <img
-                  src={getImageUrl(tourDraft.heroImage)}
-                  alt={tourDraft.title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.75 }}
-                />
-                <div style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(to top, rgba(8,31,19,0.9), transparent 60%)',
-                  padding: '24px',
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  justifyContent: 'space-between'
-                }}>
-                  <div>
-                    <span style={{ fontSize: '11px', fontWeight: 800, color: '#819986', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
-                      {(tourDraft.categories && tourDraft.categories[0]) || tourDraft.category || 'Retreat'} • {tourDraft.city}
-                    </span>
-                    <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '26px', color: '#ffffff', margin: '4px 0 0 0', fontWeight: 600 }}>
-                      {tourDraft.title}
-                    </h1>
-                  </div>
-
-                  <input
-                    ref={coverFileRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleUploadHeroCover}
-                    style={{ display: 'none' }}
-                  />
+                {[
+                  { id: 'basic-info', label: 'Thông Tin & Phân Phối' },
+                  { id: 'pricing-status', label: 'Bảng Giá & Dịch Vụ' },
+                  { id: 'highlights', label: 'Điểm Nổi Bật' },
+                  { id: 'itinerary', label: 'Lịch Trình Chi Tiết' },
+                  { id: 'gallery', label: 'Bộ Sưu Tập Ảnh' },
+                  { id: 'live-preview', label: 'Xem Trước Chi Tiết' },
+                ].map((tab) => (
                   <button
+                    key={tab.id}
                     type="button"
-                    onClick={() => coverFileRef.current?.click()}
+                    onClick={() => handleSwitchTab(tab.id)}
                     style={{
-                      backgroundColor: 'rgba(8, 31, 19, 0.85)',
-                      backdropFilter: 'blur(8px)',
-                      color: '#ffffff',
-                      border: '1px solid rgba(255, 255, 255, 0.25)',
+                      border: 'none',
+                      backgroundColor: activeSection === tab.id ? '#ffffff' : 'transparent',
+                      color: activeSection === tab.id ? '#081f13' : '#4d6453',
                       borderRadius: '10px',
-                      padding: '8px 16px',
+                      padding: '8px 18px',
                       fontSize: '13px',
-                      fontWeight: 600,
-                      cursor: 'pointer'
+                      fontWeight: activeSection === tab.id ? 700 : 500,
+                      cursor: 'pointer',
+                      boxShadow: activeSection === tab.id ? '0 2px 8px rgba(8,31,19,0.08)' : 'none',
+                      transition: 'all 0.15s ease'
                     }}
                   >
-                    Tải Ảnh Bìa Mới (JPG/PNG)
+                    {tab.label}
                   </button>
-                </div>
+                ))}
               </div>
+            </div>
 
-              {/* Form Input Squircle Card */}
-              <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '28px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.05)' }}>
-                <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: '0 0 20px 0', fontWeight: 600 }}>
-                  Thông Tin Chi Tiết Tour
-                </h3>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
-                  <div style={{ gridColumn: 'span 2' }}>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Tên Tour Retreat</label>
-                    <input
-                      type="text"
-                      placeholder="Ví dụ: Hành Trình Tĩnh Tại & Phục Hồi Thân Tâm 3N2Đ"
-                      value={tourDraft.title || ''}
-                      onChange={(e) => setTourDraft({ ...tourDraft, title: e.target.value })}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
-                    />
-                  </div>
-
-                  <div style={{ gridColumn: 'span 2' }}>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Subtitle / Tagline Mới</label>
-                    <input
-                      type="text"
-                      placeholder="Ví dụ: Phục hồi Thân - Tâm - Trí giữa đại ngàn nguyên sơ bạt ngàn..."
-                      value={tourDraft.subtitle || ''}
-                      onChange={(e) => setTourDraft({ ...tourDraft, subtitle: e.target.value })}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
-                    />
-                  </div>
-
-                  <div style={{ gridColumn: 'span 2', backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '14px', padding: '16px 18px', boxShadow: '0 2px 8px rgba(22, 101, 52, 0.04)' }}>
-                    <div style={{ marginBottom: '8px' }}>
-                      <label style={{ fontSize: '12.5px', fontWeight: 800, color: '#166534', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span>Landing Page </span>
-                      </label>
+            {/* TAB 1: BASIC INFORMATION */}
+            {activeSection === 'basic-info' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                {/* Hero Banner Cover Upload Card */}
+                <div style={{
+                  position: 'relative',
+                  height: '240px',
+                  borderRadius: '24px',
+                  overflow: 'hidden',
+                  backgroundColor: '#081f13',
+                  boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.1)'
+                }}>
+                  <img
+                    src={getImageUrl(tourDraft.heroImage)}
+                    alt={tourDraft.title}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.75 }}
+                  />
+                  <div style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(to top, rgba(8,31,19,0.9), transparent 60%)',
+                    padding: '24px',
+                    display: 'flex',
+                    alignItems: 'flex-end',
+                    justifyContent: 'space-between'
+                  }}>
+                    <div>
+                      <span style={{ fontSize: '11px', fontWeight: 800, color: '#819986', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+                        {(tourDraft.categories && tourDraft.categories[0]) || tourDraft.category || 'Retreat'} • {tourDraft.city}
+                      </span>
+                      <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '26px', color: '#ffffff', margin: '4px 0 0 0', fontWeight: 600 }}>
+                        {tourDraft.title}
+                      </h1>
                     </div>
 
-                    <select
-                      value={(tourDraft as any).landingSectionTemplateId || tourDraft.yoga3dTemplateId || ''}
-                      onChange={(e) => {
-                        const selectedVal = e.target.value;
-                        setTourDraft({
-                          ...tourDraft,
-                          landingSectionTemplateId: selectedVal,
-                          yoga3dTemplateId: selectedVal
-                        } as any);
-                      }}
+                    <input
+                      ref={coverFileRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleUploadHeroCover}
+                      style={{ display: 'none' }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => coverFileRef.current?.click()}
                       style={{
-                        width: '100%',
-                        padding: '10px 14px',
-                        borderRadius: '8px',
-                        border: '1px solid #86efac',
-                        fontSize: '13.5px',
+                        backgroundColor: 'rgba(8, 31, 19, 0.85)',
+                        backdropFilter: 'blur(8px)',
+                        color: '#ffffff',
+                        border: '1px solid rgba(255, 255, 255, 0.25)',
+                        borderRadius: '10px',
+                        padding: '8px 16px',
+                        fontSize: '13px',
                         fontWeight: 600,
-                        color: '#081f13',
-                        backgroundColor: '#ffffff',
                         cursor: 'pointer'
                       }}
                     >
-                      <option value="">-- Mặc Định: Dùng Loại 1 (Vận Động 3Đ • Chia tay Đau Cổ, Vai, Gáy) --</option>
-                      {availableLandingTemplates.map((tpl) => (
-                        <option key={tpl.id} value={tpl.id}>
-                          {tpl.name} {tpl.isDefault ? '(★ Mặc Định Hệ Thống)' : ''}
-                        </option>
-                      ))}
-                    </select>
+                      Tải Ảnh Bìa Mới (JPG/PNG)
+                    </button>
                   </div>
+                </div>
 
-                  {/* UNIFIED RETREAT CATEGORIES & HOMEPAGE DISTRIBUTION */}
-                  <div style={{ gridColumn: '1 / -1', backgroundColor: '#fcfdfc', borderRadius: '18px', padding: '22px', border: '1px solid rgba(8, 31, 19, 0.14)', boxShadow: '0 2px 12px rgba(8, 31, 19, 0.04)' }}>
+                {/* Form Input Squircle Card */}
+                <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '28px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.05)' }}>
+                  <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: '0 0 20px 0', fontWeight: 600 }}>
+                    Thông Tin Chi Tiết Tour
+                  </h3>
 
-                    {/* Header & Selected Badges */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px', borderBottom: '1px solid #eef2ef', paddingBottom: '12px' }}>
-                      <div>
-                        <h4 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '18px', color: '#081f13', margin: 0, fontWeight: 700 }}>
-                          Phân Loại Series Retreat & Vị Trí Hiển Thị Website
-                        </h4>
-                        <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0 0' }}>
-                          Tự động đồng bộ Menu điều hướng và các khu vực ghim nổi bật trên Website
-                        </p>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-                        <span style={{ fontSize: '11.5px', color: '#059669', backgroundColor: '#e6f4ea', padding: '3px 10px', borderRadius: '12px', fontWeight: 700 }}>
-                          {(tourDraft.categories || []).length} mục đã kích hoạt
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Quick Selected Tags Pill Bar */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '18px', minHeight: '26px' }}>
-                      {(tourDraft.categories || []).length === 0 ? (
-                        <span style={{ fontSize: '12px', color: '#94a3b8', fontStyle: 'italic' }}>
-                          ⚠️ Chưa chọn chủ đề Series nào (hãy chọn ít nhất 1 Series ở Mục 1 bên dưới)
-                        </span>
-                      ) : (
-                        (tourDraft.categories || []).map((catSlug) => {
-                          const tagLabels: Record<string, { name: string; color: string }> = {
-                            'chua-lanh': { name: '🌿 Retreat Chữa Lành', color: '#16a34a' },
-                            'bao-ton': { name: '🛡️ Retreat Bảo Tồn', color: '#0284c7' },
-                            'thien-nhien': { name: '🌲 Retreat Thiên Nhiên', color: '#ca8a04' },
-                            'thien-nguyen': { name: '💖 Retreat Thiện Nguyện', color: '#db2777' },
-                            'doc-quyen': { name: '👑 Độc Quyền', color: '#eab308' },
-                            'sap-khoi-hanh': { name: '📅 Sắp Khởi Hành', color: '#2563eb' },
-                            'khong-the-bo-lo': { name: '🔥 Không Thể Bỏ Lỡ', color: '#dc2626' },
-                            'hot': { name: '🔥 HOT', color: '#dc2626' },
-                            'uu-dai-gio-chot': { name: '⚡ Giờ Chót', color: '#ea580c' },
-                            'last-minute': { name: '⚡ Flash Sale', color: '#ea580c' },
-                            'moi': { name: '🌟 Mới (NEW)', color: '#16a34a' },
-                            'new': { name: '🌟 NEW', color: '#16a34a' },
-                            'bac': { name: '🏔️ Miền Bắc', color: '#475569' },
-                            'trung': { name: '🌊 Miền Trung', color: '#475569' },
-                            'nam': { name: '🌴 Miền Nam', color: '#475569' },
-                          };
-                          const info = tagLabels[catSlug] || { name: catSlug, color: '#059669' };
-                          return (
-                            <span
-                              key={catSlug}
-                              style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '5px',
-                                backgroundColor: '#ffffff',
-                                border: `1px solid ${info.color}50`,
-                                color: '#081f13',
-                                fontSize: '11.5px',
-                                fontWeight: 700,
-                                padding: '3px 8px',
-                                borderRadius: '16px',
-                                boxShadow: '0 1px 2px rgba(0,0,0,0.04)'
-                              }}
-                            >
-                              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: info.color }} />
-                              {info.name}
-                            </span>
-                          );
-                        })
-                      )}
-                    </div>
-
-                    {/* MỤC 1: MENU CỐ ĐỊNH HÀNG TRÊN (TOP FIXED BADGES & HOMEPAGE SECTIONS) */}
-                    <div style={{ marginBottom: '18px', backgroundColor: '#ffffff', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
-                        <strong style={{ fontSize: '13px', color: '#081f13', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span>⭐ 1. Menu Cố Định Hàng Trên & Ghim Trang Chủ</span>
-                        </strong>
-                        <span style={{ fontSize: '11.5px', color: '#64748b' }}>
-                          4 nút menu cố định trên thanh Header & các khu vực ghim lớn trên Trang chủ
-                        </span>
-                      </div>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '10px' }}>
-
-                        {/* 1. Retreats ĐỘC QUYỀN */}
-                        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderRadius: '12px', backgroundColor: tourDraft.isExclusive || (tourDraft.categories || []).includes('doc-quyen') ? '#fefce8' : '#ffffff', border: tourDraft.isExclusive || (tourDraft.categories || []).includes('doc-quyen') ? '2px solid #facc15' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                          <div>
-                            <strong style={{ fontSize: '13.5px', color: '#854d0e', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <span>👑 Retreats ĐỘC QUYỀN</span>
-                            </strong>
-                            <p style={{ fontSize: '11.5px', color: '#64748b', margin: '2px 0 0 0' }}>Hiển thị ở Menu Độc Quyền & Slider 3D Trang Chủ</p>
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={tourDraft.isExclusive || (tourDraft.categories || []).includes('doc-quyen')}
-                            onChange={(e) => {
-                              const checked = e.target.checked;
-                              const current = tourDraft.categories || [];
-                              const next = checked ? Array.from(new Set([...current, 'doc-quyen'])) : current.filter((s) => s !== 'doc-quyen');
-                              setTourDraft({ ...tourDraft, isExclusive: checked, categories: next });
-                            }}
-                            style={{ width: '18px', height: '18px', accentColor: '#eab308', cursor: 'pointer' }}
-                          />
-                        </label>
-
-                        {/* 2. Sắp Khởi hành */}
-                        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderRadius: '12px', backgroundColor: tourDraft.isFeatured || (tourDraft.categories || []).includes('sap-khoi-hanh') ? '#eff6ff' : '#ffffff', border: tourDraft.isFeatured || (tourDraft.categories || []).includes('sap-khoi-hanh') ? '2px solid #93c5fd' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                          <div>
-                            <strong style={{ fontSize: '13.5px', color: '#1e40af', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <span>📅 Sắp Khởi hành</span>
-                            </strong>
-                            <p style={{ fontSize: '11.5px', color: '#64748b', margin: '2px 0 0 0' }}>Hiển thị ở Menu Sắp Khởi Hành & Mục Bento Grid Trang Chủ</p>
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={tourDraft.isFeatured || (tourDraft.categories || []).includes('sap-khoi-hanh')}
-                            onChange={(e) => {
-                              const checked = e.target.checked;
-                              const current = tourDraft.categories || [];
-                              const next = checked ? Array.from(new Set([...current, 'sap-khoi-hanh'])) : current.filter((s) => s !== 'sap-khoi-hanh');
-                              setTourDraft({ ...tourDraft, isFeatured: checked, categories: next });
-                            }}
-                            style={{ width: '18px', height: '18px', accentColor: '#2563eb', cursor: 'pointer' }}
-                          />
-                        </label>
-
-                        {/* 3. KHÔNG THỂ BỎ LỠ */}
-                        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderRadius: '12px', backgroundColor: tourDraft.isHot || (tourDraft.categories || []).includes('khong-the-bo-lo') ? '#fff1f2' : '#ffffff', border: tourDraft.isHot || (tourDraft.categories || []).includes('khong-the-bo-lo') ? '2px solid #fda4af' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                          <div>
-                            <strong style={{ fontSize: '13.5px', color: '#9f1239', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <span>🔥 KHÔNG THỂ BỎ LỠ</span>
-                            </strong>
-                            <p style={{ fontSize: '11.5px', color: '#64748b', margin: '2px 0 0 0' }}>Hiển thị ở Menu Không Thể Bỏ Lỡ & Mục Khám Phá Nổi Bật</p>
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={tourDraft.isHot || (tourDraft.categories || []).includes('khong-the-bo-lo')}
-                            onChange={(e) => {
-                              const checked = e.target.checked;
-                              const current = tourDraft.categories || [];
-                              const next = checked ? Array.from(new Set([...current, 'khong-the-bo-lo', 'hot'])) : current.filter((s) => s !== 'khong-the-bo-lo');
-                              setTourDraft({ ...tourDraft, isHot: checked, categories: next });
-                            }}
-                            style={{ width: '18px', height: '18px', accentColor: '#dc2626', cursor: 'pointer' }}
-                          />
-                        </label>
-
-                        {/* 4. Ưu đãi GIỜ CHÓT */}
-                        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderRadius: '12px', backgroundColor: tourDraft.isPromotion || (tourDraft.categories || []).includes('uu-dai-gio-chot') ? '#fffbeb' : '#ffffff', border: tourDraft.isPromotion || (tourDraft.categories || []).includes('uu-dai-gio-chot') ? '2px solid #fde68a' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                          <div>
-                            <strong style={{ fontSize: '13.5px', color: '#9a3412', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <span>⚡ Ưu đãi GIỜ CHÓT</span>
-                            </strong>
-                            <p style={{ fontSize: '11.5px', color: '#64748b', margin: '2px 0 0 0' }}>Hiển thị ở Menu Giờ Chót & Mục Flash Sale Trang Chủ</p>
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={tourDraft.isPromotion || (tourDraft.categories || []).includes('uu-dai-gio-chot')}
-                            onChange={(e) => {
-                              const checked = e.target.checked;
-                              const current = tourDraft.categories || [];
-                              const next = checked ? Array.from(new Set([...current, 'uu-dai-gio-chot', 'last-minute'])) : current.filter((s) => s !== 'uu-dai-gio-chot');
-                              setTourDraft({ ...tourDraft, isPromotion: checked, categories: next });
-                            }}
-                            style={{ width: '18px', height: '18px', accentColor: '#ea580c', cursor: 'pointer' }}
-                          />
-                        </label>
-
-                      </div>
-                    </div>
-
-                    {/* MỤC 2: CHỦ ĐỀ SERIES RETREAT (4 CỘT CHÍNH) */}
-                    <div style={{ marginBottom: '18px', backgroundColor: '#ffffff', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
-                        <strong style={{ fontSize: '13px', color: '#081f13', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span>🌿 2. Chủ Đề Series Retreat Chính (4 Cột Mega Menu)</span>
-                          <span style={{ fontSize: '11px', color: '#dc2626', fontWeight: 600 }}>*bắt buộc chọn</span>
-                        </strong>
-                        <span style={{ fontSize: '11.5px', color: '#64748b' }}>
-                          Xác định tour thuộc 1 trong 4 cột Series Retreat trên Menu
-                        </span>
-                      </div>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '10px' }}>
-                        {[
-                          {
-                            slug: 'chua-lanh',
-                            categoryName: 'Healing',
-                            title: 'Retreat Chữa Lành',
-                            desc: 'Phục hồi Thân · Tâm · Trí (Wellness & Spa)',
-                            activeBg: '#f0fdf4',
-                            activeBorder: '#86efac',
-                            activeColor: '#166534',
-                            badgeColor: '#16a34a',
-                            icon: '🌿'
-                          },
-                          {
-                            slug: 'bao-ton',
-                            categoryName: 'Conservation',
-                            title: 'Retreat Bảo Tồn',
-                            desc: 'Bảo tồn rừng già & Đa dạng sinh học',
-                            activeBg: '#f0f9ff',
-                            activeBorder: '#7dd3fc',
-                            activeColor: '#075985',
-                            badgeColor: '#0284c7',
-                            icon: '🛡️'
-                          },
-                          {
-                            slug: 'thien-nhien',
-                            categoryName: 'Nature',
-                            title: 'Retreat Thiên Nhiên',
-                            desc: 'Hòa mình giữa đại ngàn & Tắm rừng nguyên sơ',
-                            activeBg: '#fefce8',
-                            activeBorder: '#fde047',
-                            activeColor: '#854d0e',
-                            badgeColor: '#ca8a04',
-                            icon: '🌲'
-                          },
-                          {
-                            slug: 'thien-nguyen',
-                            categoryName: 'Volunteer',
-                            title: 'Retreat Thiện Nguyện',
-                            desc: 'Gắn kết sẻ chia & Giá trị cộng đồng',
-                            activeBg: '#fdf2f8',
-                            activeBorder: '#f472b6',
-                            activeColor: '#9d174d',
-                            badgeColor: '#db2777',
-                            icon: '💖'
-                          },
-                        ].map((series) => {
-                          const isSelected = (tourDraft.categories || []).includes(series.slug) || (tourDraft.categories || []).includes(series.categoryName) || tourDraft.category === series.categoryName;
-                          return (
-                            <label
-                              key={series.slug}
-                              style={{
-                                display: 'flex',
-                                alignItems: 'flex-start',
-                                gap: '10px',
-                                padding: '12px 14px',
-                                borderRadius: '12px',
-                                backgroundColor: isSelected ? series.activeBg : '#ffffff',
-                                border: isSelected ? `2px solid ${series.activeBorder}` : '1px solid #e2e8f0',
-                                cursor: 'pointer',
-                                transition: 'all 0.15s ease',
-                                boxShadow: isSelected ? '0 2px 8px rgba(0,0,0,0.04)' : 'none'
-                              }}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={isSelected}
-                                onChange={(e) => {
-                                  const current = tourDraft.categories || [];
-                                  let next = e.target.checked
-                                    ? [...current, series.slug]
-                                    : current.filter((s) => s !== series.slug && s !== series.categoryName);
-                                  next = Array.from(new Set(next));
-                                  setTourDraft({
-                                    ...tourDraft,
-                                    categories: next,
-                                    category: next[0] || series.categoryName || 'Healing'
-                                  });
-                                }}
-                                style={{ marginTop: '2px', accentColor: series.badgeColor, cursor: 'pointer', width: '16px', height: '16px' }}
-                              />
-                              <div style={{ flex: 1 }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                  <span style={{ fontSize: '15px' }}>{series.icon}</span>
-                                  <strong style={{ fontSize: '13.5px', color: isSelected ? series.activeColor : '#081f13' }}>
-                                    {series.title}
-                                  </strong>
-                                </div>
-                                <p style={{ fontSize: '11.5px', color: '#64748b', margin: '3px 0 0 0', lineHeight: 1.3 }}>
-                                  {series.desc}
-                                </p>
-                              </div>
-                            </label>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* MỤC 3: PHÂN LOẠI CON TRONG SERIES (6 DÒNG CON) */}
-                    <div style={{ marginBottom: '18px', backgroundColor: '#ffffff', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
-                        <strong style={{ fontSize: '13px', color: '#081f13', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span>🏷️ 3. Phân Loại Danh Mục Con Trong Series (6 Dòng Con)</span>
-                        </strong>
-                        <span style={{ fontSize: '11.5px', color: '#64748b' }}>
-                          Khớp chính xác với 6 dòng con bên dưới từng cột Series Retreat trên Menu
-                        </span>
-                      </div>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '10px' }}>
-
-                        {/* 1. Retreat Hot [HOT] */}
-                        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '12px', backgroundColor: tourDraft.isHot || (tourDraft.categories || []).includes('hot') ? '#fff1f2' : '#ffffff', border: tourDraft.isHot || (tourDraft.categories || []).includes('hot') ? '2px solid #fda4af' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                          <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <strong style={{ fontSize: '13px', color: '#9f1239' }}>🔥 Retreat Hot</strong>
-                              <span style={{ fontSize: '10px', fontWeight: 800, backgroundColor: '#f97316', color: '#ffffff', padding: '1px 6px', borderRadius: '6px' }}>HOT</span>
-                            </div>
-                            <p style={{ fontSize: '11px', color: '#64748b', margin: '2px 0 0 0' }}>Đang được yêu thích & đặt nhiều nhất</p>
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={tourDraft.isHot || (tourDraft.categories || []).includes('hot')}
-                            onChange={(e) => {
-                              const checked = e.target.checked;
-                              const current = tourDraft.categories || [];
-                              const next = checked ? Array.from(new Set([...current, 'hot', 'retreat-hot'])) : current.filter((s) => s !== 'hot' && s !== 'retreat-hot');
-                              setTourDraft({ ...tourDraft, isHot: checked, categories: next });
-                            }}
-                            style={{ width: '18px', height: '18px', accentColor: '#dc2626', cursor: 'pointer' }}
-                          />
-                        </label>
-
-                        {/* 2. Retreat Mới [NEW] */}
-                        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '12px', backgroundColor: tourDraft.isNew || (tourDraft.categories || []).includes('moi') ? '#f0fdf4' : '#ffffff', border: tourDraft.isNew || (tourDraft.categories || []).includes('moi') ? '2px solid #86efac' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                          <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <strong style={{ fontSize: '13px', color: '#166534' }}>🌟 Retreat Mới</strong>
-                              <span style={{ fontSize: '10px', fontWeight: 800, backgroundColor: '#38bdf8', color: '#ffffff', padding: '1px 6px', borderRadius: '6px' }}>NEW</span>
-                            </div>
-                            <p style={{ fontSize: '11px', color: '#64748b', margin: '2px 0 0 0' }}>Sản phẩm hành trình mới ra mắt</p>
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={tourDraft.isNew || (tourDraft.categories || []).includes('moi')}
-                            onChange={(e) => {
-                              const checked = e.target.checked;
-                              const current = tourDraft.categories || [];
-                              const next = checked ? Array.from(new Set([...current, 'moi', 'new'])) : current.filter((s) => s !== 'moi' && s !== 'new');
-                              setTourDraft({ ...tourDraft, isNew: checked, categories: next });
-                            }}
-                            style={{ width: '18px', height: '18px', accentColor: '#16a34a', cursor: 'pointer' }}
-                          />
-                        </label>
-
-                        {/* 3. Retreat Last Minute [ƯU ĐÃI] */}
-                        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '12px', backgroundColor: tourDraft.isPromotion || (tourDraft.categories || []).includes('last-minute') ? '#fffbeb' : '#ffffff', border: tourDraft.isPromotion || (tourDraft.categories || []).includes('last-minute') ? '2px solid #fde68a' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                          <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <strong style={{ fontSize: '13px', color: '#9a3412' }}>⚡ Retreat Last Minute</strong>
-                              <span style={{ fontSize: '10px', fontWeight: 800, backgroundColor: '#facc15', color: '#854d0e', padding: '1px 6px', borderRadius: '6px' }}>ƯU ĐÃI</span>
-                            </div>
-                            <p style={{ fontSize: '11px', color: '#64748b', margin: '2px 0 0 0' }}>Gói ưu đãi giờ chót / flash sale</p>
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={tourDraft.isPromotion || (tourDraft.categories || []).includes('last-minute')}
-                            onChange={(e) => {
-                              const checked = e.target.checked;
-                              const current = tourDraft.categories || [];
-                              const next = checked ? Array.from(new Set([...current, 'last-minute', 'uu-dai-gio-chot'])) : current.filter((s) => s !== 'last-minute' && s !== 'uu-dai-gio-chot');
-                              setTourDraft({ ...tourDraft, isPromotion: checked, categories: next });
-                            }}
-                            style={{ width: '18px', height: '18px', accentColor: '#ea580c', cursor: 'pointer' }}
-                          />
-                        </label>
-
-                        {/* 4. Miền Bắc */}
-                        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '12px', backgroundColor: (tourDraft.categories || []).includes('bac') || tourDraft.region === 'bac' ? '#f1f5f9' : '#ffffff', border: (tourDraft.categories || []).includes('bac') || tourDraft.region === 'bac' ? '2px solid #94a3b8' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                          <div>
-                            <strong style={{ fontSize: '13px', color: '#1e293b' }}>🏔️ Miền Bắc</strong>
-                            <p style={{ fontSize: '11px', color: '#64748b', margin: '2px 0 0 0' }}>Sa Pa, Hà Giang, Yên Tử, Ninh Bình...</p>
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={(tourDraft.categories || []).includes('bac') || tourDraft.region === 'bac'}
-                            onChange={(e) => {
-                              const checked = e.target.checked;
-                              const current = tourDraft.categories || [];
-                              const next = checked ? Array.from(new Set([...current, 'bac'])) : current.filter((s) => s !== 'bac');
-                              setTourDraft({ ...tourDraft, categories: next, region: checked ? 'bac' : tourDraft.region });
-                            }}
-                            style={{ width: '18px', height: '18px', accentColor: '#475569', cursor: 'pointer' }}
-                          />
-                        </label>
-
-                        {/* 5. Miền Trung */}
-                        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '12px', backgroundColor: (tourDraft.categories || []).includes('trung') || tourDraft.region === 'trung' ? '#f1f5f9' : '#ffffff', border: (tourDraft.categories || []).includes('trung') || tourDraft.region === 'trung' ? '2px solid #94a3b8' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                          <div>
-                            <strong style={{ fontSize: '13px', color: '#1e293b' }}>🌊 Miền Trung</strong>
-                            <p style={{ fontSize: '11px', color: '#64748b', margin: '2px 0 0 0' }}>Đà Lạt, Phú Yên, Huế, Hội An, Nha Trang...</p>
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={(tourDraft.categories || []).includes('trung') || tourDraft.region === 'trung'}
-                            onChange={(e) => {
-                              const checked = e.target.checked;
-                              const current = tourDraft.categories || [];
-                              const next = checked ? Array.from(new Set([...current, 'trung'])) : current.filter((s) => s !== 'trung');
-                              setTourDraft({ ...tourDraft, categories: next, region: checked ? 'trung' : tourDraft.region });
-                            }}
-                            style={{ width: '18px', height: '18px', accentColor: '#475569', cursor: 'pointer' }}
-                          />
-                        </label>
-
-                        {/* 6. Miền Nam */}
-                        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '12px', backgroundColor: (tourDraft.categories || []).includes('nam') || tourDraft.region === 'nam' ? '#f1f5f9' : '#ffffff', border: (tourDraft.categories || []).includes('nam') || tourDraft.region === 'nam' ? '2px solid #94a3b8' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                          <div>
-                            <strong style={{ fontSize: '13px', color: '#1e293b' }}>🌴 Miền Nam</strong>
-                            <p style={{ fontSize: '11px', color: '#64748b', margin: '2px 0 0 0' }}>Nam Cát Tiên, Hồ Lắk, Phú Quốc, Côn Đảo...</p>
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={(tourDraft.categories || []).includes('nam') || tourDraft.region === 'nam'}
-                            onChange={(e) => {
-                              const checked = e.target.checked;
-                              const current = tourDraft.categories || [];
-                              const next = checked ? Array.from(new Set([...current, 'nam'])) : current.filter((s) => s !== 'nam');
-                              setTourDraft({ ...tourDraft, categories: next, region: checked ? 'nam' : tourDraft.region });
-                            }}
-                            style={{ width: '18px', height: '18px', accentColor: '#475569', cursor: 'pointer' }}
-                          />
-                        </label>
-
-                      </div>
-                    </div>
-
-                    {/* MỤC 4: PHÂN LOẠI KHÁCH & PHÊ DUYỆT XUẤT BẢN */}
-                    <div style={{ backgroundColor: '#ffffff', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
-                        <strong style={{ fontSize: '13px', color: '#081f13', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <span>🛡️ 4. Phân Loại Khách & Phê Duyệt Xuất Bản Website</span>
-                        </strong>
-                      </div>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '10px' }}>
-
-                        {/* 1. Tour Do Khách Hàng Yêu Cầu/Tạo (isCustomer) */}
-                        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderRadius: '12px', backgroundColor: tourDraft.isCustomer ? '#fef3c7' : '#ffffff', border: tourDraft.isCustomer ? '2px solid #fde68a' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                          <div>
-                            <strong style={{ fontSize: '13.5px', color: '#92400e', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <span>👤 Tour Khách Hàng Đặt Riêng (isCustomer)</span>
-                            </strong>
-                            <p style={{ fontSize: '11.5px', color: '#b45309', margin: '2px 0 0 0' }}>Đánh dấu tour tạo theo yêu cầu của khách</p>
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={tourDraft.isCustomer || false}
-                            onChange={(e) => setTourDraft({ ...tourDraft, isCustomer: e.target.checked })}
-                            style={{ width: '18px', height: '18px', accentColor: '#d97706', cursor: 'pointer' }}
-                          />
-                        </label>
-
-                        {/* 2. Đã Được Admin Duyệt Hiển Thị */}
-                        <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderRadius: '12px', backgroundColor: (tourDraft.isAdminApproved !== false && (tourDraft as any).isAdminAprove !== false) ? '#dcfce7' : '#fee2e2', border: (tourDraft.isAdminApproved !== false && (tourDraft as any).isAdminAprove !== false) ? '2px solid #86efac' : '2px solid #fca5a5', cursor: 'pointer', transition: 'all 0.15s ease' }}>
-                          <div>
-                            <strong style={{ fontSize: '14px', color: (tourDraft.isAdminApproved !== false && (tourDraft as any).isAdminAprove !== false) ? '#14532d' : '#991b1b', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <span>🛡️ Đã Được Admin Duyệt Hiển Thị (isAdminApproved)</span>
-                            </strong>
-                            <p style={{ fontSize: '12px', color: (tourDraft.isAdminApproved !== false && (tourDraft as any).isAdminAprove !== false) ? '#166534' : '#b91c1c', margin: '3px 0 0 0' }}>
-                              {(tourDraft.isAdminApproved !== false && (tourDraft as any).isAdminAprove !== false) ? '✓ Tour đang được phép hiển thị công khai trên Website' : '✕ Tour đang ẨN (chỉ Admin nhìn thấy)'}
-                            </p>
-                          </div>
-                          <input
-                            type="checkbox"
-                            checked={tourDraft.isAdminApproved !== false && (tourDraft as any).isAdminAprove !== false}
-                            onChange={(e) => setTourDraft({ ...tourDraft, isAdminApproved: e.target.checked, isAdminAprove: e.target.checked } as any)}
-                            style={{ width: '20px', height: '20px', accentColor: '#16a34a', cursor: 'pointer' }}
-                          />
-                        </label>
-
-                      </div>
-                    </div>
-
-                  </div>
-
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Quốc Gia (Country)</label>
-                    <select
-                      value={tourDraft.country || 'Vietnam'}
-                      onChange={(e) => setTourDraft({ ...tourDraft, country: e.target.value })}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px', backgroundColor: '#ffffff', outline: 'none' }}
-                    >
-                      <option value="Vietnam">Việt Nam (Vietnam)</option>
-                      <option value="Thailand">Thái Lan (Thailand)</option>
-                      <option value="Japan">Nhật Bản (Japan)</option>
-                      <option value="Indonesia">Indonesia (Bali)</option>
-                      <option value="Switzerland">Thụy Sĩ (Switzerland)</option>
-                      <option value="India">Ấn Độ (India)</option>
-                      <option value="Nepal">Nepal</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Thành Phố / Điểm Đến (City)</label>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <select
-                        value={
-                          [
-                            'Vịnh Hạ Long', 'Hạ Long', 'Yên Tử', 'Sa Pa', 'Hà Giang', 'Ninh Bình', 'Thanh Hóa', 'Cao Bằng', 'Hòa Bình', 'Hà Nội',
-                            'Phú Yên', 'Đà Lạt', 'Huế', 'Hội An', 'Đà Nẵng', 'Nha Trang', 'Quy Nhơn', 'Quảng Bình', 'Ninh Thuận',
-                            'Đắk Lắk', 'Gia Lai', 'Kon Tum',
-                            'Phú Quốc', 'Côn Đảo', 'Nam Cát Tiên', 'Cần Thơ', 'Sóc Trăng', 'Tiền Giang', 'Bến Tre', 'TP. Hồ Chí Minh',
-                            'Chiang Mai', 'Ubud', 'Kyoto', 'Thụy Sĩ', 'Nepal', 'Ấn Độ'
-                          ].some(c => (tourDraft.city || '').toLowerCase().includes(c.toLowerCase()) || c.toLowerCase().includes((tourDraft.city || '').toLowerCase()))
-                            ? tourDraft.city
-                            : 'custom'
-                        }
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          if (val !== 'custom') {
-                            let autoRegion = tourDraft.region;
-                            let autoCountry = tourDraft.country || 'Vietnam';
-
-                            // Auto detect region & country based on city
-                            if (['Vịnh Hạ Long', 'Hạ Long', 'Yên Tử', 'Sa Pa', 'Hà Giang', 'Ninh Bình', 'Thanh Hóa', 'Cao Bằng', 'Hòa Bình', 'Hà Nội'].includes(val)) {
-                              autoRegion = 'bac';
-                              autoCountry = 'Vietnam';
-                            } else if (['Phú Yên', 'Đà Lạt', 'Huế', 'Hội An', 'Đà Nẵng', 'Nha Trang', 'Quy Nhơn', 'Quảng Bình', 'Ninh Thuận'].includes(val)) {
-                              autoRegion = 'trung';
-                              autoCountry = 'Vietnam';
-                            } else if (['Đắk Lắk', 'Gia Lai', 'Kon Tum'].includes(val)) {
-                              autoRegion = 'tay-nguyen';
-                              autoCountry = 'Vietnam';
-                            } else if (['Phú Quốc', 'Côn Đảo', 'Nam Cát Tiên', 'Cần Thơ', 'Sóc Trăng', 'Tiền Giang', 'Bến Tre', 'TP. Hồ Chí Minh'].includes(val)) {
-                              autoRegion = 'nam';
-                              autoCountry = 'Vietnam';
-                            } else if (val === 'Chiang Mai') {
-                              autoRegion = 'international';
-                              autoCountry = 'Thailand';
-                            } else if (val === 'Ubud') {
-                              autoRegion = 'international';
-                              autoCountry = 'Indonesia';
-                            } else if (val === 'Kyoto') {
-                              autoRegion = 'international';
-                              autoCountry = 'Japan';
-                            }
-
-                            const currentCats = (tourDraft.categories || []).filter(c => c !== 'bac' && c !== 'trung' && c !== 'nam' && c !== 'tay-nguyen');
-                            const nextCats = (autoRegion === 'bac' || autoRegion === 'trung' || autoRegion === 'nam' || autoRegion === 'tay-nguyen')
-                              ? Array.from(new Set([...currentCats, autoRegion]))
-                              : currentCats;
-
-                            setTourDraft({
-                              ...tourDraft,
-                              city: val,
-                              region: autoRegion as any,
-                              country: autoCountry,
-                              categories: nextCats
-                            });
-                          }
-                        }}
-                        style={{ flex: 1, padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px', backgroundColor: '#ffffff', outline: 'none' }}
-                      >
-                        <option value="">-- Chọn Điểm Đến Có Sẵn --</option>
-                        <optgroup label="🏔️ Miền Bắc">
-                          <option value="Vịnh Hạ Long">Vịnh Hạ Long (Quảng Ninh)</option>
-                          <option value="Yên Tử">Yên Tử (Quảng Ninh)</option>
-                          <option value="Sa Pa">Sa Pa (Lào Cai)</option>
-                          <option value="Hà Giang">Hà Giang</option>
-                          <option value="Ninh Bình">Ninh Bình (Tràng An)</option>
-                          <option value="Thanh Hóa">Thanh Hóa (Pù Luông)</option>
-                          <option value="Cao Bằng">Cao Bằng (Bản Giốc)</option>
-                          <option value="Hòa Bình">Hòa Bình (Mai Châu)</option>
-                          <option value="Hà Nội">Hà Nội</option>
-                        </optgroup>
-                        <optgroup label="🌊 Miền Trung">
-                          <option value="Phú Yên">Phú Yên (Bãi San Hô)</option>
-                          <option value="Đà Lạt">Đà Lạt (Lâm Đồng)</option>
-                          <option value="Huế">Huế (Cố Đô)</option>
-                          <option value="Hội An">Hội An (Quảng Nam)</option>
-                          <option value="Đà Nẵng">Đà Nẵng (Sơn Trà)</option>
-                          <option value="Nha Trang">Nha Trang (Khánh Hòa)</option>
-                          <option value="Quy Nhơn">Quy Nhơn (Bình Định)</option>
-                          <option value="Quảng Bình">Quảng Bình (Phong Nha)</option>
-                          <option value="Ninh Thuận">Ninh Thuận (Vĩnh Hy)</option>
-                        </optgroup>
-                        <optgroup label="🌲 Tây Nguyên">
-                          <option value="Đắk Lắk">Đắk Lắk (Hồ Lắk / Buôn Ma Thuột)</option>
-                          <option value="Gia Lai">Gia Lai (Pleiku / Biển Hồ)</option>
-                          <option value="Kon Tum">Kon Tum (Măng Đen)</option>
-                        </optgroup>
-                        <optgroup label="🌴 Miền Nam">
-                          <option value="Phú Quốc">Phú Quốc (Kiên Giang)</option>
-                          <option value="Côn Đảo">Côn Đảo (Bà Rịa - Vũng Tàu)</option>
-                          <option value="Nam Cát Tiên">Nam Cát Tiên (Đồng Nai)</option>
-                          <option value="Cần Thơ">Cần Thơ (Tây Đô)</option>
-                          <option value="Sóc Trăng">Sóc Trăng (Chùa Khmer)</option>
-                          <option value="Tiền Giang">Tiền Giang (Mỹ Tho)</option>
-                          <option value="Bến Tre">Bến Tre (Miệt Vườn)</option>
-                        </optgroup>
-                        <optgroup label="🌏 Quốc Tế">
-                          <option value="Chiang Mai">Chiang Mai (Thái Lan)</option>
-                          <option value="Ubud">Ubud (Bali, Indonesia)</option>
-                          <option value="Kyoto">Kyoto (Nhật Bản)</option>
-                        </optgroup>
-                        <option value="custom">-- Nhập địa danh khác --</option>
-                      </select>
-
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+                    <div style={{ gridColumn: 'span 2' }}>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Tên Tour Retreat</label>
                       <input
                         type="text"
-                        placeholder="Hoặc tự gõ địa danh..."
-                        value={tourDraft.city || ''}
-                        onChange={(e) => setTourDraft({ ...tourDraft, city: e.target.value })}
-                        style={{ flex: 1, padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
+                        placeholder="Ví dụ: Hành Trình Tĩnh Tại & Phục Hồi Thân Tâm 3N2Đ"
+                        value={tourDraft.title || ''}
+                        onChange={(e) => setTourDraft({ ...tourDraft, title: e.target.value })}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
                       />
                     </div>
-                  </div>
 
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Phân Vùng Miền (Region)</label>
-                    <select
-                      value={tourDraft.region || 'bac'}
-                      onChange={(e) => {
-                        const newRegion = e.target.value;
-                        const currentCats = (tourDraft.categories || []).filter(c => c !== 'bac' && c !== 'trung' && c !== 'nam' && c !== 'tay-nguyen');
-                        const nextCats = (newRegion === 'bac' || newRegion === 'trung' || newRegion === 'nam' || newRegion === 'tay-nguyen')
-                          ? Array.from(new Set([...currentCats, newRegion]))
-                          : currentCats;
-                        setTourDraft({ ...tourDraft, region: newRegion as any, categories: nextCats });
-                      }}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px', backgroundColor: '#ffffff', outline: 'none', fontWeight: 600 }}
-                    >
-                      <option value="bac">🏔️ Miền Bắc (Đông Bắc Bộ, Tây Bắc, Đồng Bằng Sông Hồng)</option>
-                      <option value="trung">🌊 Miền Trung (Bắc Trung Bộ, Duyên Hải Nam Trung Bộ)</option>
-                      <option value="tay-nguyen">🌲 Tây Nguyên (Đại Ngàn Tây Nguyên)</option>
-                      <option value="nam">🌴 Miền Nam (Đông Nam Bộ, Đồng Bằng Sông Cửu Long)</option>
-                      <option value="international">🌏 Quốc Tế (Thái Lan, Bali, Nhật Bản, Thụy Sĩ...)</option>
-                    </select>
-                  </div>
-
-                  {/* INTERACTIVE MAP PICKER COMPONENT */}
-                  <div style={{ gridColumn: 'span 2', backgroundColor: '#f9faf7', padding: '20px', borderRadius: '16px', border: '1px solid rgba(8, 31, 19, 0.1)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                      <label style={{ fontSize: '13px', fontWeight: 700, color: '#081f13', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px', margin: 0 }}>
-                        📍 Vị Trí Bản Đồ Tương Tác (Destination Map Picker)
-                      </label>
-                      <span style={{ fontSize: '12px', color: '#059669', fontWeight: 600 }}>🗺️ Live Google Maps Preview</span>
+                    <div style={{ gridColumn: 'span 2' }}>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Subtitle / Tagline Mới</label>
+                      <input
+                        type="text"
+                        placeholder="Ví dụ: Phục hồi Thân - Tâm - Trí giữa đại ngàn nguyên sơ bạt ngàn..."
+                        value={tourDraft.subtitle || ''}
+                        onChange={(e) => setTourDraft({ ...tourDraft, subtitle: e.target.value })}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
+                      />
                     </div>
 
-                    {/* Quick Presets */}
-                    <div style={{ marginBottom: '12px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: '12px', fontWeight: 600, color: '#525a54', alignSelf: 'center' }}>Ghim nhanh:</span>
-                      {[
-                        { name: '📍 Vịnh Hạ Long Quảng Ninh', loc: 'Vịnh Hạ Long Quảng Ninh' },
-                        { name: '📍 Bãi San Hô Phú Yên', loc: 'Zannier Hotels Bãi San Hô Phú Yên' },
-                        { name: '📍 Hồ Tuyền Lâm Đà Lạt', loc: 'Hồ Tuyền Lâm Đà Lạt' },
-                        { name: '📍 Pù Luông Thanh Hóa', loc: 'Pù Luông Thanh Hóa' },
-                        { name: '📍 Thung Lũng Sa Pa', loc: 'Thung lũng Sa Pa Lào Cai' },
-                        { name: '📍 Bãi Dài Phú Quốc', loc: 'Bãi Dài Phú Quốc Kiên Giang' },
-                        { name: '📍 Tràng An Ninh Bình', loc: 'Tràng An Ninh Bình' },
-                        { name: '📍 Yên Tử Quảng Ninh', loc: 'Núi Yên Tử Quảng Ninh' },
-                        { name: '📍 Chiang Mai Thái Lan', loc: 'Chiang Mai Thailand' },
-                        { name: '📍 Ubud Bali', loc: 'Ubud Bali Indonesia' },
-                      ].map((preset) => (
+                    <div style={{ gridColumn: 'span 2', backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '14px', padding: '16px 18px', boxShadow: '0 2px 8px rgba(22, 101, 52, 0.04)' }}>
+                      <div style={{ marginBottom: '8px' }}>
+                        <label style={{ fontSize: '12.5px', fontWeight: 800, color: '#166534', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span>Landing Page </span>
+                        </label>
+                      </div>
+
+                      <select
+                        value={(tourDraft as any).landingSectionTemplateId || tourDraft.yoga3dTemplateId || ''}
+                        onChange={(e) => {
+                          const selectedVal = e.target.value;
+                          setTourDraft({
+                            ...tourDraft,
+                            landingSectionTemplateId: selectedVal,
+                            yoga3dTemplateId: selectedVal
+                          } as any);
+                        }}
+                        style={{
+                          width: '100%',
+                          padding: '10px 14px',
+                          borderRadius: '8px',
+                          border: '1px solid #86efac',
+                          fontSize: '13.5px',
+                          fontWeight: 600,
+                          color: '#081f13',
+                          backgroundColor: '#ffffff',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <option value="">-- Mặc Định: Dùng Loại 1 (Vận Động 3Đ • Chia tay Đau Cổ, Vai, Gáy) --</option>
+                        {availableLandingTemplates.map((tpl) => (
+                          <option key={tpl.id} value={tpl.id}>
+                            {tpl.name} {tpl.isDefault ? '(★ Mặc Định Hệ Thống)' : ''}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* UNIFIED RETREAT CATEGORIES & HOMEPAGE DISTRIBUTION */}
+                    <div style={{ gridColumn: '1 / -1', backgroundColor: '#fcfdfc', borderRadius: '18px', padding: '22px', border: '1px solid rgba(8, 31, 19, 0.14)', boxShadow: '0 2px 12px rgba(8, 31, 19, 0.04)' }}>
+
+                      {/* Header & Selected Badges */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px', borderBottom: '1px solid #eef2ef', paddingBottom: '12px' }}>
+                        <div>
+                          <h4 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '18px', color: '#081f13', margin: 0, fontWeight: 700 }}>
+                            Phân Loại Series Retreat & Vị Trí Hiển Thị Website
+                          </h4>
+                          <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0 0' }}>
+                            Tự động đồng bộ Menu điều hướng và các khu vực ghim nổi bật trên Website
+                          </p>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                          <span style={{ fontSize: '11.5px', color: '#059669', backgroundColor: '#e6f4ea', padding: '3px 10px', borderRadius: '12px', fontWeight: 700 }}>
+                            {(tourDraft.categories || []).length} mục đã kích hoạt
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Quick Selected Tags Pill Bar */}
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '18px', minHeight: '26px' }}>
+                        {(tourDraft.categories || []).length === 0 ? (
+                          <span style={{ fontSize: '12px', color: '#94a3b8', fontStyle: 'italic' }}>
+                            ⚠️ Chưa chọn chủ đề Series nào (hãy chọn ít nhất 1 Series ở Mục 1 bên dưới)
+                          </span>
+                        ) : (
+                          (tourDraft.categories || []).map((catSlug) => {
+                            const tagLabels: Record<string, { name: string; color: string }> = {
+                              'chua-lanh': { name: '🌿 Retreat Chữa Lành', color: '#16a34a' },
+                              'bao-ton': { name: '🛡️ Retreat Bảo Tồn', color: '#0284c7' },
+                              'thien-nhien': { name: '🌲 Retreat Thiên Nhiên', color: '#ca8a04' },
+                              'thien-nguyen': { name: '💖 Retreat Thiện Nguyện', color: '#db2777' },
+                              'doc-quyen': { name: '👑 Độc Quyền', color: '#eab308' },
+                              'sap-khoi-hanh': { name: '📅 Sắp Khởi Hành', color: '#2563eb' },
+                              'khong-the-bo-lo': { name: '🔥 Không Thể Bỏ Lỡ', color: '#dc2626' },
+                              'hot': { name: '🔥 HOT', color: '#dc2626' },
+                              'uu-dai-gio-chot': { name: '⚡ Giờ Chót', color: '#ea580c' },
+                              'last-minute': { name: '⚡ Flash Sale', color: '#ea580c' },
+                              'moi': { name: '🌟 Mới (NEW)', color: '#16a34a' },
+                              'new': { name: '🌟 NEW', color: '#16a34a' },
+                              'bac': { name: '🏔️ Miền Bắc', color: '#475569' },
+                              'trung': { name: '🌊 Miền Trung', color: '#475569' },
+                              'nam': { name: '🌴 Miền Nam', color: '#475569' },
+                            };
+                            const info = tagLabels[catSlug] || { name: catSlug, color: '#059669' };
+                            return (
+                              <span
+                                key={catSlug}
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '5px',
+                                  backgroundColor: '#ffffff',
+                                  border: `1px solid ${info.color}50`,
+                                  color: '#081f13',
+                                  fontSize: '11.5px',
+                                  fontWeight: 700,
+                                  padding: '3px 8px',
+                                  borderRadius: '16px',
+                                  boxShadow: '0 1px 2px rgba(0,0,0,0.04)'
+                                }}
+                              >
+                                <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: info.color }} />
+                                {info.name}
+                              </span>
+                            );
+                          })
+                        )}
+                      </div>
+
+                      {/* MỤC 1: MENU CỐ ĐỊNH HÀNG TRÊN (TOP FIXED BADGES & HOMEPAGE SECTIONS) */}
+                      <div style={{ marginBottom: '18px', backgroundColor: '#ffffff', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
+                          <strong style={{ fontSize: '13px', color: '#081f13', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span>⭐ 1. Menu Cố Định Hàng Trên & Ghim Trang Chủ</span>
+                          </strong>
+                          <span style={{ fontSize: '11.5px', color: '#64748b' }}>
+                            4 nút menu cố định trên thanh Header & các khu vực ghim lớn trên Trang chủ
+                          </span>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '10px' }}>
+
+                          {/* 1. Retreats ĐỘC QUYỀN */}
+                          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderRadius: '12px', backgroundColor: tourDraft.isExclusive || (tourDraft.categories || []).includes('doc-quyen') ? '#fefce8' : '#ffffff', border: tourDraft.isExclusive || (tourDraft.categories || []).includes('doc-quyen') ? '2px solid #facc15' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                            <div>
+                              <strong style={{ fontSize: '13.5px', color: '#854d0e', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span>👑 Retreats ĐỘC QUYỀN</span>
+                              </strong>
+                              <p style={{ fontSize: '11.5px', color: '#64748b', margin: '2px 0 0 0' }}>Hiển thị ở Menu Độc Quyền & Slider 3D Trang Chủ</p>
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={tourDraft.isExclusive || (tourDraft.categories || []).includes('doc-quyen')}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                const current = tourDraft.categories || [];
+                                const next = checked ? Array.from(new Set([...current, 'doc-quyen'])) : current.filter((s) => s !== 'doc-quyen');
+                                setTourDraft({ ...tourDraft, isExclusive: checked, categories: next });
+                              }}
+                              style={{ width: '18px', height: '18px', accentColor: '#eab308', cursor: 'pointer' }}
+                            />
+                          </label>
+
+                          {/* 2. Sắp Khởi hành */}
+                          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderRadius: '12px', backgroundColor: tourDraft.isFeatured || (tourDraft.categories || []).includes('sap-khoi-hanh') ? '#eff6ff' : '#ffffff', border: tourDraft.isFeatured || (tourDraft.categories || []).includes('sap-khoi-hanh') ? '2px solid #93c5fd' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                            <div>
+                              <strong style={{ fontSize: '13.5px', color: '#1e40af', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span>📅 Sắp Khởi hành</span>
+                              </strong>
+                              <p style={{ fontSize: '11.5px', color: '#64748b', margin: '2px 0 0 0' }}>Hiển thị ở Menu Sắp Khởi Hành & Mục Bento Grid Trang Chủ</p>
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={tourDraft.isFeatured || (tourDraft.categories || []).includes('sap-khoi-hanh')}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                const current = tourDraft.categories || [];
+                                const next = checked ? Array.from(new Set([...current, 'sap-khoi-hanh'])) : current.filter((s) => s !== 'sap-khoi-hanh');
+                                setTourDraft({ ...tourDraft, isFeatured: checked, categories: next });
+                              }}
+                              style={{ width: '18px', height: '18px', accentColor: '#2563eb', cursor: 'pointer' }}
+                            />
+                          </label>
+
+                          {/* 3. KHÔNG THỂ BỎ LỠ */}
+                          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderRadius: '12px', backgroundColor: tourDraft.isHot || (tourDraft.categories || []).includes('khong-the-bo-lo') ? '#fff1f2' : '#ffffff', border: tourDraft.isHot || (tourDraft.categories || []).includes('khong-the-bo-lo') ? '2px solid #fda4af' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                            <div>
+                              <strong style={{ fontSize: '13.5px', color: '#9f1239', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span>🔥 KHÔNG THỂ BỎ LỠ</span>
+                              </strong>
+                              <p style={{ fontSize: '11.5px', color: '#64748b', margin: '2px 0 0 0' }}>Hiển thị ở Menu Không Thể Bỏ Lỡ & Mục Khám Phá Nổi Bật</p>
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={tourDraft.isHot || (tourDraft.categories || []).includes('khong-the-bo-lo')}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                const current = tourDraft.categories || [];
+                                const next = checked ? Array.from(new Set([...current, 'khong-the-bo-lo', 'hot'])) : current.filter((s) => s !== 'khong-the-bo-lo');
+                                setTourDraft({ ...tourDraft, isHot: checked, categories: next });
+                              }}
+                              style={{ width: '18px', height: '18px', accentColor: '#dc2626', cursor: 'pointer' }}
+                            />
+                          </label>
+
+                          {/* 4. Ưu đãi GIỜ CHÓT */}
+                          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderRadius: '12px', backgroundColor: tourDraft.isPromotion || (tourDraft.categories || []).includes('uu-dai-gio-chot') ? '#fffbeb' : '#ffffff', border: tourDraft.isPromotion || (tourDraft.categories || []).includes('uu-dai-gio-chot') ? '2px solid #fde68a' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                            <div>
+                              <strong style={{ fontSize: '13.5px', color: '#9a3412', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span>⚡ Ưu đãi GIỜ CHÓT</span>
+                              </strong>
+                              <p style={{ fontSize: '11.5px', color: '#64748b', margin: '2px 0 0 0' }}>Hiển thị ở Menu Giờ Chót & Mục Flash Sale Trang Chủ</p>
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={tourDraft.isPromotion || (tourDraft.categories || []).includes('uu-dai-gio-chot')}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                const current = tourDraft.categories || [];
+                                const next = checked ? Array.from(new Set([...current, 'uu-dai-gio-chot', 'last-minute'])) : current.filter((s) => s !== 'uu-dai-gio-chot');
+                                setTourDraft({ ...tourDraft, isPromotion: checked, categories: next });
+                              }}
+                              style={{ width: '18px', height: '18px', accentColor: '#ea580c', cursor: 'pointer' }}
+                            />
+                          </label>
+
+                        </div>
+                      </div>
+
+                      {/* MỤC 2: CHỦ ĐỀ SERIES RETREAT (4 CỘT CHÍNH) */}
+                      <div style={{ marginBottom: '18px', backgroundColor: '#ffffff', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
+                          <strong style={{ fontSize: '13px', color: '#081f13', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span>🌿 2. Chủ Đề Series Retreat Chính (4 Cột Mega Menu)</span>
+                            <span style={{ fontSize: '11px', color: '#dc2626', fontWeight: 600 }}>*bắt buộc chọn</span>
+                          </strong>
+                          <span style={{ fontSize: '11.5px', color: '#64748b' }}>
+                            Xác định tour thuộc 1 trong 4 cột Series Retreat trên Menu
+                          </span>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '10px' }}>
+                          {[
+                            {
+                              slug: 'chua-lanh',
+                              categoryName: 'Healing',
+                              title: 'Retreat Chữa Lành',
+                              desc: 'Phục hồi Thân · Tâm · Trí (Wellness & Spa)',
+                              activeBg: '#f0fdf4',
+                              activeBorder: '#86efac',
+                              activeColor: '#166534',
+                              badgeColor: '#16a34a',
+                              icon: '🌿'
+                            },
+                            {
+                              slug: 'bao-ton',
+                              categoryName: 'Conservation',
+                              title: 'Retreat Bảo Tồn',
+                              desc: 'Bảo tồn rừng già & Đa dạng sinh học',
+                              activeBg: '#f0f9ff',
+                              activeBorder: '#7dd3fc',
+                              activeColor: '#075985',
+                              badgeColor: '#0284c7',
+                              icon: '🛡️'
+                            },
+                            {
+                              slug: 'thien-nhien',
+                              categoryName: 'Nature',
+                              title: 'Retreat Thiên Nhiên',
+                              desc: 'Hòa mình giữa đại ngàn & Tắm rừng nguyên sơ',
+                              activeBg: '#fefce8',
+                              activeBorder: '#fde047',
+                              activeColor: '#854d0e',
+                              badgeColor: '#ca8a04',
+                              icon: '🌲'
+                            },
+                            {
+                              slug: 'thien-nguyen',
+                              categoryName: 'Volunteer',
+                              title: 'Retreat Thiện Nguyện',
+                              desc: 'Gắn kết sẻ chia & Giá trị cộng đồng',
+                              activeBg: '#fdf2f8',
+                              activeBorder: '#f472b6',
+                              activeColor: '#9d174d',
+                              badgeColor: '#db2777',
+                              icon: '💖'
+                            },
+                          ].map((series) => {
+                            const isSelected = (tourDraft.categories || []).includes(series.slug) || (tourDraft.categories || []).includes(series.categoryName) || tourDraft.category === series.categoryName;
+                            return (
+                              <label
+                                key={series.slug}
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'flex-start',
+                                  gap: '10px',
+                                  padding: '12px 14px',
+                                  borderRadius: '12px',
+                                  backgroundColor: isSelected ? series.activeBg : '#ffffff',
+                                  border: isSelected ? `2px solid ${series.activeBorder}` : '1px solid #e2e8f0',
+                                  cursor: 'pointer',
+                                  transition: 'all 0.15s ease',
+                                  boxShadow: isSelected ? '0 2px 8px rgba(0,0,0,0.04)' : 'none'
+                                }}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={(e) => {
+                                    const current = tourDraft.categories || [];
+                                    let next = e.target.checked
+                                      ? [...current, series.slug]
+                                      : current.filter((s) => s !== series.slug && s !== series.categoryName);
+                                    next = Array.from(new Set(next));
+                                    setTourDraft({
+                                      ...tourDraft,
+                                      categories: next,
+                                      category: next[0] || series.categoryName || 'Healing'
+                                    });
+                                  }}
+                                  style={{ marginTop: '2px', accentColor: series.badgeColor, cursor: 'pointer', width: '16px', height: '16px' }}
+                                />
+                                <div style={{ flex: 1 }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <span style={{ fontSize: '15px' }}>{series.icon}</span>
+                                    <strong style={{ fontSize: '13.5px', color: isSelected ? series.activeColor : '#081f13' }}>
+                                      {series.title}
+                                    </strong>
+                                  </div>
+                                  <p style={{ fontSize: '11.5px', color: '#64748b', margin: '3px 0 0 0', lineHeight: 1.3 }}>
+                                    {series.desc}
+                                  </p>
+                                </div>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* MỤC 3: PHÂN LOẠI CON TRONG SERIES (6 DÒNG CON) */}
+                      <div style={{ marginBottom: '18px', backgroundColor: '#ffffff', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
+                          <strong style={{ fontSize: '13px', color: '#081f13', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span>🏷️ 3. Phân Loại Danh Mục Con Trong Series (6 Dòng Con)</span>
+                          </strong>
+                          <span style={{ fontSize: '11.5px', color: '#64748b' }}>
+                            Khớp chính xác với 6 dòng con bên dưới từng cột Series Retreat trên Menu
+                          </span>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '10px' }}>
+
+                          {/* 1. Retreat Hot [HOT] */}
+                          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '12px', backgroundColor: tourDraft.isHot || (tourDraft.categories || []).includes('hot') ? '#fff1f2' : '#ffffff', border: tourDraft.isHot || (tourDraft.categories || []).includes('hot') ? '2px solid #fda4af' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                            <div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <strong style={{ fontSize: '13px', color: '#9f1239' }}>🔥 Retreat Hot</strong>
+                                <span style={{ fontSize: '10px', fontWeight: 800, backgroundColor: '#f97316', color: '#ffffff', padding: '1px 6px', borderRadius: '6px' }}>HOT</span>
+                              </div>
+                              <p style={{ fontSize: '11px', color: '#64748b', margin: '2px 0 0 0' }}>Đang được yêu thích & đặt nhiều nhất</p>
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={tourDraft.isHot || (tourDraft.categories || []).includes('hot')}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                const current = tourDraft.categories || [];
+                                const next = checked ? Array.from(new Set([...current, 'hot', 'retreat-hot'])) : current.filter((s) => s !== 'hot' && s !== 'retreat-hot');
+                                setTourDraft({ ...tourDraft, isHot: checked, categories: next });
+                              }}
+                              style={{ width: '18px', height: '18px', accentColor: '#dc2626', cursor: 'pointer' }}
+                            />
+                          </label>
+
+                          {/* 2. Retreat Mới [NEW] */}
+                          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '12px', backgroundColor: tourDraft.isNew || (tourDraft.categories || []).includes('moi') ? '#f0fdf4' : '#ffffff', border: tourDraft.isNew || (tourDraft.categories || []).includes('moi') ? '2px solid #86efac' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                            <div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <strong style={{ fontSize: '13px', color: '#166534' }}>🌟 Retreat Mới</strong>
+                                <span style={{ fontSize: '10px', fontWeight: 800, backgroundColor: '#38bdf8', color: '#ffffff', padding: '1px 6px', borderRadius: '6px' }}>NEW</span>
+                              </div>
+                              <p style={{ fontSize: '11px', color: '#64748b', margin: '2px 0 0 0' }}>Sản phẩm hành trình mới ra mắt</p>
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={tourDraft.isNew || (tourDraft.categories || []).includes('moi')}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                const current = tourDraft.categories || [];
+                                const next = checked ? Array.from(new Set([...current, 'moi', 'new'])) : current.filter((s) => s !== 'moi' && s !== 'new');
+                                setTourDraft({ ...tourDraft, isNew: checked, categories: next });
+                              }}
+                              style={{ width: '18px', height: '18px', accentColor: '#16a34a', cursor: 'pointer' }}
+                            />
+                          </label>
+
+                          {/* 3. Retreat Last Minute [ƯU ĐÃI] */}
+                          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '12px', backgroundColor: tourDraft.isPromotion || (tourDraft.categories || []).includes('last-minute') ? '#fffbeb' : '#ffffff', border: tourDraft.isPromotion || (tourDraft.categories || []).includes('last-minute') ? '2px solid #fde68a' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                            <div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <strong style={{ fontSize: '13px', color: '#9a3412' }}>⚡ Retreat Last Minute</strong>
+                                <span style={{ fontSize: '10px', fontWeight: 800, backgroundColor: '#facc15', color: '#854d0e', padding: '1px 6px', borderRadius: '6px' }}>ƯU ĐÃI</span>
+                              </div>
+                              <p style={{ fontSize: '11px', color: '#64748b', margin: '2px 0 0 0' }}>Gói ưu đãi giờ chót / flash sale</p>
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={tourDraft.isPromotion || (tourDraft.categories || []).includes('last-minute')}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                const current = tourDraft.categories || [];
+                                const next = checked ? Array.from(new Set([...current, 'last-minute', 'uu-dai-gio-chot'])) : current.filter((s) => s !== 'last-minute' && s !== 'uu-dai-gio-chot');
+                                setTourDraft({ ...tourDraft, isPromotion: checked, categories: next });
+                              }}
+                              style={{ width: '18px', height: '18px', accentColor: '#ea580c', cursor: 'pointer' }}
+                            />
+                          </label>
+
+                          {/* 4. Miền Bắc */}
+                          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '12px', backgroundColor: (tourDraft.categories || []).includes('bac') || tourDraft.region === 'bac' ? '#f1f5f9' : '#ffffff', border: (tourDraft.categories || []).includes('bac') || tourDraft.region === 'bac' ? '2px solid #94a3b8' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                            <div>
+                              <strong style={{ fontSize: '13px', color: '#1e293b' }}>🏔️ Miền Bắc</strong>
+                              <p style={{ fontSize: '11px', color: '#64748b', margin: '2px 0 0 0' }}>Sa Pa, Hà Giang, Yên Tử, Ninh Bình...</p>
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={(tourDraft.categories || []).includes('bac') || tourDraft.region === 'bac'}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                const current = tourDraft.categories || [];
+                                const next = checked ? Array.from(new Set([...current, 'bac'])) : current.filter((s) => s !== 'bac');
+                                setTourDraft({ ...tourDraft, categories: next, region: checked ? 'bac' : tourDraft.region });
+                              }}
+                              style={{ width: '18px', height: '18px', accentColor: '#475569', cursor: 'pointer' }}
+                            />
+                          </label>
+
+                          {/* 5. Miền Trung */}
+                          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '12px', backgroundColor: (tourDraft.categories || []).includes('trung') || tourDraft.region === 'trung' ? '#f1f5f9' : '#ffffff', border: (tourDraft.categories || []).includes('trung') || tourDraft.region === 'trung' ? '2px solid #94a3b8' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                            <div>
+                              <strong style={{ fontSize: '13px', color: '#1e293b' }}>🌊 Miền Trung</strong>
+                              <p style={{ fontSize: '11px', color: '#64748b', margin: '2px 0 0 0' }}>Đà Lạt, Phú Yên, Huế, Hội An, Nha Trang...</p>
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={(tourDraft.categories || []).includes('trung') || tourDraft.region === 'trung'}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                const current = tourDraft.categories || [];
+                                const next = checked ? Array.from(new Set([...current, 'trung'])) : current.filter((s) => s !== 'trung');
+                                setTourDraft({ ...tourDraft, categories: next, region: checked ? 'trung' : tourDraft.region });
+                              }}
+                              style={{ width: '18px', height: '18px', accentColor: '#475569', cursor: 'pointer' }}
+                            />
+                          </label>
+
+                          {/* 6. Miền Nam */}
+                          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '12px', backgroundColor: (tourDraft.categories || []).includes('nam') || tourDraft.region === 'nam' ? '#f1f5f9' : '#ffffff', border: (tourDraft.categories || []).includes('nam') || tourDraft.region === 'nam' ? '2px solid #94a3b8' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                            <div>
+                              <strong style={{ fontSize: '13px', color: '#1e293b' }}>🌴 Miền Nam</strong>
+                              <p style={{ fontSize: '11px', color: '#64748b', margin: '2px 0 0 0' }}>Nam Cát Tiên, Hồ Lắk, Phú Quốc, Côn Đảo...</p>
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={(tourDraft.categories || []).includes('nam') || tourDraft.region === 'nam'}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                const current = tourDraft.categories || [];
+                                const next = checked ? Array.from(new Set([...current, 'nam'])) : current.filter((s) => s !== 'nam');
+                                setTourDraft({ ...tourDraft, categories: next, region: checked ? 'nam' : tourDraft.region });
+                              }}
+                              style={{ width: '18px', height: '18px', accentColor: '#475569', cursor: 'pointer' }}
+                            />
+                          </label>
+
+                        </div>
+                      </div>
+
+                      {/* MỤC 4: PHÂN LOẠI KHÁCH & PHÊ DUYỆT XUẤT BẢN */}
+                      <div style={{ backgroundColor: '#ffffff', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
+                          <strong style={{ fontSize: '13px', color: '#081f13', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span>🛡️ 4. Phân Loại Khách & Phê Duyệt Xuất Bản Website</span>
+                          </strong>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '10px' }}>
+
+                          {/* 1. Tour Do Khách Hàng Yêu Cầu/Tạo (isCustomer) */}
+                          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderRadius: '12px', backgroundColor: tourDraft.isCustomer ? '#fef3c7' : '#ffffff', border: tourDraft.isCustomer ? '2px solid #fde68a' : '1px solid #e2e8f0', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                            <div>
+                              <strong style={{ fontSize: '13.5px', color: '#92400e', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span>👤 Tour Khách Hàng Đặt Riêng (isCustomer)</span>
+                              </strong>
+                              <p style={{ fontSize: '11.5px', color: '#b45309', margin: '2px 0 0 0' }}>Đánh dấu tour tạo theo yêu cầu của khách</p>
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={tourDraft.isCustomer || false}
+                              onChange={(e) => setTourDraft({ ...tourDraft, isCustomer: e.target.checked })}
+                              style={{ width: '18px', height: '18px', accentColor: '#d97706', cursor: 'pointer' }}
+                            />
+                          </label>
+
+                          {/* 2. Đã Được Admin Duyệt Hiển Thị */}
+                          <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderRadius: '12px', backgroundColor: (tourDraft.isAdminApproved !== false && (tourDraft as any).isAdminAprove !== false) ? '#dcfce7' : '#fee2e2', border: (tourDraft.isAdminApproved !== false && (tourDraft as any).isAdminAprove !== false) ? '2px solid #86efac' : '2px solid #fca5a5', cursor: 'pointer', transition: 'all 0.15s ease' }}>
+                            <div>
+                              <strong style={{ fontSize: '14px', color: (tourDraft.isAdminApproved !== false && (tourDraft as any).isAdminAprove !== false) ? '#14532d' : '#991b1b', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span>🛡️ Đã Được Admin Duyệt Hiển Thị (isAdminApproved)</span>
+                              </strong>
+                              <p style={{ fontSize: '12px', color: (tourDraft.isAdminApproved !== false && (tourDraft as any).isAdminAprove !== false) ? '#166534' : '#b91c1c', margin: '3px 0 0 0' }}>
+                                {(tourDraft.isAdminApproved !== false && (tourDraft as any).isAdminAprove !== false) ? '✓ Tour đang được phép hiển thị công khai trên Website' : '✕ Tour đang ẨN (chỉ Admin nhìn thấy)'}
+                              </p>
+                            </div>
+                            <input
+                              type="checkbox"
+                              checked={tourDraft.isAdminApproved !== false && (tourDraft as any).isAdminAprove !== false}
+                              onChange={(e) => setTourDraft({ ...tourDraft, isAdminApproved: e.target.checked, isAdminAprove: e.target.checked } as any)}
+                              style={{ width: '20px', height: '20px', accentColor: '#16a34a', cursor: 'pointer' }}
+                            />
+                          </label>
+
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Quốc Gia (Country)</label>
+                      <select
+                        value={tourDraft.country || 'Vietnam'}
+                        onChange={(e) => setTourDraft({ ...tourDraft, country: e.target.value })}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px', backgroundColor: '#ffffff', outline: 'none' }}
+                      >
+                        <option value="Vietnam">Việt Nam (Vietnam)</option>
+                        <option value="Thailand">Thái Lan (Thailand)</option>
+                        <option value="Japan">Nhật Bản (Japan)</option>
+                        <option value="Indonesia">Indonesia (Bali)</option>
+                        <option value="Switzerland">Thụy Sĩ (Switzerland)</option>
+                        <option value="India">Ấn Độ (India)</option>
+                        <option value="Nepal">Nepal</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Thành Phố / Điểm Đến (City)</label>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <select
+                          value={
+                            [
+                              'Vịnh Hạ Long', 'Hạ Long', 'Yên Tử', 'Sa Pa', 'Hà Giang', 'Ninh Bình', 'Thanh Hóa', 'Cao Bằng', 'Hòa Bình', 'Hà Nội',
+                              'Phú Yên', 'Đà Lạt', 'Huế', 'Hội An', 'Đà Nẵng', 'Nha Trang', 'Quy Nhơn', 'Quảng Bình', 'Ninh Thuận',
+                              'Đắk Lắk', 'Gia Lai', 'Kon Tum',
+                              'Phú Quốc', 'Côn Đảo', 'Nam Cát Tiên', 'Cần Thơ', 'Sóc Trăng', 'Tiền Giang', 'Bến Tre', 'TP. Hồ Chí Minh',
+                              'Chiang Mai', 'Ubud', 'Kyoto', 'Thụy Sĩ', 'Nepal', 'Ấn Độ'
+                            ].some(c => (tourDraft.city || '').toLowerCase().includes(c.toLowerCase()) || c.toLowerCase().includes((tourDraft.city || '').toLowerCase()))
+                              ? tourDraft.city
+                              : 'custom'
+                          }
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val !== 'custom') {
+                              let autoRegion = tourDraft.region;
+                              let autoCountry = tourDraft.country || 'Vietnam';
+
+                              // Auto detect region & country based on city
+                              if (['Vịnh Hạ Long', 'Hạ Long', 'Yên Tử', 'Sa Pa', 'Hà Giang', 'Ninh Bình', 'Thanh Hóa', 'Cao Bằng', 'Hòa Bình', 'Hà Nội'].includes(val)) {
+                                autoRegion = 'bac';
+                                autoCountry = 'Vietnam';
+                              } else if (['Phú Yên', 'Đà Lạt', 'Huế', 'Hội An', 'Đà Nẵng', 'Nha Trang', 'Quy Nhơn', 'Quảng Bình', 'Ninh Thuận'].includes(val)) {
+                                autoRegion = 'trung';
+                                autoCountry = 'Vietnam';
+                              } else if (['Đắk Lắk', 'Gia Lai', 'Kon Tum'].includes(val)) {
+                                autoRegion = 'tay-nguyen';
+                                autoCountry = 'Vietnam';
+                              } else if (['Phú Quốc', 'Côn Đảo', 'Nam Cát Tiên', 'Cần Thơ', 'Sóc Trăng', 'Tiền Giang', 'Bến Tre', 'TP. Hồ Chí Minh'].includes(val)) {
+                                autoRegion = 'nam';
+                                autoCountry = 'Vietnam';
+                              } else if (val === 'Chiang Mai') {
+                                autoRegion = 'international';
+                                autoCountry = 'Thailand';
+                              } else if (val === 'Ubud') {
+                                autoRegion = 'international';
+                                autoCountry = 'Indonesia';
+                              } else if (val === 'Kyoto') {
+                                autoRegion = 'international';
+                                autoCountry = 'Japan';
+                              }
+
+                              const currentCats = (tourDraft.categories || []).filter(c => c !== 'bac' && c !== 'trung' && c !== 'nam' && c !== 'tay-nguyen');
+                              const nextCats = (autoRegion === 'bac' || autoRegion === 'trung' || autoRegion === 'nam' || autoRegion === 'tay-nguyen')
+                                ? Array.from(new Set([...currentCats, autoRegion]))
+                                : currentCats;
+
+                              setTourDraft({
+                                ...tourDraft,
+                                city: val,
+                                region: autoRegion as any,
+                                country: autoCountry,
+                                categories: nextCats
+                              });
+                            }
+                          }}
+                          style={{ flex: 1, padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px', backgroundColor: '#ffffff', outline: 'none' }}
+                        >
+                          <option value="">-- Chọn Điểm Đến Có Sẵn --</option>
+                          <optgroup label="🏔️ Miền Bắc">
+                            <option value="Vịnh Hạ Long">Vịnh Hạ Long (Quảng Ninh)</option>
+                            <option value="Yên Tử">Yên Tử (Quảng Ninh)</option>
+                            <option value="Sa Pa">Sa Pa (Lào Cai)</option>
+                            <option value="Hà Giang">Hà Giang</option>
+                            <option value="Ninh Bình">Ninh Bình (Tràng An)</option>
+                            <option value="Thanh Hóa">Thanh Hóa (Pù Luông)</option>
+                            <option value="Cao Bằng">Cao Bằng (Bản Giốc)</option>
+                            <option value="Hòa Bình">Hòa Bình (Mai Châu)</option>
+                            <option value="Hà Nội">Hà Nội</option>
+                          </optgroup>
+                          <optgroup label="🌊 Miền Trung">
+                            <option value="Phú Yên">Phú Yên (Bãi San Hô)</option>
+                            <option value="Đà Lạt">Đà Lạt (Lâm Đồng)</option>
+                            <option value="Huế">Huế (Cố Đô)</option>
+                            <option value="Hội An">Hội An (Quảng Nam)</option>
+                            <option value="Đà Nẵng">Đà Nẵng (Sơn Trà)</option>
+                            <option value="Nha Trang">Nha Trang (Khánh Hòa)</option>
+                            <option value="Quy Nhơn">Quy Nhơn (Bình Định)</option>
+                            <option value="Quảng Bình">Quảng Bình (Phong Nha)</option>
+                            <option value="Ninh Thuận">Ninh Thuận (Vĩnh Hy)</option>
+                          </optgroup>
+                          <optgroup label="🌲 Tây Nguyên">
+                            <option value="Đắk Lắk">Đắk Lắk (Hồ Lắk / Buôn Ma Thuột)</option>
+                            <option value="Gia Lai">Gia Lai (Pleiku / Biển Hồ)</option>
+                            <option value="Kon Tum">Kon Tum (Măng Đen)</option>
+                          </optgroup>
+                          <optgroup label="🌴 Miền Nam">
+                            <option value="Phú Quốc">Phú Quốc (Kiên Giang)</option>
+                            <option value="Côn Đảo">Côn Đảo (Bà Rịa - Vũng Tàu)</option>
+                            <option value="Nam Cát Tiên">Nam Cát Tiên (Đồng Nai)</option>
+                            <option value="Cần Thơ">Cần Thơ (Tây Đô)</option>
+                            <option value="Sóc Trăng">Sóc Trăng (Chùa Khmer)</option>
+                            <option value="Tiền Giang">Tiền Giang (Mỹ Tho)</option>
+                            <option value="Bến Tre">Bến Tre (Miệt Vườn)</option>
+                          </optgroup>
+                          <optgroup label="🌏 Quốc Tế">
+                            <option value="Chiang Mai">Chiang Mai (Thái Lan)</option>
+                            <option value="Ubud">Ubud (Bali, Indonesia)</option>
+                            <option value="Kyoto">Kyoto (Nhật Bản)</option>
+                          </optgroup>
+                          <option value="custom">-- Nhập địa danh khác --</option>
+                        </select>
+
+                        <input
+                          type="text"
+                          placeholder="Hoặc tự gõ địa danh..."
+                          value={tourDraft.city || ''}
+                          onChange={(e) => setTourDraft({ ...tourDraft, city: e.target.value })}
+                          style={{ flex: 1, padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Phân Vùng Miền (Region)</label>
+                      <select
+                        value={tourDraft.region || 'bac'}
+                        onChange={(e) => {
+                          const newRegion = e.target.value;
+                          const currentCats = (tourDraft.categories || []).filter(c => c !== 'bac' && c !== 'trung' && c !== 'nam' && c !== 'tay-nguyen');
+                          const nextCats = (newRegion === 'bac' || newRegion === 'trung' || newRegion === 'nam' || newRegion === 'tay-nguyen')
+                            ? Array.from(new Set([...currentCats, newRegion]))
+                            : currentCats;
+                          setTourDraft({ ...tourDraft, region: newRegion as any, categories: nextCats });
+                        }}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px', backgroundColor: '#ffffff', outline: 'none', fontWeight: 600 }}
+                      >
+                        <option value="bac">🏔️ Miền Bắc (Đông Bắc Bộ, Tây Bắc, Đồng Bằng Sông Hồng)</option>
+                        <option value="trung">🌊 Miền Trung (Bắc Trung Bộ, Duyên Hải Nam Trung Bộ)</option>
+                        <option value="tay-nguyen">🌲 Tây Nguyên (Đại Ngàn Tây Nguyên)</option>
+                        <option value="nam">🌴 Miền Nam (Đông Nam Bộ, Đồng Bằng Sông Cửu Long)</option>
+                        <option value="international">🌏 Quốc Tế (Thái Lan, Bali, Nhật Bản, Thụy Sĩ...)</option>
+                      </select>
+                    </div>
+
+                    {/* INTERACTIVE MAP PICKER COMPONENT */}
+                    <div style={{ gridColumn: 'span 2', backgroundColor: '#f9faf7', padding: '20px', borderRadius: '16px', border: '1px solid rgba(8, 31, 19, 0.1)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                        <label style={{ fontSize: '13px', fontWeight: 700, color: '#081f13', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px', margin: 0 }}>
+                          📍 Vị Trí Bản Đồ Tương Tác (Destination Map Picker)
+                        </label>
+                        <span style={{ fontSize: '12px', color: '#059669', fontWeight: 600 }}>🗺️ Live Google Maps Preview</span>
+                      </div>
+
+                      {/* Quick Presets */}
+                      <div style={{ marginBottom: '12px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: '12px', fontWeight: 600, color: '#525a54', alignSelf: 'center' }}>Ghim nhanh:</span>
+                        {[
+                          { name: '📍 Vịnh Hạ Long Quảng Ninh', loc: 'Vịnh Hạ Long Quảng Ninh' },
+                          { name: '📍 Bãi San Hô Phú Yên', loc: 'Zannier Hotels Bãi San Hô Phú Yên' },
+                          { name: '📍 Hồ Tuyền Lâm Đà Lạt', loc: 'Hồ Tuyền Lâm Đà Lạt' },
+                          { name: '📍 Pù Luông Thanh Hóa', loc: 'Pù Luông Thanh Hóa' },
+                          { name: '📍 Thung Lũng Sa Pa', loc: 'Thung lũng Sa Pa Lào Cai' },
+                          { name: '📍 Bãi Dài Phú Quốc', loc: 'Bãi Dài Phú Quốc Kiên Giang' },
+                          { name: '📍 Tràng An Ninh Bình', loc: 'Tràng An Ninh Bình' },
+                          { name: '📍 Yên Tử Quảng Ninh', loc: 'Núi Yên Tử Quảng Ninh' },
+                          { name: '📍 Chiang Mai Thái Lan', loc: 'Chiang Mai Thailand' },
+                          { name: '📍 Ubud Bali', loc: 'Ubud Bali Indonesia' },
+                        ].map((preset) => (
+                          <button
+                            key={preset.loc}
+                            type="button"
+                            onClick={() => {
+                              const mapUrl = `https://maps.google.com/maps?q=${encodeURIComponent(preset.loc)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+                              setTourDraft({ ...tourDraft, destinationMap: mapUrl });
+                            }}
+                            style={{
+                              fontSize: '11px',
+                              fontWeight: 600,
+                              padding: '4px 10px',
+                              borderRadius: '999px',
+                              backgroundColor: '#ffffff',
+                              color: '#081f13',
+                              border: '1px solid rgba(8,31,19,0.15)',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {preset.name}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Search & Custom Address Input */}
+                      <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
+                        <input
+                          type="text"
+                          placeholder="Nhập tên resort, địa chỉ hoặc tọa độ vị trí (Ví dụ: Edensee Resort Đà Lạt)..."
+                          value={tourDraft.destinationMap || ''}
+                          onChange={(e) => setTourDraft({ ...tourDraft, destinationMap: e.target.value })}
+                          style={{ flex: 1, padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px', backgroundColor: '#ffffff' }}
+                        />
                         <button
-                          key={preset.loc}
                           type="button"
                           onClick={() => {
-                            const mapUrl = `https://maps.google.com/maps?q=${encodeURIComponent(preset.loc)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
-                            setTourDraft({ ...tourDraft, destinationMap: mapUrl });
+                            const query = tourDraft.destinationMap || tourDraft.city || 'Đà Lạt';
+                            if (!query.startsWith('http')) {
+                              const mapUrl = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+                              setTourDraft({ ...tourDraft, destinationMap: mapUrl });
+                            }
                           }}
                           style={{
-                            fontSize: '11px',
-                            fontWeight: 600,
-                            padding: '4px 10px',
-                            borderRadius: '999px',
-                            backgroundColor: '#ffffff',
-                            color: '#081f13',
-                            border: '1px solid rgba(8,31,19,0.15)',
+                            backgroundColor: '#081f13',
+                            color: '#ffffff',
+                            border: 'none',
+                            borderRadius: '10px',
+                            padding: '0 18px',
+                            fontSize: '13px',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            whiteSpace: 'nowrap'
+                          }}
+                        >
+                          🔍 Ghim Lên Bản Đồ
+                        </button>
+                      </div>
+
+                      {/* Live Interactive Map Iframe Preview */}
+                      <div style={{ width: '100%', height: '240px', borderRadius: '14px', overflow: 'hidden', border: '1px solid rgba(8, 31, 19, 0.12)', backgroundColor: '#e2e8f0', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)' }}>
+                        <iframe
+                          title="Destination Map Live Preview"
+                          width="100%"
+                          height="100%"
+                          style={{ border: 0 }}
+                          loading="lazy"
+                          allowFullScreen
+                          src={
+                            tourDraft.destinationMap && tourDraft.destinationMap.startsWith('http')
+                              ? tourDraft.destinationMap
+                              : `https://maps.google.com/maps?q=${encodeURIComponent(tourDraft.destinationMap || tourDraft.city || 'Đà Lạt')}&t=&z=13&ie=UTF8&iwloc=&output=embed`
+                          }
+                        ></iframe>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Thời Lượng (Ví dụ: 3 Ngày 2 Đêm)</label>
+                      <input
+                        type="text"
+                        placeholder="Ví dụ: 3 Ngày 2 Đêm"
+                        value={tourDraft.duration || ''}
+                        onChange={(e) => setTourDraft({ ...tourDraft, duration: e.target.value })}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Lịch Khởi Hành (Ví dụ: Hằng tuần)</label>
+                      <input
+                        type="text"
+                        placeholder="Ví dụ: Hằng tuần, Thứ 6 Hằng Tuần, Ngày 15 Mỗi Tháng"
+                        value={(tourDraft as any)._departureDatesText !== undefined ? (tourDraft as any)._departureDatesText : (tourDraft.departureDates ? tourDraft.departureDates.join(', ') : 'Hằng tuần')}
+                        onChange={(e) => {
+                          const raw = e.target.value;
+                          setTourDraft({
+                            ...tourDraft,
+                            departureDates: raw.split(',').map((s) => s.trim()).filter(Boolean),
+                            _departureDatesText: raw
+                          } as any);
+                        }}
+                        onBlur={() => {
+                          const next = { ...tourDraft };
+                          delete (next as any)._departureDatesText;
+                          setTourDraft(next);
+                        }}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Khách Sạn / Resort</label>
+                      <input
+                        type="text"
+                        placeholder="Ví dụ: Edensee Lake Resort & Spa 5 Sao"
+                        value={tourDraft.hotel || ''}
+                        onChange={(e) => setTourDraft({ ...tourDraft, hotel: e.target.value })}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Phương Tiện Di Chuyển</label>
+                      <input
+                        type="text"
+                        placeholder="Ví dụ: Xe Limousine VIP 4U 9 chỗ cao cấp"
+                        value={tourDraft.transportation || ''}
+                        onChange={(e) => setTourDraft({ ...tourDraft, transportation: e.target.value })}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Hãng Hàng Không</label>
+                      <input
+                        type="text"
+                        placeholder="Ví dụ: Vietnam Airlines / Bamboo Airways"
+                        value={tourDraft.airline || ''}
+                        onChange={(e) => setTourDraft({ ...tourDraft, airline: e.target.value })}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
+                      />
+                    </div>
+
+                    {/* Dynamic Included List Editor */}
+                    <div style={{ gridColumn: 'span 2', backgroundColor: '#f9faf7', padding: '16px', borderRadius: '16px', border: '1px solid rgba(8, 31, 19, 0.08)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                        <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', margin: 0 }}>
+                          Dịch Vụ Bao Gồm Nổi Bật ({tourDraft.included?.length || 0})
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = [...(tourDraft.included || []), ''];
+                            setTourDraft({ ...tourDraft, included: updated });
+                          }}
+                          style={{
+                            backgroundColor: '#081f13',
+                            color: '#ffffff',
+                            border: 'none',
+                            borderRadius: '8px',
+                            padding: '6px 14px',
+                            fontSize: '12px',
+                            fontWeight: 700,
                             cursor: 'pointer'
                           }}
                         >
-                          {preset.name}
+                          + Thêm Dịch Vụ Bao Gồm
                         </button>
-                      ))}
+                      </div>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {(tourDraft.included || []).map((incItem, incIdx) => (
+                          <div key={incIdx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ fontSize: '12px', fontWeight: 700, color: '#059669', minWidth: '24px' }}>#{incIdx + 1}</span>
+                            <input
+                              type="text"
+                              placeholder="Ví dụ: Xe VIP Limousine đưa đón tận nơi..."
+                              value={incItem}
+                              onChange={(e) => {
+                                const updated = [...(tourDraft.included || [])];
+                                updated[incIdx] = e.target.value;
+                                setTourDraft({ ...tourDraft, included: updated });
+                              }}
+                              style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '13px', backgroundColor: '#ffffff' }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updated = (tourDraft.included || []).filter((_, i) => i !== incIdx);
+                                setTourDraft({ ...tourDraft, included: updated });
+                              }}
+                              style={{ backgroundColor: '#fff1f2', color: '#e11d48', border: '1px solid #fecdd3', borderRadius: '8px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}
+                            >
+                              Xóa
+                            </button>
+                          </div>
+                        ))}
+                        {(!tourDraft.included || tourDraft.included.length === 0) && (
+                          <p style={{ fontSize: '12px', color: '#94a3b8', fontStyle: 'italic', margin: '4px 0' }}>Chưa có dịch vụ bao gồm. Bấm nút "+ Thêm Dịch Vụ Bao Gồm" ở trên để thêm từng mục.</p>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Search & Custom Address Input */}
-                    <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
+                    {/* Dynamic Excluded List Editor */}
+                    <div style={{ gridColumn: 'span 2', backgroundColor: '#f9faf7', padding: '16px', borderRadius: '16px', border: '1px solid rgba(8, 31, 19, 0.08)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                        <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', margin: 0 }}>
+                          Dịch Vụ Không Bao Gồm ({tourDraft.excluded?.length || 0})
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = [...(tourDraft.excluded || []), ''];
+                            setTourDraft({ ...tourDraft, excluded: updated });
+                          }}
+                          style={{
+                            backgroundColor: '#475569',
+                            color: '#ffffff',
+                            border: 'none',
+                            borderRadius: '8px',
+                            padding: '6px 14px',
+                            fontSize: '12px',
+                            fontWeight: 700,
+                            cursor: 'pointer'
+                          }}
+                        >
+                          + Thêm Dịch Vụ Không Bao Gồm
+                        </button>
+                      </div>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {(tourDraft.excluded || []).map((excItem, excIdx) => (
+                          <div key={excIdx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', minWidth: '24px' }}>#{excIdx + 1}</span>
+                            <input
+                              type="text"
+                              placeholder="Ví dụ: Vé máy bay khứ hồi, Chi phí giặt ủi mua sắm cá nhân..."
+                              value={excItem}
+                              onChange={(e) => {
+                                const updated = [...(tourDraft.excluded || [])];
+                                updated[excIdx] = e.target.value;
+                                setTourDraft({ ...tourDraft, excluded: updated });
+                              }}
+                              style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '13px', backgroundColor: '#ffffff' }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const updated = (tourDraft.excluded || []).filter((_, i) => i !== excIdx);
+                                setTourDraft({ ...tourDraft, excluded: updated });
+                              }}
+                              style={{ backgroundColor: '#fff1f2', color: '#e11d48', border: '1px solid #fecdd3', borderRadius: '8px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}
+                            >
+                              Xóa
+                            </button>
+                          </div>
+                        ))}
+                        {(!tourDraft.excluded || tourDraft.excluded.length === 0) && (
+                          <p style={{ fontSize: '12px', color: '#94a3b8', fontStyle: 'italic', margin: '4px 0' }}>Chưa có dịch vụ không bao gồm. Bấm nút "+ Thêm Dịch Vụ Không Bao Gồm" để thêm mục.</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 2: PRICING & DISTRIBUTION */}
+            {activeSection === 'pricing-status' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '28px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.05)' }}>
+                  <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: '0 0 20px 0', fontWeight: 600 }}>
+                    Thiết Lập Giá Bán
+                  </h3>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '20px' }}>
+                    <AdminPriceInput
+                      id="tour-price"
+                      label="Giá Người Lớn (Từ 12 tuổi)"
+                      value={tourDraft.price}
+                      onChange={(val) => setTourDraft({ ...tourDraft, price: val })}
+                      placeholder="Ví dụ: 6.500.000"
+                      presets={[500000, 1000000, 2000000, 5000000]}
+                      required
+                    />
+
+                    <AdminPriceInput
+                      id="tour-original-price"
+                      label="Giá Gốc Niêm Yết / Flash Sale"
+                      value={tourDraft.originalPrice}
+                      onChange={(val) => setTourDraft({ ...tourDraft, originalPrice: val })}
+                      placeholder="Ví dụ: 8.500.000 (Nhập 0 nếu không áp dụng Flash Sale)"
+                      hint="Dùng để hiển thị giá gạch ngang và tính huy hiệu Flash Sale."
+                      presets={[1000000, 2000000, 5000000, 10000000]}
+                    />
+
+                    <AdminPriceInput
+                      id="tour-child-price"
+                      label="Giá Trẻ Em (5 - 11 tuổi)"
+                      value={tourDraft.childPrice}
+                      onChange={(val) => setTourDraft({ ...tourDraft, childPrice: val })}
+                      placeholder="Ví dụ: 5.000.000 (Để 0 nếu miễn phí hoặc áp dụng giá mặc định)"
+                      hint="Để 0 nếu miễn phí hoặc tính theo % mặc định."
+                      presets={[500000, 1000000, 2000000, 5000000]}
+                    />
+
+                    <AdminPriceInput
+                      id="tour-infant-price"
+                      label="Giá Em Bé (< 5 tuổi)"
+                      value={tourDraft.infantPrice}
+                      onChange={(val) => setTourDraft({ ...tourDraft, infantPrice: val })}
+                      placeholder="Ví dụ: 0 (Để 0 nếu MIỄN PHÍ)"
+                      hint="Thông thường là 0 VNĐ (miễn phí theo chính sách)."
+                      presets={[200000, 500000, 1000000]}
+                    />
+                  </div>
+                </div>
+
+                {/* Card 2: Ghi Chú Quyền Lợi & Chính Sách Bảo Lưu */}
+                <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '28px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.05)' }}>
+                  <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: '0 0 20px 0', fontWeight: 600 }}>
+                    Ghi Chú Quyền Lợi Các Hạng Khách & Chính Sách Đổi Ngày
+                  </h3>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '20px' }}>
+                    <div>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Ghi Chú Người Lớn</label>
                       <input
                         type="text"
-                        placeholder="Nhập tên resort, địa chỉ hoặc tọa độ vị trí (Ví dụ: Edensee Resort Đà Lạt)..."
-                        value={tourDraft.destinationMap || ''}
-                        onChange={(e) => setTourDraft({ ...tourDraft, destinationMap: e.target.value })}
-                        style={{ flex: 1, padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px', backgroundColor: '#ffffff' }}
+                        placeholder="Ví dụ: Bao gồm xe VIP, Resort cao cấp, 100% bữa ăn & liệu trình thiền"
+                        value={tourDraft.adultNote || ''}
+                        onChange={(e) => setTourDraft({ ...tourDraft, adultNote: e.target.value })}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '13px' }}
                       />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const query = tourDraft.destinationMap || tourDraft.city || 'Đà Lạt';
-                          if (!query.startsWith('http')) {
-                            const mapUrl = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
-                            setTourDraft({ ...tourDraft, destinationMap: mapUrl });
-                          }
-                        }}
-                        style={{
-                          backgroundColor: '#081f13',
-                          color: '#ffffff',
-                          border: 'none',
-                          borderRadius: '10px',
-                          padding: '0 18px',
-                          fontSize: '13px',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                          whiteSpace: 'nowrap'
-                        }}
-                      >
-                        🔍 Ghim Lên Bản Đồ
-                      </button>
                     </div>
 
-                    {/* Live Interactive Map Iframe Preview */}
-                    <div style={{ width: '100%', height: '240px', borderRadius: '14px', overflow: 'hidden', border: '1px solid rgba(8, 31, 19, 0.12)', backgroundColor: '#e2e8f0', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)' }}>
-                      <iframe
-                        title="Destination Map Live Preview"
-                        width="100%"
-                        height="100%"
-                        style={{ border: 0 }}
-                        loading="lazy"
-                        allowFullScreen
-                        src={
-                          tourDraft.destinationMap && tourDraft.destinationMap.startsWith('http')
-                            ? tourDraft.destinationMap
-                            : `https://maps.google.com/maps?q=${encodeURIComponent(tourDraft.destinationMap || tourDraft.city || 'Đà Lạt')}&t=&z=13&ie=UTF8&iwloc=&output=embed`
-                        }
-                      ></iframe>
+                    <div>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Ghi Chú Trẻ Em (5-11t)</label>
+                      <input
+                        type="text"
+                        placeholder="Ví dụ: Hưởng giường riêng & suất ăn trọn gói dành cho trẻ em"
+                        value={tourDraft.childNote || ''}
+                        onChange={(e) => setTourDraft({ ...tourDraft, childNote: e.target.value })}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '13px' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Ghi Chú Em Bé (&lt;5t)</label>
+                      <input
+                        type="text"
+                        placeholder="Ví dụ: Ngồi cùng bố mẹ, miễn phí vé tham quan & phụ thu lưu trú"
+                        value={tourDraft.infantNote || ''}
+                        onChange={(e) => setTourDraft({ ...tourDraft, infantNote: e.target.value })}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '13px' }}
+                      />
                     </div>
                   </div>
 
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Thời Lượng (Ví dụ: 3 Ngày 2 Đêm)</label>
-                    <input
-                      type="text"
-                      placeholder="Ví dụ: 3 Ngày 2 Đêm"
-                      value={tourDraft.duration || ''}
-                      onChange={(e) => setTourDraft({ ...tourDraft, duration: e.target.value })}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Lịch Khởi Hành (Ví dụ: Hằng tuần)</label>
-                    <input
-                      type="text"
-                      placeholder="Ví dụ: Hằng tuần, Thứ 6 Hằng Tuần, Ngày 15 Mỗi Tháng"
-                      value={(tourDraft as any)._departureDatesText !== undefined ? (tourDraft as any)._departureDatesText : (tourDraft.departureDates ? tourDraft.departureDates.join(', ') : 'Hằng tuần')}
-                      onChange={(e) => {
-                        const raw = e.target.value;
-                        setTourDraft({
-                          ...tourDraft,
-                          departureDates: raw.split(',').map((s) => s.trim()).filter(Boolean),
-                          _departureDatesText: raw
-                        } as any);
-                      }}
-                      onBlur={() => {
-                        const next = { ...tourDraft };
-                        delete (next as any)._departureDatesText;
-                        setTourDraft(next);
-                      }}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Khách Sạn / Resort</label>
-                    <input
-                      type="text"
-                      placeholder="Ví dụ: Edensee Lake Resort & Spa 5 Sao"
-                      value={tourDraft.hotel || ''}
-                      onChange={(e) => setTourDraft({ ...tourDraft, hotel: e.target.value })}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Phương Tiện Di Chuyển</label>
-                    <input
-                      type="text"
-                      placeholder="Ví dụ: Xe Limousine VIP 4U 9 chỗ cao cấp"
-                      value={tourDraft.transportation || ''}
-                      onChange={(e) => setTourDraft({ ...tourDraft, transportation: e.target.value })}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Hãng Hàng Không</label>
-                    <input
-                      type="text"
-                      placeholder="Ví dụ: Vietnam Airlines / Bamboo Airways"
-                      value={tourDraft.airline || ''}
-                      onChange={(e) => setTourDraft({ ...tourDraft, airline: e.target.value })}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px' }}
-                    />
-                  </div>
-
-                  {/* Dynamic Included List Editor */}
-                  <div style={{ gridColumn: 'span 2', backgroundColor: '#f9faf7', padding: '16px', borderRadius: '16px', border: '1px solid rgba(8, 31, 19, 0.08)' }}>
+                  {/* Dynamic Included List Editor in Tab 2 */}
+                  <div style={{ marginBottom: '20px', backgroundColor: '#f9faf7', padding: '16px', borderRadius: '16px', border: '1px solid rgba(8, 31, 19, 0.08)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                       <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', margin: 0 }}>
                         Dịch Vụ Bao Gồm Nổi Bật ({tourDraft.included?.length || 0})
@@ -1766,9 +1954,10 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                               const updated = (tourDraft.included || []).filter((_, i) => i !== incIdx);
                               setTourDraft({ ...tourDraft, included: updated });
                             }}
-                            style={{ backgroundColor: '#fff1f2', color: '#e11d48', border: '1px solid #fecdd3', borderRadius: '8px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}
+                            style={{ backgroundColor: '#fff1f2', color: '#e11d48', border: '1px solid #fecdd3', borderRadius: '8px', padding: '8px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            title="Xóa dịch vụ"
                           >
-                            Xóa
+                            <Trash2 size={14} />
                           </button>
                         </div>
                       ))}
@@ -1778,621 +1967,405 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                     </div>
                   </div>
 
-                  {/* Dynamic Excluded List Editor */}
-                  <div style={{ gridColumn: 'span 2', backgroundColor: '#f9faf7', padding: '16px', borderRadius: '16px', border: '1px solid rgba(8, 31, 19, 0.08)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', margin: 0 }}>
-                        Dịch Vụ Không Bao Gồm ({tourDraft.excluded?.length || 0})
-                      </label>
+                  <div>
+                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Chính Sách Bảo Lưu & Đổi Ngày Đặc Quyền</label>
+                    <textarea
+                      rows={3}
+                      placeholder="Ví dụ: Đổi ngày khởi hành miễn phí 01 lần trước 07 ngày. Đã bao gồm bảo hiểm du lịch trọn gói mức bồi thường tối đa 100.000.000 VNĐ/vụ."
+                      value={tourDraft.bookingPolicyNotes || ''}
+                      onChange={(e) => setTourDraft({ ...tourDraft, bookingPolicyNotes: e.target.value })}
+                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px', resize: 'vertical' }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 3: HIGHLIGHTS */}
+            {activeSection === 'highlights' && (
+              <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '28px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.05)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                  <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: 0, fontWeight: 600 }}>
+                    Danh Sách Điểm Nổi Bật (Highlights)
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newHighlights = [...(tourDraft.highlights || []), 'Điểm nổi bật trải nghiệm mới...'];
+                      setTourDraft({ ...tourDraft, highlights: newHighlights });
+                    }}
+                    style={{ backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '10px', padding: '8px 16px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
+                  >
+                    + Thêm Điểm Nổi Bật
+                  </button>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {(tourDraft.highlights || []).map((hl, idx) => (
+                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', backgroundColor: '#f9faf7', borderRadius: '12px', border: '1px solid rgba(8, 31, 19, 0.08)' }}>
+                      <span style={{ fontSize: '13px', fontWeight: 700, color: '#059669' }}>#{idx + 1}</span>
+                      <input
+                        type="text"
+                        placeholder="Nhập nội dung điểm nổi bật (Ví dụ: Thiền định bình minh giữa rừng thông nguyên sơ...)"
+                        value={hl}
+                        onChange={(e) => {
+                          const updated = [...(tourDraft.highlights || [])];
+                          updated[idx] = e.target.value;
+                          setTourDraft({ ...tourDraft, highlights: updated });
+                        }}
+                        style={{ flex: 1, border: '1px solid rgba(8, 31, 19, 0.12)', borderRadius: '8px', padding: '8px 12px', fontSize: '14px', backgroundColor: '#ffffff' }}
+                      />
                       <button
                         type="button"
                         onClick={() => {
-                          const updated = [...(tourDraft.excluded || []), ''];
-                          setTourDraft({ ...tourDraft, excluded: updated });
+                          const updated = (tourDraft.highlights || []).filter((_, i) => i !== idx);
+                          setTourDraft({ ...tourDraft, highlights: updated });
                         }}
-                        style={{
-                          backgroundColor: '#475569',
-                          color: '#ffffff',
-                          border: 'none',
-                          borderRadius: '8px',
-                          padding: '6px 14px',
-                          fontSize: '12px',
-                          fontWeight: 700,
-                          cursor: 'pointer'
-                        }}
+                        style={{ backgroundColor: '#fff1f2', color: '#e11d48', border: '1px solid #fecdd3', borderRadius: '8px', padding: '8px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        title="Xóa điểm nổi bật"
                       >
-                        + Thêm Dịch Vụ Không Bao Gồm
+                        <Trash2 size={14} />
                       </button>
                     </div>
-
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      {(tourDraft.excluded || []).map((excItem, excIdx) => (
-                        <div key={excIdx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontSize: '12px', fontWeight: 700, color: '#64748b', minWidth: '24px' }}>#{excIdx + 1}</span>
-                          <input
-                            type="text"
-                            placeholder="Ví dụ: Vé máy bay khứ hồi, Chi phí giặt ủi mua sắm cá nhân..."
-                            value={excItem}
-                            onChange={(e) => {
-                              const updated = [...(tourDraft.excluded || [])];
-                              updated[excIdx] = e.target.value;
-                              setTourDraft({ ...tourDraft, excluded: updated });
-                            }}
-                            style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '13px', backgroundColor: '#ffffff' }}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const updated = (tourDraft.excluded || []).filter((_, i) => i !== excIdx);
-                              setTourDraft({ ...tourDraft, excluded: updated });
-                            }}
-                            style={{ backgroundColor: '#fff1f2', color: '#e11d48', border: '1px solid #fecdd3', borderRadius: '8px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}
-                          >
-                            Xóa
-                          </button>
-                        </div>
-                      ))}
-                      {(!tourDraft.excluded || tourDraft.excluded.length === 0) && (
-                        <p style={{ fontSize: '12px', color: '#94a3b8', fontStyle: 'italic', margin: '4px 0' }}>Chưa có dịch vụ không bao gồm. Bấm nút "+ Thêm Dịch Vụ Không Bao Gồm" để thêm mục.</p>
-                      )}
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* TAB 2: PRICING & DISTRIBUTION */}
-          {activeSection === 'pricing-status' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '28px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.05)' }}>
-                <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: '0 0 20px 0', fontWeight: 600 }}>
-                  Thiết Lập Giá Bán
-                </h3>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '20px' }}>
-                  <AdminPriceInput
-                    id="tour-price"
-                    label="Giá Người Lớn (Từ 12 tuổi)"
-                    value={tourDraft.price}
-                    onChange={(val) => setTourDraft({ ...tourDraft, price: val })}
-                    placeholder="Ví dụ: 6.500.000"
-                    presets={[500000, 1000000, 2000000, 5000000]}
-                    required
-                  />
-
-                  <AdminPriceInput
-                    id="tour-original-price"
-                    label="Giá Gốc Niêm Yết / Flash Sale"
-                    value={tourDraft.originalPrice}
-                    onChange={(val) => setTourDraft({ ...tourDraft, originalPrice: val })}
-                    placeholder="Ví dụ: 8.500.000 (Nhập 0 nếu không áp dụng Flash Sale)"
-                    hint="Dùng để hiển thị giá gạch ngang và tính huy hiệu Flash Sale."
-                    presets={[1000000, 2000000, 5000000, 10000000]}
-                  />
-
-                  <AdminPriceInput
-                    id="tour-child-price"
-                    label="Giá Trẻ Em (5 - 11 tuổi)"
-                    value={tourDraft.childPrice}
-                    onChange={(val) => setTourDraft({ ...tourDraft, childPrice: val })}
-                    placeholder="Ví dụ: 5.000.000 (Để 0 nếu miễn phí hoặc áp dụng giá mặc định)"
-                    hint="Để 0 nếu miễn phí hoặc tính theo % mặc định."
-                    presets={[500000, 1000000, 2000000, 5000000]}
-                  />
-
-                  <AdminPriceInput
-                    id="tour-infant-price"
-                    label="Giá Em Bé (< 5 tuổi)"
-                    value={tourDraft.infantPrice}
-                    onChange={(val) => setTourDraft({ ...tourDraft, infantPrice: val })}
-                    placeholder="Ví dụ: 0 (Để 0 nếu MIỄN PHÍ)"
-                    hint="Thông thường là 0 VNĐ (miễn phí theo chính sách)."
-                    presets={[200000, 500000, 1000000]}
-                  />
-                </div>
-              </div>
-
-              {/* Card 2: Ghi Chú Quyền Lợi & Chính Sách Bảo Lưu */}
-              <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '28px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.05)' }}>
-                <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: '0 0 20px 0', fontWeight: 600 }}>
-                  Ghi Chú Quyền Lợi Các Hạng Khách & Chính Sách Đổi Ngày
-                </h3>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '20px' }}>
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Ghi Chú Người Lớn</label>
-                    <input
-                      type="text"
-                      placeholder="Ví dụ: Bao gồm xe VIP, Resort cao cấp, 100% bữa ăn & liệu trình thiền"
-                      value={tourDraft.adultNote || ''}
-                      onChange={(e) => setTourDraft({ ...tourDraft, adultNote: e.target.value })}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '13px' }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Ghi Chú Trẻ Em (5-11t)</label>
-                    <input
-                      type="text"
-                      placeholder="Ví dụ: Hưởng giường riêng & suất ăn trọn gói dành cho trẻ em"
-                      value={tourDraft.childNote || ''}
-                      onChange={(e) => setTourDraft({ ...tourDraft, childNote: e.target.value })}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '13px' }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Ghi Chú Em Bé (&lt;5t)</label>
-                    <input
-                      type="text"
-                      placeholder="Ví dụ: Ngồi cùng bố mẹ, miễn phí vé tham quan & phụ thu lưu trú"
-                      value={tourDraft.infantNote || ''}
-                      onChange={(e) => setTourDraft({ ...tourDraft, infantNote: e.target.value })}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '13px' }}
-                    />
-                  </div>
+            {/* TAB 4: ITINERARY */}
+            {activeSection === 'itinerary' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '22px', color: '#081f13', margin: 0, fontWeight: 600 }}>
+                    Lịch Trình Chi Tiết ({tourDraft.itinerary?.length || 0} Ngày)
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const nextDayNum = (tourDraft.itinerary?.length || 0) + 1;
+                      const newDay: TourItineraryDay = {
+                        day: nextDayNum,
+                        title: `Ngày ${nextDayNum}`,
+                        description: '',
+                        activities: [],
+                        transportAndCulinary: [],
+                        attractions: []
+                      };
+                      setTourDraft({ ...tourDraft, itinerary: [...(tourDraft.itinerary || []), newDay] });
+                    }}
+                    style={{ backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '10px', padding: '10px 20px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
+                  >
+                    + Thêm Ngày Mới
+                  </button>
                 </div>
 
-                {/* Dynamic Included List Editor in Tab 2 */}
-                <div style={{ marginBottom: '20px', backgroundColor: '#f9faf7', padding: '16px', borderRadius: '16px', border: '1px solid rgba(8, 31, 19, 0.08)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', margin: 0 }}>
-                      Dịch Vụ Bao Gồm Nổi Bật ({tourDraft.included?.length || 0})
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const updated = [...(tourDraft.included || []), ''];
-                        setTourDraft({ ...tourDraft, included: updated });
-                      }}
-                      style={{
-                        backgroundColor: '#081f13',
-                        color: '#ffffff',
-                        border: 'none',
-                        borderRadius: '8px',
-                        padding: '6px 14px',
-                        fontSize: '12px',
-                        fontWeight: 700,
-                        cursor: 'pointer'
-                      }}
-                    >
-                      + Thêm Dịch Vụ Bao Gồm
-                    </button>
-                  </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    {(tourDraft.included || []).map((incItem, incIdx) => (
-                      <div key={incIdx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '12px', fontWeight: 700, color: '#059669', minWidth: '24px' }}>#{incIdx + 1}</span>
-                        <input
-                          type="text"
-                          placeholder="Ví dụ: Xe VIP Limousine đưa đón tận nơi..."
-                          value={incItem}
-                          onChange={(e) => {
-                            const updated = [...(tourDraft.included || [])];
-                            updated[incIdx] = e.target.value;
-                            setTourDraft({ ...tourDraft, included: updated });
-                          }}
-                          style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '13px', backgroundColor: '#ffffff' }}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const updated = (tourDraft.included || []).filter((_, i) => i !== incIdx);
-                            setTourDraft({ ...tourDraft, included: updated });
-                          }}
-                          style={{ backgroundColor: '#fff1f2', color: '#e11d48', border: '1px solid #fecdd3', borderRadius: '8px', padding: '8px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                          title="Xóa dịch vụ"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    ))}
-                    {(!tourDraft.included || tourDraft.included.length === 0) && (
-                      <p style={{ fontSize: '12px', color: '#94a3b8', fontStyle: 'italic', margin: '4px 0' }}>Chưa có dịch vụ bao gồm. Bấm nút "+ Thêm Dịch Vụ Bao Gồm" ở trên để thêm từng mục.</p>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <label style={{ fontSize: '12px', fontWeight: 700, color: '#4d6453', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>Chính Sách Bảo Lưu & Đổi Ngày Đặc Quyền</label>
-                  <textarea
-                    rows={3}
-                    placeholder="Ví dụ: Đổi ngày khởi hành miễn phí 01 lần trước 07 ngày. Đã bao gồm bảo hiểm du lịch trọn gói mức bồi thường tối đa 100.000.000 VNĐ/vụ."
-                    value={tourDraft.bookingPolicyNotes || ''}
-                    onChange={(e) => setTourDraft({ ...tourDraft, bookingPolicyNotes: e.target.value })}
-                    style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px', resize: 'vertical' }}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 3: HIGHLIGHTS */}
-          {activeSection === 'highlights' && (
-            <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '28px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.05)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: 0, fontWeight: 600 }}>
-                  Danh Sách Điểm Nổi Bật (Highlights)
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const newHighlights = [...(tourDraft.highlights || []), 'Điểm nổi bật trải nghiệm mới...'];
-                    setTourDraft({ ...tourDraft, highlights: newHighlights });
-                  }}
-                  style={{ backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '10px', padding: '8px 16px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
-                >
-                  + Thêm Điểm Nổi Bật
-                </button>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {(tourDraft.highlights || []).map((hl, idx) => (
-                  <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', backgroundColor: '#f9faf7', borderRadius: '12px', border: '1px solid rgba(8, 31, 19, 0.08)' }}>
-                    <span style={{ fontSize: '13px', fontWeight: 700, color: '#059669' }}>#{idx + 1}</span>
-                    <input
-                      type="text"
-                      placeholder="Nhập nội dung điểm nổi bật (Ví dụ: Thiền định bình minh giữa rừng thông nguyên sơ...)"
-                      value={hl}
-                      onChange={(e) => {
-                        const updated = [...(tourDraft.highlights || [])];
-                        updated[idx] = e.target.value;
-                        setTourDraft({ ...tourDraft, highlights: updated });
-                      }}
-                      style={{ flex: 1, border: '1px solid rgba(8, 31, 19, 0.12)', borderRadius: '8px', padding: '8px 12px', fontSize: '14px', backgroundColor: '#ffffff' }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const updated = (tourDraft.highlights || []).filter((_, i) => i !== idx);
-                        setTourDraft({ ...tourDraft, highlights: updated });
-                      }}
-                      style={{ backgroundColor: '#fff1f2', color: '#e11d48', border: '1px solid #fecdd3', borderRadius: '8px', padding: '8px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                      title="Xóa điểm nổi bật"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* TAB 4: ITINERARY */}
-          {activeSection === 'itinerary' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '22px', color: '#081f13', margin: 0, fontWeight: 600 }}>
-                  Lịch Trình Chi Tiết ({tourDraft.itinerary?.length || 0} Ngày)
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const nextDayNum = (tourDraft.itinerary?.length || 0) + 1;
-                    const newDay: TourItineraryDay = {
-                      day: nextDayNum,
-                      title: `Ngày ${nextDayNum}`,
-                      description: '',
-                      activities: [],
-                      transportAndCulinary: [],
-                      attractions: []
-                    };
-                    setTourDraft({ ...tourDraft, itinerary: [...(tourDraft.itinerary || []), newDay] });
-                  }}
-                  style={{ backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '10px', padding: '10px 20px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
-                >
-                  + Thêm Ngày Mới
-                </button>
-              </div>
-
-              {(tourDraft.itinerary || []).map((dayItem, dayIdx) => (
-                <div key={dayIdx} style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '24px', border: '1px solid rgba(8, 31, 19, 0.08)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.05)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '14px', fontWeight: 800, color: '#059669', backgroundColor: '#dcfce7', padding: '4px 12px', borderRadius: '999px' }}>
-                      NGÀY {dayItem.day}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const updated = (tourDraft.itinerary || [])
-                          .filter((_, i) => i !== dayIdx)
-                          .map((item, idx) => ({ ...item, day: idx + 1 }));
-                        setTourDraft({ ...tourDraft, itinerary: updated });
-                      }}
-                      style={{ backgroundColor: '#fff1f2', color: '#e11d48', border: '1px solid #fecdd3', borderRadius: '8px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-                      title="Xóa ngày này"
-                    >
-                      <Trash2 size={13} />
-                      <span>Xóa ngày</span>
-                    </button>
-                  </div>
-
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#475569', marginBottom: '6px' }}>
-                      Tiêu Đề Ngày
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Ví dụ: Ngày 1: Đón Khách tại Sân Bay & Khám Phá Vịnh"
-                      value={dayItem.title || ''}
-                      onChange={(e) => {
-                        const updated = [...(tourDraft.itinerary || [])];
-                        updated[dayIdx].title = e.target.value;
-                        setTourDraft({ ...tourDraft, itinerary: updated });
-                      }}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px', fontWeight: 700, boxSizing: 'border-box' }}
-                    />
-                  </div>
-
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#475569', marginBottom: '6px' }}>
-                      Mô Tả Tổng Quan
-                    </label>
-                    <textarea
-                      rows={3}
-                      placeholder="Mô tả chi tiết các hoạt động tĩnh dưỡng, liệu trình phục hồi Thân - Tâm - Trí..."
-                      value={dayItem.description || ''}
-                      onChange={(e) => {
-                        const updated = [...(tourDraft.itinerary || [])];
-                        updated[dayIdx].description = e.target.value;
-                        setTourDraft({ ...tourDraft, itinerary: updated });
-                      }}
-                      style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '13.5px', resize: 'vertical', boxSizing: 'border-box' }}
-                    />
-                  </div>
-
-                  {/* ACTIVITIES LIST */}
-                  <div style={{ backgroundColor: '#f8fafc', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                      <span style={{ fontSize: '13px', fontWeight: 700, color: '#1e293b' }}>
-                        Hoạt Động Chi Tiết ({dayItem.activities?.length || 0})
+                {(tourDraft.itinerary || []).map((dayItem, dayIdx) => (
+                  <div key={dayIdx} style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '24px', border: '1px solid rgba(8, 31, 19, 0.08)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.05)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '14px', fontWeight: 800, color: '#059669', backgroundColor: '#dcfce7', padding: '4px 12px', borderRadius: '999px' }}>
+                        NGÀY {dayItem.day}
                       </span>
                       <button
                         type="button"
                         onClick={() => {
-                          const updated = [...(tourDraft.itinerary || [])];
-                          const acts = [...(updated[dayIdx].activities || [])];
-                          acts.push('');
-                          updated[dayIdx].activities = acts;
+                          const updated = (tourDraft.itinerary || [])
+                            .filter((_, i) => i !== dayIdx)
+                            .map((item, idx) => ({ ...item, day: idx + 1 }));
                           setTourDraft({ ...tourDraft, itinerary: updated });
                         }}
-                        style={{ backgroundColor: '#0f766e', color: '#ffffff', border: 'none', borderRadius: '6px', padding: '4px 10px', fontSize: '11.5px', fontWeight: 700, cursor: 'pointer' }}
+                        style={{ backgroundColor: '#fff1f2', color: '#e11d48', border: '1px solid #fecdd3', borderRadius: '8px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                        title="Xóa ngày này"
                       >
-                        + Thêm Hoạt Động
+                        <Trash2 size={13} />
+                        <span>Xóa ngày</span>
                       </button>
                     </div>
 
-                    {(dayItem.activities || []).map((act, actIdx) => (
-                      <div key={actIdx} style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                        <input
-                          type="text"
-                          placeholder="Ví dụ: 07:00 - Thiền định bình minh trên bãi biển"
-                          value={act}
-                          onChange={(e) => {
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#475569', marginBottom: '6px' }}>
+                        Tiêu Đề Ngày
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Ví dụ: Ngày 1: Đón Khách tại Sân Bay & Khám Phá Vịnh"
+                        value={dayItem.title || ''}
+                        onChange={(e) => {
+                          const updated = [...(tourDraft.itinerary || [])];
+                          updated[dayIdx].title = e.target.value;
+                          setTourDraft({ ...tourDraft, itinerary: updated });
+                        }}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '14px', fontWeight: 700, boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#475569', marginBottom: '6px' }}>
+                        Mô Tả Tổng Quan
+                      </label>
+                      <textarea
+                        rows={3}
+                        placeholder="Mô tả chi tiết các hoạt động tĩnh dưỡng, liệu trình phục hồi Thân - Tâm - Trí..."
+                        value={dayItem.description || ''}
+                        onChange={(e) => {
+                          const updated = [...(tourDraft.itinerary || [])];
+                          updated[dayIdx].description = e.target.value;
+                          setTourDraft({ ...tourDraft, itinerary: updated });
+                        }}
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(8, 31, 19, 0.15)', fontSize: '13.5px', resize: 'vertical', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    {/* ACTIVITIES LIST */}
+                    <div style={{ backgroundColor: '#f8fafc', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                        <span style={{ fontSize: '13px', fontWeight: 700, color: '#1e293b' }}>
+                          Hoạt Động Chi Tiết ({dayItem.activities?.length || 0})
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
                             const updated = [...(tourDraft.itinerary || [])];
                             const acts = [...(updated[dayIdx].activities || [])];
-                            acts[actIdx] = e.target.value;
+                            acts.push('');
                             updated[dayIdx].activities = acts;
                             setTourDraft({ ...tourDraft, itinerary: updated });
                           }}
-                          style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px' }}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const updated = [...(tourDraft.itinerary || [])];
-                            updated[dayIdx].activities = (updated[dayIdx].activities || []).filter((_, i) => i !== actIdx);
-                            setTourDraft({ ...tourDraft, itinerary: updated });
-                          }}
-                          style={{ backgroundColor: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5', borderRadius: '8px', padding: '8px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                          title="Xóa hoạt động"
+                          style={{ backgroundColor: '#0f766e', color: '#ffffff', border: 'none', borderRadius: '6px', padding: '4px 10px', fontSize: '11.5px', fontWeight: 700, cursor: 'pointer' }}
                         >
-                          <Trash2 size={14} />
+                          + Thêm Hoạt Động
                         </button>
                       </div>
-                    ))}
-                    {(!dayItem.activities || dayItem.activities.length === 0) && (
-                      <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0, fontStyle: 'italic' }}>
-                        Chưa có mốc hoạt động chi tiết (tùy chọn).
-                      </p>
-                    )}
-                  </div>
 
-                  {/* TRANSPORT & CULINARY TAGS */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#475569', marginBottom: '4px' }}>
-                        Phương Tiện & Ẩm Thực (Ngăn cách bằng dấu phẩy)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Xe Limousine, Bữa sáng thực dưỡng..."
-                        value={(dayItem as any)._transportText !== undefined ? (dayItem as any)._transportText : (Array.isArray(dayItem.transportAndCulinary) ? dayItem.transportAndCulinary.join(', ') : '')}
-                        onChange={(e) => {
-                          const raw = e.target.value;
-                          const updated = [...(tourDraft.itinerary || [])];
-                          (updated[dayIdx] as any)._transportText = raw;
-                          updated[dayIdx].transportAndCulinary = raw.split(',').map((s) => s.trim()).filter(Boolean);
-                          setTourDraft({ ...tourDraft, itinerary: updated });
-                        }}
-                        onBlur={() => {
-                          const updated = [...(tourDraft.itinerary || [])];
-                          delete (updated[dayIdx] as any)._transportText;
-                          setTourDraft({ ...tourDraft, itinerary: updated });
-                        }}
-                        style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
-                      />
+                      {(dayItem.activities || []).map((act, actIdx) => (
+                        <div key={actIdx} style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                          <input
+                            type="text"
+                            placeholder="Ví dụ: 07:00 - Thiền định bình minh trên bãi biển"
+                            value={act}
+                            onChange={(e) => {
+                              const updated = [...(tourDraft.itinerary || [])];
+                              const acts = [...(updated[dayIdx].activities || [])];
+                              acts[actIdx] = e.target.value;
+                              updated[dayIdx].activities = acts;
+                              setTourDraft({ ...tourDraft, itinerary: updated });
+                            }}
+                            style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px' }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = [...(tourDraft.itinerary || [])];
+                              updated[dayIdx].activities = (updated[dayIdx].activities || []).filter((_, i) => i !== actIdx);
+                              setTourDraft({ ...tourDraft, itinerary: updated });
+                            }}
+                            style={{ backgroundColor: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5', borderRadius: '8px', padding: '8px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            title="Xóa hoạt động"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      ))}
+                      {(!dayItem.activities || dayItem.activities.length === 0) && (
+                        <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0, fontStyle: 'italic' }}>
+                          Chưa có mốc hoạt động chi tiết (tùy chọn).
+                        </p>
+                      )}
                     </div>
 
-                    <div>
-                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#475569', marginBottom: '4px' }}>
-                        Điểm Đến & Danh Lam (Ngăn cách bằng dấu phẩy)
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Vịnh Hạ Long, Hang Sửng Sốt..."
-                        value={(dayItem as any)._attractionsText !== undefined ? (dayItem as any)._attractionsText : (Array.isArray(dayItem.attractions) ? dayItem.attractions.join(', ') : '')}
-                        onChange={(e) => {
-                          const raw = e.target.value;
-                          const updated = [...(tourDraft.itinerary || [])];
-                          (updated[dayIdx] as any)._attractionsText = raw;
-                          updated[dayIdx].attractions = raw.split(',').map((s) => s.trim()).filter(Boolean);
-                          setTourDraft({ ...tourDraft, itinerary: updated });
-                        }}
-                        onBlur={() => {
-                          const updated = [...(tourDraft.itinerary || [])];
-                          delete (updated[dayIdx] as any)._attractionsText;
-                          setTourDraft({ ...tourDraft, itinerary: updated });
-                        }}
-                        style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* DAY MOMENT IMAGE */}
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#475569', marginBottom: '4px' }}>
-                      Ảnh Khoảnh Khắc Trong Ngày (Tùy chọn)
-                    </label>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      {dayItem.image ? (
-                        <img
-                          src={getImageUrl(dayItem.image)}
-                          alt={`Khoảnh khắc Ngày ${dayItem.day}`}
-                          style={{ width: '40px', height: '38px', borderRadius: '8px', objectFit: 'cover', border: '1px solid #cbd5e1', flexShrink: 0 }}
+                    {/* TRANSPORT & CULINARY TAGS */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#475569', marginBottom: '4px' }}>
+                          Phương Tiện & Ẩm Thực (Ngăn cách bằng dấu phẩy)
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Xe Limousine, Bữa sáng thực dưỡng..."
+                          value={(dayItem as any)._transportText !== undefined ? (dayItem as any)._transportText : (Array.isArray(dayItem.transportAndCulinary) ? dayItem.transportAndCulinary.join(', ') : '')}
+                          onChange={(e) => {
+                            const raw = e.target.value;
+                            const updated = [...(tourDraft.itinerary || [])];
+                            (updated[dayIdx] as any)._transportText = raw;
+                            updated[dayIdx].transportAndCulinary = raw.split(',').map((s) => s.trim()).filter(Boolean);
+                            setTourDraft({ ...tourDraft, itinerary: updated });
+                          }}
+                          onBlur={() => {
+                            const updated = [...(tourDraft.itinerary || [])];
+                            delete (updated[dayIdx] as any)._transportText;
+                            setTourDraft({ ...tourDraft, itinerary: updated });
+                          }}
+                          style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
                         />
-                      ) : null}
+                      </div>
 
-                      <input
-                        type="text"
-                        placeholder="Nhập đường dẫn hoặc tải ảnh lên..."
-                        value={dayItem.image || ''}
-                        onChange={(e) => {
-                          const updated = [...(tourDraft.itinerary || [])];
-                          updated[dayIdx].image = e.target.value;
-                          setTourDraft({ ...tourDraft, itinerary: updated });
-                        }}
-                        style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
-                      />
+                      <div>
+                        <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#475569', marginBottom: '4px' }}>
+                          Điểm Đến & Danh Lam (Ngăn cách bằng dấu phẩy)
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Vịnh Hạ Long, Hang Sửng Sốt..."
+                          value={(dayItem as any)._attractionsText !== undefined ? (dayItem as any)._attractionsText : (Array.isArray(dayItem.attractions) ? dayItem.attractions.join(', ') : '')}
+                          onChange={(e) => {
+                            const raw = e.target.value;
+                            const updated = [...(tourDraft.itinerary || [])];
+                            (updated[dayIdx] as any)._attractionsText = raw;
+                            updated[dayIdx].attractions = raw.split(',').map((s) => s.trim()).filter(Boolean);
+                            setTourDraft({ ...tourDraft, itinerary: updated });
+                          }}
+                          onBlur={() => {
+                            const updated = [...(tourDraft.itinerary || [])];
+                            delete (updated[dayIdx] as any)._attractionsText;
+                            setTourDraft({ ...tourDraft, itinerary: updated });
+                          }}
+                          style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+                    </div>
 
-                      <input
-                        type="file"
-                        id={`day-moment-file-${dayIdx}`}
-                        accept="image/*"
-                        onChange={(e) => handleUploadDayImage(dayIdx, e)}
-                        style={{ display: 'none' }}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const el = document.getElementById(`day-moment-file-${dayIdx}`);
-                          if (el) el.click();
-                        }}
-                        style={{
-                          backgroundColor: '#081f13',
-                          color: '#ffffff',
-                          border: 'none',
-                          borderRadius: '8px',
-                          padding: '8px 16px',
-                          fontSize: '12.5px',
-                          fontWeight: 600,
-                          cursor: 'pointer',
-                          whiteSpace: 'nowrap'
-                        }}
-                      >
-                        Chọn ảnh
-                      </button>
+                    {/* DAY MOMENT IMAGE */}
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#475569', marginBottom: '4px' }}>
+                        Ảnh Khoảnh Khắc Trong Ngày (Tùy chọn)
+                      </label>
 
-                      {dayItem.image ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        {dayItem.image ? (
+                          <img
+                            src={getImageUrl(dayItem.image)}
+                            alt={`Khoảnh khắc Ngày ${dayItem.day}`}
+                            style={{ width: '40px', height: '38px', borderRadius: '8px', objectFit: 'cover', border: '1px solid #cbd5e1', flexShrink: 0 }}
+                          />
+                        ) : null}
+
+                        <input
+                          type="text"
+                          placeholder="Nhập đường dẫn hoặc tải ảnh lên..."
+                          value={dayItem.image || ''}
+                          onChange={(e) => {
+                            const updated = [...(tourDraft.itinerary || [])];
+                            updated[dayIdx].image = e.target.value;
+                            setTourDraft({ ...tourDraft, itinerary: updated });
+                          }}
+                          style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                        />
+
+                        <input
+                          type="file"
+                          id={`day-moment-file-${dayIdx}`}
+                          accept="image/*"
+                          onChange={(e) => handleUploadDayImage(dayIdx, e)}
+                          style={{ display: 'none' }}
+                        />
                         <button
                           type="button"
                           onClick={() => {
-                            const updated = [...(tourDraft.itinerary || [])];
-                            updated[dayIdx].image = '';
-                            setTourDraft({ ...tourDraft, itinerary: updated });
+                            const el = document.getElementById(`day-moment-file-${dayIdx}`);
+                            if (el) el.click();
                           }}
                           style={{
-                            backgroundColor: '#fff1f2',
-                            color: '#e11d48',
-                            border: '1px solid #fecdd3',
+                            backgroundColor: '#081f13',
+                            color: '#ffffff',
+                            border: 'none',
                             borderRadius: '8px',
-                            padding: '8px 10px',
+                            padding: '8px 16px',
+                            fontSize: '12.5px',
+                            fontWeight: 600,
                             cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
+                            whiteSpace: 'nowrap'
                           }}
-                          title="Xóa ảnh khoảnh khắc"
                         >
-                          <Trash2 size={14} />
+                          Chọn ảnh
                         </button>
-                      ) : null}
+
+                        {dayItem.image ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = [...(tourDraft.itinerary || [])];
+                              updated[dayIdx].image = '';
+                              setTourDraft({ ...tourDraft, itinerary: updated });
+                            }}
+                            style={{
+                              backgroundColor: '#fff1f2',
+                              color: '#e11d48',
+                              border: '1px solid #fecdd3',
+                              borderRadius: '8px',
+                              padding: '8px 10px',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                            title="Xóa ảnh khoảnh khắc"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* TAB 5: GALLERY */}
-          {activeSection === 'gallery' && (
-            <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '28px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.05)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: 0, fontWeight: 600 }}>
-                  Bộ Sưu Tập Ảnh Tour ({tourDraft.gallery?.length || 0} Ảnh)
-                </h3>
-
-                <input
-                  ref={galleryFileRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleUploadGalleryImage}
-                  style={{ display: 'none' }}
-                />
-                <button
-                  type="button"
-                  onClick={() => galleryFileRef.current?.click()}
-                  style={{ backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '10px', padding: '8px 18px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
-                >
-                  + Upload Ảnh Mới
-                </button>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px' }}>
-                {(tourDraft.gallery || []).map((imgUrl, imgIdx) => (
-                  <div key={imgIdx} style={{ position: 'relative', height: '140px', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(8,31,19,0.1)' }}>
-                    <img src={getImageUrl(imgUrl)} alt="Gallery Item" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const updated = (tourDraft.gallery || []).filter((_, i) => i !== imgIdx);
-                        setTourDraft({ ...tourDraft, gallery: updated });
-                      }}
-                      style={{ position: 'absolute', top: '8px', right: '8px', backgroundColor: 'rgba(225, 29, 72, 0.9)', color: '#ffffff', border: 'none', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                      title="Xóa ảnh"
-                    >
-                      <Trash2 size={14} />
-                    </button>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            )}
 
-          {/* TAB 6: LIVE PREVIEW */}
-          {activeSection === 'live-preview' && (
-            <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '24px', border: '1px solid rgba(8, 31, 19, 0.08)' }}>
-              <div style={{ marginBottom: '16px', padding: '10px 16px', backgroundColor: '#e0f2fe', borderRadius: '12px', color: '#0369a1', fontSize: '13px', fontWeight: 600 }}>
-                💡 Xem trước trực tiếp giao diện hiển thị cho khách hàng (Client Detail View)
+            {/* TAB 5: GALLERY */}
+            {activeSection === 'gallery' && (
+              <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '28px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.05)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                  <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: 0, fontWeight: 600 }}>
+                    Bộ Sưu Tập Ảnh Tour ({tourDraft.gallery?.length || 0} Ảnh)
+                  </h3>
+
+                  <input
+                    ref={galleryFileRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleUploadGalleryImage}
+                    style={{ display: 'none' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => galleryFileRef.current?.click()}
+                    style={{ backgroundColor: '#081f13', color: '#ffffff', border: 'none', borderRadius: '10px', padding: '8px 18px', fontSize: '13px', fontWeight: 700, cursor: 'pointer' }}
+                  >
+                    + Upload Ảnh Mới
+                  </button>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px' }}>
+                  {(tourDraft.gallery || []).map((imgUrl, imgIdx) => (
+                    <div key={imgIdx} style={{ position: 'relative', height: '140px', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(8,31,19,0.1)' }}>
+                      <img src={getImageUrl(imgUrl)} alt="Gallery Item" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = (tourDraft.gallery || []).filter((_, i) => i !== imgIdx);
+                          setTourDraft({ ...tourDraft, gallery: updated });
+                        }}
+                        style={{ position: 'absolute', top: '8px', right: '8px', backgroundColor: 'rgba(225, 29, 72, 0.9)', color: '#ffffff', border: 'none', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        title="Xóa ảnh"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <ProductDetail productSlug={tourDraft.slug} customTourData={tourDraft} />
-            </div>
-          )}
-        </>
-      )}
-    </div>
+            )}
+
+            {/* TAB 6: LIVE PREVIEW */}
+            {activeSection === 'live-preview' && (
+              <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '24px', border: '1px solid rgba(8, 31, 19, 0.08)' }}>
+                <div style={{ marginBottom: '16px', padding: '10px 16px', backgroundColor: '#e0f2fe', borderRadius: '12px', color: '#0369a1', fontSize: '13px', fontWeight: 600 }}>
+                  💡 Xem trước trực tiếp giao diện hiển thị cho khách hàng (Client Detail View)
+                </div>
+                <ProductDetail productSlug={tourDraft.slug} customTourData={tourDraft} />
+              </div>
+            )}
+          </>
+        )
+      }
+    </div >
   );
 }

@@ -42,11 +42,20 @@ export const LANDING_PAGE_SUBMENUS = [
   { id: 'faq', label: 'Hỏi · Đáp', targetId: 'faq' }
 ];
 
-const DEFAULT_FIXED_PARENT_MENUS = [
-  { label: 'Retreats ĐỘC QUYỀN', href: '/retreat/docquyen', isHighlight: true, icon: Crown },
-  { label: 'Sắp Khởi Hành', href: '/retreat/sapkhoihanh', isHighlight: false, icon: Calendar },
-  { label: 'KHÔNG THỂ BỎ LỠ', href: '/retreat/khongthebolo', isHighlight: false, icon: Flame },
-  { label: 'Ưu Đãi GIỜ CHÓT', href: '/retreat/uudaigiochot', isHighlight: false, icon: Zap }
+export interface FixedBadgeItem {
+  label: string;
+  href: string;
+  isHighlight: boolean;
+  icon: string;
+  color: string;
+  iconColor?: string;
+}
+
+const DEFAULT_FIXED_PARENT_MENUS: FixedBadgeItem[] = [
+  { label: 'Retreats ĐỘC QUYỀN', href: '/retreat/docquyen', isHighlight: true, icon: 'workspace_premium', color: '#facc15', iconColor: '#facc15' },
+  { label: 'Retreats Mới', href: '/retreat/sapkhoihanh', isHighlight: false, icon: 'calendar_today', color: '#38bdf8', iconColor: '#38bdf8' },
+  { label: 'KHÔNG THỂ BỎ LỠ', href: '/retreat/khongthebolo', isHighlight: false, icon: 'local_fire_department', color: '#f87171', iconColor: '#f87171' },
+  { label: 'Ưu Đãi GIỜ CHÓT', href: '/retreat/uudaigiochot', isHighlight: false, icon: 'timer', color: '#2dd4bf', iconColor: '#2dd4bf' }
 ];
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -70,6 +79,53 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Users
 };
 
+export const renderMenuIcon = (iconName?: string | LucideIcon | any, size = 16, color?: string) => {
+  if (!iconName) return null;
+
+  // If it's a React component (e.g. LucideIcon function/component)
+  if (typeof iconName === 'function' || (typeof iconName === 'object' && iconName.$$typeof)) {
+    const Component = iconName;
+    return <Component size={size} style={{ color: color || 'currentColor', flexShrink: 0 }} />;
+  }
+
+  // String identifier (Material Symbols or Lucide name)
+  const nameStr = String(iconName).trim();
+  const lower = nameStr.toLowerCase();
+
+  // Map legacy / text to Material Symbols
+  let matIcon = nameStr;
+  if (lower === 'crown') matIcon = 'crown';
+  else if (lower === 'calendar' || lower === 'calendartoday') matIcon = 'calendar_today';
+  else if (lower === 'flame' || lower === 'fire') matIcon = 'local_fire_department';
+  else if (lower === 'zap' || lower === 'clock') matIcon = 'timer';
+  else if (lower === 'leaf' || lower === 'leafygreen') matIcon = 'eco';
+  else if (lower === 'heart') matIcon = 'healing';
+  else if (lower === 'compass') matIcon = 'explore';
+  else if (lower === 'bookopen' || lower === 'book') matIcon = 'menu_book';
+  else if (lower === 'shoppingbag' || lower === 'bag') matIcon = 'shopping_bag';
+  else if (lower === 'mappin' || lower === 'pin') matIcon = 'location_on';
+  else if (lower === 'gift') matIcon = 'card_giftcard';
+  else if (lower === 'sparkles' || lower === 'star') matIcon = 'stars';
+
+  return (
+    <span
+      className="material-symbols-outlined"
+      style={{
+        fontSize: `${size}px`,
+        color: color || 'currentColor',
+        lineHeight: 1,
+        verticalAlign: 'middle',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0
+      }}
+    >
+      {matIcon}
+    </span>
+  );
+};
+
 export interface ColumnSubItem {
   label: string;
   href: string;
@@ -81,7 +137,9 @@ export interface DynamicColumn {
   id: string;
   title: string;
   subtitle?: string;
+  icon?: string;
   color: string;
+  iconColor?: string;
   borderColor: string;
   items: ColumnSubItem[];
   directHref?: string;
@@ -93,6 +151,9 @@ interface MenuCategory {
   hasSubmenu: boolean;
   href: string;
   headerTitle: string;
+  icon?: string;
+  color?: string;
+  iconColor?: string;
   columns?: DynamicColumn[];
 }
 
@@ -211,26 +272,46 @@ export default function Header({
     }
   };
 
+  // Helper to resolve icon for menu category item
+  const getCategoryIcon = (item: MenuCategoryItem): string => {
+    if (item.icon === 'none' || item.icon === '' || item.icon === null) return '';
+    if (item.icon) return item.icon;
+    return '';
+  };
+
   // 1. Fixed Top Badges (Retreats Độc Quyền, Sắp Khởi Hành, Không Thể Bỏ Lỡ, Ưu Đãi Giờ Chót)
   const fixedBadges = useMemo(() => {
     const fixedFromDb = liveCategories.filter((c) => c.menuType === 'fixed_top');
     if (fixedFromDb.length > 0) {
-      return fixedFromDb.map((c) => ({
-        label: c.name,
-        href:
-          c.slug === 'doc-quyen'
-            ? '/retreat/docquyen'
-            : c.slug === 'sap-khoi-hanh'
-              ? '/retreat/sapkhoihanh'
-              : c.slug === 'khong-the-bo-lo'
-                ? '/retreat/khongthebolo'
-                : c.slug === 'uu-dai-gio-chot'
-                  ? '/retreat/uudaigiochot'
-                  : `/retreat/${c.slug}`,
-        isHighlight:
-          c.slug === 'doc-quyen' || c.slug === 'docquyen' || c.icon === 'Crown',
-        icon: (c.icon && ICON_MAP[c.icon]) || (c.slug === 'doc-quyen' ? Crown : null)
-      }));
+      return fixedFromDb.map((c) => {
+        const iconName = getCategoryIcon(c);
+        let color = c.color;
+        if (!color) {
+          const s = (c.slug || '').toLowerCase();
+          if (s.includes('doc-quyen')) color = '#facc15';
+          else if (s.includes('sap-khoi-hanh') || s.includes('moi')) color = '#38bdf8';
+          else if (s.includes('khong-the-bo-lo') || s.includes('hot')) color = '#f87171';
+          else color = '#2dd4bf';
+        }
+        return {
+          label: c.name,
+          href:
+            c.slug === 'doc-quyen'
+              ? '/retreat/docquyen'
+              : c.slug === 'sap-khoi-hanh'
+                ? '/retreat/sapkhoihanh'
+                : c.slug === 'khong-the-bo-lo'
+                  ? '/retreat/khongthebolo'
+                  : c.slug === 'uu-dai-gio-chot'
+                    ? '/retreat/uudaigiochot'
+                    : `/retreat/${c.slug}`,
+          isHighlight:
+            c.slug === 'doc-quyen' || c.slug === 'docquyen' || c.icon === 'Crown' || c.icon === 'workspace_premium',
+          icon: iconName,
+          color,
+          iconColor: c.iconColor || color
+        };
+      });
     }
     return DEFAULT_FIXED_PARENT_MENUS;
   }, [liveCategories]);
@@ -256,73 +337,56 @@ export default function Header({
           hasSubmenu: false,
           href: `/${parent.slug}`,
           headerTitle: parent.name.toUpperCase(),
+          icon: getCategoryIcon(parent),
+          color: parent.color || '#ffffff',
+          iconColor: parent.iconColor || parent.color || '#ffffff',
           columns: []
         };
       }
 
-      // If parent is "series-retreat"
-      if (parent.slug === 'series-retreat') {
-        const columns: DynamicColumn[] = children.map((child) => ({
+      // Map children into dynamic Mega Menu columns
+      const columns: DynamicColumn[] = children.map((child) => {
+        let items: ColumnSubItem[] = [];
+
+        if (child.subItems && Array.isArray(child.subItems) && child.subItems.length > 0) {
+          items = child.subItems.map((si) => ({
+            label: si.label,
+            href: si.href || `/${parent.slug}/${child.slug}`,
+            badge: si.badge,
+            badgeColor: si.badgeColor || '#f97316'
+          }));
+        } else if (child.subItems && Array.isArray(child.subItems) && child.subItems.length === 0) {
+          // Explicitly empty subItems -> no sub links
+          items = [];
+        } else {
+          // Default fallbacks if never configured in Admin yet
+          if (parent.slug === 'series-retreat') {
+            items = [
+              { label: 'Retreat Hot', href: `/series-retreat/${child.slug}/hot`, badge: 'HOT', badgeColor: '#f97316' },
+              { label: 'Retreat Mới', href: `/series-retreat/${child.slug}/moi`, badge: 'NEW', badgeColor: '#38bdf8' },
+              { label: 'Retreat Last Minute', href: `/series-retreat/${child.slug}/last-minute`, badge: 'ƯU ĐÃI', badgeColor: '#facc15' }
+            ];
+          } else if (parent.slug === 'diem-den') {
+            items = [
+              { label: 'Retreat Hot', href: `/diem-den/${child.slug}/hot`, badge: 'HOT', badgeColor: '#f97316' },
+              { label: 'Retreat Mới', href: `/diem-den/${child.slug}/moi`, badge: 'NEW', badgeColor: '#38bdf8' },
+              { label: 'Retreat Last Minute', href: `/diem-den/${child.slug}/last-minute`, badge: 'ƯU ĐÃI', badgeColor: '#facc15' }
+            ];
+          }
+        }
+
+        return {
           id: child.slug,
           title: child.name,
           subtitle: child.description,
+          icon: getCategoryIcon(child),
           color: child.color || '#4ade80',
+          iconColor: child.iconColor || child.color || '#4ade80',
           borderColor: child.color ? `${child.color}55` : 'rgba(74, 222, 128, 0.3)',
-          items: [
-            { label: 'Retreat Hot', href: `/series-retreat/${child.slug}/hot`, badge: 'HOT', badgeColor: '#f97316' },
-            { label: 'Retreat Mới', href: `/series-retreat/${child.slug}/moi`, badge: 'NEW', badgeColor: '#38bdf8' },
-            { label: 'Retreat Last Minute', href: `/series-retreat/${child.slug}/last-minute`, badge: 'ƯU ĐÃI', badgeColor: '#facc15' },
-            { label: 'Miền Bắc', href: `/series-retreat/${child.slug}/bac` },
-            { label: 'Miền Trung', href: `/series-retreat/${child.slug}/trung` },
-            { label: 'Miền Nam', href: `/series-retreat/${child.slug}/nam` }
-          ]
-        }));
-
-        return {
-          id: parent.slug,
-          title: parent.name,
-          hasSubmenu: true,
-          href: `/${parent.slug}`,
-          headerTitle: parent.name.toUpperCase(),
-          columns
+          directHref: items.length === 0 ? `/${parent.slug}/${child.slug}` : undefined,
+          items
         };
-      }
-
-      // If parent is "diem-den" (Khám Phá Điểm Đến)
-      if (parent.slug === 'diem-den') {
-        const columns: DynamicColumn[] = children.map((child) => ({
-          id: child.slug,
-          title: child.name,
-          subtitle: child.description,
-          color: child.color || '#38bdf8',
-          borderColor: child.color ? `${child.color}55` : 'rgba(56, 189, 248, 0.3)',
-          items: [
-            { label: 'Retreat Hot', href: `/series-retreat/${child.slug}/hot`, badge: 'HOT', badgeColor: '#f97316' },
-            { label: 'Retreat Mới', href: `/series-retreat/${child.slug}/moi`, badge: 'NEW', badgeColor: '#38bdf8' },
-            { label: 'Retreat Last Minute', href: `/series-retreat/${child.slug}/last-minute`, badge: 'ƯU ĐÃI', badgeColor: '#facc15' }
-          ]
-        }));
-
-        return {
-          id: parent.slug,
-          title: parent.name,
-          hasSubmenu: true,
-          href: `/${parent.slug}`,
-          headerTitle: parent.name.toUpperCase(),
-          columns
-        };
-      }
-
-      // For other categories with children (101 Điều Hay, Kollection 4U, Vì Sao Chọn 4U, etc.)
-      const columns: DynamicColumn[] = children.map((child) => ({
-        id: child.slug,
-        title: child.name,
-        subtitle: child.description,
-        color: child.color || '#4ade80',
-        borderColor: child.color ? `${child.color}55` : 'rgba(74, 222, 128, 0.3)',
-        directHref: `/${parent.slug}/${child.slug}`,
-        items: []
-      }));
+      });
 
       return {
         id: parent.slug,
@@ -330,6 +394,9 @@ export default function Header({
         hasSubmenu: true,
         href: `/${parent.slug}`,
         headerTitle: parent.name.toUpperCase(),
+        icon: getCategoryIcon(parent),
+        color: parent.color || '#ffffff',
+        iconColor: parent.iconColor || parent.color || '#ffffff',
         columns
       };
     });
@@ -464,7 +531,7 @@ export default function Header({
                   }}
                   style={{
                     color:
-                      b.isHighlight && !activeCategory ? '#4ade80' : '#ffffff',
+                      b.color || (b.isHighlight && !activeCategory ? '#4ade80' : '#ffffff'),
                     background: 'transparent',
                     border: 'none',
                     padding: '0',
@@ -474,6 +541,7 @@ export default function Header({
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
+                    gap: '6px',
                     whiteSpace: 'nowrap',
                     fontWeight: b.isHighlight ? 800 : 700
                   }}
@@ -485,19 +553,10 @@ export default function Header({
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'none';
                     e.currentTarget.style.color =
-                      b.isHighlight && !activeCategory ? '#4ade80' : '#ffffff';
+                      b.color || (b.isHighlight && !activeCategory ? '#4ade80' : '#ffffff');
                   }}
                 >
-                  {b.isHighlight && (
-                    <Crown
-                      size={15}
-                      style={{
-                        color: '#facc15',
-                        fill: '#facc15',
-                        marginRight: '5px'
-                      }}
-                    />
-                  )}
+                  {renderMenuIcon(b.icon, 16, b.iconColor || b.color || (b.isHighlight ? '#facc15' : undefined))}
                   <span style={{ whiteSpace: 'nowrap' }}>{b.label}</span>
                 </a>
               ))}
@@ -625,7 +684,7 @@ export default function Header({
                             background: 'none',
                             border: 'none',
                             color:
-                              activeCategory === item.id ? '#4ade80' : '#ffffff',
+                              activeCategory === item.id ? '#4ade80' : (item.color || '#ffffff'),
                             fontSize: '1.02rem',
                             fontWeight: '700',
                             cursor: 'pointer',
@@ -641,9 +700,10 @@ export default function Header({
                           }
                           onMouseLeave={(e) => {
                             if (activeCategory !== item.id)
-                              e.currentTarget.style.color = '#ffffff';
+                              e.currentTarget.style.color = item.color || '#ffffff';
                           }}
                         >
+                          {item.icon && renderMenuIcon(item.icon, 16, activeCategory === item.id ? '#4ade80' : (item.iconColor || item.color))}
                           <span style={{ whiteSpace: 'nowrap' }}>
                             {item.title}
                           </span>
@@ -659,7 +719,7 @@ export default function Header({
                               color:
                                 activeCategory === item.id
                                   ? '#4ade80'
-                                  : 'currentColor',
+                                  : (item.color || 'currentColor'),
                               flexShrink: 0
                             }}
                           />
@@ -675,13 +735,14 @@ export default function Header({
                             setActiveCategory(null);
                           }}
                           style={{
-                            color: '#ffffff',
+                            color: item.color || '#ffffff',
                             fontSize: '1.02rem',
                             fontWeight: '700',
                             textDecoration: 'none',
                             padding: '0',
                             display: 'inline-flex',
                             alignItems: 'center',
+                            gap: '6px',
                             whiteSpace: 'nowrap',
                             transition: 'color 0.2s ease'
                           }}
@@ -690,9 +751,10 @@ export default function Header({
                           }
                           onMouseLeave={(e) => {
                             if (activeCategory !== item.id)
-                              e.currentTarget.style.color = '#ffffff';
+                              e.currentTarget.style.color = item.color || '#ffffff';
                           }}
                         >
+                          {item.icon && renderMenuIcon(item.icon, 16, item.iconColor || item.color)}
                           <span style={{ whiteSpace: 'nowrap' }}>
                             {item.title}
                           </span>
@@ -918,21 +980,42 @@ export default function Header({
                             userSelect: 'none'
                           }}
                         >
-                          <h4
-                            style={{
-                              margin: 0,
-                              fontSize: '1rem',
-                              fontWeight: 800,
-                              color: col.color,
-                              letterSpacing: '-0.01em'
-                            }}
-                          >
-                            {col.title}
-                          </h4>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            {col.icon && (
+                              <div
+                                style={{
+                                  width: '26px',
+                                  height: '26px',
+                                  borderRadius: '7px',
+                                  backgroundColor: `${col.iconColor || col.color}22`,
+                                  border: `1px solid ${col.iconColor || col.color}44`,
+                                  color: col.iconColor || col.color,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  flexShrink: 0
+                                }}
+                              >
+                                {renderMenuIcon(col.icon, 16, col.iconColor || col.color)}
+                              </div>
+                            )}
+                            <h4
+                              style={{
+                                margin: 0,
+                                fontSize: '1rem',
+                                fontWeight: 800,
+                                color: col.color,
+                                letterSpacing: '-0.01em'
+                              }}
+                            >
+                              {col.title}
+                            </h4>
+                          </div>
                           {col.subtitle && (
                             <p
                               style={{
-                                margin: '4px 0 0',
+                                margin: '6px 0 0',
+                                paddingLeft: col.icon ? '34px' : '0',
                                 fontSize: '0.78rem',
                                 color: 'rgba(255, 255, 255, 0.6)',
                                 fontWeight: 400,
@@ -1082,10 +1165,10 @@ export default function Header({
                   textDecoration: 'none',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px'
+                  gap: '8px'
                 }}
               >
-                {b.isHighlight && <Crown size={14} style={{ color: '#facc15' }} />}
+                {renderMenuIcon(b.icon, 16, b.iconColor || b.color || (b.isHighlight ? '#facc15' : undefined))}
                 <span>{b.label}</span>
               </a>
             ))}
@@ -1163,7 +1246,10 @@ export default function Header({
                       cursor: 'pointer'
                     }}
                   >
-                    <span>{cat.title}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {cat.icon && renderMenuIcon(cat.icon, 18, cat.iconColor || cat.color)}
+                      <span style={{ color: cat.color || '#ffffff' }}>{cat.title}</span>
+                    </div>
                     <ChevronDown
                       size={16}
                       style={{
@@ -1204,9 +1290,30 @@ export default function Header({
                                 borderBottom:
                                   col.items.length > 0
                                     ? '1px solid rgba(255,255,255,0.08)'
-                                    : 'none'
+                                    : 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px'
                               }}
                             >
+                              {col.icon && (
+                                <div
+                                  style={{
+                                    width: '22px',
+                                    height: '22px',
+                                    borderRadius: '6px',
+                                    backgroundColor: `${col.iconColor || col.color}22`,
+                                    border: `1px solid ${col.iconColor || col.color}44`,
+                                    color: col.iconColor || col.color,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexShrink: 0
+                                  }}
+                                >
+                                  {renderMenuIcon(col.icon, 14, col.iconColor || col.color)}
+                                </div>
+                              )}
                               <span
                                 style={{
                                   fontWeight: 800,
@@ -1265,13 +1372,16 @@ export default function Header({
                   style={{
                     fontSize: '1.05rem',
                     fontWeight: '600',
-                    color: '#ffffff',
+                    color: cat.color || '#ffffff',
                     textDecoration: 'none',
                     padding: '14px 0',
-                    display: 'block'
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
                   }}
                 >
-                  {cat.title}
+                  {cat.icon && renderMenuIcon(cat.icon, 18, cat.iconColor || cat.color)}
+                  <span>{cat.title}</span>
                 </a>
               )}
             </div>

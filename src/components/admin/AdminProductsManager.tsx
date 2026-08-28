@@ -5,6 +5,7 @@ import {
   saveProductApi,
   deleteProductApi,
   uploadImageApi,
+  fetchMenuCategoriesApi,
   getImageUrl,
   KollectionProduct
 } from '../../services/apiService';
@@ -36,12 +37,9 @@ interface AdminProductsManagerProps {
 }
 
 export const PRODUCT_CATEGORIES = [
-  'Trà & Thảo Mộc',
-  'Nến Thơm & Tinh Dầu',
-  'Trang Phục Tĩnh Dưỡng',
-  'Phụ Kiện Du Lịch',
-  'Thủ Công Mỹ Nghệ & Trầm',
-  'Bộ Quà Tặng Cao Cấp'
+  'Quà lưu niệm',
+  'Trang bị',
+  'Thiết yếu'
 ];
 
 export default function AdminProductsManager({ toast, onNavigate }: AdminProductsManagerProps) {
@@ -52,12 +50,13 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
+  const [dynamicCategories, setDynamicCategories] = useState<string[]>(PRODUCT_CATEGORIES);
 
   const [editingItem, setEditingItem] = useState<Partial<KollectionProduct>>({
     title: '',
     slug: '',
     subtitle: '',
-    category: 'Trà & Thảo Mộc',
+    category: 'Quà lưu niệm',
     sku: '',
     price: 500000,
     originalPrice: 650000,
@@ -87,6 +86,20 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
 
   useEffect(() => {
     loadProducts();
+
+    // Fetch ONLY sub-categories that belong to kollection-4u from DB
+    fetchMenuCategoriesApi()
+      .then((menuCats) => {
+        if (Array.isArray(menuCats) && menuCats.length > 0) {
+          const kollectionSubCats = menuCats
+            .filter(c => c.parentSlug === 'kollection-4u' || c.parentSlug === 'kollection')
+            .map(c => c.name);
+
+          const combined = Array.from(new Set([...PRODUCT_CATEGORIES, ...kollectionSubCats]));
+          setDynamicCategories(combined);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const handleTitleChange = (title: string) => {
@@ -311,40 +324,6 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
           </div>
         </div>
 
-        {/* Metrics Row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '24px' }}>
-          <div style={{ background: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #e5e7eb', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: '#6b7280' }}>Tổng Sản Phẩm</span>
-              <Package size={20} style={{ color: '#006d36' }} />
-            </div>
-            <div style={{ fontSize: '26px', fontWeight: 800, color: '#081f13' }}>{products.length}</div>
-          </div>
-
-          <div style={{ background: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #e5e7eb', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: '#6b7280' }}>Tổng Tồn Kho</span>
-              <Layers size={20} style={{ color: '#2563eb' }} />
-            </div>
-            <div style={{ fontSize: '26px', fontWeight: 800, color: '#081f13' }}>{totalStock} <span style={{ fontSize: '14px', fontWeight: 600, color: '#6b7280' }}>món</span></div>
-          </div>
-
-          <div style={{ background: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #e5e7eb', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: '#6b7280' }}>Sản Phẩm Bán Chạy</span>
-              <Flame size={20} style={{ color: '#f97316' }} />
-            </div>
-            <div style={{ fontSize: '26px', fontWeight: 800, color: '#081f13' }}>{products.filter(p => p.isBestSeller).length}</div>
-          </div>
-
-          <div style={{ background: '#ffffff', padding: '18px 22px', borderRadius: '14px', border: '1px solid #e5e7eb', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: '#6b7280' }}>Sản Phẩm Nổi Bật</span>
-              <Star size={20} style={{ color: '#eab308' }} />
-            </div>
-            <div style={{ fontSize: '26px', fontWeight: 800, color: '#081f13' }}>{products.filter(p => p.isFeatured).length}</div>
-          </div>
-        </div>
 
         {/* Filters bar */}
         <div style={{ background: '#ffffff', padding: '14px 20px', borderRadius: '12px', border: '1px solid #e5e7eb', display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -384,7 +363,7 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
             >
               Tất Cả ({products.length})
             </button>
-            {PRODUCT_CATEGORIES.map(cat => {
+            {dynamicCategories.map(cat => {
               const count = products.filter(p => p.category === cat).length;
               return (
                 <button
@@ -638,11 +617,11 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
                 <div>
                   <label style={{ fontSize: '13px', fontWeight: 700, color: '#374151', display: 'block', marginBottom: '6px' }}>Phân Loại Sản Phẩm</label>
                   <select
-                    value={editingItem.category || 'Trà & Thảo Mộc'}
+                    value={editingItem.category || 'Quà lưu niệm'}
                     onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value })}
                     style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', boxSizing: 'border-box', background: '#ffffff' }}
                   >
-                    {PRODUCT_CATEGORIES.map(c => (
+                    {dynamicCategories.map(c => (
                       <option key={c} value={c}>{c}</option>
                     ))}
                   </select>

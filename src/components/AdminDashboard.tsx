@@ -41,19 +41,20 @@ import { ToastProvider, useToast } from './ui/Toast';
 import './Admin.css';
 
 export const ADMIN_SECTIONS = [
-  { id: 'tours', label: 'Quản Lý Tour' },
-  { id: 'bookings', label: 'Quản Lý Đơn Đặt Tour' },
-  { id: 'landing-page', label: 'Quản Lý Landing Page' },
-  { id: 'products', label: 'Sản Phẩm (Kollection 4U)' },
-  { id: 'blog', label: 'Quản Lý Bài Viết' },
-  { id: 'destinations', label: 'Quản Lý Điểm Đến' },
-  { id: 'partners', label: 'Quản Lý Đối Tác Doanh Nghiệp' },
-  { id: 'consultations', label: 'Quản Lý Lịch Hẹn Tư Vấn' },
-  { id: 'custom-tours', label: 'Thiết Kế Lịch Trình Riêng' },
-  { id: 'shop-orders', label: 'Đơn Hàng Kollection 4U' },
-  { id: 'categories', label: 'Danh Mục Menu' },
-  { id: 'users', label: 'Quản Lý Người Dùng ' },
-  { id: 'settings', label: 'Cấu Hình Hệ Thống' },
+  { id: 'tours', label: 'Quản lý Tour' },
+  { id: 'bookings', label: 'Quản lý đơn đặt tour' },
+  { id: 'landing-page', label: 'Quản lý Landing Pages' },
+  { id: 'products', label: 'Quản lý sản phẩm' },
+  { id: 'consultations', label: 'Quản lý lịch tư vấn' },
+  { id: 'custom-tours', label: 'Quản lý lịch trình riêng' },
+  { id: 'categories', label: 'Quản lý danh mục' },
+
+  // { id: 'shop-orders', label: 'Quản lý đơn hàng' },
+  // { id: 'blog', label: 'Quản Lý Bài Viết' },
+  // { id: 'destinations', label: 'Quản Lý Điểm Đến' },
+  // { id: 'partners', label: 'Quản Lý Đối Tác Doanh Nghiệp' },
+  // { id: 'users', label: 'Quản Lý Người Dùng ' },
+  // { id: 'settings', label: 'Cấu Hình Hệ Thống' },
 ] as const;
 
 export type AdminSectionId = typeof ADMIN_SECTIONS[number]['id'] | string;
@@ -80,8 +81,8 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
     const found = ADMIN_SECTIONS.find(
       (item) =>
         (item.id as string) === match ||
-        (match === 'destination' && item.id === 'destinations') ||
-        (match === 'partner' && item.id === 'partners') ||
+        // (match === 'destination' && item.id === 'destinations') ||
+        // (match === 'partner' && item.id === 'partners') ||
         (match === 'yoga3d' && item.id === 'landing-page') ||
         (match === 'landing-section' && item.id === 'landing-page')
     );
@@ -499,31 +500,79 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
             boxSizing: 'border-box'
           }}
         >
-          {permittedSections.map((sec) => (
-            <button
-              key={sec.id}
-              onClick={() => handleSelectSection(sec.id)}
-              className={`serene-sidebar-item ${activeSection === sec.id ? 'active' : ''}`}
-              style={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '10px 14px',
-                borderRadius: '8px',
-                border: 'none',
-                backgroundColor: activeSection === sec.id ? '#081f13' : 'transparent',
-                color: activeSection === sec.id ? '#ffffff' : '#a1bfa9',
-                fontSize: '13.5px',
-                fontWeight: activeSection === sec.id ? 700 : 500,
-                cursor: 'pointer',
-                textAlign: 'left',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <span>{sec.label}</span>
-            </button>
-          ))}
+          {permittedSections.map((sec, idx) => {
+            const isSystemDivider = sec.id === 'categories' && (idx === 0 || permittedSections[idx - 1].id !== 'categories');
+            const SECTION_ICONS: Record<string, string> = {
+              tours: 'explore',
+              bookings: 'shopping_cart',
+              'landing-page': 'web',
+              products: 'category',
+              consultations: 'calendar_today',
+              'custom-tours': 'design_services',
+              categories: 'menu',
+              users: 'group',
+              settings: 'settings'
+            };
+            const icon = SECTION_ICONS[sec.id] || 'folder';
+            const isActive = activeSection === sec.id;
+
+            return (
+              <React.Fragment key={sec.id}>
+                {isSystemDivider && (
+                  <div
+                    style={{
+                      marginTop: '16px',
+                      marginBottom: '6px',
+                      padding: '0 12px',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      color: 'rgba(255, 255, 255, 0.25)',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em'
+                    }}
+                  >
+                    Hệ thống
+                  </div>
+                )}
+                <button
+                  key={sec.id}
+                  onClick={() => handleSelectSection(sec.id)}
+                  className={`serene-sidebar-item ${isActive ? 'active' : ''}`}
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    padding: '11px 14px',
+                    borderRadius: '12px',
+                    border: 'none',
+                    backgroundColor: isActive ? '#081f13' : 'transparent',
+                    color: isActive ? '#ffffff' : '#a1bfa9',
+                    fontSize: '13.5px',
+                    fontWeight: isActive ? 700 : 500,
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'all 0.2s ease',
+                    boxShadow: isActive ? '0 4px 12px rgba(0,0,0,0.2)' : 'none'
+                  }}
+                >
+                  <span
+                    className="material-symbols-outlined text-lg"
+                    style={{
+                      color: isActive ? '#d4af37' : '#a1bfa9',
+                      fontSize: '19px',
+                      flexShrink: 0
+                    }}
+                  >
+                    {icon}
+                  </span>
+                  <span style={{ flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {sec.label}
+                  </span>
+                </button>
+              </React.Fragment>
+            );
+          })}
 
           {/* USER INFO PROFILE CARD AT BOTTOM */}
           <div
