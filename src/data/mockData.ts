@@ -880,23 +880,23 @@ export const MOCK_PRODUCTS = [
 // --------------------------------------------------------------------------
 export const MOCK_MENU_CATEGORIES = [
   // 1. Fixed Top Badges (Hàng trên menu cố định)
-  { id: 1, name: 'Retreats ĐỘC QUYỀN', slug: 'doc-quyen', parentSlug: null, menuType: 'fixed_top', orderIndex: 1, icon: 'Crown', color: '#facc15' },
-  { id: 2, name: 'Sắp Khởi hành', slug: 'sap-khoi-hanh', parentSlug: null, menuType: 'fixed_top', orderIndex: 2, icon: 'Calendar', color: '#ffffff' },
-  { id: 3, name: 'KHÔNG THỂ BỎ LỠ', slug: 'khong-the-bo-lo', parentSlug: null, menuType: 'fixed_top', orderIndex: 3, icon: 'Flame', color: '#ffffff' },
-  { id: 4, name: 'Ưu đãi GIỜ CHÓT', slug: 'uu-dai-gio-chot', parentSlug: null, menuType: 'fixed_top', orderIndex: 4, icon: 'Zap', color: '#ffffff' },
+  { id: 1, name: 'Retreats ĐỘC QUYỀN', slug: 'doc-quyen', parentSlug: null, menuType: 'fixed_top', orderIndex: 1, icon: 'Crown', color: '#00ff15ff', iconColor: '#facc15' },
+  { id: 2, name: 'Sắp Khởi hành', slug: 'sap-khoi-hanh', parentSlug: null, menuType: 'fixed_top', orderIndex: 2, icon: '', color: '#ffffff' },
+  { id: 3, name: 'KHÔNG THỂ BỎ LỠ', slug: 'khong-the-bo-lo', parentSlug: null, menuType: 'fixed_top', orderIndex: 3, icon: '', color: '#ffffff' },
+  { id: 4, name: 'Ưu đãi GIỜ CHÓT', slug: 'uu-dai-gio-chot', parentSlug: null, menuType: 'fixed_top', orderIndex: 4, icon: '', color: '#ffffff' },
 
   // 2. Main Mega Menu Categories (Hàng dưới)
-  { id: 5, name: 'Series Retreat', slug: 'series-retreat', parentSlug: null, menuType: 'mega_menu', orderIndex: 1, icon: 'Leaf', color: '#4ade80' },
-  { id: 6, name: 'Khám Phá Điểm Đến', slug: 'diem-den', parentSlug: null, menuType: 'mega_menu', orderIndex: 2, icon: 'Compass', color: '#f97316' },
-  { id: 7, name: '101 Điều Hay', slug: 'dieu-hay', parentSlug: null, menuType: 'mega_menu', orderIndex: 3, icon: 'BookOpen', color: '#38bdf8' },
-  { id: 8, name: 'Kollection 4U', slug: 'kollection-4u', parentSlug: null, menuType: 'mega_menu', orderIndex: 4, icon: 'Sparkles', color: '#facc15' },
-  { id: 9, name: 'Vì Sao Chọn 4U?', slug: 'vi-sao-chon-4u', parentSlug: null, menuType: 'mega_menu', orderIndex: 5, icon: 'Star', color: '#e5c158' },
+  { id: 5, name: 'Series Retreat', slug: 'series-retreat', parentSlug: null, menuType: 'mega_menu', orderIndex: 1, icon: '', color: '#ffffff' },
+  { id: 6, name: 'Khám Phá Điểm Đến', slug: 'diem-den', parentSlug: null, menuType: 'mega_menu', orderIndex: 2, icon: '', color: '#ffffff' },
+  { id: 7, name: '101 Điều Hay', slug: 'dieu-hay', parentSlug: null, menuType: 'mega_menu', orderIndex: 3, icon: '', color: '#ffffff' },
+  { id: 8, name: 'Kollection 4U', slug: 'kollection-4u', parentSlug: null, menuType: 'mega_menu', orderIndex: 4, icon: '', color: '#ffffff' },
+  { id: 9, name: 'Vì Sao Chọn 4U?', slug: 'vi-sao-chon-4u', parentSlug: null, menuType: 'mega_menu', orderIndex: 5, icon: '', color: '#ffffff' },
 
   // 3. Submenu Items for Series Retreat
-  { id: 10, name: 'Retreat Chữa Lành', slug: 'chua-lanh', parentSlug: 'series-retreat', menuType: 'mega_menu', orderIndex: 1, icon: 'Heart', color: '#4ade80', description: 'Chữa lành Thân - Tâm - Trí giữa thiên nhiên' },
-  { id: 11, name: 'Retreat Bảo Tồn', slug: 'bao-ton', parentSlug: 'series-retreat', menuType: 'mega_menu', orderIndex: 2, icon: 'Shield', color: '#38bdf8', description: 'Bảo tồn rừng nguyên sinh & hệ sinh thái' },
-  { id: 12, name: 'Retreat Thiên Nhiên', slug: 'thien-nhien', parentSlug: 'series-retreat', menuType: 'mega_menu', orderIndex: 3, icon: 'Leaf', color: '#facc15', description: 'Hòa mình cùng non xanh nước biếc' },
-  { id: 13, name: 'Retreat Thiện Nguyện', slug: 'thien-nguyen', parentSlug: 'series-retreat', menuType: 'mega_menu', orderIndex: 4, icon: 'Sparkles', color: '#f472b6', description: 'Gắn kết yêu thương và sẻ chia cộng đồng' },
+  { id: 10, name: 'Retreat Chữa Lành', slug: 'chua-lanh', parentSlug: 'series-retreat', menuType: 'mega_menu', orderIndex: 1, icon: '', color: '#4ade80', description: 'Chữa lành Thân - Tâm - Trí giữa thiên nhiên' },
+  { id: 11, name: 'Retreat Bảo Tồn', slug: 'bao-ton', parentSlug: 'series-retreat', menuType: 'mega_menu', orderIndex: 2, icon: '', color: '#38bdf8', description: 'Bảo tồn rừng nguyên sinh & hệ sinh thái' },
+  { id: 12, name: 'Retreat Thiên Nhiên', slug: 'thien-nhien', parentSlug: 'series-retreat', menuType: 'mega_menu', orderIndex: 3, icon: '', color: '#facc15', description: 'Hòa mình cùng non xanh nước biếc' },
+  { id: 13, name: 'Retreat Thiện Nguyện', slug: 'thien-nguyen', parentSlug: 'series-retreat', menuType: 'mega_menu', orderIndex: 4, icon: '', color: '#f472b6', description: 'Gắn kết yêu thương và sẻ chia cộng đồng' },
 
   // 4. Submenu Items for Khám Phá Điểm Đến
   { id: 14, name: 'Miền Bắc', slug: 'bac', parentSlug: 'diem-den', menuType: 'mega_menu', orderIndex: 1, color: '#4ade80', description: 'Vẻ đẹp hùng vĩ ngút ngàn non nước miền Bắc' },
@@ -904,20 +904,20 @@ export const MOCK_MENU_CATEGORIES = [
   { id: 16, name: 'Miền Nam', slug: 'nam', parentSlug: 'diem-den', menuType: 'mega_menu', orderIndex: 3, color: '#facc15', description: 'Miền sông nước thanh bình & đảo ngọc phương Nam' },
 
   // 5. Submenu Items for 101 Điều Hay
-  { id: 23, name: 'Cẩm Nang Tĩnh Dưỡng & Thiền Trà', slug: 'cam-nang-tinh-duong', parentSlug: 'dieu-hay', menuType: 'mega_menu', orderIndex: 1, icon: 'BookOpen', color: '#38bdf8', description: 'Bí quyết phục hồi năng lượng thân tâm' },
-  { id: 24, name: 'Bản Đồ Năng Lượng Chữa Lành', slug: 'ban-do-nang-luong', parentSlug: 'dieu-hay', menuType: 'mega_menu', orderIndex: 2, icon: 'Compass', color: '#facc15', description: 'Khám phá các tọa độ địa linh Việt Nam' },
-  { id: 25, name: 'Câu Chuyện Hành Trình Khách Hàng', slug: 'cau-chuyen-khach-hang', parentSlug: 'dieu-hay', menuType: 'mega_menu', orderIndex: 3, icon: 'Heart', color: '#f472b6', description: 'Chia sẻ chân thực từ những chuyến đi' },
+  { id: 23, name: 'Cẩm Nang Tĩnh Dưỡng & Thiền Trà', slug: 'cam-nang-tinh-duong', parentSlug: 'dieu-hay', menuType: 'mega_menu', orderIndex: 1, icon: '', color: '#38bdf8', description: 'Bí quyết phục hồi năng lượng thân tâm' },
+  { id: 24, name: 'Bản Đồ Năng Lượng Chữa Lành', slug: 'ban-do-nang-luong', parentSlug: 'dieu-hay', menuType: 'mega_menu', orderIndex: 2, icon: '', color: '#facc15', description: 'Khám phá các tọa độ địa linh Việt Nam' },
+  { id: 25, name: 'Câu Chuyện Hành Trình Khách Hàng', slug: 'cau-chuyen-khach-hang', parentSlug: 'dieu-hay', menuType: 'mega_menu', orderIndex: 3, icon: '', color: '#f472b6', description: 'Chia sẻ chân thực từ những chuyến đi' },
 
   // 6. Submenu Items for Kollection 4U
-  { id: 26, name: 'Trà & Thảo Mộc Cổ Thụ', slug: 'tra-thao-moc', parentSlug: 'kollection-4u', menuType: 'mega_menu', orderIndex: 1, icon: 'Gift', color: '#4ade80', description: 'Trà Shan Tuyết, Trà Sen Tây Hồ' },
-  { id: 27, name: 'Nến Thơm & Tinh Dầu Trầm', slug: 'nen-thom-tinh-dau', parentSlug: 'kollection-4u', menuType: 'mega_menu', orderIndex: 2, icon: 'Sparkles', color: '#facc15', description: 'Hương thơm an định tinh thần' },
-  { id: 28, name: 'Thiền Phục Linen Hữu Cơ', slug: 'thien-phuc-linen', parentSlug: 'kollection-4u', menuType: 'mega_menu', orderIndex: 3, icon: 'Feather', color: '#38bdf8', description: 'Trang phục thoáng mát tự nhiên' },
-  { id: 29, name: 'Phụ Kiện Du Lịch Thủ Công', slug: 'phu-kien-du-lich', parentSlug: 'kollection-4u', menuType: 'mega_menu', orderIndex: 4, icon: 'Truck', color: '#f472b6', description: 'Túi da canvas, bình giữ nhiệt gốm sứ' },
+  { id: 26, name: 'Trà & Thảo Mộc Cổ Thụ', slug: 'tra-thao-moc', parentSlug: 'kollection-4u', menuType: 'mega_menu', orderIndex: 1, icon: '', color: '#4ade80', description: 'Trà Shan Tuyết, Trà Sen Tây Hồ' },
+  { id: 27, name: 'Nến Thơm & Tinh Dầu Trầm', slug: 'nen-thom-tinh-dau', parentSlug: 'kollection-4u', menuType: 'mega_menu', orderIndex: 2, icon: '', color: '#facc15', description: 'Hương thơm an định tinh thần' },
+  { id: 28, name: 'Thiền Phục Linen Hữu Cơ', slug: 'thien-phuc-linen', parentSlug: 'kollection-4u', menuType: 'mega_menu', orderIndex: 3, icon: '', color: '#38bdf8', description: 'Trang phục thoáng mát tự nhiên' },
+  { id: 29, name: 'Phụ Kiện Du Lịch Thủ Công', slug: 'phu-kien-du-lich', parentSlug: 'kollection-4u', menuType: 'mega_menu', orderIndex: 4, icon: '', color: '#f472b6', description: 'Túi da canvas, bình giữ nhiệt gốm sứ' },
 
   // 7. Submenu Items for Vì Sao Chọn 4U?
-  { id: 30, name: 'Triết Lý Thiết Kế Hành Trình', slug: 'triet-ly-thiet-ke', parentSlug: 'vi-sao-chon-4u', menuType: 'mega_menu', orderIndex: 1, icon: 'Star', color: '#e5c158', description: 'Định nghĩa chuẩn mực nghỉ dưỡng thượng lưu' },
-  { id: 31, name: 'Đội Ngũ Chuyên Gia & Trợ Lý Riêng', slug: 'doi-ngu-chuyen-gia', parentSlug: 'vi-sao-chon-4u', menuType: 'mega_menu', orderIndex: 2, icon: 'Users', color: '#4ade80', description: 'Đồng hành tận tâm trên mọi cung đường' },
-  { id: 32, name: 'Cam Kết Bảo Tồn & Bền Vững', slug: 'cam-ket-ben-vung', parentSlug: 'vi-sao-chon-4u', menuType: 'mega_menu', orderIndex: 3, icon: 'Shield', color: '#38bdf8', description: 'Chung tay gìn giữ thiên nhiên và di sản' }
+  { id: 30, name: 'Triết Lý Thiết Kế Hành Trình', slug: 'triet-ly-thiet-ke', parentSlug: 'vi-sao-chon-4u', menuType: 'mega_menu', orderIndex: 1, icon: '', color: '#e5c158', description: 'Định nghĩa chuẩn mực nghỉ dưỡng thượng lưu' },
+  { id: 31, name: 'Đội Ngũ Chuyên Gia & Trợ Lý Riêng', slug: 'doi-ngu-chuyen-gia', parentSlug: 'vi-sao-chon-4u', menuType: 'mega_menu', orderIndex: 2, icon: '', color: '#4ade80', description: 'Đồng hành tận tâm trên mọi cung đường' },
+  { id: 32, name: 'Cam Kết Bảo Tồn & Bền Vững', slug: 'cam-ket-ben-vung', parentSlug: 'vi-sao-chon-4u', menuType: 'mega_menu', orderIndex: 3, icon: '', color: '#38bdf8', description: 'Chung tay gìn giữ thiên nhiên và di sản' }
 ];
 
 // --------------------------------------------------------------------------
