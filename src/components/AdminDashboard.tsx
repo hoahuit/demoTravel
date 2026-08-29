@@ -47,8 +47,7 @@ export const ADMIN_SECTIONS = [
   { id: 'products', label: 'Quản lý sản phẩm' },
   { id: 'consultations', label: 'Quản lý lịch tư vấn' },
   { id: 'custom-tours', label: 'Quản lý lịch trình riêng' },
-  { id: 'categories', label: 'Quản lý danh mục' },
-
+  // { id: 'categories', label: 'Quản lý danh mục' },
   // { id: 'shop-orders', label: 'Quản lý đơn hàng' },
   // { id: 'blog', label: 'Quản Lý Bài Viết' },
   // { id: 'destinations', label: 'Quản Lý Điểm Đến' },
@@ -501,7 +500,7 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
           }}
         >
           {permittedSections.map((sec, idx) => {
-            const isSystemDivider = sec.id === 'categories' && (idx === 0 || permittedSections[idx - 1].id !== 'categories');
+            // const isSystemDivider = sec.id === 'categories' && (idx === 0 || permittedSections[idx - 1]?.id !== 'categories');
             const SECTION_ICONS: Record<string, string> = {
               tours: 'explore',
               bookings: 'shopping_cart',
@@ -518,7 +517,7 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
 
             return (
               <React.Fragment key={sec.id}>
-                {isSystemDivider && (
+                {/* {isSystemDivider && (
                   <div
                     style={{
                       marginTop: '16px',
@@ -533,7 +532,7 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
                   >
                     Hệ thống
                   </div>
-                )}
+                )} */}
                 <button
                   key={sec.id}
                   onClick={() => handleSelectSection(sec.id)}
