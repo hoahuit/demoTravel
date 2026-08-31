@@ -880,10 +880,10 @@ export const MOCK_PRODUCTS = [
 // --------------------------------------------------------------------------
 export const MOCK_MENU_CATEGORIES = [
   // 1. Fixed Top Badges (Hàng trên menu cố định)
-  { id: 1, name: 'Retreats ĐỘC QUYỀN', slug: 'doc-quyen', parentSlug: null, menuType: 'fixed_top', orderIndex: 1, icon: 'Crown', color: '#00ff15ff', iconColor: '#facc15' },
-  { id: 2, name: 'Sắp Khởi hành', slug: 'sap-khoi-hanh', parentSlug: null, menuType: 'fixed_top', orderIndex: 2, icon: '', color: '#ffffff' },
-  { id: 3, name: 'KHÔNG THỂ BỎ LỠ', slug: 'khong-the-bo-lo', parentSlug: null, menuType: 'fixed_top', orderIndex: 3, icon: '', color: '#ffffff' },
-  { id: 4, name: 'Ưu đãi GIỜ CHÓT', slug: 'uu-dai-gio-chot', parentSlug: null, menuType: 'fixed_top', orderIndex: 4, icon: '', color: '#ffffff' },
+  { id: 1, name: 'Retreats ĐỘC QUYỀN', slug: 'doc-quyen', parentSlug: null, menuType: 'fixed_top', orderIndex: 1, icon: 'workspace_premium', color: '#22ff00ff', iconColor: '#facc15' },
+  { id: 2, name: 'Retreats Mới', slug: 'sap-khoi-hanh', parentSlug: null, menuType: 'fixed_top', orderIndex: 2, icon: '', color: '#ffffff', iconColor: '#ffffff' },
+  { id: 3, name: 'KHÔNG THỂ BỎ LỠ', slug: 'khong-the-bo-lo', parentSlug: null, menuType: 'fixed_top', orderIndex: 3, icon: '', color: '#ffffff', iconColor: '#ffffff' },
+  { id: 4, name: 'Ưu Đãi GIỜ CHÓT', slug: 'uu-dai-gio-chot', parentSlug: null, menuType: 'fixed_top', orderIndex: 4, icon: '', color: '#ffffff', iconColor: '#ffffff' },
 
   // 2. Main Mega Menu Categories (Hàng dưới)
   { id: 5, name: 'Series Retreat', slug: 'series-retreat', parentSlug: null, menuType: 'mega_menu', orderIndex: 1, icon: '', color: '#ffffff' },

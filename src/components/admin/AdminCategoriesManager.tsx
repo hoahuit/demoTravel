@@ -87,10 +87,10 @@ export const ICON_CATEGORIES = [
 // Initial fallback mock items matching Figma if API is empty
 const DEFAULT_INITIAL_CATEGORIES: MenuCategoryItem[] = [
   // Fixed Top Badges
-  { name: 'Retreats Độc quyền', slug: 'doc-quyen', menuType: 'fixed_top', orderIndex: 1, icon: 'workspace_premium', color: '#d97706', description: 'Đặc quyền thành viên' },
-  { name: 'Retreats Mới', slug: 'sap-khoi-hanh', menuType: 'fixed_top', orderIndex: 2, icon: 'calendar_today', color: '#2563eb', description: 'Lịch trình khởi hành mới' },
-  { name: 'KHÔNG THỂ BỎ LỠ', slug: 'khong-the-bo-lo', menuType: 'fixed_top', orderIndex: 3, icon: 'local_fire_department', color: '#dc2626', description: 'Tour thịnh hành nhất' },
-  { name: 'Ưu đãi GIỜ CHÓT', slug: 'uu-dai-gio-chot', menuType: 'fixed_top', orderIndex: 4, icon: 'timer', color: '#0d9488', description: 'Giảm giá đặc biệt' },
+  { name: 'Retreats Độc quyền', slug: 'doc-quyen', menuType: 'fixed_top', orderIndex: 1, icon: 'workspace_premium', color: '#15fa30ff', description: 'Đặc quyền thành viên' },
+  { name: 'Retreats Mới', slug: 'sap-khoi-hanh', menuType: 'fixed_top', orderIndex: 2, icon: 'calendar_today', color: '#ffffff', description: 'Lịch trình khởi hành mới' },
+  { name: 'KHÔNG THỂ BỎ LỠ', slug: 'khong-the-bo-lo', menuType: 'fixed_top', orderIndex: 3, icon: 'local_fire_department', color: '#ffffff', description: 'Tour thịnh hành nhất' },
+  { name: 'Ưu đãi GIỜ CHÓT', slug: 'uu-dai-gio-chot', menuType: 'fixed_top', orderIndex: 4, icon: 'timer', color: '#ffffff', description: 'Giảm giá đặc biệt' },
 
   // Mega Parents & Children
   // Column 1: Series Retreat

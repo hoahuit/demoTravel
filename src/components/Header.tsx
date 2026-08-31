@@ -22,9 +22,13 @@ import {
   Truck,
   Feather,
   Users,
+  Clock,
+  ShoppingBag,
+  Award,
   LucideIcon
 } from 'lucide-react';
-import { fetchMenuCategoriesApi, MenuCategoryItem } from '../services/apiService';
+import { fetchMenuCategoriesApi, getCachedQuery, MenuCategoryItem } from '../services/apiService';
+import { getMockCategories } from '../data/mockData';
 
 export interface HeaderProps {
   currentPath?: string;
@@ -53,75 +57,111 @@ export interface FixedBadgeItem {
 
 const DEFAULT_FIXED_PARENT_MENUS: FixedBadgeItem[] = [
   { label: 'Retreats ĐỘC QUYỀN', href: '/retreat/docquyen', isHighlight: true, icon: 'workspace_premium', color: '#facc15', iconColor: '#facc15' },
-  { label: 'Retreats Mới', href: '/retreat/sapkhoihanh', isHighlight: false, icon: 'calendar_today', color: '#38bdf8', iconColor: '#38bdf8' },
-  { label: 'KHÔNG THỂ BỎ LỠ', href: '/retreat/khongthebolo', isHighlight: false, icon: 'local_fire_department', color: '#f87171', iconColor: '#f87171' },
-  { label: 'Ưu Đãi GIỜ CHÓT', href: '/retreat/uudaigiochot', isHighlight: false, icon: 'timer', color: '#2dd4bf', iconColor: '#2dd4bf' }
+  { label: 'Retreats Mới', href: '/retreat/sapkhoihanh', isHighlight: false, icon: 'calendar_today', color: '#ffffff', iconColor: '#ffffff' },
+  { label: 'KHÔNG THỂ BỎ LỠ', href: '/retreat/khongthebolo', isHighlight: false, icon: 'local_fire_department', color: '#ffffff', iconColor: '#ffffff' },
+  { label: 'Ưu Đãi GIỜ CHÓT', href: '/retreat/uudaigiochot', isHighlight: false, icon: 'timer', color: '#ffffff', iconColor: '#ffffff' }
 ];
 
 const ICON_MAP: Record<string, LucideIcon> = {
-  Heart,
-  Shield,
-  Leaf,
-  Sparkles,
-  Compass,
-  BookOpen,
-  Star,
-  HelpCircle,
-  Calendar,
-  Briefcase,
-  Crown,
-  Zap,
-  Flame,
-  MapPin,
-  Gift,
-  Truck,
-  Feather,
-  Users
+  crown: Crown,
+  workspace_premium: Crown,
+  workspacepremium: Crown,
+  premium: Crown,
+  award: Award,
+  calendar: Calendar,
+  calendartoday: Calendar,
+  calendar_today: Calendar,
+  flame: Flame,
+  fire: Flame,
+  local_fire_department: Flame,
+  localfiredepartment: Flame,
+  hot: Flame,
+  timer: Clock,
+  clock: Clock,
+  zap: Zap,
+  leaf: Leaf,
+  leafygreen: Leaf,
+  eco: Leaf,
+  nature: Leaf,
+  park: Leaf,
+  forest: Leaf,
+  heart: Heart,
+  healing: Heart,
+  favorite: Heart,
+  spa: Heart,
+  compass: Compass,
+  explore: Compass,
+  travel_explore: Compass,
+  travelexplore: Compass,
+  bookopen: BookOpen,
+  book: BookOpen,
+  menu_book: BookOpen,
+  menubook: BookOpen,
+  article: BookOpen,
+  shoppingbag: ShoppingBag,
+  bag: ShoppingBag,
+  shopping_bag: ShoppingBag,
+  card_giftcard: Gift,
+  cardgiftcard: Gift,
+  gift: Gift,
+  backpack: Briefcase,
+  mappin: MapPin,
+  pin: MapPin,
+  location_on: MapPin,
+  locationon: MapPin,
+  sparkles: Sparkles,
+  star: Star,
+  stars: Star,
+  shield: Shield,
+  users: Users,
+  volunteer_activism: Heart,
+  volunteeractivism: Heart,
+  help: HelpCircle,
+  helpcircle: HelpCircle,
+  help_circle: HelpCircle,
+  briefcase: Briefcase,
+  feather: Feather,
+  truck: Truck
 };
 
 export const renderMenuIcon = (iconName?: string | LucideIcon | any, size = 16, color?: string) => {
   if (!iconName) return null;
 
-  // If it's a React component (e.g. LucideIcon function/component)
+  // 1. If it's a React component (e.g. LucideIcon function/component)
   if (typeof iconName === 'function' || (typeof iconName === 'object' && iconName.$$typeof)) {
     const Component = iconName;
     return <Component size={size} style={{ color: color || 'currentColor', flexShrink: 0 }} />;
   }
 
-  // String identifier (Material Symbols or Lucide name)
+  // 2. String identifier: check Lucide map first to render instant SVG and eliminate FOUT text completely
   const nameStr = String(iconName).trim();
-  const lower = nameStr.toLowerCase();
+  const rawLower = nameStr.toLowerCase();
+  const normalizedLower = rawLower.replace(/[-_ ]/g, '');
 
-  // Map legacy / text to Material Symbols
-  let matIcon = nameStr;
-  if (lower === 'crown') matIcon = 'crown';
-  else if (lower === 'calendar' || lower === 'calendartoday') matIcon = 'calendar_today';
-  else if (lower === 'flame' || lower === 'fire') matIcon = 'local_fire_department';
-  else if (lower === 'zap' || lower === 'clock') matIcon = 'timer';
-  else if (lower === 'leaf' || lower === 'leafygreen') matIcon = 'eco';
-  else if (lower === 'heart') matIcon = 'healing';
-  else if (lower === 'compass') matIcon = 'explore';
-  else if (lower === 'bookopen' || lower === 'book') matIcon = 'menu_book';
-  else if (lower === 'shoppingbag' || lower === 'bag') matIcon = 'shopping_bag';
-  else if (lower === 'mappin' || lower === 'pin') matIcon = 'location_on';
-  else if (lower === 'gift') matIcon = 'card_giftcard';
-  else if (lower === 'sparkles' || lower === 'star') matIcon = 'stars';
+  const LucideComponent = ICON_MAP[rawLower] || ICON_MAP[normalizedLower];
+  if (LucideComponent) {
+    return <LucideComponent size={size} style={{ color: color || 'currentColor', flexShrink: 0 }} />;
+  }
 
+  // 3. Fallback for custom Material Symbols with bounded width/height to avoid raw text spill
   return (
     <span
       className="material-symbols-outlined"
       style={{
         fontSize: `${size}px`,
+        width: `${size}px`,
+        height: `${size}px`,
         color: color || 'currentColor',
         lineHeight: 1,
         verticalAlign: 'middle',
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        flexShrink: 0
+        flexShrink: 0,
+        overflow: 'hidden'
       }}
     >
-      {matIcon}
+      {nameStr}
     </span>
   );
 };
@@ -168,7 +208,13 @@ export default function Header({
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [mobileExpandedCat, setMobileExpandedCat] = useState<string | null>(null);
-  const [liveCategories, setLiveCategories] = useState<MenuCategoryItem[]>([]);
+  const [liveCategories, setLiveCategories] = useState<MenuCategoryItem[]>(() => {
+    const cached = getCachedQuery<MenuCategoryItem[]>('section:categories');
+    if (cached && Array.isArray(cached) && cached.length > 0) {
+      return cached;
+    }
+    return getMockCategories();
+  });
   const [activeLandingSection, setActiveLandingSection] = useState<string>('signals');
 
   const isDetailPage = useMemo(() => {
@@ -288,10 +334,8 @@ export default function Header({
         let color = c.color;
         if (!color) {
           const s = (c.slug || '').toLowerCase();
-          if (s.includes('doc-quyen')) color = '#facc15';
-          else if (s.includes('sap-khoi-hanh') || s.includes('moi')) color = '#38bdf8';
-          else if (s.includes('khong-the-bo-lo') || s.includes('hot')) color = '#f87171';
-          else color = '#2dd4bf';
+          if (s.includes('doc-quyen') || s.includes('docquyen')) color = '#facc15';
+          else color = '#ffffff';
         }
         return {
           label: c.name,
