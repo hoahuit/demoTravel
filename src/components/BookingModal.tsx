@@ -1,7 +1,19 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import './BookingModal.css';
-import { QrCode, ShieldCheck, CheckCircle, X, Sparkles, Plus, Check, Gift } from 'lucide-react';
-import { createTourBookingApi } from '../services/apiService';
+import { QrCode, ShieldCheck, CheckCircle, X, Sparkles, Plus, Check, Gift, Minus, Tag } from 'lucide-react';
+import { createTourBookingApi, validateCouponCodeApi } from '../services/apiService';
+import {
+  calculateTotal,
+  calculateTotalWithCoupon,
+  calculateAdultPrice,
+  calculateListPrice,
+  calculateChildPrice,
+  calculateInfantPrice,
+  formatVnd as pricingFormatVnd,
+  buildPricingInputFromTour,
+  type PricingFormulaInput,
+  type TotalBreakdown,
+} from '../lib/pricingCalculator';
 
 export interface BookingModalProps {
   externalOpen?: boolean;
@@ -9,6 +21,9 @@ export interface BookingModalProps {
   selectedTour?: {
     title?: string;
     price?: number;
+    originalPrice?: number;
+    childPrice?: number;
+    infantPrice?: number;
     city?: string;
     slug?: string;
     category?: string;
@@ -16,6 +31,18 @@ export interface BookingModalProps {
     duration?: string;
     selectedDate?: string;
     guests?: any;
+    // Pricing Formula Fields (Danny @260825)
+    cost?: number;
+    marginPercent?: number;
+    promotionPercent?: number;
+    group3Percent?: number;
+    group5Percent?: number;
+    childDiscountPercent?: number;
+    infantDiscountPercent?: number;
+    vatPercent?: number;
+    listPrice?: number;
+    group3Price?: number;
+    group5Price?: number;
   } | null;
 }
 
@@ -180,7 +207,87 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
   };
 
   const tourPriceVND = parsePrice(selectedTour?.price);
-  const guestCount = Number(selectedTour?.guests?.adults || selectedTour?.guests?.adult || 1);
+
+  // Guest counters — 3 categories
+  const [adultCount, setAdultCount] = useState<number>(() => {
+    const fromGuests = Number(selectedTour?.guests?.adults || selectedTour?.guests?.adult || 0);
+    return fromGuests > 0 ? fromGuests : 1;
+  });
+  const [childCount, setChildCount] = useState<number>(() => Number(selectedTour?.guests?.children || 0));
+  const [infantCount, setInfantCount] = useState<number>(() => Number(selectedTour?.guests?.infants || 0));
+
+  // Coupon state
+  const [couponCode, setCouponCode] = useState<string>('');
+  const [couponLoading, setCouponLoading] = useState<boolean>(false);
+  const [couponResult, setCouponResult] = useState<{ valid: boolean; discountPercent: number; title: string } | null>(null);
+
+  // Build pricing input from tour data (null = legacy tour without cost formula)
+  const pricingInput: PricingFormulaInput | null = useMemo(() => {
+    if (!selectedTour) return null;
+    return buildPricingInputFromTour(selectedTour as Record<string, any>);
+  }, [selectedTour]);
+
+  // Calculate pricing breakdown
+  const pricingBreakdown: TotalBreakdown = useMemo(() => {
+    const guests = { adults: adultCount, children: childCount, infants: infantCount };
+    const couponDiscount = (couponResult?.valid && couponResult.discountPercent > 0) ? couponResult.discountPercent : 0;
+
+    if (pricingInput) {
+      // Cost-based formula tour
+      if (couponDiscount > 0) {
+        return calculateTotalWithCoupon(pricingInput, guests, couponDiscount);
+      }
+      return calculateTotal(pricingInput, guests);
+    }
+
+    // Legacy tour — use stored prices directly
+    const adultPrice = tourPriceVND;
+    const childPriceLegacy = selectedTour?.childPrice || Math.round(adultPrice * 0.5);
+    const infantPriceLegacy = selectedTour?.infantPrice || Math.round(adultPrice * 0.2);
+    const vatPercent = selectedTour?.vatPercent ?? 8;
+
+    let effectiveAdultPrice = adultPrice;
+    if (couponDiscount > 0) {
+      effectiveAdultPrice = Math.round(adultPrice * (1 - couponDiscount / 100));
+    }
+    const effectiveChildPrice = couponDiscount > 0 ? Math.round(childPriceLegacy * (1 - couponDiscount / 100)) : childPriceLegacy;
+    const effectiveInfantPrice = couponDiscount > 0 ? Math.round(infantPriceLegacy * (1 - couponDiscount / 100)) : infantPriceLegacy;
+
+    const subtotal = (effectiveAdultPrice * Math.max(1, guests.adults))
+      + (effectiveChildPrice * Math.max(0, guests.children))
+      + (effectiveInfantPrice * Math.max(0, guests.infants));
+    const vatAmount = Math.round(subtotal * vatPercent / 100);
+    return {
+      subtotal,
+      vatAmount,
+      totalAmount: subtotal + vatAmount,
+      adultPrice: effectiveAdultPrice,
+      childPrice: effectiveChildPrice,
+      infantPrice: effectiveInfantPrice,
+    };
+  }, [pricingInput, tourPriceVND, adultCount, childCount, infantCount, couponResult, selectedTour]);
+
+  const guestCount = adultCount + childCount + infantCount;
+
+  // Coupon validation handler
+  const handleValidateCoupon = useCallback(async () => {
+    const trimmed = couponCode.trim();
+    if (!trimmed) return;
+    setCouponLoading(true);
+    try {
+      const result = await validateCouponCodeApi(trimmed);
+      setCouponResult(result);
+    } catch {
+      setCouponResult({ valid: false, discountPercent: 0, title: '' });
+    } finally {
+      setCouponLoading(false);
+    }
+  }, [couponCode]);
+
+  const handleClearCoupon = () => {
+    setCouponCode('');
+    setCouponResult(null);
+  };
 
   // Dynamic Matching for Addons
   const matchedAddons = useMemo(() => {
@@ -192,7 +299,6 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
       selectedTour?.slug || ''
     ].join(' ').toLowerCase();
 
-    // Calculate match score
     const scored = ADDON_CATALOG.map(item => {
       let score = 0;
       item.matchedTags.forEach(tag => {
@@ -215,8 +321,8 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
   }, [selectedAddonIds]);
 
   const finalTotalAmount = useMemo(() => {
-    return (tourPriceVND * Math.max(1, guestCount)) + addonsTotalPrice;
-  }, [tourPriceVND, guestCount, addonsTotalPrice]);
+    return pricingBreakdown.totalAmount + addonsTotalPrice;
+  }, [pricingBreakdown.totalAmount, addonsTotalPrice]);
 
   const toggleAddon = (id: string) => {
     setSelectedAddonIds(prev =>
@@ -385,35 +491,173 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
               {!submitted ? (
                 <form onSubmit={handleSubmitOrder} style={{ display: 'flex', flexDirection: 'column', gap: '16px', margin: 0 }}>
 
-                {/* Tour Summary Mini Card */}
+                {/* Tour Summary + Guest Picker + Pricing Breakdown */}
                 <div style={{
                   backgroundColor: '#f8fafc',
                   border: '1px solid #e2e8f0',
                   borderRadius: '12px',
-                  padding: '12px 16px',
+                  padding: '14px 16px',
                   display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                  gap: '8px'
+                  flexDirection: 'column',
+                  gap: '12px'
                 }}>
-                  <div>
-                    <div style={{ fontSize: '11px', fontWeight: 700, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                      Hành Trình Đã Chọn
-                    </div>
-                    <div style={{ fontSize: '14px', fontWeight: 800, color: '#0f172a', margin: '2px 0' }}>
-                      {defaultTourTitle}
-                    </div>
-                    <div style={{ fontSize: '12px', color: '#64748b' }}>
-                      Khởi hành: <strong>{selectedTour?.selectedDate || 'Theo yêu cầu'}</strong> • <strong>{guestCount} Khách</strong>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                    <div>
+                      <div style={{ fontSize: '11px', fontWeight: 700, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Hành Trình Đã Chọn
+                      </div>
+                      <div style={{ fontSize: '14px', fontWeight: 800, color: '#0f172a', margin: '2px 0' }}>
+                        {defaultTourTitle}
+                      </div>
+                      <div style={{ fontSize: '12px', color: '#64748b' }}>
+                        Khởi hành: <strong>{selectedTour?.selectedDate || 'Theo yêu cầu'}</strong>
+                      </div>
                     </div>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '15px', fontWeight: 800, color: '#004532' }}>
-                      {formatVnd(tourPriceVND * Math.max(1, guestCount))}
+
+                  {/* Guest Counter — 3 categories */}
+                  <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '12px' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', marginBottom: '8px' }}>Số lượng khách</div>
+                    {[
+                      { label: 'Người lớn (từ 12 tuổi)', count: adultCount, setCount: setAdultCount, minCount: 1, price: pricingBreakdown.adultPrice },
+                      { label: 'Trẻ em (6-12 tuổi)', count: childCount, setCount: setChildCount, minCount: 0, price: pricingBreakdown.childPrice },
+                      { label: 'Em bé (dưới 6 tuổi)', count: infantCount, setCount: setInfantCount, minCount: 0, price: pricingBreakdown.infantPrice },
+                    ].map((guest, idx) => (
+                      <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                        <div>
+                          <span style={{ fontSize: '13px', color: '#374151', fontWeight: 500 }}>{guest.label}</span>
+                          <span style={{ fontSize: '11px', color: '#94a3b8', marginLeft: '6px' }}>{formatVnd(guest.price)}/người</span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <button
+                            type="button"
+                            onClick={() => guest.setCount(Math.max(guest.minCount, guest.count - 1))}
+                            disabled={guest.count <= guest.minCount}
+                            style={{
+                              width: '28px', height: '28px', borderRadius: '6px',
+                              border: '1px solid #cbd5e1', backgroundColor: '#f8fafc',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              cursor: guest.count <= guest.minCount ? 'not-allowed' : 'pointer',
+                              opacity: guest.count <= guest.minCount ? 0.4 : 1,
+                            }}
+                          >
+                            <Minus size={12} />
+                          </button>
+                          <span style={{ width: '28px', textAlign: 'center', fontSize: '14px', fontWeight: 700, color: '#0f172a' }}>{guest.count}</span>
+                          <button
+                            type="button"
+                            onClick={() => guest.setCount(Math.min(20, guest.count + 1))}
+                            style={{
+                              width: '28px', height: '28px', borderRadius: '6px',
+                              border: '1px solid #059669', backgroundColor: '#ecfdf5',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              cursor: 'pointer', color: '#059669',
+                            }}
+                          >
+                            <Plus size={12} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    {adultCount >= 3 && (
+                      <div style={{ fontSize: '11px', color: '#059669', fontWeight: 600, marginTop: '4px', padding: '4px 8px', backgroundColor: '#ecfdf5', borderRadius: '6px' }}>
+                        ✨ Đã áp dụng giá {adultCount >= 5 ? 'Nhóm 5+ Người lớn' : 'Nhóm 3-4 Người lớn'}!
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Coupon Input */}
+                  <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '12px' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', marginBottom: '6px' }}>Mã ưu đãi (Coupon)</div>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <input
+                        type="text"
+                        placeholder="Nhập mã VD: 4URe123"
+                        value={couponCode}
+                        onChange={(e) => { setCouponCode(e.target.value); setCouponResult(null); }}
+                        style={{
+                          flex: 1, padding: '8px 12px', borderRadius: '6px',
+                          border: '1px solid #cbd5e1', fontSize: '13px',
+                          boxSizing: 'border-box', outline: 'none',
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleValidateCoupon}
+                        disabled={couponLoading || !couponCode.trim()}
+                        style={{
+                          padding: '8px 14px', borderRadius: '6px',
+                          border: 'none', backgroundColor: '#059669',
+                          color: '#ffffff', fontSize: '12px', fontWeight: 700,
+                          cursor: couponLoading ? 'wait' : 'pointer',
+                          opacity: (!couponCode.trim() || couponLoading) ? 0.5 : 1,
+                        }}
+                      >
+                        {couponLoading ? 'Đang kiểm...' : 'Áp dụng'}
+                      </button>
                     </div>
-                    <div style={{ fontSize: '11px', color: '#94a3b8' }}>
-                      ({formatVnd(tourPriceVND)} / khách)
+                    {couponResult && (
+                      <div style={{
+                        marginTop: '6px', padding: '6px 10px', borderRadius: '6px',
+                        backgroundColor: couponResult.valid ? '#ecfdf5' : '#fff1f2',
+                        border: `1px solid ${couponResult.valid ? '#a7f3d0' : '#fecdd3'}`,
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                      }}>
+                        <span style={{ fontSize: '12px', color: couponResult.valid ? '#065f46' : '#be123c', fontWeight: 600 }}>
+                          {couponResult.valid
+                            ? `✅ Giảm ${couponResult.discountPercent}% — ${couponResult.title}`
+                            : '❌ Mã không hợp lệ hoặc đã hết hạn'}
+                        </span>
+                        {couponResult.valid && (
+                          <button
+                            type="button"
+                            onClick={handleClearCoupon}
+                            style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '11px', color: '#64748b', textDecoration: 'underline' }}
+                          >Xóa</button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Pricing Breakdown */}
+                  <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '12px' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#374151', textTransform: 'uppercase', marginBottom: '6px' }}>Chi tiết thanh toán</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#475569', marginBottom: '3px' }}>
+                      <span>Người lớn × {adultCount}</span>
+                      <span>{formatVnd(pricingBreakdown.adultPrice * adultCount)}</span>
+                    </div>
+                    {childCount > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#475569', marginBottom: '3px' }}>
+                        <span>Trẻ em × {childCount}</span>
+                        <span>{formatVnd(pricingBreakdown.childPrice * childCount)}</span>
+                      </div>
+                    )}
+                    {infantCount > 0 && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#475569', marginBottom: '3px' }}>
+                        <span>Em bé × {infantCount}</span>
+                        <span>{formatVnd(pricingBreakdown.infantPrice * infantCount)}</span>
+                      </div>
+                    )}
+                    {couponResult?.valid && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#059669', marginBottom: '3px' }}>
+                        <span>🎁 Giảm giá Tri ân (-{couponResult.discountPercent}%)</span>
+                        <span>-</span>
+                      </div>
+                    )}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#475569', marginBottom: '3px', paddingTop: '4px', borderTop: '1px dashed #e2e8f0' }}>
+                      <span>Tạm tính</span>
+                      <span>{formatVnd(pricingBreakdown.subtotal)}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#475569', marginBottom: '3px' }}>
+                      <span>VAT ({selectedTour?.vatPercent ?? 8}%)</span>
+                      <span>+{formatVnd(pricingBreakdown.vatAmount)}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '15px', fontWeight: 800, color: '#004532', marginTop: '6px', paddingTop: '6px', borderTop: '1px solid #059669' }}>
+                      <span>Tổng Thanh toán</span>
+                      <span>{formatVnd(pricingBreakdown.totalAmount)}</span>
+                    </div>
+                    <div style={{ fontSize: '10.5px', color: '#94a3b8', marginTop: '4px', textAlign: 'right' }}>
+                      Giá đã bao gồm Thuế
                     </div>
                   </div>
                 </div>

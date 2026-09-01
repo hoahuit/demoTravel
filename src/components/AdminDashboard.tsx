@@ -43,6 +43,7 @@ import './Admin.css';
 export const ADMIN_SECTIONS = [
   { id: 'tours', label: 'Quản lý Tour' },
   { id: 'bookings', label: 'Quản lý đơn đặt tour' },
+  { id: 'promotions', label: 'Quản lý mã Voucher' },
   { id: 'landing-page', label: 'Quản lý Landing Pages' },
   { id: 'products', label: 'Quản lý sản phẩm' },
   { id: 'consultations', label: 'Quản lý lịch tư vấn' },
@@ -182,7 +183,7 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
         break;
       case 'promotions':
         title = 'Tạo Mã Ưu Đãi Voucher';
-        newItem = { id: `promo-${Date.now()}`, code: 'DISCOUNT2026', title: '', subtitle: 'Ưu đãi đặc quyền 4U', discountBadge: 'GIẢM 20%', category: 'Flash Sale', expiryDate: '31/12/2026' };
+        newItem = { id: `promo-${Date.now()}`, code: 'TRIAN10', title: 'Ưu Đãi Tri Ân Khách Hàng', subtitle: 'Ưu đãi đặc quyền 4U', discountBadge: 'GIẢM 10%', discountPercent: 10, category: 'Tri Ân', expiryDate: '2026-12-31' };
         break;
       case 'services':
         title = 'Thêm Dịch Vụ Retreat Mới';
@@ -504,6 +505,7 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
             const SECTION_ICONS: Record<string, string> = {
               tours: 'explore',
               bookings: 'shopping_cart',
+              promotions: 'local_offer',
               'landing-page': 'web',
               products: 'category',
               consultations: 'calendar_today',
@@ -738,9 +740,57 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
                   );
                 }
 
+                const FIELD_LABELS: Record<string, string> = {
+                  code: 'Mã Voucher (Nhập tại Booking/Checkout)',
+                  title: 'Tên Chương Trình Ưu Đãi',
+                  subtitle: 'Mô Tả Phụ / Ghi Chú',
+                  discountPercent: '% Giảm Giá Thực Tế (Dùng tính Giá Tri Ân)',
+                  discountBadge: 'Huy Hiệu Hiển Thị (VD: GIẢM 10%, FLASH SALE)',
+                  category: 'Phân Loại Danh Mục',
+                  expiryDate: 'Ngày Hết Hạn (VD: 2026-12-31 hoặc 31/12/2026)',
+                  name: 'Họ và Tên / Tiêu Đề',
+                  role: 'Chức Vụ / Vai Trò',
+                  department: 'Phòng Ban',
+                  question: 'Câu Hỏi',
+                  answer: 'Câu Trả Lời',
+                  logoText: 'Tên Logo / Đối Tác',
+                  bannerImage: 'Ảnh Banner URL'
+                };
+                const fieldLabel = FIELD_LABELS[key] || key;
+
+                if (key === 'discountPercent') {
+                  return (
+                    <div key={key}>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#006d36', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                        {fieldLabel}
+                      </label>
+                      <div style={{ position: 'relative' }}>
+                        <input
+                          type="number"
+                          min={0}
+                          max={100}
+                          step={0.5}
+                          placeholder="Ví dụ: 10"
+                          value={val ?? 0}
+                          onChange={(e) => {
+                            setEditingTarget({
+                              ...editingTarget,
+                              item: { ...editingTarget.item, [key]: parseFloat(e.target.value) || 0 }
+                            });
+                          }}
+                          style={{ width: '100%', padding: '10px 32px 10px 12px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '14px', boxSizing: 'border-box' }}
+                        />
+                        <span style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontWeight: 700 }}>%</span>
+                      </div>
+                    </div>
+                  );
+                }
+
                 return (
                   <div key={key}>
-                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#525a54', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>{key}</label>
+                    <label style={{ fontSize: '12px', fontWeight: 700, color: '#525a54', textTransform: 'uppercase', marginBottom: '6px', display: 'block' }}>
+                      {fieldLabel}
+                    </label>
                     <input
                       type="text"
                       value={val ?? ''}
@@ -750,7 +800,7 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
                           item: { ...editingTarget.item, [key]: e.target.value }
                         });
                       }}
-                      style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '14px' }}
+                      style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '14px', boxSizing: 'border-box' }}
                     />
                   </div>
                 );

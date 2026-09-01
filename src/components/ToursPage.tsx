@@ -656,6 +656,10 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
                           <span style={{ fontSize: '18px', fontWeight: 800, color: '#006d36' }}>{feat.price.toLocaleString('vi-VN')} VNĐ</span>
+                          {feat.originalPrice && feat.originalPrice > feat.price && (
+                            <span style={{ fontSize: '13px', color: '#94a3b8', textDecoration: 'line-through', fontWeight: 400 }}>{feat.originalPrice.toLocaleString('vi-VN')} VNĐ</span>
+                          )}
+                          <span style={{ fontSize: '10.5px', color: '#94a3b8', fontWeight: 400 }}>Giá chưa bao gồm Thuế</span>
                           <button
                             onClick={() => onNavigate(`/sanpham/${feat.slug}`)}
                             style={{ background: '#1a1714', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}
@@ -727,6 +731,10 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                           <span style={{ fontSize: '17px', fontWeight: 800, color: '#006d36', display: 'block' }}>
                             {tour.price.toLocaleString('vi-VN')} VNĐ
                           </span>
+                          {tour.originalPrice && tour.originalPrice > tour.price && (
+                            <span style={{ fontSize: '12px', color: '#94a3b8', textDecoration: 'line-through', display: 'block' }}>{tour.originalPrice.toLocaleString('vi-VN')} VNĐ</span>
+                          )}
+                          <span style={{ fontSize: '10px', color: '#94a3b8', display: 'block' }}>Giá chưa bao gồm Thuế</span>
                           <button
                             onClick={() => onNavigate(`/sanpham/${tour.slug}`)}
                             style={{ background: 'transparent', color: '#1a1714', border: 'none', padding: 0, fontSize: '14px', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', marginTop: '2px' }}
@@ -798,6 +806,10 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                     <span style={{ fontSize: '18px', fontWeight: 600, color: '#1a1714' }}>
                       {tour.price.toLocaleString('vi-VN')} VNĐ
                     </span>
+                    {tour.originalPrice && tour.originalPrice > tour.price && (
+                      <span style={{ fontSize: '12px', color: '#94a3b8', textDecoration: 'line-through', fontWeight: 400, marginLeft: '6px' }}>{tour.originalPrice.toLocaleString('vi-VN')}</span>
+                    )}
+                    <span style={{ fontSize: '10px', color: '#94a3b8', display: 'block', marginTop: '2px' }}>Giá chưa bao gồm Thuế</span>
 
                     <button
                       onClick={() => onNavigate(`/sanpham/${tour.slug}`)}

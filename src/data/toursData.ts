@@ -40,6 +40,22 @@ export interface TourPackage {
   childPrice?: number;
   infantPrice?: number;
   discountPercentage?: number;
+
+  // Pricing Formula Fields (Danny @260825)
+  cost?: number;
+  marginPercent?: number;
+  promotionPercent?: number;
+  group3Percent?: number;
+  group5Percent?: number;
+  childDiscountPercent?: number;
+  infantDiscountPercent?: number;
+  vatPercent?: number;
+
+  // Computed group prices (from backend enrichTourResponse)
+  listPrice?: number;
+  group3Price?: number;
+  group5Price?: number;
+
   rating: number;
   reviewsCount: number;
   isHot?: boolean;

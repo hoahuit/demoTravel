@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Clock, Star, Compass, ChevronDown, CheckCircle, MapPin, ArrowRight, Navigation, ShieldCheck, Tag, Info, UserCheck, Heart, Sparkles } from 'lucide-react';
 import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
 import { fetchToursApi, getImageUrl } from '../services/apiService';
+import { buildPricingInputFromTour, calculateAllPrices } from '../lib/pricingCalculator';
 import ScrollExpandMedia from './ui/scroll-expansion-hero';
 import ElegantCarousel, { SlideData } from './ui/elegant-carousel';
 import Testimonials from './Testimonials';
@@ -194,13 +195,15 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
     ratingValue: product.rating,
     type: primaryCategory,
     priceText: `${product.price.toLocaleString('vi-VN')} VNĐ`,
+    originalPriceText: product.originalPrice && product.originalPrice > product.price ? `${product.originalPrice.toLocaleString('vi-VN')} VNĐ` : undefined,
     priceAdult: product.price,
     childPriceText: product.childPrice && product.childPrice > 0
       ? `${product.childPrice.toLocaleString('vi-VN')} VNĐ`
-      : `${Math.round(product.price * 0.7).toLocaleString('vi-VN')} VNĐ`,
+      : `${Math.round(product.price * 0.5).toLocaleString('vi-VN')} VNĐ`,
     infantPriceText: product.infantPrice && product.infantPrice > 0
       ? `${product.infantPrice.toLocaleString('vi-VN')} VNĐ`
-      : 'MIỄN PHÍ',
+      : `${Math.round(product.price * 0.2).toLocaleString('vi-VN')} VNĐ`,
+    vatPercent: product.vatPercent ?? 8,
     adultNote: product.adultNote || 'Bao gồm xe VIP Limousine, Resort cao cấp, 100% bữa ăn & liệu trình thiền định',
     childNote: product.childNote || 'Hưởng giường riêng & suất ăn trọn gói dành cho trẻ em',
     infantNote: product.infantNote || 'Ngồi cùng bố mẹ, miễn phí vé tham quan & phụ thu lưu trú',
@@ -372,12 +375,18 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
 
             <div className="pd-subnav-cta">
               <div className="pd-subnav-price-box" style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.7rem', color: '#5b6561', textTransform: 'uppercase' }}>Giá Trọn Gói</div>
-                <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#006d36' }}>{pageData.priceText}</div>
+                <div style={{ fontSize: '0.75rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Giá trọn gói từ</div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', justifyContent: 'flex-end' }}>
+                  <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#006d36' }}>{pageData.priceText}</div>
+                  {pageData.originalPriceText && (
+                    <div style={{ fontSize: '0.85rem', color: '#94a3b8', textDecoration: 'line-through' }}>{pageData.originalPriceText}</div>
+                  )}
+                </div>
+                <div style={{ fontSize: '0.68rem', color: '#64748b' }}>Giá chưa bao gồm Thuế</div>
               </div>
               <button
                 className="pd-subnav-cta-btn"
-                onClick={onOpenBooking}
+                onClick={() => onOpenBooking && onOpenBooking(product)}
                 style={{
                   background: '#062c23',
                   color: '#ffffff',
@@ -736,7 +745,15 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                       <tbody>
                         <tr>
                           <td style={{ fontWeight: '700' }}>Người lớn (Từ 12 tuổi)</td>
-                          <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.15rem' }}>{pageData.priceText}</td>
+                          <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.15rem' }}>
+                            <div>{pageData.priceText}</div>
+                            {pageData.originalPriceText && (
+                              <div style={{ fontSize: '0.82rem', color: '#94a3b8', textDecoration: 'line-through', fontWeight: 500 }}>
+                                {pageData.originalPriceText}
+                              </div>
+                            )}
+                            <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 500 }}>Chưa gồm thuế</div>
+                          </td>
                           <td style={{ color: '#5b6561' }}>{pageData.adultNote}</td>
                         </tr>
                         <tr>
@@ -744,7 +761,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                           <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.05rem' }}>{pageData.childPriceText}</td>
                           <td style={{ color: '#5b6561' }}>{pageData.childNote}</td>
                         </tr>
-                        <tr>
+                          <tr>
                           <td style={{ fontWeight: '700' }}>Em bé (&lt; 5 tuổi)</td>
                           <td style={{ color: '#27ae60', fontWeight: '800', fontSize: '1.05rem' }}>{pageData.infantPriceText}</td>
                           <td style={{ color: '#5b6561' }}>{pageData.infantNote}</td>
@@ -863,9 +880,15 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                   <div style={{ fontSize: '0.75rem', fontWeight: '700', color: '#5b6561', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '6px' }}>
                     GIÁ CHUYẾN ĐỊNH
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '24px' }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', flexWrap: 'wrap' }}>
                     <span style={{ fontSize: '2rem', fontWeight: '800', color: '#006d36' }}>{pageData.priceText}</span>
-                    <span style={{ fontSize: '0.85rem', color: '#5b6561' }}>/ Khách</span>
+                    {pageData.originalPriceText && (
+                      <span style={{ fontSize: '1.1rem', color: '#94a3b8', textDecoration: 'line-through' }}>{pageData.originalPriceText}</span>
+                    )}
+                    <span style={{ fontSize: '0.9rem', color: '#5b6561' }}>/ khách</span>
+                  </div>
+                  <div style={{ fontSize: '0.82rem', color: '#64748b', marginTop: '4px', fontWeight: 500 }}>
+                    💡 Giá chưa bao gồm Thuế (VAT {pageData.vatPercent}%)
                   </div>
 
                   {/* Booking Form Selectors */}
@@ -924,12 +947,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                     onClick={() => {
                       if (onOpenBooking) {
                         onOpenBooking({
-                          title: pageData.title,
-                          price: pageData.priceAdult,
-                          city: pageData.location,
-                          duration: pageData.duration,
-                          category: product.category,
-                          categories: product.categories,
+                          ...product,
                           selectedDate: selectedDate || (pageData.departureDates && pageData.departureDates[0]),
                           guests: guests
                         });

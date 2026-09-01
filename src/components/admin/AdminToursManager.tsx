@@ -16,6 +16,12 @@ import { getAllLandingSectionTemplates } from '../../data/landingSectionData';
 import ProductDetail from '../ProductDetail';
 import EmptyState from '../ui/EmptyState';
 import AdminPriceInput from './AdminPriceInput';
+import {
+  calculateAllPrices,
+  formatVnd as pricingFormatVnd,
+  type PricingFormulaInput,
+  type PricingResult,
+} from '../../lib/pricingCalculator';
 
 interface AdminToursManagerProps {
   onNavigate?: (path: string) => void;
@@ -1818,50 +1824,311 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
             {activeSection === 'pricing-status' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                 <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '28px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.05)' }}>
-                  <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: '0 0 20px 0', fontWeight: 600 }}>
-                    Thiết Lập Giá Bán
-                  </h3>
+                  <div style={{ marginBottom: '24px' }}>
+                    <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: '0 0 6px 0', fontWeight: 700 }}>
+                      Cài Đặt Giá Bán Tự Động (Theo Công Thức Danny @260825)
+                    </h3>
+                    <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>
+                      Nhập giá vốn và tỷ lệ chiết khấu bên dưới. Hệ thống sẽ tự động tính toán Giá niêm yết, Giá khuyến mãi theo nhóm khách, Giá trẻ em và Em bé trên Website.
+                    </p>
+                  </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '20px' }}>
-                    <AdminPriceInput
-                      id="tour-price"
-                      label="Giá Người Lớn (Từ 12 tuổi)"
-                      value={tourDraft.price}
-                      onChange={(val) => setTourDraft({ ...tourDraft, price: val })}
-                      placeholder="Ví dụ: 6.500.000"
-                      presets={[500000, 1000000, 2000000, 5000000]}
-                      required
-                    />
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '28px' }}>
+                    {/* CỘT TRÁI: DỮ LIỆU ĐẦU VÀO */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      <div style={{ paddingBottom: '8px', borderBottom: '2px solid #e2e8f0' }}>
+                        <span style={{ fontSize: '12.5px', fontWeight: 800, color: '#006d36', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                          1. Dữ Liệu Giá Vốn & Tỷ Suất Lợi Nhuận
+                        </span>
+                      </div>
 
-                    <AdminPriceInput
-                      id="tour-original-price"
-                      label="Giá Gốc Niêm Yết / Flash Sale"
-                      value={tourDraft.originalPrice}
-                      onChange={(val) => setTourDraft({ ...tourDraft, originalPrice: val })}
-                      placeholder="Ví dụ: 8.500.000 (Nhập 0 nếu không áp dụng Flash Sale)"
-                      hint="Dùng để hiển thị giá gạch ngang và tính huy hiệu Flash Sale."
-                      presets={[1000000, 2000000, 5000000, 10000000]}
-                    />
+                      {/* Giá vốn */}
+                      <AdminPriceInput
+                        id="tour-cost"
+                        label="Giá Vốn Đầu Vào Cho 01 Người Lớn (Cost)"
+                        value={tourDraft.cost || 0}
+                        onChange={(val) => setTourDraft({ ...tourDraft, cost: val })}
+                        placeholder="Ví dụ: 5.472.000"
+                        hint="Tổng chi phí tour trực tiếp trên mỗi khách người lớn."
+                        presets={[1000000, 3000000, 5000000, 10000000]}
+                        required
+                      />
 
-                    <AdminPriceInput
-                      id="tour-child-price"
-                      label="Giá Trẻ Em (5 - 11 tuổi)"
-                      value={tourDraft.childPrice}
-                      onChange={(val) => setTourDraft({ ...tourDraft, childPrice: val })}
-                      placeholder="Ví dụ: 5.000.000 (Để 0 nếu miễn phí hoặc áp dụng giá mặc định)"
-                      hint="Để 0 nếu miễn phí hoặc tính theo % mặc định."
-                      presets={[500000, 1000000, 2000000, 5000000]}
-                    />
+                      {/* % Lợi nhuận & % Khuyến mãi */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                        <div>
+                          <label style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginBottom: '6px', display: 'block' }}>
+                            % Tỷ Suất Lợi Nhuận Mong Muốn (% Margin)
+                          </label>
+                          <div style={{ position: 'relative' }}>
+                            <input
+                              type="number"
+                              min={0}
+                              max={99}
+                              step={0.01}
+                              placeholder="40"
+                              value={tourDraft.marginPercent || 0}
+                              onChange={(e) => setTourDraft({ ...tourDraft, marginPercent: parseFloat(e.target.value) || 0 })}
+                              style={{ width: '100%', padding: '10px 32px 10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', boxSizing: 'border-box' }}
+                            />
+                            <span style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontSize: '13px', fontWeight: 600 }}>%</span>
+                          </div>
+                          <span style={{ fontSize: '11px', color: '#64748b', marginTop: '4px', display: 'block' }}>
+                            Ví dụ: 40% (dùng tính Trị giá)
+                          </span>
+                        </div>
 
-                    <AdminPriceInput
-                      id="tour-infant-price"
-                      label="Giá Em Bé (< 5 tuổi)"
-                      value={tourDraft.infantPrice}
-                      onChange={(val) => setTourDraft({ ...tourDraft, infantPrice: val })}
-                      placeholder="Ví dụ: 0 (Để 0 nếu MIỄN PHÍ)"
-                      hint="Thông thường là 0 VNĐ (miễn phí theo chính sách)."
-                      presets={[200000, 500000, 1000000]}
-                    />
+                        <div>
+                          <label style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginBottom: '6px', display: 'block' }}>
+                            % Khuyến Mãi Cho 1 - 2 Khách (% Promotion)
+                          </label>
+                          <div style={{ position: 'relative' }}>
+                            <input
+                              type="number"
+                              min={0}
+                              max={99}
+                              step={0.01}
+                              placeholder="23.36"
+                              value={tourDraft.promotionPercent || 0}
+                              onChange={(e) => setTourDraft({ ...tourDraft, promotionPercent: parseFloat(e.target.value) || 0 })}
+                              style={{ width: '100%', padding: '10px 32px 10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', boxSizing: 'border-box' }}
+                            />
+                            <span style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontSize: '13px', fontWeight: 600 }}>%</span>
+                          </div>
+                          <span style={{ fontSize: '11px', color: '#64748b', marginTop: '4px', display: 'block' }}>
+                            Ví dụ: 23.36% (tính Giá Đặc Biệt)
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Ưu đãi nhóm */}
+                      <div style={{ paddingBottom: '6px', borderBottom: '1px dashed #e2e8f0', marginTop: '4px' }}>
+                        <span style={{ fontSize: '12px', fontWeight: 700, color: '#475569', textTransform: 'uppercase' }}>
+                          2. Chính Sách Ưu Đãi Đặt Theo Nhóm
+                        </span>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                        <div>
+                          <label style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginBottom: '6px', display: 'block' }}>
+                            % Giảm Nhóm 3 - 4 Người Lớn
+                          </label>
+                          <div style={{ position: 'relative' }}>
+                            <input
+                              type="number"
+                              min={0}
+                              max={99}
+                              step={0.01}
+                              placeholder="27"
+                              value={tourDraft.group3Percent || 0}
+                              onChange={(e) => setTourDraft({ ...tourDraft, group3Percent: parseFloat(e.target.value) || 0 })}
+                              style={{ width: '100%', padding: '10px 32px 10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', boxSizing: 'border-box' }}
+                            />
+                            <span style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontSize: '13px', fontWeight: 600 }}>%</span>
+                          </div>
+                          <span style={{ fontSize: '11px', color: '#64748b', marginTop: '4px', display: 'block' }}>Ví dụ: 27%</span>
+                        </div>
+
+                        <div>
+                          <label style={{ fontSize: '12px', fontWeight: 700, color: '#1e293b', marginBottom: '6px', display: 'block' }}>
+                            % Giảm Nhóm Từ 5 Người Lớn
+                          </label>
+                          <div style={{ position: 'relative' }}>
+                            <input
+                              type="number"
+                              min={0}
+                              max={99}
+                              step={0.01}
+                              placeholder="30"
+                              value={tourDraft.group5Percent || 0}
+                              onChange={(e) => setTourDraft({ ...tourDraft, group5Percent: parseFloat(e.target.value) || 0 })}
+                              style={{ width: '100%', padding: '10px 32px 10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '14px', boxSizing: 'border-box' }}
+                            />
+                            <span style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontSize: '13px', fontWeight: 600 }}>%</span>
+                          </div>
+                          <span style={{ fontSize: '11px', color: '#64748b', marginTop: '4px', display: 'block' }}>Ví dụ: 30%</span>
+                        </div>
+                      </div>
+
+                      {/* Trẻ em, Em bé & VAT */}
+                      <div style={{ paddingBottom: '6px', borderBottom: '1px dashed #e2e8f0', marginTop: '4px' }}>
+                        <span style={{ fontSize: '12px', fontWeight: 700, color: '#475569', textTransform: 'uppercase' }}>
+                          3. Chính Sách Trẻ Em & Thuế VAT
+                        </span>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+                        <div>
+                          <label style={{ fontSize: '11.5px', fontWeight: 700, color: '#1e293b', marginBottom: '6px', display: 'block' }}>
+                            % Giảm Trẻ Em (6 - 11 tuổi)
+                          </label>
+                          <div style={{ position: 'relative' }}>
+                            <input
+                              type="number"
+                              min={0}
+                              max={99}
+                              step={0.01}
+                              placeholder="50"
+                              value={tourDraft.childDiscountPercent || 0}
+                              onChange={(e) => setTourDraft({ ...tourDraft, childDiscountPercent: parseFloat(e.target.value) || 0 })}
+                              style={{ width: '100%', padding: '10px 28px 10px 10px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                            />
+                            <span style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontSize: '12px' }}>%</span>
+                          </div>
+                          <span style={{ fontSize: '10.5px', color: '#64748b', marginTop: '3px', display: 'block' }}>50% = nửa giá NL</span>
+                        </div>
+
+                        <div>
+                          <label style={{ fontSize: '11.5px', fontWeight: 700, color: '#1e293b', marginBottom: '6px', display: 'block' }}>
+                            % Giảm Em Bé (Dưới 6 tuổi)
+                          </label>
+                          <div style={{ position: 'relative' }}>
+                            <input
+                              type="number"
+                              min={0}
+                              max={99}
+                              step={0.01}
+                              placeholder="80"
+                              value={tourDraft.infantDiscountPercent || 0}
+                              onChange={(e) => setTourDraft({ ...tourDraft, infantDiscountPercent: parseFloat(e.target.value) || 0 })}
+                              style={{ width: '100%', padding: '10px 28px 10px 10px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                            />
+                            <span style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontSize: '12px' }}>%</span>
+                          </div>
+                          <span style={{ fontSize: '10.5px', color: '#64748b', marginTop: '3px', display: 'block' }}>80% = thu 20% giá</span>
+                        </div>
+
+                        <div>
+                          <label style={{ fontSize: '11.5px', fontWeight: 700, color: '#1e293b', marginBottom: '6px', display: 'block' }}>
+                            % Thuế VAT
+                          </label>
+                          <div style={{ position: 'relative' }}>
+                            <input
+                              type="number"
+                              min={0}
+                              max={50}
+                              step={0.5}
+                              placeholder="8"
+                              value={tourDraft.vatPercent ?? 8}
+                              onChange={(e) => setTourDraft({ ...tourDraft, vatPercent: parseFloat(e.target.value) || 0 })}
+                              style={{ width: '100%', padding: '10px 28px 10px 10px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                            />
+                            <span style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontSize: '12px' }}>%</span>
+                          </div>
+                          <span style={{ fontSize: '10.5px', color: '#64748b', marginTop: '3px', display: 'block' }}>Mặc định: 8%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* CỘT PHẢI: BẢNG XEM TRƯỚC GIÁ HIỂN THỊ */}
+                    <div>
+                      <div style={{ paddingBottom: '8px', borderBottom: '2px solid #059669', marginBottom: '16px' }}>
+                        <span style={{ fontSize: '12.5px', fontWeight: 800, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                          Bảng Xem Trước Giá Bán Trên Website
+                        </span>
+                      </div>
+
+                      {(() => {
+                        const costVal = tourDraft.cost || 0;
+                        const marginVal = tourDraft.marginPercent || 0;
+                        const hasCostInput = costVal > 0 && marginVal > 0;
+
+                        if (!hasCostInput) {
+                          return (
+                            <div style={{
+                              padding: '32px 24px',
+                              backgroundColor: '#f8fafc',
+                              borderRadius: '16px',
+                              border: '1.5px dashed #cbd5e1',
+                              textAlign: 'center',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '12px'
+                            }}>
+                              <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px' }}>
+                                📊
+                              </div>
+                              <div>
+                                <h5 style={{ fontSize: '14px', fontWeight: 700, color: '#1e293b', margin: '0 0 6px 0' }}>
+                                  Chưa Có Đủ Dữ Liệu Tính Giá
+                                </h5>
+                                <p style={{ fontSize: '12.5px', color: '#64748b', margin: 0, lineHeight: 1.5, maxWidth: '320px' }}>
+                                  Vui lòng nhập <strong>Giá Vốn Đầu Vào</strong> và <strong>% Lợi Nhuận Mong Muốn</strong> ở cột bên trái để hệ thống tự động tính toàn bộ bảng giá.
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        const pricingInput: PricingFormulaInput = {
+                          cost: costVal,
+                          marginPercent: marginVal,
+                          promotionPercent: tourDraft.promotionPercent || 0,
+                          group3Percent: tourDraft.group3Percent || 0,
+                          group5Percent: tourDraft.group5Percent || 0,
+                          childDiscountPercent: tourDraft.childDiscountPercent || 0,
+                          infantDiscountPercent: tourDraft.infantDiscountPercent || 0,
+                          vatPercent: tourDraft.vatPercent ?? 8,
+                        };
+                        const preview: PricingResult = calculateAllPrices(pricingInput);
+
+                        const previewRows = [
+                          { label: 'Trị giá niêm yết (Hiển thị gạch ngang)', note: '= Roundup(Cost / (1 - %Margin), -4)', value: preview.listPrice, color: '#64748b', strikethrough: true, bg: '#f8fafc' },
+                          { label: 'Giá ĐẶC BIỆT trong tháng (1 - 2 Khách)', note: '= Trị giá × (1 - %Promotion)', value: preview.specialPrice, color: '#059669', strikethrough: false, bg: '#ecfdf5', highlight: true },
+                          { label: 'Giá Ưu đãi nhóm 3 - 4 Người lớn', note: '= Trị giá × (1 - %Nhóm 3+)', value: preview.group3Price, color: '#2563eb', strikethrough: false, bg: '#eff6ff' },
+                          { label: 'Giá Ưu đãi nhóm từ 5 Người lớn', note: '= Trị giá × (1 - %Nhóm 5+)', value: preview.group5Price, color: '#7c3aed', strikethrough: false, bg: '#faf5ff' },
+                          { label: 'Giá vé Trẻ em (6 đến dưới 12 tuổi)', note: '= Giá Người lớn × (1 - %Giảm TE)', value: preview.childPrice, color: '#d97706', strikethrough: false, bg: '#fffbeb' },
+                          { label: 'Giá vé Em bé (Dưới 6 tuổi)', note: '= Giá Người lớn × (1 - %Giảm EB)', value: preview.infantPrice, color: '#dc2626', strikethrough: false, bg: '#fef2f2' },
+                        ];
+
+                        return (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <div style={{ borderRadius: '14px', border: '1px solid #e2e8f0', overflow: 'hidden', backgroundColor: '#ffffff' }}>
+                              {previewRows.map((row, idx) => (
+                                <div
+                                  key={idx}
+                                  style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    padding: '12px 16px',
+                                    backgroundColor: row.bg,
+                                    borderBottom: idx < previewRows.length - 1 ? '1px solid #e2e8f0' : 'none',
+                                  }}
+                                >
+                                  <div>
+                                    <div style={{ fontSize: '13px', color: '#0f172a', fontWeight: row.highlight ? 700 : 600 }}>
+                                      {row.label}
+                                    </div>
+                                    <div style={{ fontSize: '11px', color: '#64748b' }}>
+                                      {row.note}
+                                    </div>
+                                  </div>
+                                  <div style={{
+                                    fontSize: row.highlight ? '16px' : '14px',
+                                    fontWeight: 800,
+                                    color: row.color,
+                                    fontFamily: 'monospace',
+                                    textDecoration: row.strikethrough ? 'line-through' : 'none',
+                                    textAlign: 'right'
+                                  }}>
+                                    {pricingFormatVnd(row.value)}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+
+                            <div style={{ padding: '12px 16px', backgroundColor: '#f0fdf4', borderRadius: '10px', border: '1px solid #bbf7d0' }}>
+                              <p style={{ fontSize: '12px', color: '#15803d', margin: 0, fontWeight: 600 }}>
+                                💡 Quy định hiển thị: Luôn có ghi chú "Giá chưa bao gồm Thuế" trên mọi trang sản phẩm. Thuế VAT ({tourDraft.vatPercent ?? 8}%) sẽ được tự động tính vào Tổng thanh toán ở bước Đặt tour.
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })()}
+                    </div>
                   </div>
                 </div>
 

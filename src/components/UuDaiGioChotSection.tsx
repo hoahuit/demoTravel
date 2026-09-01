@@ -453,6 +453,16 @@ export default function UuDaiGioChotSection({ onOpenBooking, onNavigate }: UuDai
                         >
                           {priceVal ? `${priceVal.toLocaleString('vi-VN')} ₫` : 'Liên hệ'}
                         </span>
+                        <span
+                          style={{
+                            display: 'block',
+                            fontSize: '10px',
+                            color: 'rgba(16, 32, 27, 0.55)',
+                            marginTop: '2px'
+                          }}
+                        >
+                          Giá chưa bao gồm Thuế
+                        </span>
                       </div>
 
                       <span className="udgc-editorial-link">

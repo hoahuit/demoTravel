@@ -1198,5 +1198,29 @@ export async function deleteTourBookingApi(id: string | number): Promise<any> {
   return saveSectionItemApi('tour-bookings', 'delete', { id });
 }
 
+// ============================================================================
+// COUPON / PROMOTION VALIDATION (Danny @260825)
+// ============================================================================
 
+export interface CouponValidationResult {
+  valid: boolean;
+  discountPercent: number;
+  title: string;
+  code: string;
+}
 
+export async function validateCouponCodeApi(code: string): Promise<CouponValidationResult> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/promotions/validate-code`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code }),
+    });
+    if (!response.ok) {
+      return { valid: false, discountPercent: 0, title: '', code };
+    }
+    return await response.json();
+  } catch {
+    return { valid: false, discountPercent: 0, title: '', code };
+  }
+}
