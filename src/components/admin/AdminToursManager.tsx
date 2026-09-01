@@ -35,8 +35,48 @@ const findTourBySlug = (slug: string) => {
 const buildDraft = (tour: TourPackage | null): TourPackage | null => {
   if (!tour) return null;
 
+  let cost = tour.cost || 0;
+  let marginPercent = tour.marginPercent || 0;
+  let promotionPercent = tour.promotionPercent || 0;
+  let group3Percent = tour.group3Percent || 0;
+  let group5Percent = tour.group5Percent || 0;
+  let childDiscountPercent = tour.childDiscountPercent || 0;
+  let infantDiscountPercent = tour.infantDiscountPercent || 0;
+
+  // Auto-populate formula defaults for legacy tours where cost was not set
+  if (cost === 0) {
+    const listP = tour.originalPrice || tour.price || 0;
+    const specialP = tour.price || listP;
+    if (listP > 0) {
+      marginPercent = 40;
+      cost = Math.round((listP * (1 - marginPercent / 100)) / 1000) * 1000;
+      promotionPercent = listP > specialP ? Number((((listP - specialP) / listP) * 100).toFixed(2)) : 20;
+      group3Percent = Number((promotionPercent + 3.64).toFixed(2));
+      group5Percent = Number((promotionPercent + 6.64).toFixed(2));
+      childDiscountPercent = 50;
+      infantDiscountPercent = 80;
+    } else {
+      // Default to Danny standard template for brand new tours
+      cost = 5472000;
+      marginPercent = 40;
+      promotionPercent = 23.36;
+      group3Percent = 27;
+      group5Percent = 30;
+      childDiscountPercent = 50;
+      infantDiscountPercent = 80;
+    }
+  }
+
   return {
     ...tour,
+    cost,
+    marginPercent,
+    promotionPercent,
+    group3Percent,
+    group5Percent,
+    childDiscountPercent,
+    infantDiscountPercent,
+    vatPercent: tour.vatPercent ?? 8,
     categories: Array.isArray(tour.categories)
       ? [...tour.categories]
       : tour.category
@@ -1824,13 +1864,90 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
             {activeSection === 'pricing-status' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                 <div style={{ backgroundColor: '#ffffff', borderRadius: '24px', padding: '28px', border: '1px solid rgba(8, 31, 19, 0.06)', boxShadow: '0 4px 20px -2px rgba(8, 31, 19, 0.05)' }}>
-                  <div style={{ marginBottom: '24px' }}>
-                    <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: '0 0 6px 0', fontWeight: 700 }}>
-                      Cài Đặt Giá Bán Tự Động (Theo Công Thức Danny @260825)
-                    </h3>
-                    <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>
-                      Nhập giá vốn và tỷ lệ chiết khấu bên dưới. Hệ thống sẽ tự động tính toán Giá niêm yết, Giá khuyến mãi theo nhóm khách, Giá trẻ em và Em bé trên Website.
-                    </p>
+                  <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
+                    <div>
+                      <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '20px', color: '#081f13', margin: '0 0 6px 0', fontWeight: 700 }}>
+                        Cài Đặt Giá Bán Tự Động (Theo Công Thức Danny @260825)
+                      </h3>
+                      <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>
+                        Nhập giá vốn và tỷ lệ chiết khấu bên dưới. Hệ thống sẽ tự động tính toán Giá niêm yết, Giá khuyến mãi theo nhóm khách, Giá trẻ em và Em bé trên Website.
+                      </p>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setTourDraft({
+                            ...tourDraft,
+                            cost: 5472000,
+                            marginPercent: 40,
+                            promotionPercent: 23.36,
+                            group3Percent: 27,
+                            group5Percent: 30,
+                            childDiscountPercent: 50,
+                            infantDiscountPercent: 80,
+                            vatPercent: 8
+                          });
+                          toast.success('Đã nạp công thức mẫu Danny @260825 (Vốn: 5.472.000đ, Margin: 40%, Khuyến mãi: 23.36%)!');
+                        }}
+                        style={{
+                          backgroundColor: '#ecfdf5',
+                          color: '#065f46',
+                          border: '1px solid #a7f3d0',
+                          borderRadius: '8px',
+                          padding: '8px 14px',
+                          fontSize: '12.5px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px'
+                        }}
+                      >
+                        <span>✨ Nạp Mẫu Chuẩn Danny @260825</span>
+                      </button>
+
+                      {((tourDraft.originalPrice || 0) > 0 || (tourDraft.price || 0) > 0) && (tourDraft.cost || 0) === 0 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const orig = tourDraft.originalPrice || tourDraft.price || 28500000;
+                            const cur = tourDraft.price || orig;
+                            const margin = 40;
+                            const costEst = Math.round((orig * (1 - margin / 100)) / 1000) * 1000;
+                            const promoEst = orig > 0 ? Number((((orig - cur) / orig) * 100).toFixed(2)) : 20;
+                            setTourDraft({
+                              ...tourDraft,
+                              cost: costEst,
+                              marginPercent: margin,
+                              promotionPercent: promoEst > 0 ? promoEst : 20,
+                              group3Percent: Math.min(99, Math.round(promoEst + 4)),
+                              group5Percent: Math.min(99, Math.round(promoEst + 7)),
+                              childDiscountPercent: 50,
+                              infantDiscountPercent: 80,
+                              vatPercent: 8
+                            });
+                            toast.success(`Đã tự động tính Giá Vốn (${costEst.toLocaleString('vi-VN')} đ) từ giá niêm yết hiện tại!`);
+                          }}
+                          style={{
+                            backgroundColor: '#eff6ff',
+                            color: '#1e40af',
+                            border: '1px solid #bfdbfe',
+                            borderRadius: '8px',
+                            padding: '8px 14px',
+                            fontSize: '12.5px',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                          }}
+                        >
+                          <span>⚡ Quy Đổi Nhanh Từ Giá Tour Hiện Tại</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '28px' }}>

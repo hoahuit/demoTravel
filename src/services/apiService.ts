@@ -298,6 +298,8 @@ export function sanitizeTourPayload(tourData: any, isUpdate = false) {
   const validKeys = [
     'slug', 'title', 'subtitle', 'category', 'categories', 'country', 'city', 'duration', 'durationDays',
     'heroImage', 'price', 'originalPrice', 'childPrice', 'infantPrice',
+    'cost', 'marginPercent', 'promotionPercent', 'group3Percent', 'group5Percent',
+    'childDiscountPercent', 'infantDiscountPercent', 'vatPercent',
     'adultNote', 'childNote', 'infantNote', 'bookingPolicyNotes',
     'isHot', 'isFeatured', 'isExclusive', 'isCustomer', 'isAdminApproved', 'isAdminAprove',
     'departureDates', 'airline', 'hotel', 'transportation', 'rating', 'reviewsCount',
