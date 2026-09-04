@@ -213,14 +213,26 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
     experiencePara2: product.blogStorySnippet || product.subtitle || `Hành trình ${product.title} tại ${product.city} với trải nghiệm trọn gói đặc sắc.`,
     highlights: product.highlights,
     galleryImages: product.gallery.length > 0 ? product.gallery.map(img => getImageUrl(img)) : [getImageUrl(product.heroImage)],
-    itinerary: product.itinerary.map(item => ({
-      day: `NGÀY ${item.day}`,
+    itinerary: (Array.isArray(product.itinerary) ? product.itinerary : []).map((item: any) => ({
+      day: `NGÀY ${item.day ?? item.dayNumber ?? 1}`,
       title: item.title,
       image: getImageUrl(item.image),
       description: item.description,
-      activities: item.activities ?? [],
-      transportAndCulinary: item.transportAndCulinary ?? [],
-      attractions: item.attractions ?? []
+      activities: Array.isArray(item.activities)
+        ? item.activities
+        : (typeof item.activities === 'string' && item.activities.trim()
+            ? (item.activities.startsWith('[') ? JSON.parse(item.activities) : item.activities.split(';').map((s: string) => s.trim()).filter(Boolean))
+            : []),
+      transportAndCulinary: Array.isArray(item.transportAndCulinary)
+        ? item.transportAndCulinary
+        : (typeof item.transportAndCulinary === 'string' && item.transportAndCulinary.trim()
+            ? item.transportAndCulinary.split(',').map((s: string) => s.trim()).filter(Boolean)
+            : (typeof item.transport === 'string' && item.transport.trim() ? item.transport.split(',').map((s: string) => s.trim()).filter(Boolean) : [])),
+      attractions: Array.isArray(item.attractions)
+        ? item.attractions
+        : (typeof item.attractions === 'string' && item.attractions.trim()
+            ? item.attractions.split(',').map((s: string) => s.trim()).filter(Boolean)
+            : [])
     })),
     inclusions: parsedInclusions.length > 0
       ? parsedInclusions
@@ -669,7 +681,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                               )}
 
                               {/* Transport Section - Only shown when transport/culinary tags exist */}
-                              {currentDay.transportAndCulinary && currentDay.transportAndCulinary.length > 0 && (
+                              {Array.isArray(currentDay.transportAndCulinary) && currentDay.transportAndCulinary.length > 0 && (
                                 <div style={{ marginBottom: '28px' }}>
                                   <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#10201B', margin: '0 0 12px 0' }}>
                                     Phương Tiện & Ẩm Thực
@@ -685,7 +697,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                               )}
 
                               {/* Attractions Section - Only shown when attractions exist */}
-                              {currentDay.attractions && currentDay.attractions.length > 0 && (
+                              {Array.isArray(currentDay.attractions) && currentDay.attractions.length > 0 && (
                                 <div>
                                   <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#10201B', margin: '0 0 12px 0' }}>
                                     Điểm Đến Nổi Bật
