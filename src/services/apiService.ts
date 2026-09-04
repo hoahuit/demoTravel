@@ -40,14 +40,14 @@ export function getAuthHeader(): string {
 // Toggle mock data mode via .env (VITE_USE_MOCK_DATA=true)
 export const USE_MOCK_DATA = String((import.meta as any).env?.VITE_USE_MOCK_DATA || '').toLowerCase() === 'true';
 
-// Format image URL: if relative filename like 'a.jpg' is provided, load using API_BASE_URL/uploads/a.jpg
+// Format image URL: safely normalize relative path, prevent duplicate /api-proxy or /uploads
 export function getImageUrl(imagePath?: string): string {
   const DEFAULT_PLACEHOLDER = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80';
 
   if (!imagePath || typeof imagePath !== 'string' || !imagePath.trim()) {
     return DEFAULT_PLACEHOLDER;
   }
-  const trimmed = imagePath.trim();
+  let trimmed = imagePath.trim();
   const lower = trimmed.toLowerCase();
 
   // Security Sanitization: Prevent XSS / malicious script pseudo-protocols
@@ -55,13 +55,34 @@ export function getImageUrl(imagePath?: string): string {
     return DEFAULT_PLACEHOLDER;
   }
 
+  // Already a full remote URL or base64 data
   if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:image/')) {
     return trimmed;
   }
-  if (trimmed.startsWith('/')) {
-    return `${API_BASE_URL}${trimmed}`;
+
+  // Clean duplicate /api-proxy prefixes if stored in DB
+  while (trimmed.startsWith('/api-proxy') || trimmed.startsWith('api-proxy/')) {
+    trimmed = trimmed.replace(/^\/?api-proxy\/?/, '');
   }
-  return `${API_BASE_URL}/uploads/${trimmed}`;
+
+  // Ensure it starts with /
+  if (!trimmed.startsWith('/')) {
+    trimmed = `/${trimmed}`;
+  }
+
+  // Clean duplicate /uploads/ if path is already like /uploads/uploads/
+  if (trimmed.startsWith('/uploads/uploads/')) {
+    trimmed = trimmed.replace('/uploads/uploads/', '/uploads/');
+  }
+
+  // If path doesn't already have /uploads/ or /files/, prepend /uploads
+  if (!trimmed.startsWith('/uploads/') && !trimmed.startsWith('/files/')) {
+    trimmed = `/uploads${trimmed}`;
+  }
+
+  // Prepend API_BASE_URL (which might be /api-proxy or http://216.92.34.22:3001)
+  const base = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+  return `${base}${trimmed}`;
 }
 
 // Helper to compress large image files client-side before upload
