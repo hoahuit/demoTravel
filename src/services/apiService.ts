@@ -70,10 +70,8 @@ export function getImageUrl(imagePath?: string): string {
     trimmed = `/${trimmed}`;
   }
 
-  // Clean duplicate /uploads/ if path is already like /uploads/uploads/
-  if (trimmed.startsWith('/uploads/uploads/')) {
-    trimmed = trimmed.replace('/uploads/uploads/', '/uploads/');
-  }
+  // Clean any duplicate /uploads/ (e.g. /uploads/uploads/ -> /uploads/)
+  trimmed = trimmed.replace(/^(\/uploads)+/, '/uploads');
 
   // If path doesn't already have /uploads/ or /files/, prepend /uploads
   if (!trimmed.startsWith('/uploads/') && !trimmed.startsWith('/files/')) {

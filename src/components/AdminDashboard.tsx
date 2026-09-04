@@ -48,13 +48,13 @@ export const ADMIN_SECTIONS = [
   { id: 'products', label: 'Quản lý sản phẩm' },
   { id: 'consultations', label: 'Quản lý lịch tư vấn' },
   { id: 'custom-tours', label: 'Quản lý lịch trình riêng' },
-  // { id: 'categories', label: 'Quản lý danh mục' },
-  // { id: 'shop-orders', label: 'Quản lý đơn hàng' },
-  // { id: 'blog', label: 'Quản Lý Bài Viết' },
-  // { id: 'destinations', label: 'Quản Lý Điểm Đến' },
-  // { id: 'partners', label: 'Quản Lý Đối Tác Doanh Nghiệp' },
-  // { id: 'users', label: 'Quản Lý Người Dùng ' },
-  // { id: 'settings', label: 'Cấu Hình Hệ Thống' },
+  { id: 'categories', label: 'Quản lý danh mục' },
+  { id: 'shop-orders', label: 'Quản lý đơn hàng' },
+  { id: 'blog', label: 'Quản Lý Bài Viết' },
+  { id: 'destinations', label: 'Quản Lý Điểm Đến' },
+  { id: 'partners', label: 'Quản Lý Đối Tác Doanh Nghiệp' },
+  { id: 'users', label: 'Quản Lý Người Dùng ' },
+  { id: 'settings', label: 'Cấu Hình Hệ Thống' },
 ] as const;
 
 export type AdminSectionId = typeof ADMIN_SECTIONS[number]['id'] | string;
