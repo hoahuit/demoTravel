@@ -16,10 +16,11 @@ export default function CreateCustomTourModal({
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Form State - 3 to 4 core fields
+  // Form State - core fields
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
+    email: '',
     guestCount: '2 người',
     destination: initialDestination || '',
     region: 'Miền Trung',
@@ -55,8 +56,13 @@ export default function CreateCustomTourModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.phone.trim()) {
-      alert('Vui lòng nhập Họ tên và Số điện thoại!');
+    if (!formData.name.trim() || !formData.phone.trim() || !formData.email.trim()) {
+      alert('Vui lòng nhập Họ tên, Số điện thoại và Email nhận lịch trình!');
+      return;
+    }
+
+    if (!formData.email.includes('@') || !formData.email.includes('.')) {
+      alert('Vui lòng nhập địa chỉ email hợp lệ!');
       return;
     }
 
@@ -68,6 +74,7 @@ export default function CreateCustomTourModal({
         requestCode: `CTR-${Date.now().toString().slice(-6)}`,
         customerName: formData.name.trim(),
         customerPhone: formData.phone.trim(),
+        customerEmail: formData.email.trim(),
         destination: targetPlace,
         numberOfGuests: Number(formData.guestCount) || 2,
         specialRequests: formData.notes.trim() || '',
@@ -256,7 +263,33 @@ export default function CreateCustomTourModal({
                 </div>
               </div>
 
-              {/* 2. Số lượng người & Vùng miền muốn đi */}
+              {/* 2. Email & Điểm đến cụ thể (nếu có) */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px 32px' }}>
+                <div>
+                  <label className="custom-tour-label">Email nhận lịch trình đề xuất *</label>
+                  <input
+                    type="email"
+                    className="custom-tour-input"
+                    placeholder="email@example.com"
+                    required
+                    value={formData.email}
+                    onChange={e => setFormData({ ...formData, email: e.target.value })}
+                  />
+                </div>
+
+                <div>
+                  <label className="custom-tour-label">Điểm đến cụ thể mong muốn (nếu có)</label>
+                  <input
+                    type="text"
+                    className="custom-tour-input"
+                    placeholder="Ví dụ: Phú Yên, Sapa, Đà Lạt, Hội An..."
+                    value={formData.destination}
+                    onChange={e => setFormData({ ...formData, destination: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              {/* 3. Số lượng người & Vùng miền muốn đi */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '24px 32px' }}>
                 <div>
                   <label className="custom-tour-label">Số lượng người tham gia</label>
@@ -289,18 +322,6 @@ export default function CreateCustomTourModal({
                     <option value="Hành Trình Quốc Tế (Bali, Bhutan, Nhật Bản, Chiang Mai...)">Hành Trình Quốc Tế (Bali, Bhutan, Nhật Bản, Chiang Mai...)</option>
                   </select>
                 </div>
-              </div>
-
-              {/* 3. Điểm đến cụ thể (nếu có) */}
-              <div>
-                <label className="custom-tour-label">Điểm đến cụ thể bạn mong muốn (nếu có)</label>
-                <input
-                  type="text"
-                  className="custom-tour-input"
-                  placeholder="Ví dụ: Phú Yên, Sapa, Đà Lạt, Vịnh Hạ Long, Côn Đảo..."
-                  value={formData.destination}
-                  onChange={e => setFormData({ ...formData, destination: e.target.value })}
-                />
               </div>
 
               {/* 4. Thông tin / Nhu cầu chuyến đi */}

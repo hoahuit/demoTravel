@@ -436,8 +436,13 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
 
   const handleProceedToUpsell = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!orderForm.fullName.trim() || !orderForm.phone.trim()) {
-      toast?.show?.('Vui lòng điền Họ tên và Số điện thoại nhận hàng.', 'warning');
+    if (!orderForm.fullName.trim() || !orderForm.phone.trim() || !orderForm.email.trim()) {
+      toast?.show?.('Vui lòng điền Họ tên, Số điện thoại và Email nhận xác nhận đơn hàng.', 'warning');
+      return;
+    }
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(orderForm.email.trim())) {
+      toast?.show?.('Vui lòng nhập định dạng Email hợp lệ để nhận mã đơn hàng.', 'warning');
       return;
     }
     // Proceed to Step 2: UPSELL
@@ -1535,6 +1540,18 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                         style={{ width: '100%', padding: 'clamp(8px, 1.2vh, 11px) 12px', borderRadius: '6px', border: '1px solid #bec9c2', fontSize: '13.5px', boxSizing: 'border-box', outline: 'none' }}
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>Email nhận xác nhận đơn hàng & hóa đơn *</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="email@example.com"
+                      value={orderForm.email}
+                      onChange={e => setOrderForm({ ...orderForm, email: e.target.value })}
+                      style={{ width: '100%', padding: 'clamp(8px, 1.2vh, 11px) 12px', borderRadius: '6px', border: '1px solid #bec9c2', fontSize: '13.5px', boxSizing: 'border-box', outline: 'none' }}
+                    />
                   </div>
 
                   <div>

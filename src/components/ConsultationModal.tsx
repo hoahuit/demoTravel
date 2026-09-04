@@ -26,6 +26,7 @@ interface ConsultFormData {
 interface CustomTourFormData {
   name: string;
   phone: string;
+  email: string;
   guestCount: string;
   destination: string;
   region: string;
@@ -89,6 +90,7 @@ export default function ConsultationModal({
   const [customData, setCustomData] = useState<CustomTourFormData>({
     name: '',
     phone: '',
+    email: '',
     guestCount: '2 người',
     destination: initialDestination || '',
     region: 'Miền Trung',
@@ -140,7 +142,7 @@ export default function ConsultationModal({
       await saveSectionItemApi('consultations', 'create', {
         customerName: formData.name.trim(),
         customerPhone: formData.phone.trim(),
-        customerEmail: formData.email.trim() || '',
+        customerEmail: formData.email.trim() || undefined,
         preferredCallTime: timeMapping[formData.preferredTime] || formData.preferredTime || 'Sáng (8h - 12h)',
         tourName: formData.tour || 'Yêu cầu tư vấn chung',
         note: formData.message.trim() || '--',
@@ -159,8 +161,13 @@ export default function ConsultationModal({
 
   const handleCustomSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!customData.name.trim() || !customData.phone.trim()) {
-      alert('Vui lòng nhập Họ tên và Số điện thoại!');
+    if (!customData.name.trim() || !customData.phone.trim() || !customData.email.trim()) {
+      alert('Vui lòng nhập Họ tên, Số điện thoại và Email nhận lịch trình!');
+      return;
+    }
+
+    if (!customData.email.includes('@') || !customData.email.includes('.')) {
+      alert('Vui lòng nhập địa chỉ email hợp lệ!');
       return;
     }
 
@@ -172,6 +179,7 @@ export default function ConsultationModal({
         requestCode: `CTR-${Date.now().toString().slice(-6)}`,
         customerName: customData.name.trim(),
         customerPhone: customData.phone.trim(),
+        customerEmail: customData.email.trim(),
         destination: targetPlace,
         numberOfGuests: Number(customData.guestCount) || 2,
         specialRequests: customData.notes.trim() || '',
@@ -204,6 +212,7 @@ export default function ConsultationModal({
     setCustomData({
       name: '',
       phone: '',
+      email: '',
       guestCount: '2 người',
       destination: initialDestination || '',
       region: 'Miền Trung',
@@ -671,6 +680,31 @@ export default function ConsultationModal({
 
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px 24px', width: '100%', boxSizing: 'border-box' }}>
                         <div>
+                          <label className="consult-journey-label">Email nhận lịch trình đề xuất *</label>
+                          <input
+                            type="email"
+                            className="consult-journey-input"
+                            placeholder="email@example.com"
+                            required
+                            value={customData.email}
+                            onChange={e => setCustomData({ ...customData, email: e.target.value })}
+                          />
+                        </div>
+
+                        <div>
+                          <label className="consult-journey-label">Điểm đến cụ thể (Nếu đã có)</label>
+                          <input
+                            type="text"
+                            className="consult-journey-input"
+                            placeholder="Ví dụ: Sa Pa, Đà Lạt, Hội An hoặc 'Nhờ 4U gợi ý'..."
+                            value={customData.destination}
+                            onChange={e => setCustomData({ ...customData, destination: e.target.value })}
+                          />
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px 24px', width: '100%', boxSizing: 'border-box' }}>
+                        <div>
                           <label className="consult-journey-label">Vùng miền mong muốn</label>
                           <select
                             className="consult-journey-input"
@@ -700,17 +734,6 @@ export default function ConsultationModal({
                             <option value="Doanh nghiệp >10 người">Doanh nghiệp / Đoàn thể (trên 10 người)</option>
                           </select>
                         </div>
-                      </div>
-
-                      <div>
-                        <label className="consult-journey-label">Điểm đến cụ thể (Nếu đã có định hướng)</label>
-                        <input
-                          type="text"
-                          className="consult-journey-input"
-                          placeholder="Ví dụ: Sa Pa, Đà Lạt, Hội An hoặc 'Nhờ 4U gợi ý'..."
-                          value={customData.destination}
-                          onChange={e => setCustomData({ ...customData, destination: e.target.value })}
-                        />
                       </div>
 
                       <div>

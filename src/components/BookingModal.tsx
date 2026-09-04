@@ -49,6 +49,7 @@ export interface BookingModalProps {
 interface OrderFormState {
   fullName: string;
   phone: string;
+  email: string;
   address: string;
   notes: string;
 }
@@ -333,6 +334,7 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
   const [orderForm, setOrderForm] = useState<OrderFormState>({
     fullName: '',
     phone: '',
+    email: '',
     address: '',
     notes: '',
   });
@@ -352,6 +354,7 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
     setOrderForm({
       fullName: '',
       phone: '',
+      email: '',
       address: '',
       notes: '',
     });
@@ -359,8 +362,13 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
 
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!orderForm.fullName.trim() || !orderForm.phone.trim()) {
-      alert('Vui lòng nhập họ tên và số điện thoại liên hệ!');
+    if (!orderForm.fullName.trim() || !orderForm.phone.trim() || !orderForm.email.trim()) {
+      alert('Vui lòng nhập họ tên, số điện thoại và email nhận vé điện tử!');
+      return;
+    }
+
+    if (!orderForm.email.includes('@') || !orderForm.email.includes('.')) {
+      alert('Vui lòng nhập địa chỉ email hợp lệ để nhận xác nhận đặt tour!');
       return;
     }
 
@@ -376,6 +384,7 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
         bookingCode,
         customerName: orderForm.fullName.trim(),
         customerPhone: orderForm.phone.trim(),
+        customerEmail: orderForm.email.trim(),
         shippingAddress: orderForm.address.trim() || undefined,
         tourTitle: defaultTourTitle,
         tourSlug: selectedTour?.slug || undefined,
@@ -713,26 +722,53 @@ export default function BookingModal({ externalOpen, onExternalClose, selectedTo
                   </div>
                 </div>
 
-                {/* Địa chỉ */}
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>
-                    Địa chỉ nhận trang bị / tài liệu hành trình (nếu có)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Số nhà, Tên đường, Phường/Xã, Tỉnh/Thành"
-                    value={orderForm.address}
-                    onChange={(e) => setOrderForm({ ...orderForm, address: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: 'clamp(8px, 1.2vh, 11px) 12px',
-                      borderRadius: '6px',
-                      border: '1px solid #bec9c2',
-                      fontSize: '13.5px',
-                      boxSizing: 'border-box',
-                      outline: 'none'
-                    }}
-                  />
+                {/* 2-Column Responsive Inputs: Email + Địa chỉ */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'clamp(8px, 1.2vh, 14px)' }}>
+                  {/* Email */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>
+                      Email nhận xác nhận & vé điện tử *
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="email@example.com"
+                      value={orderForm.email}
+                      onChange={(e) => setOrderForm({ ...orderForm, email: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: 'clamp(8px, 1.2vh, 11px) 12px',
+                        borderRadius: '6px',
+                        border: '1px solid #bec9c2',
+                        fontSize: '13.5px',
+                        boxSizing: 'border-box',
+                        outline: 'none',
+                        transition: 'border-color 0.2s ease'
+                      }}
+                    />
+                  </div>
+
+                  {/* Địa chỉ */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#191c1d', marginBottom: '5px' }}>
+                      Địa chỉ nhận trang bị / tài liệu hành trình (nếu có)
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Số nhà, Tên đường, Phường/Xã, Tỉnh/Thành"
+                      value={orderForm.address}
+                      onChange={(e) => setOrderForm({ ...orderForm, address: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: 'clamp(8px, 1.2vh, 11px) 12px',
+                        borderRadius: '6px',
+                        border: '1px solid #bec9c2',
+                        fontSize: '13.5px',
+                        boxSizing: 'border-box',
+                        outline: 'none'
+                      }}
+                    />
+                  </div>
                 </div>
 
                 {/* SMART CROSS-SELL ADDON EQUIPMENT RECOMMENDATION SECTION */}
