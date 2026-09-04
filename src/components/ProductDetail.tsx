@@ -221,18 +221,18 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
       activities: Array.isArray(item.activities)
         ? item.activities
         : (typeof item.activities === 'string' && item.activities.trim()
-            ? (item.activities.startsWith('[') ? JSON.parse(item.activities) : item.activities.split(';').map((s: string) => s.trim()).filter(Boolean))
-            : []),
+          ? (item.activities.startsWith('[') ? JSON.parse(item.activities) : item.activities.split(';').map((s: string) => s.trim()).filter(Boolean))
+          : []),
       transportAndCulinary: Array.isArray(item.transportAndCulinary)
         ? item.transportAndCulinary
         : (typeof item.transportAndCulinary === 'string' && item.transportAndCulinary.trim()
-            ? item.transportAndCulinary.split(',').map((s: string) => s.trim()).filter(Boolean)
-            : (typeof item.transport === 'string' && item.transport.trim() ? item.transport.split(',').map((s: string) => s.trim()).filter(Boolean) : [])),
+          ? item.transportAndCulinary.split(',').map((s: string) => s.trim()).filter(Boolean)
+          : (typeof item.transport === 'string' && item.transport.trim() ? item.transport.split(',').map((s: string) => s.trim()).filter(Boolean) : [])),
       attractions: Array.isArray(item.attractions)
         ? item.attractions
         : (typeof item.attractions === 'string' && item.attractions.trim()
-            ? item.attractions.split(',').map((s: string) => s.trim()).filter(Boolean)
-            : [])
+          ? item.attractions.split(',').map((s: string) => s.trim()).filter(Boolean)
+          : [])
     })),
     inclusions: parsedInclusions.length > 0
       ? parsedInclusions
@@ -252,7 +252,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
 
   const tabs = [
     { id: 'Highlight', label: 'TRẢI NGHIỆM ĐỘC BẢN' },
-    { id: 'Itinerary', label: 'LỊCH TRÌNH' },
+    { id: 'Itinerary', label: 'LỊCH TRÌNH CHI TIẾT' },
     { id: 'PriceDescription', label: 'CHI TIẾT BẢNG GIÁ' },
     { id: 'MapsArea', label: 'BẢN ĐỒ & KHU VỰC' },
   ];
@@ -525,11 +525,13 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                     {/* Left Cover Image */}
                     <div style={{ width: '100%', height: '220px', borderRadius: '18px', overflow: 'hidden' }}>
                       <img
-                        src={getImageUrl(pageData.heroImage)}
+                        src={pageData.heroImage}
                         alt={pageData.title}
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80';
+                        }}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
-
                     </div>
 
                     {/* Right Summary Info */}
@@ -631,10 +633,18 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                             ? [currentDay.image]
                             : (Array.isArray((currentDay as any).images) && (currentDay as any).images.length > 0
                               ? (currentDay as any).images
-                              : []));
+                              : (pageData.galleryImages && pageData.galleryImages[selectedDayIndex]
+                                  ? [pageData.galleryImages[selectedDayIndex]]
+                                  : (pageData.heroImage ? [pageData.heroImage] : []))));
 
                           const dayMoments = rawImages
-                            .map((img: string) => getImageUrl(img))
+                            .map((img: string) => {
+                              if (!img || typeof img !== 'string' || !img.trim() || img.trim() === '--') return '';
+                              const trimmed = img.trim();
+                              return (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('/api-proxy'))
+                                ? trimmed
+                                : getImageUrl(trimmed);
+                            })
                             .filter((img: string) => img && img.trim().length > 0);
 
                           return (
@@ -672,6 +682,9 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                                         <img
                                           src={imgUrl}
                                           alt={`Khoảnh khắc ${imgIdx + 1}`}
+                                          onError={(e) => {
+                                            (e.currentTarget as HTMLImageElement).src = pageData.heroImage || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80';
+                                          }}
                                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                         />
                                       </div>
@@ -773,7 +786,7 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
                           <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.05rem' }}>{pageData.childPriceText}</td>
                           <td style={{ color: '#5b6561' }}>{pageData.childNote}</td>
                         </tr>
-                          <tr>
+                        <tr>
                           <td style={{ fontWeight: '700' }}>Em bé (&lt; 5 tuổi)</td>
                           <td style={{ color: '#27ae60', fontWeight: '800', fontSize: '1.05rem' }}>{pageData.infantPriceText}</td>
                           <td style={{ color: '#5b6561' }}>{pageData.infantNote}</td>
