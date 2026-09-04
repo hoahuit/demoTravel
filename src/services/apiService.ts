@@ -40,11 +40,11 @@ export function getAuthHeader(): string {
 // Toggle mock data mode via .env (VITE_USE_MOCK_DATA=true)
 export const USE_MOCK_DATA = String((import.meta as any).env?.VITE_USE_MOCK_DATA || '').toLowerCase() === 'true';
 
-// Format image URL: safely normalize relative path, prevent duplicate /api-proxy or /uploads
+// Format image URL: safely normalize relative path, prevent duplicate /api-proxy or /uploads or multiple slashes
 export function getImageUrl(imagePath?: string): string {
   const DEFAULT_PLACEHOLDER = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80';
 
-  if (!imagePath || typeof imagePath !== 'string' || !imagePath.trim()) {
+  if (!imagePath || typeof imagePath !== 'string' || !imagePath.trim() || imagePath.trim() === '--') {
     return DEFAULT_PLACEHOLDER;
   }
   let trimmed = imagePath.trim();
@@ -60,25 +60,35 @@ export function getImageUrl(imagePath?: string): string {
     return trimmed;
   }
 
-  // Clean duplicate /api-proxy prefixes if stored in DB
-  while (trimmed.startsWith('/api-proxy') || trimmed.startsWith('api-proxy/')) {
-    trimmed = trimmed.replace(/^\/?api-proxy\/?/, '');
-  }
+  // 1. Normalize all backslashes to forward slashes
+  trimmed = trimmed.replace(/\\+/g, '/');
 
-  // Ensure it starts with /
+  // 2. Strip any repeated /api-proxy prefixes
+  trimmed = trimmed.replace(/^(\/?api-proxy\/)+/i, '/');
+  trimmed = trimmed.replace(/^\/?api-proxy/i, '');
+
+  // 3. Normalize multiple consecutive slashes (e.g. //uploads -> /uploads)
+  trimmed = trimmed.replace(/\/+/g, '/');
+
+  // 4. Ensure it starts with /
   if (!trimmed.startsWith('/')) {
     trimmed = `/${trimmed}`;
   }
 
-  // Clean any duplicate /uploads/ (e.g. /uploads/uploads/ -> /uploads/)
-  trimmed = trimmed.replace(/^(\/uploads)+/, '/uploads');
+  // 5. Clean any duplicate /uploads/ (e.g. /uploads/uploads/ or /uploads//uploads/ -> /uploads/)
+  while (/^\/uploads(\/uploads)+/i.test(trimmed)) {
+    trimmed = trimmed.replace(/^\/uploads(\/uploads)+/i, '/uploads');
+  }
 
-  // If path doesn't already have /uploads/ or /files/, prepend /uploads
+  // 6. If path doesn't already have /uploads/ or /files/, prepend /uploads
   if (!trimmed.startsWith('/uploads/') && !trimmed.startsWith('/files/')) {
     trimmed = `/uploads${trimmed}`;
   }
 
-  // Prepend API_BASE_URL (which might be /api-proxy or http://216.92.34.22:3001)
+  // 7. Clean any remaining multiple slashes
+  trimmed = trimmed.replace(/\/+/g, '/');
+
+  // 8. Prepend API_BASE_URL (which might be /api-proxy or http://216.92.34.22:3001)
   const base = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
   return `${base}${trimmed}`;
 }
