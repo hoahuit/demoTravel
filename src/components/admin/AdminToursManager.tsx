@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
-import { RefreshCw, Plus, Trash2, Edit2 } from 'lucide-react';
+import { RefreshCw, Plus, Trash2, Edit2, FileSpreadsheet, Download } from 'lucide-react';
 import { TOURS_DATA, TourPackage, TourItineraryDay } from '../../data/toursData';
 import {
   saveTourApi,
@@ -10,8 +10,10 @@ import {
   uploadImageApi,
   fetchMenuCategoriesApi,
   fetchLandingSectionTemplatesApi,
+  downloadExcelTemplate,
   MenuCategoryItem
 } from '../../services/apiService';
+import AdminExcelImportModal from './AdminExcelImportModal';
 import { getAllLandingSectionTemplates } from '../../data/landingSectionData';
 import ProductDetail from '../ProductDetail';
 import EmptyState from '../ui/EmptyState';
@@ -108,6 +110,7 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
   const [activeSection, setActiveSection] = useState<string>('basic-info');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [categoryFilter, setCategoryFilter] = useState<string>('All');
+  const [isImportModalOpen, setIsImportModalOpen] = useState<boolean>(false);
   const coverFileRef = useRef<HTMLInputElement>(null);
   const galleryFileRef = useRef<HTMLInputElement>(null);
 
@@ -383,7 +386,59 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                 Quản lý, biên tập và kiểm duyệt các gói tour tĩnh dưỡng cao cấp của 4U Retreat.
               </p>
             </div>
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                onClick={() => downloadExcelTemplate('tours')}
+                style={{
+                  backgroundColor: '#ffffff',
+                  color: '#15803d',
+                  border: '1px solid #bbf7d0',
+                  borderRadius: '8px',
+                  padding: '8px 14px',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.15s ease'
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0fdf4')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ffffff')}
+                title="Tải file Excel mẫu tour-update.xlsx (5 tabs)"
+              >
+                <Download size={14} color="#16a34a" />
+                <span>Tải Template</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsImportModalOpen(true)}
+                style={{
+                  backgroundColor: '#ecfdf5',
+                  color: '#065f46',
+                  border: '1px solid #a7f3d0',
+                  borderRadius: '8px',
+                  padding: '8px 14px',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.15s ease'
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#d1fae5')}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ecfdf5')}
+                title="Import danh sách Tour từ file Excel"
+              >
+                <FileSpreadsheet size={15} color="#059669" />
+                <span>Nhập Excel</span>
+              </button>
+
               <button
                 type="button"
                 onClick={() => loadLiveToursAndCategories(true)}
@@ -2750,6 +2805,14 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
           </>
         )
       }
+
+      <AdminExcelImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        type="tours"
+        onSuccess={() => loadLiveToursAndCategories(true)}
+        toast={toast}
+      />
     </div >
   );
 }

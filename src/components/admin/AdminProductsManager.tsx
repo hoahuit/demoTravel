@@ -6,9 +6,11 @@ import {
   deleteProductApi,
   uploadImageApi,
   fetchMenuCategoriesApi,
+  downloadExcelTemplate,
   getImageUrl,
   KollectionProduct
 } from '../../services/apiService';
+import AdminExcelImportModal from './AdminExcelImportModal';
 import {
   ShoppingBag,
   Plus,
@@ -27,7 +29,9 @@ import {
   Star,
   Flame,
   Layers,
-  X
+  X,
+  Download,
+  FileSpreadsheet
 } from 'lucide-react';
 import AdminPriceInput from './AdminPriceInput';
 
@@ -49,6 +53,7 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const [dynamicCategories, setDynamicCategories] = useState<string[]>(PRODUCT_CATEGORIES);
 
@@ -270,6 +275,58 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
               >
               </button>
             )}
+
+            <button
+              type="button"
+              onClick={() => downloadExcelTemplate('products')}
+              style={{
+                backgroundColor: '#ffffff',
+                color: '#15803d',
+                border: '1px solid #bbf7d0',
+                borderRadius: '8px',
+                padding: '8px 14px',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.15s ease'
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0fdf4')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ffffff')}
+              title="Tải file Excel mẫu kollection4u-update.xlsx"
+            >
+              <Download size={14} color="#16a34a" />
+              <span>Tải Template</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsImportModalOpen(true)}
+              style={{
+                backgroundColor: '#ecfdf5',
+                color: '#065f46',
+                border: '1px solid #a7f3d0',
+                borderRadius: '8px',
+                padding: '8px 14px',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.15s ease'
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#d1fae5')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ecfdf5')}
+              title="Import danh sách sản phẩm từ file Excel"
+            >
+              <FileSpreadsheet size={15} color="#059669" />
+              <span>Nhập Excel</span>
+            </button>
 
             <button
               type="button"
@@ -777,6 +834,14 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
           </div>
         </div>
       )}
+
+      <AdminExcelImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        type="products"
+        onSuccess={() => loadProducts(true)}
+        toast={toast}
+      />
     </div>
   );
 }

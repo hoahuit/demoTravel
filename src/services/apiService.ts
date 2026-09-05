@@ -1255,3 +1255,90 @@ export async function validateCouponCodeApi(code: string): Promise<CouponValidat
     return { valid: false, discountPercent: 0, title: '', code };
   }
 }
+
+// ============================================================================
+// EXCEL IMPORT & TEMPLATE DOWNLOAD APIS
+// ============================================================================
+
+export function getTourTemplateDownloadUrl(): string {
+  return `${API_BASE_URL}/tours/download-template`;
+}
+
+export function getProductTemplateDownloadUrl(): string {
+  return `${API_BASE_URL}/products/download-template`;
+}
+
+export async function downloadExcelTemplate(type: 'tours' | 'products'): Promise<void> {
+  const url = type === 'tours' ? getTourTemplateDownloadUrl() : getProductTemplateDownloadUrl();
+  const defaultFilename = type === 'tours' ? 'tour-update.xlsx' : 'kollection4u-update.xlsx';
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Tải template thất bại (Mã lỗi: ${response.status})`);
+    }
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = defaultFilename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(blobUrl);
+  } catch {
+    // Fallback: direct browser trigger
+    window.open(url, '_blank');
+  }
+}
+
+export interface ExcelImportApiResponse {
+  success: boolean;
+  importedCount: number;
+  createdCount: number;
+  updatedCount: number;
+  items: Array<{ id: number; slug: string; title: string; action: 'created' | 'updated' }>;
+  errors: string[];
+}
+
+export async function importExcelApi(
+  type: 'tours' | 'products',
+  file?: File | null,
+  options?: { filePath?: string }
+): Promise<ExcelImportApiResponse> {
+  const endpoint = type === 'tours' ? `${API_BASE_URL}/tours/import-excel` : `${API_BASE_URL}/products/import-excel`;
+
+  let payload: { filePath?: string; fileData?: string; filename?: string } = {};
+
+  if (file) {
+    const base64Data = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (e) => reject(e);
+      reader.readAsDataURL(file);
+    });
+    payload = {
+      fileData: base64Data,
+      filename: file.name,
+    };
+  } else if (options?.filePath) {
+    payload = { filePath: options.filePath };
+  }
+
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: getAuthHeader(),
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const errorText = await getApiErrorMessage(response);
+    throw new Error(errorText);
+  }
+
+  return await response.json();
+}
+
