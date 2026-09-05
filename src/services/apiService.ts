@@ -1269,11 +1269,33 @@ export function getProductTemplateDownloadUrl(): string {
 }
 
 export async function downloadExcelTemplate(type: 'tours' | 'products'): Promise<void> {
-  const url = type === 'tours' ? getTourTemplateDownloadUrl() : getProductTemplateDownloadUrl();
   const defaultFilename = type === 'tours' ? 'tour-update.xlsx' : 'kollection4u-update.xlsx';
+  const staticUrl = `/templates/${defaultFilename}`;
+
+  // Priority 1: Direct download from frontend public assets (instant & completely isolated from backend router)
+  try {
+    const res = await fetch(staticUrl);
+    if (res.ok) {
+      const blob = await res.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = defaultFilename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      return;
+    }
+  } catch {
+    // Fall through to backend API
+  }
+
+  // Priority 2: Backend API endpoint
+  const backendUrl = type === 'tours' ? getTourTemplateDownloadUrl() : getProductTemplateDownloadUrl();
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(backendUrl);
     if (!response.ok) {
       throw new Error(`Tải template thất bại (Mã lỗi: ${response.status})`);
     }
@@ -1288,7 +1310,7 @@ export async function downloadExcelTemplate(type: 'tours' | 'products'): Promise
     window.URL.revokeObjectURL(blobUrl);
   } catch {
     // Fallback: direct browser trigger
-    window.open(url, '_blank');
+    window.open(staticUrl, '_blank');
   }
 }
 
