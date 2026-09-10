@@ -525,7 +525,7 @@ export default function Header({
               src="/Logo-4U-Wellness.png"
               alt="4U Wellness Logo"
               style={{
-                height: '46px',
+                height: '50px',
                 width: 'auto',
                 objectFit: 'contain',
                 display: 'block'
