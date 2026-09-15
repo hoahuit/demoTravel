@@ -1199,7 +1199,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              setActiveProduct({ ...product, title: displayTitle, heroImage: displayImage });
+                              setActiveProduct({ ...product, title: displayTitle });
                             }}
                             style={{
                               background: 'transparent',
@@ -1217,7 +1217,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                           </button>
                           <button
                             aria-label="Thêm vào giỏ hàng"
-                            onClick={(e) => handleAddToCart({ ...product, title: displayTitle, heroImage: displayImage }, 1, e)}
+                            onClick={(e) => handleAddToCart({ ...product, title: displayTitle }, 1, e)}
                             style={{
                               backgroundColor: '#006d36',
                               color: '#ffffff',
