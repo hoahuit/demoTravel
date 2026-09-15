@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   fetchProductsApi,
   createProductApi,
@@ -31,7 +31,8 @@ import {
   Layers,
   X,
   Download,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Images
 } from 'lucide-react';
 import AdminPriceInput from './AdminPriceInput';
 
@@ -55,6 +56,8 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [uploading, setUploading] = useState<boolean>(false);
+  const [galleryUploading, setGalleryUploading] = useState<boolean>(false);
+  const galleryFileRef = useRef<HTMLInputElement>(null);
   const [dynamicCategories, setDynamicCategories] = useState<string[]>(PRODUCT_CATEGORIES);
 
   const [editingItem, setEditingItem] = useState<Partial<KollectionProduct>>({
@@ -140,6 +143,57 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleGalleryFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setGalleryUploading(true);
+
+    const uploadPromises = Array.from(files).map(file =>
+      uploadImageApi(file).then(res => {
+        const url = typeof res === 'string' ? res : (res?.url || res?.fileUrl || '');
+        return url || null;
+      })
+    );
+
+    const results = await Promise.allSettled(uploadPromises);
+
+    const uploadedUrls: string[] = [];
+    let failCount = 0;
+
+    for (const result of results) {
+      if (result.status === 'fulfilled' && result.value) {
+        uploadedUrls.push(result.value);
+      } else {
+        failCount++;
+      }
+    }
+
+    if (uploadedUrls.length > 0) {
+      setEditingItem(prev => ({
+        ...prev,
+        gallery: [...(Array.isArray(prev.gallery) ? prev.gallery : []), ...uploadedUrls]
+      }));
+      toast?.show?.(`Đã thêm ${uploadedUrls.length} ảnh vào bộ sưu tập!`, 'success');
+    }
+    if (failCount > 0) {
+      toast?.show?.(`${failCount} ảnh không tải được.`, 'error');
+    }
+
+    setGalleryUploading(false);
+    if (galleryFileRef.current) {
+      galleryFileRef.current.value = '';
+    }
+  };
+
+
+  const handleRemoveGalleryImage = (indexToRemove: number) => {
+    setEditingItem(prev => ({
+      ...prev,
+      gallery: (Array.isArray(prev.gallery) ? prev.gallery : []).filter((_, idx) => idx !== indexToRemove)
+    }));
   };
 
   const handleOpenCreate = () => {
@@ -752,6 +806,112 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
                   <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <img src={getImageUrl(editingItem.heroImage)} alt="Preview" style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover', border: '1px solid #e2e8f0' }} />
                     <span style={{ fontSize: '12px', color: '#64748b' }}>Xem trước ảnh đại diện</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Row 5b: Gallery Images */}
+              <div>
+                <label style={{ fontSize: '13px', fontWeight: 700, color: '#374151', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                  <Images size={15} style={{ color: '#006d36' }} />
+                  Bộ Sưu Tập Ảnh Sản Phẩm ({editingItem.gallery?.length || 0} ảnh)
+                </label>
+
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '12px' }}>
+                  <input
+                    ref={galleryFileRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleGalleryFileUpload}
+                    style={{ display: 'none' }}
+                    disabled={galleryUploading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => galleryFileRef.current?.click()}
+                    disabled={galleryUploading}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '9px 18px',
+                      borderRadius: '8px',
+                      background: '#f1f5f9',
+                      color: '#475569',
+                      fontWeight: 700,
+                      fontSize: '13px',
+                      cursor: galleryUploading ? 'wait' : 'pointer',
+                      border: '1px solid #cbd5e1',
+                      opacity: galleryUploading ? 0.6 : 1
+                    }}
+                  >
+                    <Upload size={15} />
+                    {galleryUploading ? 'Đang tải ảnh...' : '+ Thêm Ảnh Gallery'}
+                  </button>
+                  <span style={{ fontSize: '12px', color: '#94a3b8' }}>Hỗ trợ JPG, PNG, WebP — tối đa 5MB/ảnh</span>
+                </div>
+
+                {(editingItem.gallery && editingItem.gallery.length > 0) && (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '10px' }}>
+                    {(Array.isArray(editingItem.gallery) ? editingItem.gallery : []).map((imgUrl, imgIdx) => (
+                      <div
+                        key={imgIdx}
+                        style={{
+                          position: 'relative',
+                          height: '100px',
+                          borderRadius: '10px',
+                          overflow: 'hidden',
+                          border: '1px solid #e2e8f0',
+                          background: '#f8fafc'
+                        }}
+                      >
+                        <img
+                          src={getImageUrl(imgUrl)}
+                          alt={`Gallery ${imgIdx + 1}`}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=400&q=80';
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveGalleryImage(imgIdx)}
+                          title="Xóa ảnh này"
+                          style={{
+                            position: 'absolute',
+                            top: '4px',
+                            right: '4px',
+                            backgroundColor: 'rgba(225, 29, 72, 0.9)',
+                            color: '#ffffff',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: '24px',
+                            height: '24px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {(!editingItem.gallery || editingItem.gallery.length === 0) && (
+                  <div style={{
+                    padding: '24px',
+                    textAlign: 'center',
+                    borderRadius: '10px',
+                    border: '2px dashed #d1d5db',
+                    color: '#9ca3af',
+                    fontSize: '13px'
+                  }}>
+                    <Images size={28} style={{ margin: '0 auto 8px auto', opacity: 0.4, display: 'block' }} />
+                    Chưa có ảnh gallery. Upload ảnh để hiển thị trong trang chi tiết sản phẩm.
                   </div>
                 )}
               </div>
