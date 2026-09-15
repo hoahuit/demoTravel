@@ -119,7 +119,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
       if (Array.isArray(data) && data.length > 0) {
         const normalized: KollectionProduct[] = data.map((item) => {
           const resolvedTitle = item.title || item.name || 'Sản phẩm Kollection 4U';
-          const resolvedHero = getMerchandiseImage(item);
+          const resolvedHero = item.heroImage || (item as any).image || '';
           const isItemExclusive = item.isExclusive !== undefined ? item.isExclusive : false;
 
           return {
