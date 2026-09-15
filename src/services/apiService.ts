@@ -55,9 +55,15 @@ export function getImageUrl(imagePath?: string): string {
     return DEFAULT_PLACEHOLDER;
   }
 
-  // Already a full remote URL or base64 data
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:image/')) {
+  // Base64 data image
+  if (trimmed.startsWith('data:image/')) {
     return trimmed;
+  }
+
+  // If already a full remote URL (Dropbox, Unsplash, external CDN, etc.)
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    // If it points to our domain with duplicate /uploads/uploads/, sanitize it
+    return trimmed.replace(/(\/uploads)+/gi, '/uploads');
   }
 
   // 1. Normalize all backslashes to forward slashes
@@ -75,22 +81,27 @@ export function getImageUrl(imagePath?: string): string {
     trimmed = `/${trimmed}`;
   }
 
-  // 5. Clean any duplicate /uploads/ (e.g. /uploads/uploads/ or /uploads//uploads/ -> /uploads/)
-  while (/^\/uploads(\/uploads)+/i.test(trimmed)) {
-    trimmed = trimmed.replace(/^\/uploads(\/uploads)+/i, '/uploads');
-  }
+  // 5. Clean any duplicate /uploads/ (e.g. /uploads/uploads/ -> /uploads/)
+  trimmed = trimmed.replace(/^(\/uploads)+/i, '/uploads');
 
   // 6. If path doesn't already have /uploads/ or /files/, prepend /uploads
   if (!trimmed.startsWith('/uploads/') && !trimmed.startsWith('/files/')) {
     trimmed = `/uploads${trimmed}`;
   }
 
-  // 7. Clean any remaining multiple slashes
-  trimmed = trimmed.replace(/\/+/g, '/');
+  // 7. Clean any remaining duplicate /uploads/
+  trimmed = trimmed.replace(/^(\/uploads)+/i, '/uploads');
 
-  // 8. Prepend API_BASE_URL (which might be /api-proxy or http://216.92.34.22:3001)
-  const base = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-  return `${base}${trimmed}`;
+  // 8. Prepend API_BASE_URL (cleanly handle if base itself ends with /uploads)
+  let base = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+  if (base.endsWith('/uploads')) {
+    base = base.slice(0, -8);
+  }
+
+  let finalUrl = `${base}${trimmed}`;
+  // Final safeguard: replace any duplicate /uploads/ anywhere in the URL path
+  finalUrl = finalUrl.replace(/(\/uploads)+/gi, '/uploads');
+  return finalUrl;
 }
 
 // Helper to compress large image files client-side before upload
