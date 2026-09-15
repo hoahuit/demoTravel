@@ -24,18 +24,10 @@ export default function KollectionSection({ onNavigate }: KollectionSectionProps
 
   const categories = [
     { id: 'all', label: 'Tất Cả Sản Phẩm' },
-    { id: 'tea', label: 'Trà & Thảo Mộc', match: ['Trà', 'Thảo mộc', 'Quà lưu niệm'] },
-    { id: 'scent', label: 'Nến Thơm & Trầm', match: ['Nến', 'Tinh dầu', 'Thiết yếu'] },
-    { id: 'clothes', label: 'Thiền Phục Linen', match: ['Thiền phục', 'Linen', 'Trang bị'] },
-    { id: 'accessories', label: 'Phụ Kiện Du Lịch', match: ['Phụ kiện', 'Bình giữ nhiệt', 'Balo'] }
   ];
 
   const filteredProducts = products.filter(p => {
     if (selectedCategory === 'all') return true;
-    const catObj = categories.find(c => c.id === selectedCategory);
-    if (!catObj || !catObj.match) return true;
-    const catStr = (p.category || '') + ' ' + (p.title || '') + ' ' + (p.description || '');
-    return catObj.match.some(m => catStr.toLowerCase().includes(m.toLowerCase()));
   });
 
   const formatPrice = (price: number) => {
@@ -226,15 +218,7 @@ export default function KollectionSection({ onNavigate }: KollectionSectionProps
               marginBottom: '64px'
             }}
           >
-            {categories.map((c) => (
-              <button
-                key={c.id}
-                onClick={() => setSelectedCategory(c.id)}
-                className={`kollection-filter-btn ${selectedCategory === c.id ? 'active' : ''}`}
-              >
-                {c.label}
-              </button>
-            ))}
+
           </div>
         </ScrollReveal>
 
