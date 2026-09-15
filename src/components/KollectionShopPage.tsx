@@ -41,47 +41,146 @@ interface KollectionShopPageProps {
   onNavigate?: (path: string) => void;
 }
 
-export const FEATURED_CATEGORIES = [
+export const DEFAULT_NOMAD_PRODUCTS: KollectionProduct[] = [
   {
-    id: 'souvenirs',
-    name: 'Quà lưu niệm',
-    subtitle: 'Chế tác thủ công',
-    categoryKey: 'Quà lưu niệm',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCVR3VFpWr8SwWK1opXwuR34WlEa_pEUzTOZOz8bEvmPcmZ6tN8x6eAPxZJIyzTd4d_EMB3NGcdNfosZigQb9e5wsoWCOgklW0ZHZwU2WXFyN814powhrVfOdI0ADpb7YphPJvid6U8YHEkrRCnN9U4rh7JOx8E3ZtPpppulAo3fYK83rAvN9ZLCJ85yh_iGf31IukX-u_afPkbmdz-jTKk12fLzicU97kTtyXtsep-XZw1vLA6TWIr',
-    fallbackImage: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=85'
+    id: 17,
+    slug: 'toa-cu-ngoi-thien',
+    title: 'Tọa cụ ngồi Thiền',
+    name: 'Tọa cụ ngồi Thiền',
+    subtitle: 'Trợ thủ ĐẮC LỰC',
+    category: '"Bạn đồng hành" trong Retreat',
+    sku: '4URe-KLT-005',
+    price: 350000,
+    originalPrice: 450000,
+    stock: 50,
+    heroImage: '/uploads/4URe___Toa_cu_ngoi_Thien___Hero.png',
+    image: '/uploads/4URe___Toa_cu_ngoi_Thien___Hero.png',
+    description: 'Tọa cụ được làm từ Chất liệu ĐÀN HỒI, ÊM ÁI; thiết kế TIỆN LỢI thành 2 Mảnh có thể gấp lại sau khi sử dụng. Sử dụng Tọa cụ khi ngồi Thiền giúp GIẢM Áp lực lên Cột sống, GIẢM căng Cơ đùi và Cơ chân.',
+    isFeatured: true,
+    isNewArrival: false,
+    isBestSeller: false,
+    rating: 5,
+    reviewsCount: 0,
+    gallery: [
+      'https://www.dropbox.com/scl/fo/bj6b9ctaazj8m047rwduk/AMMLfOaa3FLK3S1zy64x9q8?rlkey=sd6jllrhmqacigd3cktd1tmvz&dl=0'
+    ]
   },
   {
-    id: 'gear',
-    name: 'Trang bị',
-    subtitle: 'Bền bỉ theo thời gian',
-    categoryKey: 'Trang bị',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAlyoRRMDdrEh1tEdYk_hR089ATUbOba9k2ZLY4EEOt7vStwznpSaiyIxKVKJPaLLya2UilfXbxnjGpi3yvXvBjeMczyjijEQ3PPzRZlxNWPoJlS3FhCQwy5_dACe_mP_T60HyDUUQvhJX_zQ8OwwJhx4vuZQunPrrw4HoVWGq6U1Nz3l55gqrSDP8QZWu6xaHPvIJHqNxGuG4SOYKVnHBRpnPuwBd_zcicEI79s2MGlZl4FfJmLNNy',
-    fallbackImage: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1200&q=85'
+    id: 16,
+    slug: 'ao-thun-yoga',
+    title: 'Áo thun Yoga',
+    name: 'Áo thun Yoga',
+    subtitle: 'THOẢI MÁI, NHẸ NHÀNG cho Cơ thể & Tâm trí',
+    category: 'Trang phục',
+    sku: '4URe-KLT-004',
+    price: 185000,
+    originalPrice: 285000,
+    stock: 50,
+    heroImage: '/uploads/4URe___Ao_thun___Hero.png',
+    image: '/uploads/4URe___Ao_thun___Hero.png',
+    description: 'Chưa tìm được một Trang phục thích hợp để tập Yoga? Áo thun được thiết kế với Hoạ tiết tối giản, Kiểu dáng phù hợp cho cả Nam và Nữ.',
+    isFeatured: true,
+    isNewArrival: false,
+    isBestSeller: false,
+    rating: 5,
+    reviewsCount: 0,
+    gallery: [
+      'https://www.dropbox.com/scl/fo/ecb53zmo9xbfjoedeg86d/ALDtv929Iwi705mypzv1cZE?rlkey=c8m6dazb8d9afftxtnnen5mpj&dl=0'
+    ]
   },
   {
-    id: 'essentials',
-    name: 'Thiết yếu',
-    subtitle: 'Sắp xếp thông minh',
-    categoryKey: 'Thiết yếu',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCDJ0PU48_kCS6k5M3Prgxt4d5x50qXJ1a9hPQkJVal5RC1jJ5cPR3DsbHqEJPfXS9Nqqwq7tJtdSpy3mAF-CIskaJdHGCEccCV5NQd_Fd15TBUWVzYvK7D1ghj99nXai-dtp-STJu6puKX2qjzosr8Hgj62eZXSHS-eB3lVxvzRiJBHKwQolKXV_VP5Zhlvi85VNgHetbGwlhJ7nACik0SI2Y-IUzpBLKjSXzj2JhmC-syN4CMbiun',
-    fallbackImage: 'https://images.unsplash.com/photo-1581553680321-4fffae59fccd?auto=format&fit=crop&w=1200&q=85'
+    id: 15,
+    slug: 'tui-vai-canvas',
+    title: 'Túi vải Canvas',
+    name: 'Túi vải Canvas',
+    subtitle: 'THÂN THIỆN với Môi trường',
+    category: '"Bạn đồng hành" trong Retreat',
+    sku: '4URe-KLT-003',
+    price: 170000,
+    originalPrice: 270000,
+    stock: 50,
+    heroImage: '/uploads/4URe___Tui_Canvas___Hero.png',
+    image: '/uploads/4URe___Tui_Canvas___Hero.png',
+    description: 'Túi được làm từ Chất liệu Vải Canvas CHẮC CHẮC với thiết kế TRANG NHÃ. Đây là một Vật dụng TIỆN LỢI.',
+    isFeatured: true,
+    isNewArrival: false,
+    isBestSeller: false,
+    rating: 5,
+    reviewsCount: 0,
+    gallery: [
+      'https://www.dropbox.com/scl/fo/p49mt1x9zkmu1mk1yau51/ABCR32q3U8emdHNC7YqOJNQ?rlkey=xjef9my0wut6ztmbxhzt469pc&dl=0'
+    ]
+  },
+  {
+    id: 14,
+    slug: 'dau-me',
+    title: 'Dầu Mè',
+    name: 'Dầu Mè',
+    subtitle: 'KHỎE ĐẸP mỗi ngày',
+    category: 'Chăm sóc Sức khỏe',
+    sku: '4URe-KLT-002',
+    price: 70000,
+    originalPrice: 170000,
+    stock: 50,
+    heroImage: '/uploads/4URe___Dau_me___Hero.png',
+    image: '/uploads/4URe___Dau_me___Hero.png',
+    description: 'Công dụng thải độc, chữa lành cho Cơ thể, có thể dùng để xoa bóp giúp giảm các Cơn đau Cơ, Xương khớp,…',
+    isFeatured: false,
+    isNewArrival: false,
+    isBestSeller: true,
+    rating: 5,
+    reviewsCount: 0,
+    gallery: [
+      'https://www.dropbox.com/scl/fo/4qgzgjgl9o2o4k50xr1jx/AOgwJV9f2vGJVVSIbJlFAls?rlkey=r8hhkupnqq69wrdubc1b3vgnx&dl=0'
+    ]
+  },
+  {
+    id: 13,
+    slug: 'goi-mat',
+    title: 'Gối Mắt',
+    name: 'Gối Mắt',
+    subtitle: 'Xua tan Căng thẳng',
+    category: '"Bạn đồng hành" trong Retreat',
+    sku: '4URe-KLT-001',
+    price: 200000,
+    originalPrice: 300000,
+    stock: 50,
+    heroImage: '/uploads/4URe___Goi_mat___Hero.png',
+    image: '/uploads/4URe___Goi_mat___Hero.png',
+    description: 'Bao gồm Nguyên liệu từ Thiên nhiên là Hoa Oải hương khô và Vỏ Đậu xanh.',
+    isFeatured: true,
+    isNewArrival: false,
+    isBestSeller: false,
+    rating: 5,
+    reviewsCount: 0,
+    gallery: [
+      'https://www.dropbox.com/scl/fo/2uoycdkolibtwibm03agd/AAwnfOhmQv13pmaiT8anTGQ?rlkey=fhl8nue0hc4y8ftivt7ox639m&dl=0'
+    ]
   }
 ];
 
-export const DEFAULT_NOMAD_PRODUCTS: KollectionProduct[] = [
+// Helper to format/clean category string (removes outer quotes, escaped quotes)
+export const cleanCategoryName = (cat: string = ''): string => {
+  return cat.replace(/^"+|"+$/g, '').replace(/^\\"+|\\"+$/g, '').replace(/^'+|'+$/g, '').trim();
+};
 
-];
+// Helper normalize function for loose matching
+export const normalizeCategoryStr = (str = '') =>
+  cleanCategoryName(str)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/[-_]/g, ' ')
+    .replace(/[^a-z0-9 ]/g, '')
+    .trim();
 
 export default function KollectionShopPage({ currentPath = '/kollection-4u', onNavigate }: KollectionShopPageProps) {
   const toast = useToast();
   const [products, setProducts] = useState<KollectionProduct[]>(DEFAULT_NOMAD_PRODUCTS);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [kollectionCategories, setKollectionCategories] = useState<string[]>([
-    'Quà lưu niệm',
-    'Trang bị',
-    'Thiết yếu'
-  ]);
+  const [liveMenuCategories, setLiveMenuCategories] = useState<any[]>([]);
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<'newest' | 'price-asc' | 'price-desc' | 'featured'>('newest');
@@ -120,48 +219,11 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
   });
 
   const getMerchandiseImage = (product: KollectionProduct): string => {
-    const title = (product.title || (product as any).name || '').toLowerCase();
-    const cat = (product.category || '').toLowerCase();
     const rawImg = product.heroImage || (product as any).image || '';
-
-    // Check if rawImg is a known travel landscape image (e.g. photo-1426604966848 or mountain views)
-    const isLandscapePhoto =
-      rawImg.includes('photo-1426604966848') ||
-      rawImg.includes('photo-1544735716') ||
-      rawImg.includes('photo-1506744038136') ||
-      rawImg.includes('photo-1508746829417');
-
-    if (rawImg && !isLandscapePhoto) {
+    if (rawImg) {
       return getImageUrl(rawImg);
     }
-
-    // Specific product mapping by keywords
-    if (title.includes('bình') || title.includes('nhiệt') || title.includes('thermos')) {
-      return 'https://lh3.googleusercontent.com/aida-public/AB6AXuDAjTRcfdF6_yplK4VT-RChhxc_dz4gKf_iF0t-dDv6SZypoAbltGUIxc3lRHFKv4nZMF8Tsgu9Ba9S-MWfpU_W1_iDsxBoKe7dTpT1ogIu35me-nmxxS1IuybSM54_lEQKNizMTQX-K7xK8F-BBqBu6VbChNnNZNrY7fEoNsFJ75b1abxFjuX1yoWrrAdSUPEtpWd6tu5Wz8ul1E4qEvYXYbASQwPiWN4yvaxn9oLlfQZdQjR7y9O2';
-    }
-    if (title.includes('dụng cụ') || title.includes('đa năng') || title.includes('explorer') || title.includes('kìm') || title.includes('dao')) {
-      return 'https://lh3.googleusercontent.com/aida-public/AB6AXuCl2RytbicQSz-WIZdQH-PivcpvDy2Awo_yBLeSkqUrh-Pk8fThJJFSNjrqEdKPEZzjJk2FyOXoQZnHffSjs-MybP0WsMRPyua9rr3KYevhuE80GhbDQqNj26IdKplnl0fqBnBig3L_s8rL5ppSreTiWolguuT0VVj8oLfEJT2018Tf7zB8mg7A_RMmv2EYUf66AvUcRN0PRV63NUHmHkRKYm574-XAcX5mOHyNkds6e_qGRtxMtRho';
-    }
-    if (title.includes('hành lý') || title.includes('phân loại') || title.includes('set túi') || title.includes('packing')) {
-      return 'https://lh3.googleusercontent.com/aida-public/AB6AXuB2KcU5rhNDPLymv81SVNzvhlWhBkB6-B-EJcP40aT9gTUcsZ62E73wO_GdxI6PZlG6jPv4cJqquEUFRZZI3pnRUdpBsitzoyhPUpioKYxUUFE58LnPHzQTDY8I0BT0O4G39IJcaxZKjBZpektsdVRT410YvQCOfpupbH3Fzl2jQN4smIUosHWVWNVA-B3rFK6kEo_fqzlS7P5Hw-26FFqxElBWlZHQ_S0hmseFhJTrwOm6F3zaNsd9';
-    }
-    if (title.includes('balo') || title.includes('ba lô') || title.includes('canvas') || title.includes('sáp ong')) {
-      return 'https://lh3.googleusercontent.com/aida-public/AB6AXuAlyoRRMDdrEh1tEdYk_hR089ATUbOba9k2ZLY4EEOt7vStwznpSaiyIxKVKJPaLLya2UilfXbxnjGpi3yvXvBjeMczyjijEQ3PPzRZlxNWPoJlS3FhCQwy5_dACe_mP_T60HyDUUQvhJX_zQ8OwwJhx4vuZQunPrrw4HoVWGq6U1Nz3l55gqrSDP8QZWu6xaHPvIJHqNxGuG4SOYKVnHBRpnPuwBd_zcicEI79s2MGlZl4FfJmLNNy';
-    }
-    if (title.includes('sổ') || title.includes('du ký') || title.includes('vintage') || title.includes('journal')) {
-      return 'https://lh3.googleusercontent.com/aida-public/AB6AXuCVR3VFpWr8SwWK1opXwuR34WlEa_pEUzTOZOz8bEvmPcmZ6tN8x6eAPxZJIyzTd4d_EMB3NGcdNfosZigQb9e5wsoWCOgklW0ZHZwU2WXFyN814powhrVfOdI0ADpb7YphPJvid6U8YHEkrRCnN9U4rh7JOx8E3ZtPpppulAo3fYK83rAvN9ZLCJ85yh_iGf31IukX-u_afPkbmdz-jTKk12fLzicU97kTtyXtsep-XZw1vLA6TWIr';
-    }
-    if (title.includes('trà') || cat.includes('trà')) {
-      return 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=1000&q=85';
-    }
-    if (title.includes('nến') || title.includes('tinh dầu') || cat.includes('nến') || cat.includes('tinh dầu')) {
-      return 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=85';
-    }
-    if (title.includes('thiền') || title.includes('linen') || title.includes('phục') || cat.includes('trang phục')) {
-      return 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=1000&q=85';
-    }
-
-    return 'https://lh3.googleusercontent.com/aida-public/AB6AXuDAjTRcfdF6_yplK4VT-RChhxc_dz4gKf_iF0t-dDv6SZypoAbltGUIxc3lRHFKv4nZMF8Tsgu9Ba9S-MWfpU_W1_iDsxBoKe7dTpT1ogIu35me-nmxxS1IuybSM54_lEQKNizMTQX-K7xK8F-BBqBu6VbChNnNZNrY7fEoNsFJ75b1abxFjuX1yoWrrAdSUPEtpWd6tu5Wz8ul1E4qEvYXYbASQwPiWN4yvaxn9oLlfQZdQjR7y9O2';
+    return 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=85';
   };
 
   const loadProducts = async () => {
@@ -183,8 +245,6 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
           };
         });
         setProducts(normalized);
-      } else if (Array.isArray(data) && data.length === 0) {
-        setProducts([]);
       } else {
         setProducts(DEFAULT_NOMAD_PRODUCTS);
       }
@@ -198,23 +258,79 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
   useEffect(() => {
     loadProducts();
 
-    // Fetch ONLY sub-categories that belong to kollection-4u from DB
+    // Fetch sub-categories that belong to kollection-4u from DB
     fetchMenuCategoriesApi()
       .then((menuCats) => {
         if (Array.isArray(menuCats) && menuCats.length > 0) {
-          const kollectionSubCats = menuCats
-            .filter(c => c.parentSlug === 'kollection-4u' || c.parentSlug === 'kollection')
-            .map(c => c.name);
-
-          if (kollectionSubCats.length > 0) {
-            setKollectionCategories(Array.from(new Set(['Quà lưu niệm', 'Trang bị', 'Thiết yếu', ...kollectionSubCats])));
-          }
+          setLiveMenuCategories(menuCats);
         }
       })
       .catch(() => { });
   }, []);
 
-  // Sync category filter from URL path (e.g. /kollection-4u/qua-luu-niem -> 'Quà lưu niệm')
+  // Derive unique categories dynamically from products and menu categories (NO hardcoded values)
+  const availableCategories = useMemo(() => {
+    const set = new Set<string>();
+
+    // 1. From live products
+    products.forEach((p) => {
+      if (p.category) {
+        const cleaned = cleanCategoryName(p.category);
+        if (cleaned) set.add(cleaned);
+      }
+      if (Array.isArray((p as any).categories)) {
+        (p as any).categories.forEach((c: string) => {
+          const cleaned = cleanCategoryName(c);
+          if (cleaned) set.add(cleaned);
+        });
+      }
+    });
+
+    // 2. From menu categories (children of kollection-4u or kollection)
+    liveMenuCategories
+      .filter((c) => c.parentSlug === 'kollection-4u' || c.parentSlug === 'kollection')
+      .forEach((c) => {
+        const cleaned = cleanCategoryName(c.name);
+        if (cleaned) set.add(cleaned);
+      });
+
+    return Array.from(set);
+  }, [products, liveMenuCategories]);
+
+  // Dynamic Bento Cards derived directly from available categories
+  const dynamicFeaturedCategories = useMemo(() => {
+    return availableCategories.map((catName, index) => {
+      const matchingProduct = products.find((p) => {
+        const normP = normalizeCategoryStr(p.category || '');
+        const normC = normalizeCategoryStr(catName);
+        return normP === normC || normP.includes(normC) || normC.includes(normP);
+      });
+
+      const matchingMenuCat = liveMenuCategories.find(
+        (c) => normalizeCategoryStr(c.name) === normalizeCategoryStr(catName)
+      );
+
+      const subtitle =
+        matchingMenuCat?.description ||
+        matchingProduct?.subtitle ||
+        (matchingProduct ? matchingProduct.title : 'Sản phẩm chọn lọc độc bản 4U');
+
+      const image = matchingProduct?.heroImage
+        ? getImageUrl(matchingProduct.heroImage)
+        : 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=85';
+
+      return {
+        id: `cat-${index}`,
+        name: catName,
+        subtitle,
+        categoryKey: catName,
+        image,
+        fallbackImage: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=85'
+      };
+    });
+  }, [availableCategories, products, liveMenuCategories]);
+
+  // Sync category filter from URL path (e.g. /kollection-4u/goi-mat -> 'Bạn đồng hành trong Retreat')
   useEffect(() => {
     if (!currentPath) return;
     const cleanPath = currentPath.split(/[?#]/)[0].replace(/\/+$/, '');
@@ -222,31 +338,43 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
 
     if (segments.length >= 2 && (segments[0] === 'kollection-4u' || segments[0] === 'kollection')) {
       const subSlug = segments[1].toLowerCase();
-      if (subSlug === 'qua-luu-niem' || subSlug === 'souvenirs') {
-        setSelectedCategory('Quà lưu niệm');
-      } else if (subSlug === 'trang-bi' || subSlug === 'gear') {
-        setSelectedCategory('Trang bị');
-      } else if (subSlug === 'thiet-yeu' || subSlug === 'essentials') {
-        setSelectedCategory('Thiết yếu');
+      if (subSlug === 'all' || subSlug === 'tat-ca') {
+        setSelectedCategory('All');
       } else if (subSlug === 'doc-quyen' || subSlug === 'dac-tuyen') {
         setSelectedCategory('doc-quyen');
       } else {
-        setSelectedCategory(subSlug);
+        // Find matching category by slug or name
+        const matchCat = liveMenuCategories.find(
+          (c) => c.slug === subSlug || normalizeCategoryStr(c.slug) === normalizeCategoryStr(subSlug)
+        );
+        if (matchCat) {
+          setSelectedCategory(cleanCategoryName(matchCat.name));
+        } else {
+          const found = availableCategories.find(
+            (c) =>
+              normalizeCategoryStr(c) === normalizeCategoryStr(subSlug) ||
+              normalizeCategoryStr(c).replace(/\s+/g, '-') === subSlug
+          );
+          setSelectedCategory(found || subSlug);
+        }
       }
     } else if (segments.length === 1 && (segments[0] === 'kollection-4u' || segments[0] === 'kollection')) {
       setSelectedCategory('All');
     }
-  }, [currentPath]);
+  }, [currentPath, liveMenuCategories, availableCategories]);
 
-  // Helper normalize function for loose matching
-  const normalizeStr = (str = '') =>
-    str
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/đ/g, 'd')
-      .replace(/[-_]/g, ' ')
-      .trim();
+  // Handler to select category & reset to All cleanly
+  const handleSelectCategory = (cat: string) => {
+    setSelectedCategory(cat);
+    if (cat === 'All') {
+      setSelectedPriceRange('All');
+      setSearchQuery('');
+      if (onNavigate) {
+        onNavigate('/kollection-4u');
+      }
+    }
+    scrollToSection('product-catalog');
+  };
 
   // Filter & Sort Products
   const filteredProducts = useMemo(() => {
@@ -257,15 +385,19 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
       if (selectedCategory === 'doc-quyen') {
         list = list.filter(p => p.isExclusive === true || (p as any).badge === 'Độc Quyền' || (p as any).badge === 'Đặc Tuyển');
       } else {
-        const normQuery = normalizeStr(selectedCategory);
+        const normQuery = normalizeCategoryStr(selectedCategory);
         list = list.filter(p => {
-          const normCat = normalizeStr(p.category || '');
+          const normCat = normalizeCategoryStr(p.category || '');
           const catsArray = Array.isArray((p as any).categories) ? (p as any).categories : [];
           return (
+            normCat === normQuery ||
             normCat.includes(normQuery) ||
             normQuery.includes(normCat) ||
-            catsArray.some((c: string) => normalizeStr(c).includes(normQuery)) ||
-            (p.slug && normalizeStr(p.slug).includes(normQuery))
+            catsArray.some((c: string) => {
+              const normC = normalizeCategoryStr(c);
+              return normC === normQuery || normC.includes(normQuery) || normQuery.includes(normC);
+            }) ||
+            (p.slug && normalizeCategoryStr(p.slug).includes(normQuery))
           );
         });
       }
@@ -303,7 +435,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
         break;
       case 'newest':
       default:
-        list.sort((a, b) => (b.id as number || 0) - (a.id as number || 0));
+        list.sort((a, b) => ((b.id as number) || 0) - ((a.id as number) || 0));
         break;
     }
 
@@ -771,10 +903,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
             </h2>
 
             <button
-              onClick={() => {
-                setSelectedCategory('All');
-                scrollToSection('product-catalog');
-              }}
+              onClick={() => handleSelectCategory('All')}
               style={{
                 background: 'none',
                 border: 'none',
@@ -792,15 +921,12 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
             </button>
           </div>
 
-          {/* 3 Bento Cards */}
+          {/* Dynamic Bento Cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', minHeight: '300px' }}>
-            {FEATURED_CATEGORIES.map((cat) => (
+            {dynamicFeaturedCategories.map((cat) => (
               <div
                 key={cat.id}
-                onClick={() => {
-                  setSelectedCategory(cat.categoryKey);
-                  scrollToSection('product-catalog');
-                }}
+                onClick={() => handleSelectCategory(cat.categoryKey)}
                 className="group"
                 style={{
                   position: 'relative',
@@ -895,7 +1021,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
               {/* Category Filter with Exclusive Option */}
               <select
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                onChange={(e) => handleSelectCategory(e.target.value)}
                 style={{
                   borderRadius: '999px',
                   border: '1px solid rgba(16, 32, 27, 0.15)',
@@ -910,7 +1036,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
               >
                 <option value="All">Danh mục: Tất cả</option>
                 <option value="doc-quyen">✨ Sản phẩm Độc quyền</option>
-                {kollectionCategories.map(cat => (
+                {availableCategories.map((cat) => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>

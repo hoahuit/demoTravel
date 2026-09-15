@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Clock, Star, Compass, ChevronDown, CheckCircle, MapPin, ArrowRight, Navigation, ShieldCheck, Tag, Info, UserCheck, Heart, Sparkles } from 'lucide-react';
 import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
 import { fetchToursApi, getImageUrl } from '../services/apiService';
@@ -257,36 +257,33 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
     { id: 'MapsArea', label: 'BẢN ĐỒ & KHU VỰC' },
   ];
 
-  const experienceSlides: SlideData[] = [
-    {
-      title: pageData.highlights?.[0] || pageData.experienceTitle || pageData.title,
-      subtitle: pageData.subtitle,
-      description: pageData.experiencePara1,
-      accent: '#006d36',
-      imageUrl: pageData.galleryImages?.[0] || pageData.heroImage,
-    },
-    {
-      title: pageData.highlights?.[1] || `Trải nghiệm ẩm thực & tinh thần`,
-      subtitle: pageData.type || pageData.subtitle,
-      description: pageData.experiencePara2,
-      accent: '#B08A46',
-      imageUrl: pageData.galleryImages?.[1] || pageData.galleryImages?.[0] || pageData.heroImage,
-    },
-    {
-      title: pageData.highlights?.[2] || `Liệu trình phục hồi chuyên sâu`,
-      subtitle: pageData.subtitle,
-      description: pageData.experiencePara2,
-      accent: '#2E86AB',
-      imageUrl: pageData.galleryImages?.[2] || pageData.galleryImages?.[0] || pageData.heroImage,
-    },
-    {
-      title: pageData.title,
-      subtitle: pageData.location,
-      description: pageData.experiencePara1,
-      accent: '#C4956A',
-      imageUrl: pageData.galleryImages?.[3] || pageData.heroImage,
-    },
-  ];
+  const accentColors = ['#006d36', '#B08A46', '#2E86AB', '#C4956A', '#4ade80', '#D4A955', '#7A9E7E'];
+
+  const experienceSlides: SlideData[] = useMemo(() => {
+    if (Array.isArray(pageData.highlights) && pageData.highlights.length > 0) {
+      return pageData.highlights.map((hl, idx) => {
+        const image = (pageData.galleryImages && pageData.galleryImages.length > 0)
+          ? pageData.galleryImages[idx % pageData.galleryImages.length]
+          : pageData.heroImage;
+        return {
+          title: hl,
+          subtitle: pageData.location || 'Trải Nghiệm Độc Bản',
+          description: hl,
+          accent: accentColors[idx % accentColors.length],
+          imageUrl: image,
+        };
+      });
+    }
+    return [
+      {
+        title: pageData.title,
+        subtitle: pageData.location || pageData.subtitle,
+        description: pageData.experiencePara1 || pageData.subtitle,
+        accent: '#006d36',
+        imageUrl: pageData.galleryImages?.[0] || pageData.heroImage,
+      }
+    ];
+  }, [pageData]);
 
   const handleTabClick = (tabId: string) => {
     setActiveTab(tabId);

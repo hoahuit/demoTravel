@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
-import { fetchToursApi } from '../services/apiService';
+import { fetchToursApi, getImageUrl } from '../services/apiService';
 
 export interface HeroProps {
   onOpenBooking?: () => void;
@@ -19,7 +19,19 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
     });
   }, []);
 
-  const currentHeroImage = '/images/hero_destination.jpg';
+  const khoangDungTour = tours.find(
+    (t) => String(t.id) === '13' || t.slug?.includes('khoang-dung')
+  ) || tours[0];
+
+  const heroImageSrc = khoangDungTour?.heroImage
+    ? getImageUrl(khoangDungTour.heroImage)
+    : '/images/hero_khoangdung.jpg';
+
+  const destinationTag = khoangDungTour?.city && khoangDungTour?.duration
+    ? `${khoangDungTour.city} • ${khoangDungTour.duration}`
+    : 'Châu Đốc • 3 Ngày 2 Đêm';
+
+  const subtitleText = khoangDungTour?.subtitle || 'Tạm gác những Xô bồ thường nhật để sống chậm lại giữa Châu Đốc, An Giang an yên';
 
   return (
     <section
@@ -57,9 +69,12 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
           }}
         >
           <img
-            src={currentHeroImage}
-            alt="4U Travel Destination"
+            src={heroImageSrc}
+            alt="Khoảng Dừng - 4U Retreat"
             className="hero-destination-image is-revealed"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src = '/images/hero_khoangdung.jpg';
+            }}
             style={{
               width: '100%',
               height: '100%',
@@ -110,7 +125,7 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
               fontFamily: "'Plus Jakarta Sans', sans-serif"
             }}
           >
-            Sa Pa • 3 Ngày 2 Đêm
+            {destinationTag}
           </span>
 
           {/* Main Headline */}
@@ -153,7 +168,7 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
               fontFamily: "'Plus Jakarta Sans', sans-serif"
             }}
           >
-            “Hương Sắc Mây Ngàn & Tĩnh Tâm Sa Pa” — Nghỉ dưỡng biệt lập trên đỉnh đồi nhìn ra thung lũng Mường Hoa và dãy Hoàng Liên Sơn.. Phục hồi Thân · Tâm · Trí giữa đại ngàn nguyên sơ — nơi bạn buông bỏ âu lo và lắng nghe câu trả lời từ chính tâm hồn mình.
+            “Khoảng Dừng” — {subtitleText}. Đắm mình giữa thiên nhiên nguyên sơ, lướt nhẹ qua những dòng nước tĩnh lặng và tái tạo trọn vẹn năng lượng cho Thân · Tâm · Trí.
           </p>
         </div>
       </div>
