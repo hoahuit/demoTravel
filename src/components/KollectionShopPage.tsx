@@ -106,7 +106,7 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
 
   const getMerchandiseImage = (product: KollectionProduct): string => {
     const rawImg = product.heroImage || (product as any).image || '';
-    if (rawImg) {
+    if (rawImg && typeof rawImg === 'string' && !rawImg.includes('/scl/fo/')) {
       return getImageUrl(rawImg);
     }
     return 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1200&q=85';
@@ -528,9 +528,17 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
 
   const getProductGallery = (product: KollectionProduct): string[] => {
     if (product.gallery && Array.isArray(product.gallery) && product.gallery.length > 0) {
-      return product.gallery;
+      const validImages = product.gallery.filter(img => {
+        if (!img || typeof img !== 'string') return false;
+        if (img.includes('dropbox.com') && (img.includes('/scl/fo/') || !img.match(/\.(jpeg|jpg|png|webp|gif|svg)/i))) {
+          return false;
+        }
+        return true;
+      });
+      if (validImages.length > 0) return validImages;
     }
-    return [getMerchandiseImage(product)];
+    const hero = product.heroImage || (product as any).image || '';
+    return [hero || 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=1000&q=85'];
   };
 
   return (
@@ -1015,7 +1023,10 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                   <ScrollReveal key={product.id || product.slug || pIdx} delay={(pIdx % 2) * 80}>
                     <div
                       className="nomad-card"
-                      onClick={() => setActiveProduct({ ...product, title: displayTitle, heroImage: displayImage })}
+                      onClick={() => {
+                        setActiveImageIndex(0);
+                        setActiveProduct(product);
+                      }}
                       style={{
                         background: 'transparent',
                         display: 'flex',
@@ -1281,7 +1292,14 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
               ) : (
                 cartItems.map(({ product, quantity }) => (
                   <div key={product.id || product.slug} style={{ display: 'flex', gap: '12px', alignItems: 'center', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '0.375rem', border: '1px solid #edeeef' }}>
-                    <img src={getMerchandiseImage(product)} alt="" style={{ width: '60px', height: '60px', borderRadius: '0.25rem', objectFit: 'cover' }} />
+                    <img 
+                      src={getMerchandiseImage(product)} 
+                      alt={product.title || ''} 
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=600&q=80';
+                      }}
+                      style={{ width: '60px', height: '60px', borderRadius: '0.25rem', objectFit: 'cover' }} 
+                    />
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: '14px', fontWeight: 600, color: '#191c1d', lineHeight: 1.3 }}>{product.title || (product as any).name}</div>
                       <div style={{ fontSize: '14px', fontWeight: 700, color: '#004532', marginTop: '3px' }}>{formatVnd(product.price)}</div>
@@ -1366,22 +1384,51 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
             </button>
 
             <div style={{ padding: '24px', backgroundColor: '#f8f9fa', borderRight: '1px solid #edeeef' }}>
-              <div style={{ width: '100%', height: '340px', borderRadius: '0.25rem', overflow: 'hidden', marginBottom: '12px', backgroundColor: '#ffffff' }}>
-                <img src={getMerchandiseImage(activeProduct)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </div>
-              {getProductGallery(activeProduct).length > 1 && (
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  {getProductGallery(activeProduct).map((img, idx) => (
-                    <div
-                      key={idx}
-                      onClick={() => setActiveImageIndex(idx)}
-                      style={{ width: '56px', height: '56px', borderRadius: '0.25rem', overflow: 'hidden', cursor: 'pointer', border: activeImageIndex === idx ? '2px solid #065f46' : '1px solid #bec9c2' }}
-                    >
-                      <img src={getImageUrl(img)} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              {(() => {
+                const galleryList = getProductGallery(activeProduct);
+                const activeImgSrc = galleryList[activeImageIndex] || activeProduct.heroImage || (activeProduct as any).image || '';
+                return (
+                  <>
+                    <div style={{ width: '100%', height: '340px', borderRadius: '0.25rem', overflow: 'hidden', marginBottom: '12px', backgroundColor: '#ffffff' }}>
+                      <img 
+                        src={getImageUrl(activeImgSrc)} 
+                        alt={activeProduct.title || ''} 
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=1000&q=85';
+                        }}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                      />
                     </div>
-                  ))}
-                </div>
-              )}
+                    {galleryList.length > 1 && (
+                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        {galleryList.map((img, idx) => (
+                          <div
+                            key={idx}
+                            onClick={() => setActiveImageIndex(idx)}
+                            style={{ 
+                              width: '56px', 
+                              height: '56px', 
+                              borderRadius: '0.25rem', 
+                              overflow: 'hidden', 
+                              cursor: 'pointer', 
+                              border: activeImageIndex === idx ? '2px solid #065f46' : '1px solid #bec9c2' 
+                            }}
+                          >
+                            <img 
+                              src={getImageUrl(img)} 
+                              alt="" 
+                              onError={(e) => {
+                                (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=400&q=80';
+                              }}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
             </div>
 
             <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
