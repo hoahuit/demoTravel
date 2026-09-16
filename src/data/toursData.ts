@@ -1,26 +1,33 @@
 export interface TourItineraryDay {
-  day: number;
+  day?: number;
+  dayNumber?: number;
   title: string;
   description: string;
   image?: string;
-  activities: string[];
+  activities: string[] | string;
+  transport?: string;
   transportAndCulinary?: string[];
-  attractions?: string[];
+  attractions?: string[] | string;
+  orderIndex?: number;
 }
 
 export interface TourReview {
-  id: string;
-  userName: string;
-  avatar: string;
-  rating: number;
-  date: string;
-  title: string;
-  comment: string;
-  travelerType: string;
+  id?: string | number;
+  userName?: string;
+  name?: string;
+  authorName?: string;
+  avatar?: string;
+  rating?: number;
+  date?: string;
+  createdAt?: string;
+  title?: string;
+  comment?: string;
+  travelerType?: string;
+  orderIndex?: number;
 }
 
 export interface TourPackage {
-  id: string;
+  id: string | number;
   slug: string;
   title: string;
   subtitle: string;
@@ -66,6 +73,7 @@ export interface TourPackage {
   isCustomer?: boolean;
   isAdminApproved?: boolean;
   isAdminAprove?: boolean;
+  seriesType?: string | null;
   highlights: string[];
   itinerary: TourItineraryDay[];
   included?: string[];
@@ -87,6 +95,12 @@ export interface TourPackage {
   blogStorySnippet?: string;
   landingSectionTemplateId?: string;
   yoga3dTemplateId?: string;
+  tourDepartureDates?: any[];
+  tourItineraries?: any[];
+  tourFaqs?: any[];
+  tourReviews?: any[];
+  tourCategoryMappings?: any[];
+  tourImages?: any[];
 }
 
 // 100% REAL DATA STORE (EMPTY UNTIL LOADED FROM LOOPBACK 4 / SQL SERVER)

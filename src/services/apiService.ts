@@ -40,6 +40,13 @@ export function getAuthHeader(): string {
 // Toggle mock data mode via .env (VITE_USE_MOCK_DATA=true)
 export const USE_MOCK_DATA = String((import.meta as any).env?.VITE_USE_MOCK_DATA || '').toLowerCase() === 'true';
 
+// Track backend connectivity status for automatic mock asset fallback
+export let isBackendOffline = false;
+
+export function setBackendOffline(status: boolean) {
+  isBackendOffline = status;
+}
+
 // Format image URL: safely normalize relative path, prevent duplicate /api-proxy or /uploads or multiple slashes
 export function getImageUrl(imagePath?: string): string {
   const DEFAULT_PLACEHOLDER = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80';
@@ -92,10 +99,19 @@ export function getImageUrl(imagePath?: string): string {
   // 7. Clean any remaining duplicate /uploads/
   trimmed = trimmed.replace(/^(\/uploads)+/i, '/uploads');
 
+  // If running in mock mode or backend is offline, serve static files directly from local public/uploads/
+  if (USE_MOCK_DATA || isBackendOffline) {
+    return trimmed;
+  }
+
   // 8. Prepend API_BASE_URL (cleanly handle if base itself ends with /uploads)
   let base = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
   if (base.endsWith('/uploads')) {
     base = base.slice(0, -8);
+  }
+
+  if (!base || base === '' || base === '/') {
+    return trimmed;
   }
 
   let finalUrl = `${base}${trimmed}`;
@@ -479,16 +495,19 @@ export async function fetchToursApi(forceRefresh = false) {
       });
       if (!response.ok) {
         console.warn(`[API Service] Failed to fetch live tours (${response.status}), falling back to mock tours.`);
+        isBackendOffline = true;
         return setCachedQuery('tours', getMockTours());
       }
       const rawList = await response.json();
       if (Array.isArray(rawList) && rawList.length > 0) {
+        isBackendOffline = false;
         const parsedList = rawList.map(parseTourJsonFields);
         return setCachedQuery('tours', parsedList);
       }
       return setCachedQuery('tours', getMockTours());
     } catch (err) {
       console.warn(`[API Service] Backend unreachable at ${API_BASE_URL}, using fallback mock data.`);
+      isBackendOffline = true;
       return setCachedQuery('tours', getMockTours());
     } finally {
       setTimeout(() => {
@@ -659,17 +678,21 @@ export async function fetchSectionItemsApi(section: string, forceRefresh = false
         headers: { Accept: 'application/json' },
       });
       if (!response.ok) {
+        isBackendOffline = true;
         return setCachedQuery(cacheKey, getSectionMockFallback(section));
       }
       const data = await response.json();
       if (Array.isArray(data)) {
+        isBackendOffline = false;
         return setCachedQuery(cacheKey, data);
       }
       if (data && typeof data === 'object') {
+        isBackendOffline = false;
         return setCachedQuery(cacheKey, data);
       }
       return setCachedQuery(cacheKey, getSectionMockFallback(section));
     } catch (err) {
+      isBackendOffline = true;
       return setCachedQuery(cacheKey, getSectionMockFallback(section));
     } finally {
       setTimeout(() => {

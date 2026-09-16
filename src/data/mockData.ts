@@ -13,724 +13,1404 @@ import { TourPackage } from './toursData';
 // --------------------------------------------------------------------------
 export const MOCK_TOURS: TourPackage[] = [
   {
-    id: 'tour-1',
-    slug: 'zannier-bai-san-ho-phu-yen-retreat',
-    title: 'Hành Trình Tĩnh Dưỡng Zannier Bãi San Hô',
-    subtitle: 'Nghỉ dưỡng biệt lập giữa 98 hecta thiên nhiên hoang sơ và liệu trình spa thảo mộc truyền thống.',
-    category: 'Doc-Quyen',
-    categories: ['chua-lanh', 'doc-quyen', 'hot', 'trung', 'last-minute', 'sap-khoi-hanh', 'khong-the-bo-lo', 'uu-dai-gio-chot', 'Wellness'],
+    id: 13,
+    slug: 'khoang-dung-chau-doc-3n2d-retreat',
+    title: 'Khoảng Dừng',
+    subtitle: 'Tạm gác những Xô bồ thường nhật để sống chậm lại giữa Châu Đốc, An Giang an yên',
+    category: 'chua-lanh',
     country: 'Việt Nam',
-    city: 'Phú Yên',
-    region: 'trung',
-    duration: '4 Ngày 3 Đêm',
-    durationDays: 4,
-    departureDates: ['15/09/2026', '01/10/2026', '20/10/2026'],
-    airline: 'Vietnam Airlines (Business)',
-    hotel: 'Zannier Hotels Bãi San Hô 5* Ultra Luxury',
-    transportation: 'Xe Limousine riêng đưa đón',
-    price: 28500000,
-    originalPrice: 34000000,
-    childPrice: 14000000,
-    infantPrice: 0,
-    rating: 5.0,
-    reviewsCount: 24,
+    city: 'Châu Đốc',
+    duration: '3 ngày 2 đêm',
+    durationDays: 3,
+    airline: 'Không áp dụng (Đường bộ)',
+    hotel: 'Victoria Núi Sam Lodge',
+    transportation: 'Xe 45 chỗ',
+    price: 6990000,
+    originalPrice: 9210000,
+    childPrice: 6990000,
+    infantPrice: 3495000,
+    cost: 5474231,
+    marginPercent: 40.5,
+    promotionPercent: 24.1,
+    group3Percent: 27,
+    group5Percent: 30,
+    childDiscountPercent: 0,
+    infantDiscountPercent: 50,
+    vatPercent: 8,
+    adultNote: 'Áp dụng từ 12 tuổi trở lên, tiêu chuẩn phòng 2 khách',
+    childNote: 'Từ 6 đến dưới 12 tuổi (Ngủ chung phòng bố mẹ)',
+    infantNote: 'Dưới 6 tuổi (Miễn phí tiền tour)',
+    bookingPolicyNotes: 'Được bảo lưu/đổi ngày miễn phí trước 14 ngày, chuyển nhượng không thu phí',
+    rating: 5,
+    reviewsCount: 3,
     isHot: true,
     isFeatured: true,
     isExclusive: true,
-    isPromotion: true,
+    isCustomer: false,
     isAdminApproved: true,
+    seriesType: 'chua-lanh',
+    heroImage: '/uploads/4URe___CDC___Hero.jpg',
+    destinationMap: 'https://maps.google.com/maps?q=Ch%C3%A2u%20%C4%90%E1%BB%91c&t=&z=14&ie=UTF8&iwloc=&output=embed',
+    landingSectionTemplateId: 'khoang-dung-chau-doc-3n2d-retreat',
     highlights: [
-      'Nghỉ dưỡng tại Hill Pool Villa view biển trọn vẹn',
-      'Liệu trình phục hồi thân tâm Hoa Sen 90 phút',
-      'Ăn tối thực dưỡng 5 món riêng tư bên bãi biển'
+      'Đắm mình giữa Thiên nhiên nguyên sơ và tận hưởng sự Bình yên của miền Tây',
+      'Lướt nhẹ qua những Dòng nước tĩnh lặng, nơi mọi Nhịp sống dường như chậm lại',
+      'Bước chậm giữa Thiên nhiên để đón nhận Khung cảnh rộng mở từ trên cao',
+      'Trải nghiệm Thiền tĩnh lặng đón Bình minh và nạp lại Năng lượng',
+      'Thưởng thức ẩm thực thanh đạm hữu cơ kết tinh từ tinh hoa văn hóa bản địa',
+      'Nghỉ dưỡng biệt lập tại Victoria Núi Sam Lodge với tầm nhìn thung lũng'
     ],
     included: [
-      'Vé máy bay khứ hồi hạng thương gia',
-      'Villa riêng tư bao gồm bữa sáng hàng ngày',
-      'Xe riêng đưa đón sân bay Tuy Hòa',
-      'Gói trị liệu spa và thiền trà sáng'
+      'Phương tiện di chuyển từ Tp. HCM đến Châu Đốc và ngược lại',
+      'Chỗ nghỉ nằm trong lòng Thiên nhiên yên bình tại Victoria Núi Sam',
+      'Các Bữa ăn thanh đạm đầy đủ Dinh dưỡng',
+      'Workshop và Chia sẻ "Chữa lành"',
+      'Vé vào cổng tại các điểm Tham quan',
+      'Giảng viên thuộc Sivananda Yoga chia sẻ về các Chủ đề Sức khoẻ',
+      'Khăn lạnh, nước uống trên xe',
+      'Bảo hiểm Du lịch cho Hành trình'
     ],
     excluded: [
-      'Chi phí cá nhân ngoài chương trình',
-      'Đồ uống có cồn ngoài gói ẩm thực'
+      'Chi phí cá nhân ngoài Chương trình (giặt ủi, mua sắm riêng)',
+      'Hóa đơn VAT (nếu có nhu cầu xuất hóa đơn công ty)'
     ],
     notes: [
-      'Phù hợp cho các cặp đôi và khách tìm kiếm sự tĩnh lặng',
-      'Trang phục lịch sự, thoải mái khi tham gia thiền'
+      'Trang phục lịch sự, thoải mái khi tham gia Trải nghiệm Yoga & Thiền định'
     ],
-    heroImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1600&auto=format&fit=crop&q=85',
-    gallery: [
-      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1600&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1600&auto=format&fit=crop'
+    travelTips: [
+      'Trang phục lịch sự, thoải mái khi tham gia Trải nghiệm Yoga & Thiền định'
+    ],
+    categories: [
+      'chua-lanh',
+      'thien-nhien',
+      'bao-ton',
+      'doc-quyen',
+      'hot',
+      'Wellness'
+    ],
+    departureDates: [
+      '23/10/2026'
     ],
     itinerary: [
       {
         day: 1,
-        title: 'Đón Tuy Hòa - Check-in Đồi San Hô',
-        description: 'Xe đón quý khách tại sân bay Tuy Hòa về resort nhận phòng Villa hướng đồi.',
-        activities: ['Đón sân bay bằng Limousine', 'Thưởng trà chào mừng', 'Bữa tối ẩm thực Làng Chài']
+        dayNumber: 1,
+        title: 'Khởi hành đến Châu Đốc',
+        description: 'Cùng nhau tìm hiểu: "Ta đang cần Khoảng dừng cho điều gì?" trên Hành trình đến Châu Đốc',
+        image: '/uploads/1788544654812_day1.jpg',
+        activities: [
+          'Tham quan Thánh đường Mubarak, Chùa Tây An, Chùa Bà',
+          'Tìm hiểu về Giá trị của Vải "Lãnh Mỹ A", được làm bởi Tay nghề Thủ công độc bản',
+          'Đón Hoàng hôn tại Victoria Nui Sam',
+          'Trải nghiệm Xe lôi dạo quanh các Điểm tham quan nổi tiếng'
+        ],
+        transport: 'Xe 45 chỗ + Xe lôi',
+        transportAndCulinary: [
+          'Xe 45 chỗ + Xe lôi'
+        ],
+        attractions: [
+          'Thánh đường Mubarak',
+          'Chùa Tây An',
+          'Chùa Bà',
+          'Victoria Nui Sam'
+        ]
       },
       {
         day: 2,
-        title: 'Yoga Bình Minh - Trị Liệu Thảo Dược',
-        description: 'Khởi đầu ngày mới với bài tập hít thở ven biển và liệu trình spa thảo dược cổ truyền.',
-        activities: ['Yoga bãi biển', 'Spa Hoa Sen 90 phút', 'Chèo thuyền Kayak vịnh san hô']
+        dayNumber: 2,
+        title: 'Khoảng dừng',
+        description: 'Đón ngày mới tràn đầy Năng lượng',
+        image: '/uploads/day2.jpg',
+        activities: [
+          'Cảm nhận Bình yên từ bên trong qua Trải nghiệm Thiền tĩnh lặng',
+          'Trải nghiệm Kết nối Thiên nhiên qua Hiking Núi Sam',
+          'Tham gia Workshop "Làm Sao để Giải Tỏa Stress?"',
+          'Dành cho mình Khoảng lặng để chia sẻ "Chữa lành": "Nỗi sợ nào luôn đeo bám Ta mỗi ngày?"'
+        ],
+        transport: 'Xe 45 chỗ + Hiking Núi Sam',
+        transportAndCulinary: [
+          'Xe 45 chỗ + Hiking Núi Sam'
+        ],
+        attractions: [
+          'Núi Sam',
+          'Victoria Nui Sam Lodge'
+        ]
       },
       {
         day: 3,
-        title: 'Thưởng Ngoạn Hoàng Hôn - Bữa Tối Lãng Mạn',
-        description: 'Tận hưởng ngày thư giãn tuyệt đối bên hồ bơi vô cực và tiệc tối BBQ hải sản riêng tư.',
-        activities: ['Thiền chuông xoay', 'Ngắm hoàng hôn trên vách đá', 'Bữa tối bãi biển riêng biệt']
+        dayNumber: 3,
+        title: 'Trở về',
+        description: 'Về với Tinh thần tươi mới',
+        image: '/uploads/day3.jpg',
+        activities: [
+          'Đón Bình an qua Thiền hành',
+          'Trải nghiệm di chuyển bằng Xuồng Ba lá xuyên Rừng Tràm Trà Sư xanh mát',
+          'Thưởng thức bữa trưa thanh đạm hữu cơ',
+          'Kết thúc chương trình, hẹn gặp lại trong Hành trình tiếp theo.'
+        ],
+        transport: 'Xuồng ba lá + Xe 45 chỗ',
+        transportAndCulinary: [
+          'Xuồng ba lá + Xe 45 chỗ'
+        ],
+        attractions: [
+          'Rừng Tràm Trà Sư'
+        ]
+      }
+    ],
+    gallery: [
+      '/uploads/4URe___CDC___Highlight_1.jpg',
+      '/uploads/4URe___CDC___Highlight_2.jpg',
+      '/uploads/4URe___CDC___Highlight_3.jpg',
+      '/uploads/4URe___CDC___Highlight_4.jpg',
+      '/uploads/4URe___CDC___Highlight_5.jpg'
+    ],
+    faq: [
+      {
+        question: 'Tôi chưa từng tập Yoga hay Thiền định thì có tham gia được không?',
+        answer: 'Hoàn toàn được. Các buổi thực hành Thiền và Yoga tại 4U Retreat được thiết kế với cường độ nhẹ nhàng, dành cho mọi đối tượng từ người mới bắt đầu đến người đã có kinh nghiệm, có sự hướng dẫn tận tình từ chuyên gia Sivananda Yoga.'
+      },
+      {
+        question: 'Chế độ ăn uống trong suốt hành trình như thế nào?',
+        answer: 'Chế độ ăn trong hành trình được thiết kế theo hướng thanh đạm, dinh dưỡng thực dưỡng lành mạnh từ nguyên liệu tươi ngon hữu cơ địa phương, hỗ trợ thanh lọc cơ thể tối đa.'
+      },
+      {
+        question: 'Tôi có thể đi một mình được không?',
+        answer: 'Chắc chắn rồi! Rất nhiều thành viên tham gia 4U Retreat đi một mình để tìm kiếm không gian tĩnh lặng cho bản thân và kết nối với những người bạn đồng điệu mới.'
+      },
+      {
+        question: 'Cần chuẩn bị những gì trước chuyến đi?',
+        answer: 'Quý khách nên chuẩn bị trang phục co giãn thoải mái, lịch sự để thiền/yoga, giày thể thao/hiking êm chân, bình nước cá nhân và một tâm thế rộng mở đón nhận.'
+      }
+    ],
+    reviews: [
+      {
+        authorName: 'Nguyễn Thanh Hà',
+        name: 'Nguyễn Thanh Hà',
+        rating: 5,
+        comment: 'Chuyến đi tuyệt vời giúp tôi buông bỏ hoàn toàn những áp lực công việc hàng ngày. Không gian Victoria Núi Sam và rừng tràm Trà Sư đem lại cảm giác bình yên khó tả.',
+        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&auto=format&fit=crop',
+        createdAt: '15/08/2026'
+      },
+      {
+        authorName: 'Trần Minh Quân',
+        name: 'Trần Minh Quân',
+        rating: 5,
+        comment: 'Lần đầu tiên trải nghiệm thiền đón bình minh trên đỉnh núi, cảm giác nạp lại trọn vẹn năng lượng cho cả thân và tâm. Cảm ơn đội ngũ 4U Wellness rất chu đáo!',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop',
+        createdAt: '20/08/2026'
+      },
+      {
+        authorName: 'Lê Ngọc Bích',
+        name: 'Lê Ngọc Bích',
+        rating: 5,
+        comment: 'Một chuyến đi đúng nghĩa "Khoảng Dừng". Mọi thứ từ chỗ nghỉ, bữa ăn đến các buổi chia sẻ đều rất tinh tế và sâu lắng.',
+        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop',
+        createdAt: '28/08/2026'
+      }
+    ],
+    tourDepartureDates: [
+      {
+        id: 38,
+        tourId: 13,
+        departureDate: '23/10/2026',
+        availableSeats: 25,
+        status: 'available',
+        priceOverride: null,
+        orderIndex: 0
+      }
+    ],
+    tourItineraries: [
+      {
+        id: 71,
+        tourId: 13,
+        dayNumber: 1,
+        title: 'Khởi hành đến Châu Đốc',
+        description: 'Cùng nhau tìm hiểu: "Ta đang cần Khoảng dừng cho điều gì?" trên Hành trình đến Châu Đốc',
+        image: '/uploads/1788544654812_day1.jpg',
+        activities: '["Tham quan Thánh đường Mubarak, Chùa Tây An, Chùa Bà","Tìm hiểu về Giá trị của Vải \\"Lãnh Mỹ A\\", được làm bởi Tay nghề Thủ công độc bản","Đón Hoàng hôn tại Victoria Nui Sam","Trải nghiệm Xe lôi dạo quanh các Điểm tham quan nổi tiếng"]',
+        transport: 'Xe 45 chỗ + Xe lôi',
+        attractions: 'Thánh đường Mubarak, Chùa Tây An, Chùa Bà, Victoria Nui Sam',
+        orderIndex: 0
+      },
+      {
+        id: 72,
+        tourId: 13,
+        dayNumber: 2,
+        title: 'Khoảng dừng',
+        description: 'Đón ngày mới tràn đầy Năng lượng',
+        image: '/uploads/day2.jpg',
+        activities: '["Cảm nhận Bình yên từ bên trong qua Trải nghiệm Thiền tĩnh lặng","Trải nghiệm Kết nối Thiên nhiên qua Hiking Núi Sam","Tham gia Workshop \\"Làm Sao để Giải Tỏa Stress?\\"","Dành cho mình Khoảng lặng để chia sẻ \\\"Chữa lành\\\": \\\"Nỗi sợ nào luôn đeo bám Ta mỗi ngày?\\""]',
+        transport: 'Xe 45 chỗ + Hiking Núi Sam',
+        attractions: 'Núi Sam, Victoria Nui Sam Lodge',
+        orderIndex: 1
+      },
+      {
+        id: 73,
+        tourId: 13,
+        dayNumber: 3,
+        title: 'Trở về',
+        description: 'Về với Tinh thần tươi mới',
+        image: '/uploads/day3.jpg',
+        activities: '["Đón Bình an qua Thiền hành","Trải nghiệm di chuyển bằng Xuồng Ba lá xuyên Rừng Tràm Trà Sư xanh mát","Thưởng thức bữa trưa thanh đạm hữu cơ","Kết thúc chương trình, hẹn gặp lại trong Hành trình tiếp theo."]',
+        transport: 'Xuồng ba lá + Xe 45 chỗ',
+        attractions: 'Rừng Tràm Trà Sư',
+        orderIndex: 2
+      }
+    ],
+    tourFaqs: [
+      {
+        id: 37,
+        tourId: 13,
+        question: 'Tôi chưa từng tập Yoga hay Thiền định thì có tham gia được không?',
+        answer: 'Hoàn toàn được. Các buổi thực hành Thiền và Yoga tại 4U Retreat được thiết kế với cường độ nhẹ nhàng, dành cho mọi đối tượng từ người mới bắt đầu đến người đã có kinh nghiệm, có sự hướng dẫn tận tình từ chuyên gia Sivananda Yoga.',
+        orderIndex: 0
+      },
+      {
+        id: 38,
+        tourId: 13,
+        question: 'Chế độ ăn uống trong suốt hành trình như thế nào?',
+        answer: 'Chế độ ăn trong hành trình được thiết kế theo hướng thanh đạm, dinh dưỡng thực dưỡng lành mạnh từ nguyên liệu tươi ngon hữu cơ địa phương, hỗ trợ thanh lọc cơ thể tối đa.',
+        orderIndex: 1
+      },
+      {
+        id: 39,
+        tourId: 13,
+        question: 'Tôi có thể đi một mình được không?',
+        answer: 'Chắc chắn rồi! Rất nhiều thành viên tham gia 4U Retreat đi một mình để tìm kiếm không gian tĩnh lặng cho bản thân và kết nối với những người bạn đồng điệu mới.',
+        orderIndex: 2
+      },
+      {
+        id: 40,
+        tourId: 13,
+        question: 'Cần chuẩn bị những gì trước chuyến đi?',
+        answer: 'Quý khách nên chuẩn bị trang phục co giãn thoải mái, lịch sự để thiền/yoga, giày thể thao/hiking êm chân, bình nước cá nhân và một tâm thế rộng mở đón nhận.',
+        orderIndex: 3
+      }
+    ],
+    tourReviews: [
+      {
+        id: 28,
+        tourId: 13,
+        authorName: 'Nguyễn Thanh Hà',
+        rating: 5,
+        comment: 'Chuyến đi tuyệt vời giúp tôi buông bỏ hoàn toàn những áp lực công việc hàng ngày. Không gian Victoria Núi Sam và rừng tràm Trà Sư đem lại cảm giác bình yên khó tả.',
+        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&auto=format&fit=crop',
+        createdAt: '15/08/2026',
+        orderIndex: 0
+      },
+      {
+        id: 29,
+        tourId: 13,
+        authorName: 'Trần Minh Quân',
+        rating: 5,
+        comment: 'Lần đầu tiên trải nghiệm thiền đón bình minh trên đỉnh núi, cảm giác nạp lại trọn vẹn năng lượng cho cả thân và tâm. Cảm ơn đội ngũ 4U Wellness rất chu đáo!',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop',
+        createdAt: '20/08/2026',
+        orderIndex: 1
+      },
+      {
+        id: 30,
+        tourId: 13,
+        authorName: 'Lê Ngọc Bích',
+        rating: 5,
+        comment: 'Một chuyến đi đúng nghĩa "Khoảng Dừng". Mọi thứ từ chỗ nghỉ, bữa ăn đến các buổi chia sẻ đều rất tinh tế và sâu lắng.',
+        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop',
+        createdAt: '28/08/2026',
+        orderIndex: 2
+      }
+    ],
+    tourCategoryMappings: [
+      {
+        id: 151,
+        tourId: 13,
+        categorySlug: 'chua-lanh'
+      },
+      {
+        id: 152,
+        tourId: 13,
+        categorySlug: 'thien-nhien'
+      },
+      {
+        id: 153,
+        tourId: 13,
+        categorySlug: 'bao-ton'
+      },
+      {
+        id: 154,
+        tourId: 13,
+        categorySlug: 'doc-quyen'
+      },
+      {
+        id: 155,
+        tourId: 13,
+        categorySlug: 'hot'
+      },
+      {
+        id: 156,
+        tourId: 13,
+        categorySlug: 'Wellness'
+      }
+    ],
+    tourImages: [
+      {
+        id: 69,
+        tourId: 13,
+        imageUrl: '/uploads/4URe___CDC___Highlight_1.jpg',
+        caption: 'Khoảng Dừng - Ảnh 1',
+        orderIndex: 0
+      },
+      {
+        id: 70,
+        tourId: 13,
+        imageUrl: '/uploads/4URe___CDC___Highlight_2.jpg',
+        caption: 'Khoảng Dừng - Ảnh 2',
+        orderIndex: 1
+      },
+      {
+        id: 71,
+        tourId: 13,
+        imageUrl: '/uploads/4URe___CDC___Highlight_3.jpg',
+        caption: 'Khoảng Dừng - Ảnh 3',
+        orderIndex: 2
+      },
+      {
+        id: 72,
+        tourId: 13,
+        imageUrl: '/uploads/4URe___CDC___Highlight_4.jpg',
+        caption: 'Khoảng Dừng - Ảnh 4',
+        orderIndex: 3
+      },
+      {
+        id: 73,
+        tourId: 13,
+        imageUrl: '/uploads/4URe___CDC___Highlight_5.jpg',
+        caption: 'Khoảng Dừng - Ảnh 5',
+        orderIndex: 4
+      }
+    ],
+    group3Price: 6723000,
+    group5Price: 6447000,
+    listPrice: 9210000
+  },
+  {
+    id: 15,
+    slug: 'binh-yen-tren-cao-nguyen-ho-lak-3n2d-retreat',
+    title: '"Bình Yên trên Cao Nguyên"',
+    subtitle: 'Từ Cao nguyên Buôn Ma Thuột đến Không gian tĩnh lặng tại Hồ Lắk, những Khoảnh khắc Bình yên và Vẻ đẹp nguyên sơ của Thiên nhiên, tất cả trong một Hành trình tái tạo trọn vẹn',
+    category: 'chua-lanh',
+    country: 'Việt Nam',
+    city: 'Đắk Lắk',
+    duration: '3 ngày 2 đêm',
+    durationDays: 3,
+    airline: 'Không áp dụng',
+    hotel: 'Lak Tented Camp',
+    transportation: 'Không áp dụng',
+    price: 6057000,
+    originalPrice: 7980000,
+    childPrice: 6057000,
+    infantPrice: 3029000,
+    cost: 4746923,
+    marginPercent: 40.5,
+    promotionPercent: 24.1,
+    group3Percent: 27,
+    group5Percent: 30,
+    childDiscountPercent: 0,
+    infantDiscountPercent: 50,
+    vatPercent: 8,
+    adultNote: 'Áp dụng từ 12 tuổi trở lên, tiêu chuẩn phòng 2 khách',
+    childNote: 'Từ 6 đến dưới 12 tuổi',
+    infantNote: 'Dưới 6 tuổi',
+    bookingPolicyNotes: '-',
+    rating: 5,
+    reviewsCount: 0,
+    isHot: false,
+    isFeatured: false,
+    isExclusive: false,
+    isCustomer: false,
+    isAdminApproved: true,
+    seriesType: null,
+    heroImage: '/uploads/4URE___LAK___Hero.jpg',
+    destinationMap: 'https://maps.google.com/maps?q=%C4%90%E1%BA%AFk%20L%E1%BA%AFk&t=&z=14&ie=UTF8&iwloc=&output=embed',
+    landingSectionTemplateId: 'binh-yen-tren-cao-nguyen-ho-lak-3n2d-retreat',
+    highlights: [
+      'Cảm nhận Thiên nhiên trong lành và yên tĩnh. Lắng nghe “Tiếng hát” của Tự nhiên, tận hưởng “Bình Yên trên Cao Nguyên”',
+      'Xua tan Mệt mỏi, Âu lo, chữa lành Tâm hồn, xoa dịu Trái tim, tìm về Hạnh phúc Chân ái qua Trải nghiệm Thiền định & Yoga',
+      'Giao lưu Văn hoá Bản địa và Bản sắc Dân tộc độc đáo'
+    ],
+    included: [
+      'Chỗ nghỉ yên bình tại Lak Tented Camp',
+      'Các Bữa ăn thanh đạm đầy đủ Dinh dưỡng',
+      'Workshop và Chia sẻ "Chữa lành"',
+      'Vé vào cổng tại các điểm Tham quan',
+      'Giảng viên thuộc Sivananda Yoga chia sẻ về các Chủ đề Sức khoẻ',
+      'Bảo hiểm Du lịch cho Hành trình'
+    ],
+    excluded: [
+      'Chi phí Cá nhân ngoài Chương trình',
+      '8% Thuế'
+    ],
+    notes: [],
+    travelTips: [],
+    categories: [
+      'chua-lanh',
+      'thien-nhien',
+      'bao-ton',
+      'doc-quyen',
+      'hot',
+      'trung'
+    ],
+    departureDates: [
+      'Thu Oct 29 2026 20:00:00 GMT-0400 (Eastern Daylight Time)'
+    ],
+    itinerary: [
+      {
+        day: 1,
+        dayNumber: 1,
+        title: 'Bình yên trên Cao Nguyên',
+        description: 'Tìm lại Bình yên nơi Hồ Lắk',
+        image: '/uploads/4URE___LAK___Day_1.jpg',
+        activities: [
+          'Tự do đạp xe, chèo thuyền khám phá Lak Tented Camp',
+          'Tìm hiểu Đa dạng Thực vật trong Khung cảnh xanh mát, trong lành',
+          'Thư giãn và tận hưởng “Bình Yên trên Cao Nguyên” mộc mạc',
+          'Giao lưu giữa các Thành viên trong Đoàn',
+          'Tham gia buổi Thiền Tĩnh tâm, tìm về Hạnh phúc và Bình an trong Tâm trí',
+          'Chia sẻ về Chủ đề "Điều Tiết"'
+        ],
+        transport: 'Không có',
+        transportAndCulinary: [
+          'Không có'
+        ],
+        attractions: [
+          'Lak Tented Camp'
+        ]
+      },
+      {
+        day: 2,
+        dayNumber: 2,
+        title: 'Giá trị Thiên nhiên & Bảo tồn',
+        description: 'Gia tăng Năng lượng bên Thác suối',
+        image: '/uploads/4URE___LAK___Day_2.jpg',
+        activities: [
+          'Thiền Tĩnh lặng chuẩn bị cho một ngày tràn đầy Năng lượng Tích cực',
+          'Workshop về Năng lượng sống',
+          'Trải nghiệm Fasting',
+          'Hiking khám phá Danh thắng hùng vĩ, tìm hiểu các Thảm thực vật trên đường đi trước khi đắm mình vào dòng thác mát lạnh',
+          'Dùng bữa trưa bên bờ suối, trải nghiệm Cuộc sống dân dã, gần gũi với Thiên nhiên trong lành',
+          'Tăng dẻo dai Cơ thể với Trải nghiệm Yoga ghế',
+          'Thiền Tĩnh lặng xua tan Âu lo, tái tạo Năng lượng Tích cực'
+        ],
+        transport: 'Không có',
+        transportAndCulinary: [
+          'Không có'
+        ],
+        attractions: [
+          'Thác Bìm Bịp',
+          'Lak Tented Camp'
+        ]
+      },
+      {
+        day: 3,
+        dayNumber: 3,
+        title: 'Trở về',
+        description: 'Trở về "Sống Không Bệnh"',
+        image: '/uploads/4URE___LAK___Day_3.jpg',
+        activities: [
+          'Trải nghiệm Thiền Hành, đúc kết những Nguyên tắc Cốt lõi cho một Lối sống Khỏe mạnh Bền vững',
+          'Đạp xe qua các Buôn làng, tìm hiểu Làng nghề Truyền thống và giao lưu Bản sắc Dân tộc độc đáo',
+          'Hòa mình vào Vẻ đẹp chân thực Vườn Cacao'
+        ],
+        transport: 'Xe đạp',
+        transportAndCulinary: [
+          'Xe đạp'
+        ],
+        attractions: [
+          'Làng Yang Tao',
+          'Lak Tented Camp'
+        ]
+      }
+    ],
+    gallery: [
+      '/uploads/4URE___LAK___Highlight_1.jpg',
+      '/uploads/4URE___LAK___Highlight_2.jpg',
+      '/uploads/4URE___LAK___Highlight_3.jpg'
+    ],
+    faq: [],
+    reviews: [],
+    tourDepartureDates: [
+      {
+        id: 40,
+        tourId: 15,
+        departureDate: 'Thu Oct 29 2026 20:00:00 GMT-0400 (Eastern Daylight Time)',
+        availableSeats: 0,
+        status: 'available',
+        priceOverride: null,
+        orderIndex: 0
+      }
+    ],
+    tourItineraries: [
+      {
+        id: 77,
+        tourId: 15,
+        dayNumber: 1,
+        title: 'Bình yên trên Cao Nguyên',
+        description: 'Tìm lại Bình yên nơi Hồ Lắk',
+        image: '/uploads/4URE___LAK___Day_1.jpg',
+        activities: '["Tự do đạp xe, chèo thuyền khám phá Lak Tented Camp","Tìm hiểu Đa dạng Thực vật trong Khung cảnh xanh mát, trong lành","Thư giãn và tận hưởng “Bình Yên trên Cao Nguyên” mộc mạc","Giao lưu giữa các Thành viên trong Đoàn","Tham gia buổi Thiền Tĩnh tâm, tìm về Hạnh phúc và Bình an trong Tâm trí","Chia sẻ về Chủ đề \\"Điều Tiết\\""]',
+        transport: 'Không có',
+        attractions: 'Lak Tented Camp',
+        orderIndex: 0
+      },
+      {
+        id: 78,
+        tourId: 15,
+        dayNumber: 2,
+        title: 'Giá trị Thiên nhiên & Bảo tồn',
+        description: 'Gia tăng Năng lượng bên Thác suối',
+        image: '/uploads/4URE___LAK___Day_2.jpg',
+        activities: '["Thiền Tĩnh lặng chuẩn bị cho một ngày tràn đầy Năng lượng Tích cực","Workshop về Năng lượng sống","Trải nghiệm Fasting","Hiking khám phá Danh thắng hùng vĩ, tìm hiểu các Thảm thực vật trên đường đi trước khi đắm mình vào dòng thác mát lạnh","Dùng bữa trưa bên bờ suối, trải nghiệm Cuộc sống dân dã, gần gũi với Thiên nhiên trong lành","Tăng dẻo dai Cơ thể với Trải nghiệm Yoga ghế","Thiền Tĩnh lặng xua tan Âu lo, tái tạo Năng lượng Tích cực"]',
+        transport: 'Không có',
+        attractions: 'Thác Bìm Bịp,Lak Tented Camp',
+        orderIndex: 1
+      },
+      {
+        id: 79,
+        tourId: 15,
+        dayNumber: 3,
+        title: 'Trở về',
+        description: 'Trở về "Sống Không Bệnh"',
+        image: '/uploads/4URE___LAK___Day_3.jpg',
+        activities: '["Trải nghiệm Thiền Hành, đúc kết những Nguyên tắc Cốt lõi cho một Lối sống Khỏe mạnh Bền vững","Đạp xe qua các Buôn làng, tìm hiểu Làng nghề Truyền thống và giao lưu Bản sắc Dân tộc độc đáo","Hòa mình vào Vẻ đẹp chân thực Vườn Cacao"]',
+        transport: 'Xe đạp',
+        attractions: 'Làng Yang Tao,Lak Tented Camp',
+        orderIndex: 2
+      }
+    ],
+    tourCategoryMappings: [
+      {
+        id: 163,
+        tourId: 15,
+        categorySlug: 'chua-lanh'
+      },
+      {
+        id: 164,
+        tourId: 15,
+        categorySlug: 'thien-nhien'
+      },
+      {
+        id: 165,
+        tourId: 15,
+        categorySlug: 'bao-ton'
+      },
+      {
+        id: 166,
+        tourId: 15,
+        categorySlug: 'doc-quyen'
+      },
+      {
+        id: 167,
+        tourId: 15,
+        categorySlug: 'hot'
+      },
+      {
+        id: 168,
+        tourId: 15,
+        categorySlug: 'trung'
+      }
+    ],
+    tourImages: [
+      {
+        id: 74,
+        tourId: 15,
+        imageUrl: '/uploads/4URE___LAK___Highlight_1.jpg',
+        caption: '',
+        orderIndex: 0
+      },
+      {
+        id: 75,
+        tourId: 15,
+        imageUrl: '/uploads/4URE___LAK___Highlight_2.jpg',
+        caption: '',
+        orderIndex: 1
+      },
+      {
+        id: 76,
+        tourId: 15,
+        imageUrl: '/uploads/4URE___LAK___Highlight_3.jpg',
+        caption: '',
+        orderIndex: 2
+      }
+    ],
+    group3Price: 5825000,
+    group5Price: 5586000,
+    listPrice: 7980000
+  },
+  {
+    id: 16,
+    slug: 'tinh-lang-giua-dai-ngan-nam-cat-tien-2n1d-retreat',
+    title: '"Tĩnh Lặng giữa Đại Ngàn"',
+    subtitle: 'Phục hồi Thân · Tâm · Trí giữa Thiên nhiên Vườn Quốc Gia Cát Tiên, nơi được Buông, được Thở, và tìm lại câu trả lời cho chính mình.',
+    category: 'chua-lanh',
+    country: 'Việt Nam',
+    city: 'Nam Cát Tiên',
+    duration: '2 ngày 1 đêm',
+    durationDays: 2,
+    airline: 'Không áp dụng',
+    hotel: 'Alagon Ecolodge',
+    transportation: 'Xe 45 chỗ',
+    price: 4182000,
+    originalPrice: 5510000,
+    childPrice: 4182000,
+    infantPrice: 2091000,
+    cost: 3272692,
+    marginPercent: 40.5,
+    promotionPercent: 24.1,
+    group3Percent: 27,
+    group5Percent: 30,
+    childDiscountPercent: 0,
+    infantDiscountPercent: 50,
+    vatPercent: 8,
+    adultNote: 'Áp dụng từ 12 tuổi trở lên, tiêu chuẩn phòng 2 khách',
+    childNote: 'Từ 6 đến dưới 12 tuổi',
+    infantNote: 'Dưới 6 tuổi',
+    bookingPolicyNotes: '-',
+    rating: 5,
+    reviewsCount: 0,
+    isHot: false,
+    isFeatured: false,
+    isExclusive: false,
+    isCustomer: false,
+    isAdminApproved: true,
+    seriesType: null,
+    heroImage: '/uploads/4URE___NCT___Hero.jpg',
+    destinationMap: 'https://maps.app.goo.gl/bwU5VAVytPeCiLcm6',
+    landingSectionTemplateId: 'tinh-lang-giua-dai-ngan-nam-cat-tien-2n1d-retreat',
+    highlights: [
+      'Trải nghiệm giúp Tái tạo Năng lượng sâu',
+      'Giải tỏa Stress và Áp lực tích tụ',
+      'Cảm nhận Không gian Thiên nhiên giúp thả lỏng Tâm trí'
+    ],
+    included: [
+      'Phương tiện di chuyển từ Tp. HCM đến Châu Đốc và ngược lại',
+      'Chỗ nghỉ yên bình tại Alagon Ecolodge',
+      'Các Bữa ăn thanh đạm đầy đủ Dinh dưỡng',
+      'Workshop và Chia sẻ "Chữa lành"',
+      'Vé vào cổng tại các điểm Tham quan',
+      'Giảng viên thuộc Sivananda Yoga chia sẻ về các Chủ đề Sức khoẻ',
+      'Khăn lạnh, nước uống trên xe',
+      'Bảo hiểm Du lịch cho Hành trình'
+    ],
+    excluded: [
+      'Chi phí Cá nhân ngoài Chương trình',
+      '8% Thuế'
+    ],
+    notes: [],
+    travelTips: [],
+    categories: [
+      'chua-lanh',
+      'thien-nhien',
+      'bao-ton',
+      'doc-quyen',
+      'hot',
+      'nam'
+    ],
+    departureDates: [
+      'Fri Sep 25 2026 20:00:00 GMT-0400 (Eastern Daylight Time)'
+    ],
+    itinerary: [
+      {
+        day: 1,
+        dayNumber: 1,
+        title: 'Khởi hành đến Nam Cát Tiên',
+        description: 'Cùng nhau tìm hiểu về "Điều Tiết" trên Hành trình đến Nam Cát Tiên',
+        image: '/uploads/4URE___NCT___Day_1.jpg',
+        activities: [
+          'Hít thở Bầu không khí trong lành, cảm nhận Thiên nhiên yên tĩnh & xanh mát qua Trải nghiệm đạp xe dạo quanh Đường làng',
+          'Trải Thiền Tĩnh lặng buổi tối, cùng nhau chia sẻ "Chữa Lành", giải toả Lo âu trong Cuộc sống, hướng đến sự Cân bằng trong Tâm hồn'
+        ],
+        transport: 'Xe 45 chỗ + Xe đạp',
+        transportAndCulinary: [
+          'Xe 45 chỗ + Xe đạp'
+        ],
+        attractions: [
+          'Alagon Ecolodge'
+        ]
+      },
+      {
+        day: 2,
+        dayNumber: 2,
+        title: 'Trở về',
+        description: 'Về với Tinh thần tươi mới',
+        image: '/uploads/4URE___NCT___Day_2.jpg',
+        activities: [
+          'Đón Bình minh tràn đầy Năng lượng với Thiền Tĩnh Lặng & Thiền hành',
+          'Kết nối Bản thân với Mẹ Thiên nhiên qua Trekking tại Vườn Quốc gia',
+          'Tham gia Workshop, hiểu về Nguyên nhân sâu xa của Stress & Giải pháp'
+        ],
+        transport: 'Xe 45 chỗ',
+        transportAndCulinary: [
+          'Xe 45 chỗ'
+        ],
+        attractions: [
+          'Alagon Ecolodge',
+          'Vườn Quốc gia Nam Cát Tiên'
+        ]
+      }
+    ],
+    gallery: [
+      '/uploads/4URE___NCT___Highlight_1.jpg',
+      '/uploads/4URE___NCT___Highlight_2.jpg',
+      '/uploads/4URE___NCT___Highlight_3.jpg'
+    ],
+    faq: [],
+    reviews: [],
+    tourDepartureDates: [
+      {
+        id: 44,
+        tourId: 16,
+        departureDate: 'Fri Sep 25 2026 20:00:00 GMT-0400 (Eastern Daylight Time)',
+        availableSeats: 0,
+        status: 'available',
+        priceOverride: null,
+        orderIndex: 0
+      }
+    ],
+    tourItineraries: [
+      {
+        id: 88,
+        tourId: 16,
+        dayNumber: 1,
+        title: 'Khởi hành đến Nam Cát Tiên',
+        description: 'Cùng nhau tìm hiểu về "Điều Tiết" trên Hành trình đến Nam Cát Tiên',
+        image: '/uploads/4URE___NCT___Day_1.jpg',
+        activities: '["Hít thở Bầu không khí trong lành, cảm nhận Thiên nhiên yên tĩnh & xanh mát qua Trải nghiệm đạp xe dạo quanh Đường làng","Trải Thiền Tĩnh lặng buổi tối, cùng nhau chia sẻ \\"Chữa Lành\\\", giải toả Lo âu trong Cuộc sống, hướng đến sự Cân bằng trong Tâm hồn"]',
+        transport: 'Xe 45 chỗ + Xe đạp',
+        attractions: 'Alagon Ecolodge',
+        orderIndex: 0
+      },
+      {
+        id: 89,
+        tourId: 16,
+        dayNumber: 2,
+        title: 'Trở về',
+        description: 'Về với Tinh thần tươi mới',
+        image: '/uploads/4URE___NCT___Day_2.jpg',
+        activities: '["Đón Bình minh tràn đầy Năng lượng với Thiền Tĩnh Lặng & Thiền hành","Kết nối Bản thân với Mẹ Thiên nhiên qua Trekking tại Vườn Quốc gia","Tham gia Workshop, hiểu về Nguyên nhân sâu xa của Stress & Giải pháp"]',
+        transport: 'Xe 45 chỗ',
+        attractions: 'Alagon Ecolodge,Vườn Quốc gia Nam Cát Tiên',
+        orderIndex: 1
+      }
+    ],
+    tourCategoryMappings: [
+      {
+        id: 186,
+        tourId: 16,
+        categorySlug: 'chua-lanh'
+      },
+      {
+        id: 187,
+        tourId: 16,
+        categorySlug: 'thien-nhien'
+      },
+      {
+        id: 188,
+        tourId: 16,
+        categorySlug: 'bao-ton'
+      },
+      {
+        id: 189,
+        tourId: 16,
+        categorySlug: 'doc-quyen'
+      },
+      {
+        id: 190,
+        tourId: 16,
+        categorySlug: 'hot'
+      },
+      {
+        id: 191,
+        tourId: 16,
+        categorySlug: 'nam'
+      }
+    ],
+    tourImages: [
+      {
+        id: 80,
+        tourId: 16,
+        imageUrl: '/uploads/4URE___NCT___Highlight_1.jpg',
+        caption: '',
+        orderIndex: 0
+      },
+      {
+        id: 81,
+        tourId: 16,
+        imageUrl: '/uploads/4URE___NCT___Highlight_2.jpg',
+        caption: '',
+        orderIndex: 1
+      },
+      {
+        id: 82,
+        tourId: 16,
+        imageUrl: '/uploads/4URE___NCT___Highlight_3.jpg',
+        caption: '',
+        orderIndex: 2
+      }
+    ],
+    group3Price: 4022000,
+    group5Price: 3857000,
+    listPrice: 5510000
+  },
+  {
+    id: 17,
+    slug: 'thanh-tinh-tinh-khiet-hue-4n3d-retreat',
+    title: '"Thanh Tịnh & Tinh Khiết"',
+    subtitle: 'Hãy tạm gác lại Âu lo chốn Đô thị để tìm thấy sự An nhiên, Thanh tịnh với chuyến đi Retreat tại Huế',
+    category: 'chua-lanh',
+    country: 'Việt Nam',
+    city: 'Huế',
+    duration: '4 ngày 3 đêm',
+    durationDays: 4,
+    airline: 'Không áp dụng',
+    hotel: 'aNhill Boutique',
+    transportation: 'Xe 45 chỗ',
+    price: 15453000,
+    originalPrice: 20360000,
+    childPrice: 15453000,
+    infantPrice: 7727000,
+    cost: 12112520,
+    marginPercent: 40.5,
+    promotionPercent: 24.1,
+    group3Percent: 27,
+    group5Percent: 30,
+    childDiscountPercent: 0,
+    infantDiscountPercent: 50,
+    vatPercent: 8,
+    adultNote: 'Áp dụng từ 12 tuổi trở lên, tiêu chuẩn phòng 2 khách',
+    childNote: 'Từ 6 đến dưới 12 tuổi',
+    infantNote: 'Dưới 6 tuổi',
+    bookingPolicyNotes: '-',
+    rating: 5,
+    reviewsCount: 0,
+    isHot: false,
+    isFeatured: false,
+    isExclusive: false,
+    isCustomer: false,
+    isAdminApproved: true,
+    seriesType: null,
+    heroImage: '/uploads/4URE___HUE___Hero.jpg',
+    destinationMap: 'https://maps.app.goo.gl/NvYLtiZsXHHwqmS39',
+    landingSectionTemplateId: 'thanh-tinh-tinh-khiet-hue-4n3d-retreat',
+    highlights: [
+      'Hòa mình vào Thiên nhiên tĩnh lặng của xứ Huế',
+      'Cảm nhận yên bình nơi Kim Long xanh mướt và "Nhà Vuờn", Hình mẫu Giá trị Bảo tồn',
+      'Trải nghiệm Khoảnh khắc "Me-Time" cho chính mình, từ đó giúp giải tỏa Căng thẳng và hiểu rõ hơn về Lối "Sống Không Bệnh"'
+    ],
+    included: [
+      'Phương tiện di chuyển từ Sân bay Phú Bài đến Khách sạn Huế và ngược lại',
+      'Chỗ nghỉ yên bình tại aNhill Boutique',
+      'Các Bữa ăn thanh đạm đầy đủ Dinh dưỡng',
+      'Workshop và Chia sẻ "Chữa lành"',
+      'Vé vào cổng tại các điểm Tham quan',
+      'Giảng viên thuộc Sivananda Yoga chia sẻ về các Chủ đề Sức khoẻ',
+      'Khăn lạnh, nước uống trên xe',
+      'Bảo hiểm Du lịch cho Hành trình'
+    ],
+    excluded: [
+      'Chi phí Cá nhân ngoài Chương trình',
+      '8% Thuế'
+    ],
+    notes: [],
+    travelTips: [],
+    categories: [
+      'chua-lanh',
+      'bao-ton',
+      'doc-quyen',
+      'hot',
+      'trung'
+    ],
+    departureDates: [
+      'Wed Nov 04 2026 19:00:00 GMT-0500 (Eastern Standard Time)'
+    ],
+    itinerary: [
+      {
+        day: 1,
+        dayNumber: 1,
+        title: '"Thanh Tịnh & Tinh Khiết"',
+        description: 'Thư giãn và tận hưởng Không gian bình yên nơi nghỉ dưỡng',
+        image: '/uploads/4URE___HUE___Day_1.jpg',
+        activities: [
+          'Tham quan Chùa Đức Sơn thanh tịnh, cảm nhận Mái ấm Yêu thương & Cho đi',
+          'Cải thiện sự Dẻo dai, Linh hoạt của Cơ thể, đồng thời tái tạo Năng lượng qua Trải nghiệm Yoga',
+          'Dành những Khoảng lặng cho chính mình để tìm lại Bình an Tâm trí qua Thiền định buổi tối'
+        ],
+        transport: 'Xe du lịch',
+        transportAndCulinary: [
+          'Xe du lịch'
+        ],
+        attractions: []
+      },
+      {
+        day: 2,
+        dayNumber: 2,
+        title: 'Kết nối',
+        description: 'Cảm nhận Giá trị Bảo tồn',
+        image: '/uploads/4URE___HUE___Day_2.jpg',
+        activities: [
+          'Đón Ngày mới tràn đầy Năng lượng với Thiền Tĩnh lặng',
+          'Cảm nhận bầu Không khí xanh mát khi đạp xe quanh Làng Kim Long',
+          'Khám phá "Nhà Vườn", Không gian Kiến trúc độc đáo, đời sống Gia đình đặc trưng của Huế vẫn còn tồn tại',
+          'Trải nghiệm Thở & Thiền giúp ngủ SÂU, cảm nhận Giá trị Sức khỏe KHÔNG NGỜ TỚI chỉ qua Hít thở, Thiền định & Thư giãn'
+        ],
+        transport: 'Xe du lịch',
+        transportAndCulinary: [
+          'Xe du lịch'
+        ],
+        attractions: []
+      },
+      {
+        day: 3,
+        dayNumber: 3,
+        title: 'Trải nghiệm',
+        description: 'Khám phá Nghệ thuật Việt Nam',
+        image: '/uploads/4URE___HUE___Day_3.jpg',
+        activities: [
+          'Đón ngày mới bình an với Thiền buổi sáng',
+          'Khám phá Nghệ thuật đậm chất Việt qua Trải nghiệm làm Bánh tráng'
+        ],
+        transport: 'Xe du lịch',
+        transportAndCulinary: [
+          'Xe du lịch'
+        ],
+        attractions: []
       },
       {
         day: 4,
-        title: 'Trà Sáng Tĩnh Tâm - Tiễn Sân Bay',
-        description: 'Dùng bữa sáng chậm rãi, tĩnh tâm trước khi xe tiễn quý khách ra sân bay.',
-        activities: ['Bữa sáng thực dưỡng', 'Mua quà đặc sản bản địa', 'Tiễn sân bay']
+        dayNumber: 4,
+        title: 'Tìm hiểu về "Sống Không Bệnh"',
+        description: 'Trở về Tinh thần tươi mới',
+        image: '/uploads/4URE___HUE___Day_4.jpg',
+        activities: [
+          'Đón Bình minh yên tĩnh với Thiền hành',
+          'Tham gia chia sẻ về Chủ đề "Làm sao xây dựng Thói quen Sống Không Bệnh?"',
+          'Tiếp tục trải nghiệm Yoga để tăng Dẻo dai, Linh hoạt của Cơ thể, giải tỏa Stress, sạc lại Năng lượng cho ngày mới'
+        ],
+        transport: 'Xe du lịch',
+        transportAndCulinary: [
+          'Xe du lịch'
+        ],
+        attractions: []
       }
-    ]
-  },
-  {
-    id: 'tour-2',
-    slug: 'dau-an-di-san-thien-dinh-yen-tu',
-    title: 'Dấu Ấn Di Sản & Thiền Định Yên Tử',
-    subtitle: 'Hành trình trở về cội nguồn tâm linh tại Legacy Yên Tử - Mgallery kiến trúc thời Trần thế kỷ 13.',
-    category: 'Heritage',
-    categories: ['chua-lanh', 'bao-ton', 'bac', 'hot', 'khong-the-bo-lo', 'Heritage', 'Wellness', 'sap-khoi-hanh'],
-    country: 'Việt Nam',
-    city: 'Yên Tử',
-    region: 'bac',
-    duration: '3 Ngày 2 Đêm',
-    durationDays: 3,
-    departureDates: ['18/09/2026', '08/10/2026', '25/10/2026'],
-    airline: 'Xe Limousine Dcar cao cấp từ Hà Nội',
-    hotel: 'Legacy Yên Tử - MGallery 5 sao',
-    transportation: 'Xe Limousine riêng suốt tuyến',
-    price: 14800000,
-    originalPrice: 18500000,
-    childPrice: 7500000,
-    infantPrice: 0,
-    rating: 4.9,
-    reviewsCount: 38,
-    isHot: true,
-    isFeatured: true,
-    isExclusive: true,
-    isAdminApproved: true,
-    highlights: [
-      'Lưu trú tại cung điện thời Trần Legacy Yên Tử',
-      'Khóa thiền định thở & Trải nghiệm tắm thảo dược Dao Đỏ',
-      'Thưởng thức ẩm thực chay cung đình thanh tịnh'
     ],
-    included: [
-      'Xe Limousine 9 chỗ đón trả tận nơi tại Hà Nội',
-      '2 đêm phòng Junior Suite Legacy Yên Tử',
-      'Toàn bộ các bữa ăn chay & thực dưỡng theo chương trình',
-      'Vé cáp treo Yên Tử khứ hồi 2 chặng'
-    ],
-    excluded: [
-      'Chi phí chi tiêu cá nhân ngoài thực đơn',
-      'VAT 8%'
-    ],
-    notes: [
-      'Nên chuẩn bị giày đi bộ êm ái khi tham quan chùa Đồng',
-      'Giữ không gian thanh tịnh khi tham gia các buổi thiền'
-    ],
-    heroImage: 'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=1600&auto=format&fit=crop',
     gallery: [
-      'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=1600&auto=format&fit=crop'
+      '/uploads/4URE___HUE___Highlight_1.jpg',
+      '/uploads/4URE___HUE___Highlight_2.jpg',
+      '/uploads/4URE___HUE___Highlight_3.jpg'
     ],
-    itinerary: [
+    faq: [],
+    reviews: [],
+    tourDepartureDates: [
       {
-        day: 1,
-        title: 'Hà Nội - Đất Phật Yên Tử',
-        description: 'Khởi hành từ Hà Nội đến Yên Tử, check-in Legacy Yên Tử kiến trúc gỗ đồng độc đáo.',
-        activities: ['Đón tại Hà Nội', 'Thưởng thức trà sen', 'Ăn tối chay cung đình Thọ Quang']
-      },
-      {
-        day: 2,
-        title: 'Chiêm Bái Đỉnh Phù Vân - Thiền Trầm',
-        description: 'Đi cáp treo lên chùa Hoa Yên, tượng Phật Hoàng Trần Nhân Tông và đỉnh chùa Đồng.',
-        activities: ['Cáp treo ngắm mây ngàn', 'Chiêm bái chùa Đồng', 'Liệu trình tắm lá thuốc Dao Đỏ']
-      },
-      {
-        day: 3,
-        title: 'Thiền Hành Buổi Sáng - Về Lại Thủ Đô',
-        description: 'Tập thở và thiền hành trong rừng trúc trước khi trở về Hà Nội.',
-        activities: ['Thiền hành rừng trúc', 'Bữa trưa thực dưỡng', 'Xe đưa về Hà Nội']
+        id: 45,
+        tourId: 17,
+        departureDate: 'Wed Nov 04 2026 19:00:00 GMT-0500 (Eastern Standard Time)',
+        availableSeats: 0,
+        status: 'available',
+        priceOverride: null,
+        orderIndex: 0
       }
-    ]
+    ],
+    tourItineraries: [
+      {
+        id: 90,
+        tourId: 17,
+        dayNumber: 1,
+        title: '"Thanh Tịnh & Tinh Khiết"',
+        description: 'Thư giãn và tận hưởng Không gian bình yên nơi nghỉ dưỡng',
+        image: '/uploads/4URE___HUE___Day_1.jpg',
+        activities: '["Tham quan Chùa Đức Sơn thanh tịnh, cảm nhận Mái ấm Yêu thương & Cho đi","Cải thiện sự Dẻo dai, Linh hoạt của Cơ thể, đồng thời tái tạo Năng lượng qua Trải nghiệm Yoga","Dành những Khoảng lặng cho chính mình để tìm lại Bình an Tâm trí qua Thiền định buổi tối"]',
+        transport: 'Xe du lịch',
+        attractions: '',
+        orderIndex: 0
+      },
+      {
+        id: 91,
+        tourId: 17,
+        dayNumber: 2,
+        title: 'Kết nối',
+        description: 'Cảm nhận Giá trị Bảo tồn',
+        image: '/uploads/4URE___HUE___Day_2.jpg',
+        activities: '["Đón Ngày mới tràn đầy Năng lượng với Thiền Tĩnh lặng","Cảm nhận bầu Không khí xanh mát khi đạp xe quanh Làng Kim Long","Khám phá \\"Nhà Vườn\\", Không gian Kiến trúc độc đáo, đời sống Gia đình đặc trưng của Huế vẫn còn tồn tại","Trải nghiệm Thở & Thiền giúp ngủ SÂU, cảm nhận Giá trị Sức khỏe KHÔNG NGỜ TỚI chỉ qua Hít thở, Thiền định & Thư giãn"]',
+        transport: 'Xe du lịch',
+        attractions: '',
+        orderIndex: 1
+      },
+      {
+        id: 92,
+        tourId: 17,
+        dayNumber: 3,
+        title: 'Trải nghiệm',
+        description: 'Khám phá Nghệ thuật Việt Nam',
+        image: '/uploads/4URE___HUE___Day_3.jpg',
+        activities: '["Đón ngày mới bình an với Thiền buổi sáng","Khám phá Nghệ thuật đậm chất Việt qua Trải nghiệm làm Bánh tráng"]',
+        transport: 'Xe du lịch',
+        attractions: '',
+        orderIndex: 2
+      },
+      {
+        id: 93,
+        tourId: 17,
+        dayNumber: 4,
+        title: 'Tìm hiểu về "Sống Không Bệnh"',
+        description: 'Trở về Tinh thần tươi mới',
+        image: '/uploads/4URE___HUE___Day_4.jpg',
+        activities: '["Đón Bình minh yên tĩnh với Thiền hành","Tham gia chia sẻ về Chủ đề \\"Làm sao xây dựng Thói quen Sống Không Bệnh?\\"","Tiếp tục trải nghiệm Yoga để tăng Dẻo dai, Linh hoạt của Cơ thể, giải tỏa Stress, sạc lại Năng lượng cho ngày mới"]',
+        transport: 'Xe du lịch',
+        attractions: '',
+        orderIndex: 3
+      }
+    ],
+    tourCategoryMappings: [
+      {
+        id: 192,
+        tourId: 17,
+        categorySlug: 'chua-lanh'
+      },
+      {
+        id: 193,
+        tourId: 17,
+        categorySlug: 'bao-ton'
+      },
+      {
+        id: 194,
+        tourId: 17,
+        categorySlug: 'doc-quyen'
+      },
+      {
+        id: 195,
+        tourId: 17,
+        categorySlug: 'hot'
+      },
+      {
+        id: 196,
+        tourId: 17,
+        categorySlug: 'trung'
+      }
+    ],
+    tourImages: [
+      {
+        id: 83,
+        tourId: 17,
+        imageUrl: '/uploads/4URE___HUE___Highlight_1.jpg',
+        caption: '',
+        orderIndex: 0
+      },
+      {
+        id: 84,
+        tourId: 17,
+        imageUrl: '/uploads/4URE___HUE___Highlight_2.jpg',
+        caption: '',
+        orderIndex: 1
+      },
+      {
+        id: 85,
+        tourId: 17,
+        imageUrl: '/uploads/4URE___HUE___Highlight_3.jpg',
+        caption: '',
+        orderIndex: 2
+      }
+    ],
+    group3Price: 14863000,
+    group5Price: 14252000,
+    listPrice: 20360000
   },
   {
-    id: 'tour-3',
-    slug: 'du-thuyen-sieu-sang-vinh-lan-ha',
-    title: 'Du Thuyền Siêu Sang & Tĩnh Lặng Vịnh Lan Hạ',
-    subtitle: 'Nghỉ dưỡng thượng lưu trên du thuyền Boutique 6 sao giữa miền di sản kỳ vĩ.',
-    category: 'Luxury',
-    categories: ['thien-nhien', 'bao-ton', 'bac', 'last-minute', 'uu-dai-gio-chot', 'khong-the-bo-lo', 'Luxury', 'hot'],
-    country: 'Việt Nam',
-    city: 'Vịnh Hạ Long',
-    region: 'bac',
-    duration: '3 Ngày 2 Đêm',
-    durationDays: 3,
-    departureDates: ['22/09/2026', '05/10/2026', '19/10/2026'],
-    airline: 'Xe Limousine đưa đón Hải Phòng / Hà Nội',
-    hotel: 'Grand Boutique Cruise 6 sao (Executive Suite)',
-    transportation: 'Xe Limousine cao cấp & Tàu cano cao tốc',
-    price: 19500000,
-    originalPrice: 26000000,
-    childPrice: 9500000,
-    infantPrice: 0,
-    rating: 5.0,
-    reviewsCount: 42,
-    isHot: true,
-    isFeatured: true,
-    isExclusive: true,
-    isPromotion: true,
-    isAdminApproved: true,
-    highlights: [
-      'Suite rộng 65m² với ban công riêng và bồn tắm hướng vịnh',
-      'Chèo thuyền kayak khám phá hang Sáng Tối bí ẩn',
-      'Tiệc canapé hoàng hôn và ẩm thực Michelin Selected'
-    ],
-    included: [
-      'Phòng Executive Suite trên du thuyền 6 sao',
-      'Trọn gói 4 bữa ăn cao cấp chuẩn Fine Dining',
-      'Chèo thuyền kayak, chèo sup và câu mực đêm',
-      'Xe Limousine đưa đón tận nơi'
-    ],
-    excluded: [
-      'Dịch vụ massage spa trên tàu',
-      'Rượu vang cao cấp gọi ngoài menu'
-    ],
-    notes: [
-      'Ưu đãi giờ chót tiết kiệm 25% duy nhất trong tháng',
-      'Vui lòng mang theo CMND/CCCD hoặc Hộ chiếu'
-    ],
-    heroImage: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=1600&auto=format&fit=crop',
-    gallery: [
-      'https://images.unsplash.com/photo-1528127269322-539801943592?w=1600&auto=format&fit=crop'
-    ],
-    itinerary: [
-      {
-        day: 1,
-        title: 'Hải Phòng - Lên Tàu - Khám Phá Vịnh Lan Hạ',
-        description: 'Cano đưa quý khách lên du thuyền, thưởng thức welcome drink và ngắm cảnh vịnh.',
-        activities: ['Check-in du thuyền', 'Ăn trưa Fine Dining', 'Chèo kayak hang Sáng Tối', 'Sunset Party']
-      },
-      {
-        day: 2,
-        title: 'Làng Chài Cổ Việt Hải - Bãi Biển Ba Trái Đào',
-        description: 'Đạp xe xuyên rừng nguyên sinh đến làng cổ Việt Hải và tắm biển bãi Ba Trái Đào.',
-        activities: ['Thái Cực Quyền sáng sớm', 'Đạp xe làng Việt Hải', 'Tắm biển bãi cát tự nhiên']
-      },
-      {
-        day: 3,
-        title: 'Đón Bình Minh Trên Vịnh - Cập Bến',
-        description: 'Tận hưởng bữa sáng trên boong tàu trong ánh bình minh kỳ ảo trước khi cập bến.',
-        activities: ['Ngắm bình minh tầng thượng', 'Brunch cao cấp', 'Cập cảng tiễn đoàn']
-      }
-    ]
-  },
-  {
-    id: 'tour-4',
-    slug: 'nghi-duong-thao-moc-rung-thong-da-lat',
-    title: 'Nghỉ Dưỡng Thảo Mộc Rừng Thông Đà Lạt',
-    subtitle: 'Thanh lọc cơ thể và tìm lại sự cân bằng giữa rừng thông nguyên sinh bên hồ Tuyền Lâm.',
-    category: 'Wellness',
-    categories: ['chua-lanh', 'thien-nhien', 'nam', 'moi', 'sap-khoi-hanh', 'Wellness', 'Nature'],
+    id: 18,
+    slug: 'lam-chu-stress-da-lat-5n4d-retreat',
+    title: '"Làm CHỦ Stress"',
+    subtitle: 'Vì sao mình luôn cảm thấy Áp lực? Tham gia NGAY Tour Retreat Sức Khỏe Toàn Diện',
+    category: 'chua-lanh',
     country: 'Việt Nam',
     city: 'Đà Lạt',
-    region: 'nam',
-    duration: '3 Ngày 2 Đêm',
-    durationDays: 3,
-    departureDates: ['12/09/2026', '26/09/2026', '15/10/2026'],
-    airline: 'Vietnam Airlines',
-    hotel: 'Bình An Village Resort / Ana Mandara Villas',
-    transportation: 'Xe riêng cao cấp suốt tuyến',
-    price: 16900000,
-    originalPrice: 21000000,
-    childPrice: 8000000,
-    infantPrice: 0,
-    rating: 4.8,
-    reviewsCount: 19,
+    duration: '5 ngày 4 đêm',
+    durationDays: 5,
+    airline: 'Không áp dụng',
+    hotel: 'Nhà Sức Khỏe Sivananda Yoga',
+    transportation: 'Không áp dụng',
+    price: 10881000,
+    originalPrice: 11970000,
+    childPrice: 10881000,
+    infantPrice: 5441000,
+    cost: 7117438,
+    marginPercent: 40.5,
+    promotionPercent: 9.1,
+    group3Percent: 0,
+    group5Percent: 0,
+    childDiscountPercent: 0,
+    infantDiscountPercent: 50,
+    vatPercent: 8,
+    adultNote: 'Áp dụng từ 12 tuổi trở lên, tiêu chuẩn phòng 2 khách',
+    childNote: 'Từ 6 đến dưới 12 tuổi',
+    infantNote: 'Dưới 6 tuổi',
+    bookingPolicyNotes: '-',
+    rating: 5,
+    reviewsCount: 0,
     isHot: false,
-    isNew: true,
-    isFeatured: true,
+    isFeatured: false,
     isExclusive: false,
+    isCustomer: false,
     isAdminApproved: true,
+    seriesType: null,
+    heroImage: '/uploads/4URe___DLI___Hero.jpg',
+    destinationMap: 'https://maps.app.goo.gl/AU1A5qju3FDKy5BT8',
+    landingSectionTemplateId: 'lam-chu-stress-da-lat-5n4d-retreat',
     highlights: [
-      'Biệt thự Pháp cổ ẩn mình giữa rừng thông xanh ngắt',
-      'Liệu trình xông hơi tinh dầu thông & massage đá ấm',
-      'Thưởng thức ẩm thực nông trại hữu cơ Farm-to-Table'
+      'Nhằm giúp mỗi Bản thân có thể tự mình chăm sóc và cải thiện Sức khỏe, Retreat này đã ra đời',
+      'Được tư vấn toàn diện về các Vấn đề Sức khỏe đang gặp, từ đó từng bước hình thành Lối sống Khỏe mạnh hơn, Hạnh phúc hơn',
+      'Là CƠ HỘI rất tốt để nhìn lại Bản thân, trở thành Phiên bản tốt hơn của chính Ta'
     ],
     included: [
-      'Vé máy bay khứ hồi Đà Lạt',
-      '2 đêm nghỉ tại biệt thự di sản Pháp',
-      'Toàn bộ bữa ăn organic bổ dưỡng',
-      'Gói trị liệu spa toàn thân 90 phút'
+      'Phòng nghỉ dưỡng yên bình tại Sivananda Yoga Resort',
+      'Luôn có sẵn Khăn lạnh, Nước khoáng đóng chai',
+      'Các Bữa ăn thanh đạm đầy đủ Dinh dưỡng',
+      'Workshop',
+      'Vé vào cổng tại các điểm Tham quan',
+      'Giảng viên thuộc Sivananda Yoga chia sẻ về các Chủ đề Sức khỏe',
+      'Bảo hiểm Du lịch cho Hành trình'
     ],
     excluded: [
-      'Chi phí giặt ủi và các dịch vụ cá nhân khác'
+      'Chi phí Cá nhân ngoài Chương trình',
+      '8% Thuế'
     ],
-    notes: [
-      'Đà Lạt buổi tối se lạnh, quý khách nên chuẩn bị áo khoác nhẹ'
+    notes: [],
+    travelTips: [],
+    categories: [
+      'chua-lanh',
+      'doc-quyen',
+      'hot',
+      'trung'
     ],
-    heroImage: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1600&auto=format&fit=crop',
-    gallery: [
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1600&auto=format&fit=crop'
+    departureDates: [
+      'Tue Nov 10 2026 19:00:00 GMT-0500 (Eastern Standard Time)'
     ],
     itinerary: [
       {
         day: 1,
-        title: 'Đón Sân Bay Liên Khương - Về Miền Thông Xanh',
-        description: 'Đón khách về resort, thưởng trà atiso nóng và ngắm hồ Tuyền Lâm.',
-        activities: ['Check-in villa di sản', 'Thưởng trà chiều bên hồ', 'Bữa tối ấm cúng bên lò sưởi']
+        dayNumber: 1,
+        title: 'Khởi hành đến Đà Lạt',
+        description: 'Cảm nhận Nét đẹp Thiên nhiên nơi Thành phố ngàn hoa',
+        image: '/uploads/4URe___DLI___Day_1.jpg',
+        activities: [
+          'Hít hà Bầu không khí trong lành của Đà Lạt qua Trải nghiệm Trekking, tham quan Khu Du lịch Nam Qua',
+          'Đến Nhà Sức Khỏe Sivananda Yoga, bắt đầu Trải nghiệm tìm về niềm Hạnh phúc và Bình an trong Tâm trí'
+        ],
+        transport: 'Xe 29 chỗ',
+        transportAndCulinary: [
+          'Xe 29 chỗ'
+        ],
+        attractions: [
+          'Khu Du lịch Nam Qua',
+          'Nhà Sức khỏe Sivananda Yoga'
+        ]
       },
       {
         day: 2,
-        title: 'Tắm Rừng Shinrin-yoku - Trị Liệu Thảo Mộc',
-        description: 'Đi bộ thở sâu giữa rừng thông cổ thụ, giải phóng căng thẳng với liệu trình thảo mộc.',
-        activities: ['Đi bộ tắm rừng thông', 'Liệu trình đá nóng & tinh dầu thông', 'Ăn tối nông trại hữu cơ']
+        dayNumber: 2,
+        title: 'Sinh hoạt tại Sivanada Yoga',
+        description: 'Những ngày Bình yên',
+        image: '/uploads/4URe___DLI___Day_2.jpg',
+        activities: [
+          'Đón Bình minh tràn đầy Năng lượng với trải nghiệm Thiền Tĩnh lặng, Yoga & Hít thở',
+          'Lan tỏa Giá trị Yêu thương & Cho đi qua Karma Yoga, Phục vụ vô vị lợi',
+          'Tham gia Workshop chia sẻ về "Làm CHỦ Stress"',
+          'Trải nghiệm mới về Yoga Âm thanh, cho Tâm trí được tinh khiết, phúc lạc và hài hòa'
+        ],
+        transport: 'Không có',
+        transportAndCulinary: [
+          'Không có'
+        ],
+        attractions: [
+          'Nhà Sức khỏe Sivananda Yoga'
+        ]
       },
       {
         day: 3,
-        title: 'Thu Hái Nông Trại - Tiễn Sân Bay',
-        description: 'Thăm vườn dâu tây và hoa thảo dược trước khi xe tiễn ra sân bay Liên Khương.',
-        activities: ['Thăm nông trại sạch', 'Mua quà mứt thảo mộc', 'Xe tiễn sân bay']
-      }
-    ]
-  },
-  {
-    id: 'tour-5',
-    slug: 'thien-tra-di-san-song-hoai-hoi-an',
-    title: 'Thiền Trà & Di Sản Sông Hoài Hội An',
-    subtitle: 'Trải nghiệm không gian hoài cổ, chèo thuyền ngắm hoàng hôn và tĩnh dưỡng bên sông Thu Bồn.',
-    category: 'Doc-Quyen',
-    categories: ['chua-lanh', 'thien-nguyen', 'trung', 'hot', 'khong-the-bo-lo', 'sap-khoi-hanh', 'Doc-Quyen'],
-    country: 'Việt Nam',
-    city: 'Hội An',
-    region: 'trung',
-    duration: '4 Ngày 3 Đêm',
-    durationDays: 4,
-    departureDates: ['16/09/2026', '30/09/2026', '14/10/2026'],
-    airline: 'Vietnam Airlines',
-    hotel: 'Four Seasons Resort The Nam Hai / Anantara Hoi An 5*',
-    transportation: 'Xe Limousine riêng & Thuyền gỗ riêng biệt',
-    price: 22000000,
-    originalPrice: 27500000,
-    childPrice: 11000000,
-    infantPrice: 0,
-    rating: 5.0,
-    reviewsCount: 31,
-    isHot: true,
-    isFeatured: true,
-    isExclusive: true,
-    isAdminApproved: true,
-    highlights: [
-      'Biệt thự ven sông cổ kính với hồ bơi riêng biệt',
-      'Buổi thưởng trà đạo sớm cùng nghệ nhân Hội An',
-      'Du thuyền gỗ ngắm hoàng hôn sông Hoài và thả đèn hoa đăng'
-    ],
-    included: [
-      'Vé máy bay khứ hồi Đà Nẵng',
-      '3 đêm nghỉ dưỡng tại resort 5 sao chuẩn quốc tế',
-      'Tất cả bữa ăn đặc sản di sản Hội An tinh tế',
-      'Thuyền riêng du ngoạn sông Hoài'
-    ],
-    excluded: [
-      'Chi tiêu cá nhân ngoài lịch trình'
-    ],
-    notes: [
-      'Trải nghiệm tuyệt vời nhất vào các ngày rằm hoặc đầu tháng'
-    ],
-    heroImage: 'https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=1600&auto=format&fit=crop',
-    gallery: [
-      'https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=1600&auto=format&fit=crop'
-    ],
-    itinerary: [
-      {
-        day: 1,
-        title: 'Đón Đà Nẵng - Về Với Phố Hội',
-        description: 'Đón tại sân bay Đà Nẵng về nhận phòng tại resort ven sông Thu Bồn.',
-        activities: ['Đón sân bay bằng Limousine', 'Check-in phòng hướng sông', 'Thưởng thức ẩm thực Cao Lầu']
-      },
-      {
-        day: 2,
-        title: 'Trà Sáng Di Sản - Dạo Bước Phố Cổ',
-        description: 'Thưởng trà thiền tại quán trà cổ và dạo phố cổ sáng sớm khi chưa đông đúc.',
-        activities: ['Thiền trà nghệ nhân', 'Tham quan nhà cổ & Chùa Cầu', 'Spa thảo dược truyền thống']
-      },
-      {
-        day: 3,
-        title: 'Làng Gốm Thanh Hà - Thuyền Hoàng Hôn',
-        description: 'Trải nghiệm nặn gốm mộc mạc và lên thuyền gỗ ngắm hoàng hôn buông trên sông.',
-        activities: ['Thăm làng gốm di sản', 'Thuyền ngắm hoàng hôn', 'Thả đèn hoa đăng cầu an']
+        dayNumber: 3,
+        title: 'Sinh hoạt tại Sivanada Yoga',
+        description: 'Những ngày Bình yên',
+        image: '/uploads/4URe___DLI___Day_3.jpg',
+        activities: [
+          'Đón Bình minh tràn đầy Năng lượng với trải nghiệm Thiền Tĩnh lặng, Yoga & Hít thở',
+          'Lan tỏa Giá trị Yêu thương & Cho đi qua Karma Yoga, Phục vụ vô vị lợi',
+          'Tham gia Workshop chia sẻ về "Làm CHỦ Stress"',
+          'Trải nghiệm mới về Yoga Âm thanh, cho Tâm trí được tinh khiết, phúc lạc và hài hòa'
+        ],
+        transport: 'Không có',
+        transportAndCulinary: [
+          'Không có'
+        ],
+        attractions: [
+          'Nhà Sức khỏe Sivananda Yoga'
+        ]
       },
       {
         day: 4,
-        title: 'Chợ Sớm Phố Cổ - Tiễn Đoàn',
-        description: 'Dạo chợ mua quà lưu niệm tinh xảo trước khi xe đưa ra sân bay Đà Nẵng.',
-        activities: ['Dạo chợ mua lụa Hội An', 'Bữa trưa chia tay', 'Xe tiễn sân bay']
+        dayNumber: 4,
+        title: 'Sinh hoạt tại Sivanada Yoga',
+        description: 'Những ngày Bình yên',
+        image: '/uploads/1789484423352_4URe___DLI___Day_4.jpg',
+        activities: [
+          'Đón Bình minh tràn đầy Năng lượng với trải nghiệm Thiền Tĩnh lặng, Yoga & Hít thở',
+          'Lan tỏa Giá trị Yêu thương & Cho đi qua Karma Yoga, Phục vụ vô vị lợi',
+          'Tham gia Workshop chia sẻ về "Làm CHỦ Stress"',
+          'Trải nghiệm mới về Yoga Âm thanh, cho Tâm trí được tinh khiết, phúc lạc và hài hòa'
+        ],
+        transport: 'Không có',
+        transportAndCulinary: [
+          'Không có'
+        ],
+        attractions: [
+          'Nhà Sức khỏe Sivananda Yoga'
+        ]
+      },
+      {
+        day: 5,
+        dayNumber: 5,
+        title: 'Trở về',
+        description: 'Trở về "Sống Không Bệnh"',
+        image: '/uploads/4URe___DLI___Day_5.jpg',
+        activities: [
+          'Đón ngày mới Bình an với trải nghiệm Thiền hành',
+          'Sạc lại Năng lượng với Yoga & Hít thở'
+        ],
+        transport: 'Không có',
+        transportAndCulinary: [
+          'Không có'
+        ],
+        attractions: [
+          'Nhà Sức khỏe Sivananda Yoga'
+        ]
       }
-    ]
-  },
-  {
-    id: 'tour-6',
-    slug: 'an-cu-biet-lap-vinh-vinh-hy',
-    title: 'Ẩn Cư Biệt Lập Vịnh Vĩnh Hy',
-    subtitle: 'Tuyệt tác nghỉ dưỡng giữa vườn quốc gia Núi Chúa và bờ vịnh san hô ngọc bích.',
-    category: 'Luxury',
-    categories: ['thien-nhien', 'bao-ton', 'trung', 'last-minute', 'hot', 'Doc-Quyen', 'Luxury', 'uu-dai-gio-chot'],
-    country: 'Việt Nam',
-    city: 'Vịnh Vĩnh Hy',
-    region: 'trung',
-    duration: '4 Ngày 3 Đêm',
-    durationDays: 4,
-    departureDates: ['20/09/2026', '10/10/2026', '28/10/2026'],
-    airline: 'Vietnam Airlines (Business Class)',
-    hotel: 'Amanoi Resort 6* / Vĩnh Hy Sanctuary Pavilion',
-    transportation: 'Xe Limousine riêng đưa đón từ sân bay Cam Ranh',
-    price: 38000000,
-    originalPrice: 48000000,
-    childPrice: 19000000,
-    infantPrice: 0,
-    rating: 5.0,
-    reviewsCount: 16,
-    isHot: true,
-    isFeatured: true,
-    isExclusive: true,
-    isPromotion: true,
-    isAdminApproved: true,
-    highlights: [
-      'Ocean Pool Pavilion với tầm nhìn 180 độ ôm trọn vịnh biển',
-      'Liệu trình thủy liệu pháp Hydrotherapy độc quyền',
-      'Du thuyền riêng khám phá rạn san hô hoang sơ'
     ],
-    included: [
-      'Vé máy bay khứ hồi hạng thương gia',
-      '3 đêm nghỉ dưỡng tại Ocean Pavilion đẳng cấp nhất châu Á',
-      'Toàn bộ bữa ăn 5 sao thiết kế riêng theo khẩu vị',
-      'Xe riêng đưa đón sân bay Cam Ranh'
-    ],
-    excluded: [
-      'Các loại rượu vang vintage quý hiếm ngoài gói'
-    ],
-    notes: [
-      'Suất ưu đãi giờ chót tiết kiệm 10 triệu đồng dành cho 2 khách đầu tiên'
-    ],
-    heroImage: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&auto=format&fit=crop',
     gallery: [
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&auto=format&fit=crop'
+      '/uploads/4URe___DLI___Highlight_1.jpg',
+      '/uploads/4URe___DLI___Highlight_3.jpg'
     ],
-    itinerary: [
+    faq: [],
+    reviews: [],
+    tourDepartureDates: [
       {
-        day: 1,
-        title: 'Đón Cam Ranh - Cung Đường Biển Vĩnh Hy',
-        description: 'Xe Limousine đón quý khách qua cung đường ven biển đẹp nhất Việt Nam.',
-        activities: ['Đón sân bay', 'Check-in Pavilion hướng biển', 'Tiệc cocktail hoàng hôn trên vách đá']
-      },
-      {
-        day: 2,
-        title: 'Yoga Vách Đá - Liệu Pháp Thủy Trị Liệu',
-        description: 'Tập yoga đón bình minh trên đài sen trên hồ và trải nghiệm Hydrotherapy.',
-        activities: ['Yoga bình minh', 'Liệu trình Hydrotherapy 120 phút', 'Ăn tối hải sản tươi sống']
-      },
-      {
-        day: 3,
-        title: 'Trekking Vườn Quốc Gia Núi Chúa - Lặn San Hô',
-        description: 'Khám phá thảm thực vật bán khô hạn độc đáo và lặn ngắm san hô bằng du thuyền.',
-        activities: ['Trekking nhẹ nhàng', 'Du thuyền riêng vịnh Vĩnh Hy', 'Tiệc BBQ bãi biển riêng']
-      },
-      {
-        day: 4,
-        title: 'Thưởng Trà Sáng - Tiễn Sân Bay Cam Ranh',
-        description: 'Tận hưởng khoảnh khắc bình yên cuối cùng trước khi xe tiễn ra sân bay.',
-        activities: ['Bữa sáng ngắm vịnh', 'Tĩnh tâm', 'Xe tiễn sân bay']
+        id: 47,
+        tourId: 18,
+        departureDate: 'Tue Nov 10 2026 19:00:00 GMT-0500 (Eastern Standard Time)',
+        availableSeats: 0,
+        status: 'available',
+        priceOverride: null,
+        orderIndex: 0
       }
-    ]
-  },
-  {
-    id: 'tour-7',
-    slug: 'tri-lieu-khoang-nong-co-do-hue',
-    title: 'Trị Liệu Khoáng Nóng Suối Nguồn Cố Đô',
-    subtitle: 'Nghỉ dưỡng Onsen khoáng nóng tự nhiên kết hợp tinh hoa dưỡng sinh cung đình Huế.',
-    category: 'Wellness',
-    categories: ['chua-lanh', 'trung', 'moi', 'last-minute', 'uu-dai-gio-chot', 'Wellness', 'khong-the-bo-lo', 'Heritage'],
-    country: 'Việt Nam',
-    city: 'Cố Đô Huế',
-    region: 'trung',
-    duration: '3 Ngày 2 Đêm',
-    durationDays: 3,
-    departureDates: ['14/09/2026', '28/09/2026', '12/10/2026'],
-    airline: 'Vietnam Airlines',
-    hotel: 'Kawakin Onsen Resort & Spa 5*',
-    transportation: 'Xe riêng cao cấp suốt hành trình',
-    price: 15500000,
-    originalPrice: 19000000,
-    childPrice: 7000000,
-    infantPrice: 0,
-    rating: 4.9,
-    reviewsCount: 22,
-    isHot: false,
-    isNew: true,
-    isPromotion: true,
-    isFeatured: true,
-    isExclusive: false,
-    isAdminApproved: true,
-    highlights: [
-      'Tắm khoáng nóng Onsen Nhật Bản giữa núi rừng Cố Đô',
-      'Liệu trình châm cứu bấm huyệt ngự y hoàng gia',
-      'Thưởng thức yến tiệc cung đình Huế thanh tao'
     ],
-    included: [
-      'Vé máy bay khứ hồi Huế',
-      '2 đêm phòng Onsen Villa cao cấp',
-      'Toàn bộ dịch vụ tắm khoáng không giới hạn',
-      'Gói trị liệu dưỡng sinh ngự y 90 phút'
-    ],
-    excluded: [
-      'Chi tiêu cá nhân ngoài chương trình'
-    ],
-    notes: [
-      'Phù hợp tái tạo năng lượng cho người bận rộn và người lớn tuổi'
-    ],
-    heroImage: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1600&auto=format&fit=crop',
-    gallery: [
-      'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1600&auto=format&fit=crop'
-    ],
-    itinerary: [
+    tourItineraries: [
       {
-        day: 1,
-        title: 'Đón Phú Bài - Check-in Onsen Sanctuary',
-        description: 'Xe đón về khu nghỉ dưỡng suối khoáng nóng, ngâm mình thư giãn.',
-        activities: ['Đón sân bay', 'Thưởng trà thảo dược Cố Đô', 'Ngâm khoáng nóng Onsen']
+        id: 99,
+        tourId: 18,
+        dayNumber: 1,
+        title: 'Khởi hành đến Đà Lạt',
+        description: 'Cảm nhận Nét đẹp Thiên nhiên nơi Thành phố ngàn hoa',
+        image: '/uploads/4URe___DLI___Day_1.jpg',
+        activities: '["Hít hà Bầu không khí trong lành của Đà Lạt qua Trải nghiệm Trekking, tham quan Khu Du lịch Nam Qua","Đến Nhà Sức Khỏe Sivananda Yoga, bắt đầu Trải nghiệm tìm về niềm Hạnh phúc và Bình an trong Tâm trí"]',
+        transport: 'Xe 29 chỗ',
+        attractions: 'Khu Du lịch Nam Qua,Nhà Sức khỏe Sivananda Yoga',
+        orderIndex: 0
       },
       {
-        day: 2,
-        title: 'Dưỡng Sinh Ngự Y - Thưởng Ngoạn Lăng Tự',
-        description: 'Liệu trình bấm huyệt ngự y buổi sáng và viếng thăm lăng Tự Đức u tịch.',
-        activities: ['Liệu trình bấm huyệt ngự y', 'Viếng thăm lăng Tự Đức', 'Yến tiệc cung đình']
+        id: 100,
+        tourId: 18,
+        dayNumber: 2,
+        title: 'Sinh hoạt tại Sivanada Yoga',
+        description: 'Những ngày Bình yên',
+        image: '/uploads/4URe___DLI___Day_2.jpg',
+        activities: '["Đón Bình minh tràn đầy Năng lượng với trải nghiệm Thiền Tĩnh lặng, Yoga & Hít thở","Lan tỏa Giá trị Yêu thương & Cho đi qua Karma Yoga, Phục vụ vô vị lợi","Tham gia Workshop chia sẻ về \\"Làm CHỦ Stress\\"","Trải nghiệm mới về Yoga Âm thanh, cho Tâm trí được tinh khiết, phúc lạc và hài hòa"]',
+        transport: 'Không có',
+        attractions: 'Nhà Sức khỏe Sivananda Yoga',
+        orderIndex: 1
       },
       {
-        day: 3,
-        title: 'Thưởng Trà Sen Hồ Tịnh Tâm - Tiễn Sân Bay',
-        description: 'Tận hưởng trà sen sớm và mua quà mè xửng, tinh dầu tràm trước khi bay.',
-        activities: ['Trà sen sáng', 'Mua quà đặc sản Huế', 'Xe tiễn sân bay']
+        id: 101,
+        tourId: 18,
+        dayNumber: 3,
+        title: 'Sinh hoạt tại Sivanada Yoga',
+        description: 'Những ngày Bình yên',
+        image: '/uploads/4URe___DLI___Day_3.jpg',
+        activities: '["Đón Bình minh tràn đầy Năng lượng với trải nghiệm Thiền Tĩnh lặng, Yoga & Hít thở","Lan tỏa Giá trị Yêu thương & Cho đi qua Karma Yoga, Phục vụ vô vị lợi","Tham gia Workshop chia sẻ về \\"Làm CHỦ Stress\\"","Trải nghiệm mới về Yoga Âm thanh, cho Tâm trí được tinh khiết, phúc lạc và hài hòa"]',
+        transport: 'Không có',
+        attractions: 'Nhà Sức khỏe Sivananda Yoga',
+        orderIndex: 2
+      },
+      {
+        id: 102,
+        tourId: 18,
+        dayNumber: 4,
+        title: 'Sinh hoạt tại Sivanada Yoga',
+        description: 'Những ngày Bình yên',
+        image: '/uploads/1789484423352_4URe___DLI___Day_4.jpg',
+        activities: '["Đón Bình minh tràn đầy Năng lượng với trải nghiệm Thiền Tĩnh lặng, Yoga & Hít thở","Lan tỏa Giá trị Yêu thương & Cho đi qua Karma Yoga, Phục vụ vô vị lợi","Tham gia Workshop chia sẻ về \\"Làm CHỦ Stress\\"","Trải nghiệm mới về Yoga Âm thanh, cho Tâm trí được tinh khiết, phúc lạc và hài hòa"]',
+        transport: 'Không có',
+        attractions: 'Nhà Sức khỏe Sivananda Yoga',
+        orderIndex: 3
+      },
+      {
+        id: 103,
+        tourId: 18,
+        dayNumber: 5,
+        title: 'Trở về',
+        description: 'Trở về "Sống Không Bệnh"',
+        image: '/uploads/4URe___DLI___Day_5.jpg',
+        activities: '["Đón ngày mới Bình an với trải nghiệm Thiền hành","Sạc lại Năng lượng với Yoga & Hít thở"]',
+        transport: 'Không có',
+        attractions: 'Nhà Sức khỏe Sivananda Yoga',
+        orderIndex: 4
       }
-    ]
-  },
-  {
-    id: 'tour-8',
-    slug: 'thien-nhien-nguyen-ban-bien-con-dao',
-    title: 'Thiên Nhiên Nguyên Bản & Spa Bên Biển Côn Đảo',
-    subtitle: 'Nghỉ dưỡng Six Senses 5 sao tách biệt, nơi rùa biển đẻ trứng và thiên nhiên kỳ thú.',
-    category: 'Doc-Quyen',
-    categories: ['bao-ton', 'thien-nhien', 'thien-nguyen', 'nam', 'last-minute', 'uu-dai-gio-chot', 'Doc-Quyen', 'sap-khoi-hanh'],
-    country: 'Việt Nam',
-    city: 'Côn Đảo',
-    region: 'nam',
-    duration: '4 Ngày 3 Đêm',
-    durationDays: 4,
-    departureDates: ['25/09/2026', '15/10/2026', '02/11/2026'],
-    airline: 'Bamboo Airways / Vietnam Airlines',
-    hotel: 'Six Senses Côn Đảo 5* Ocean View Villa',
-    transportation: 'Xe riêng đưa đón tại sân bay Cỏ Ống',
-    price: 32500000,
-    originalPrice: 42000000,
-    childPrice: 16000000,
-    infantPrice: 0,
-    rating: 5.0,
-    reviewsCount: 28,
-    isHot: true,
-    isFeatured: true,
-    isExclusive: true,
-    isPromotion: true,
-    isAdminApproved: true,
-    highlights: [
-      'Biệt thự gỗ mộc mạc hướng biển có hồ bơi vô cực riêng',
-      'Trải nghiệm thả rùa con về đại dương lúc rạng đông',
-      'Liệu trình spa thảo mộc hữu cơ Six Senses'
     ],
-    included: [
-      'Vé máy bay khứ hồi Côn Đảo',
-      '3 đêm nghỉ dưỡng tại Ocean View Villa',
-      'Bữa sáng buffet thượng hạng mỗi ngày',
-      'Dịch vụ quản gia riêng biệt (GEM)'
-    ],
-    excluded: [
-      'Chi phí tour tâm linh ban đêm ngoài chương trình'
-    ],
-    notes: [
-      'Ưu đãi giờ chót giảm trực tiếp 9.5 triệu đồng khi đặt trong tuần'
-    ],
-    heroImage: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&auto=format&fit=crop',
-    gallery: [
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&auto=format&fit=crop'
-    ],
-    itinerary: [
+    tourCategoryMappings: [
       {
-        day: 1,
-        title: 'Đón Cỏ Ống - Thiên Đường Biển Vắng',
-        description: 'Xe đón về Six Senses Côn Đảo, nhận villa bên bãi biển Đất Dốc cát trắng mịn.',
-        activities: ['Đón sân bay', 'Welcome drink dừa tươi', 'Ăn tối hải sản nướng bên bờ biển']
+        id: 201,
+        tourId: 18,
+        categorySlug: 'chua-lanh'
       },
       {
-        day: 2,
-        title: 'Thả Rùa Con Về Biển - Spa Hữu Cơ',
-        description: 'Thức dậy cùng bình minh tham gia hoạt động thả rùa và thư giãn tại spa.',
-        activities: ['Thả rùa con về biển', 'Liệu trình massage Six Senses 90 phút', 'Xem phim ngoài trời']
+        id: 202,
+        tourId: 18,
+        categorySlug: 'doc-quyen'
       },
       {
-        day: 3,
-        title: 'Khám Phá Di Tích Lịch Sử - Thuyền Vịnh Côn Sơn',
-        description: 'Viếng nghĩa trang Hàng Dương và đi cano khám phá vịnh Côn Sơn ngắm san hô.',
-        activities: ['Viếng nghĩa trang Hàng Dương', 'Cano ngắm san hô', 'Tiệc tối riêng tư']
+        id: 203,
+        tourId: 18,
+        categorySlug: 'hot'
       },
       {
-        day: 4,
-        title: 'Chào Buổi Sáng Côn Đảo - Tiễn Sân Bay',
-        description: 'Tận hưởng khoảnh khắc thư thái bên hồ bơi trước khi xe tiễn ra sân bay Cỏ Ống.',
-        activities: ['Bữa sáng thịnh soạn', 'Mua hạt bàng đặc sản', 'Tiễn sân bay']
+        id: 204,
+        tourId: 18,
+        categorySlug: 'trung'
       }
-    ]
-  },
-  {
-    id: 'tour-9',
-    slug: 'huong-sac-may-ngan-tinh-tam-sa-pa',
-    title: 'Hương Sắc Mây Ngàn & Tĩnh Tâm Sa Pa',
-    subtitle: 'Nghỉ dưỡng biệt lập trên đỉnh đồi nhìn ra thung lũng Mường Hoa và dãy Hoàng Liên Sơn.',
-    category: 'Nature',
-    categories: ['thien-nhien', 'thien-nguyen', 'bac', 'moi', 'sap-khoi-hanh', 'Nature', 'Wellness'],
-    country: 'Việt Nam',
-    city: 'Sa Pa',
-    region: 'bac',
-    duration: '3 Ngày 2 Đêm',
-    durationDays: 3,
-    departureDates: ['17/09/2026', '01/10/2026', '16/10/2026'],
-    airline: 'Xe Limousine Dcar cao cấp từ Hà Nội',
-    hotel: 'Topas Ecolodge / Hotel de la Coupole 5*',
-    transportation: 'Xe riêng cao cấp đón tận nơi',
-    price: 18200000,
-    originalPrice: 23000000,
-    childPrice: 8500000,
-    infantPrice: 0,
-    rating: 4.9,
-    reviewsCount: 35,
-    isHot: false,
-    isNew: true,
-    isFeatured: true,
-    isExclusive: true,
-    isAdminApproved: true,
-    highlights: [
-      'Bungalow đá tự nhiên view biển mây bồng bềnh 360 độ',
-      'Hồ bơi vô cực nước ấm nhìn thẳng ra ruộng bậc thang Mường Hoa',
-      'Tắm lá thuốc người Dao đỏ gia truyền trên đỉnh núi'
     ],
-    included: [
-      'Xe Limousine đưa đón khứ hồi Hà Nội - Sa Pa',
-      '2 đêm nghỉ dưỡng tại Topas Ecolodge',
-      'Toàn bộ bữa ăn Tây Bắc tinh chế',
-      'Gói tắm lá thuốc Dao đỏ và spa chân thảo mộc'
-    ],
-    excluded: [
-      'Vé cáp treo Fansipan (nếu có nhu cầu)'
-    ],
-    notes: [
-      'Thời điểm lý tưởng nhất ngắm mùa lúa chín vàng óng ả'
-    ],
-    heroImage: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1600&auto=format&fit=crop',
-    gallery: [
-      'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1600&auto=format&fit=crop'
-    ],
-    itinerary: [
+    tourImages: [
       {
-        day: 1,
-        title: 'Hà Nội - Đỉnh Đồi Topas Sa Pa',
-        description: 'Xe Limousine đưa quý khách vượt cao tốc lên Sa Pa, nhận phòng đồi view mây.',
-        activities: ['Đón tại Hà Nội', 'Check-in đồi Topas', 'Bữa tối ẩm thực Tây Bắc cao cấp']
+        id: 86,
+        tourId: 18,
+        imageUrl: '/uploads/4URe___DLI___Highlight_1.jpg',
+        caption: '',
+        orderIndex: 0
       },
       {
-        day: 2,
-        title: 'Săn Mây Bình Minh - Tắm Lá Thuốc Dao Đỏ',
-        description: 'Thức dậy trong biển mây, bơi hồ bơi vô cực và ngâm bồn lá thuốc người Dao.',
-        activities: ['Bơi hồ nước ấm ngắm mây', 'Ngâm bồn lá thuốc Dao đỏ', 'Dạo bản làng Nậm Cang']
-      },
-      {
-        day: 3,
-        title: 'Thung Lũng Mường Hoa - Về Lại Hà Nội',
-        description: 'Dạo bước qua thung lũng ruộng bậc thang trước khi lên xe về lại thủ đô.',
-        activities: ['Check-in thung lũng Mường Hoa', 'Mua quà thổ cẩm', 'Xe đưa về Hà Nội']
+        id: 87,
+        tourId: 18,
+        imageUrl: '/uploads/4URe___DLI___Highlight_3.jpg',
+        caption: '',
+        orderIndex: 1
       }
-    ]
-  },
-  {
-    id: 'tour-10',
-    slug: 'tinh-duong-mien-xanh-pu-luong',
-    title: 'Tĩnh Dưỡng Miền Xanh Thung Lũng Pù Luông',
-    subtitle: 'Hành trình chữa lành giữa núi rừng Tây Bắc, ruộng bậc thang tầng tầng lớp lớp và suối trong.',
-    category: 'Nature',
-    categories: ['thien-nhien', 'chua-lanh', 'thien-nguyen', 'bac', 'hot', 'last-minute', 'khong-the-bo-lo', 'uu-dai-gio-chot', 'Nature'],
-    country: 'Việt Nam',
-    city: 'Pù Luông',
-    region: 'bac',
-    duration: '3 Ngày 2 Đêm',
-    durationDays: 3,
-    departureDates: ['19/09/2026', '03/10/2026', '24/10/2026'],
-    airline: 'Xe Limousine đưa đón từ Hà Nội',
-    hotel: 'Pù Luông Retreat / Bocbandi Eco Resort 4*',
-    transportation: 'Xe Limousine cao cấp suốt tuyến',
-    price: 11500000,
-    originalPrice: 15000000,
-    childPrice: 5500000,
-    infantPrice: 0,
-    rating: 4.8,
-    reviewsCount: 20,
-    isHot: true,
-    isFeatured: true,
-    isExclusive: false,
-    isPromotion: true,
-    isAdminApproved: true,
-    highlights: [
-      'Khu nghỉ dưỡng sinh thái nhìn thẳng ra thung lũng Pù Luông hùng vĩ',
-      'Chèo bè tre trên dòng suối Chàm êm đềm',
-      'Thưởng thức vịt Cổ Lũng và mâm cỗ cơm lam người Thái'
     ],
-    included: [
-      'Xe Limousine khứ hồi Hà Nội - Pù Luông',
-      '2 đêm nghỉ dưỡng tại Pù Luông Retreat',
-      'Toàn bộ các bữa ăn đặc sản vùng cao',
-      'Chèo bè tre suối Chàm và vé tham quan'
-    ],
-    excluded: [
-      'Chi tiêu cá nhân ngoài chương trình'
-    ],
-    notes: [
-      'Không gian nguyên sơ thanh bình, rất thích hợp phục hồi năng lượng'
-    ],
-    heroImage: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600&auto=format&fit=crop',
-    gallery: [
-      'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600&auto=format&fit=crop'
-    ],
-    itinerary: [
-      {
-        day: 1,
-        title: 'Hà Nội - Về Miền Thung Lũng Xanh',
-        description: 'Xe đón tại Hà Nội qua cung đường đèo Thung Khe tuyệt đẹp đến Pù Luông.',
-        activities: ['Đón tại Hà Nội', 'Check-in bungalow nhìn thung lũng', 'Thưởng thức mâm cỗ người Thái']
-      },
-      {
-        day: 2,
-        title: 'Chèo Bè Tre Suối Chàm - Bản Đôn',
-        description: 'Trải nghiệm chèo bè tre ngắm cọn nước khổng lồ và dạo bước qua bản Đôn.',
-        activities: ['Chèo bè tre suối Chàm', 'Ngắm cọn nước truyền thống', 'Thư giãn hồ bơi vô cực']
-      },
-      {
-        day: 3,
-        title: 'Bình Minh Ruộng Bậc Thang - Về Hà Nội',
-        description: 'Ngắm sương sớm lãng đãng trên ruộng bậc thang trước khi xe đưa về Hà Nội.',
-        activities: ['Ngắm bình minh thung lũng', 'Mua quà nếp nương', 'Xe đưa về Hà Nội']
-      }
-    ]
+    group3Price: 11970000,
+    group5Price: 11970000,
+    listPrice: 11970000
   }
 ];
 
@@ -903,7 +1583,7 @@ export const MOCK_MENU_CATEGORIES = [
 // 4. LOCAL STORAGE MOCK DATA PERSISTENCE HELPERS
 // --------------------------------------------------------------------------
 const STORAGE_KEYS = {
-  TOURS: 'mock_4u_tours',
+  TOURS: 'mock_4u_tours_v3',
   BOOKINGS: 'mock_4u_bookings',
   CONSULTATIONS: 'mock_4u_consultations',
   PRODUCTS: 'mock_4u_products',
@@ -1001,15 +1681,15 @@ export function getMockBookings() {
   return getStoredOrInitial<any[]>(STORAGE_KEYS.BOOKINGS, [
     {
       id: 'book-1',
-      tourTitle: 'Hành Trình Tĩnh Dưỡng Zannier Bãi San Hô',
-      tourSlug: 'zannier-bai-san-ho-phu-yen-retreat',
+      tourTitle: 'Khoảng Dừng',
+      tourSlug: 'khoang-dung-chau-doc-3n2d-retreat',
       customerName: 'Trần Thị Mai',
       phone: '0988776655',
       email: 'mai.tran@example.com',
       numberOfAdults: 2,
       numberOfChildren: 0,
-      totalPrice: 57000000,
-      departureDate: '15/09/2026',
+      totalPrice: 13980000,
+      departureDate: '23/10/2026',
       status: 'confirmed',
       createdAt: new Date().toISOString()
     }
