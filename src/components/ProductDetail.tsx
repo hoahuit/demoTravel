@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Clock, Star, Compass, ChevronDown, CheckCircle, MapPin, ArrowRight, Navigation, ShieldCheck, Tag, Info, UserCheck, Heart, Sparkles } from 'lucide-react';
 import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
+import { MOCK_TOURS } from '../data/mockData';
 import { fetchToursApi, getImageUrl } from '../services/apiService';
 import { buildPricingInputFromTour, calculateAllPrices } from '../lib/pricingCalculator';
 import ScrollExpandMedia from './ui/scroll-expansion-hero';
@@ -62,7 +63,7 @@ const getMapEmbedUrl = (destinationMap?: string, city?: string, country?: string
 };
 
 export default function ProductDetail({ productSlug = 'retreat-chua-lanh', customTourData, hideTestimonials = false, onBackHome, onOpenBooking }: ProductDetailProps) {
-  const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
+  const [tours, setTours] = useState<TourPackage[]>(() => (TOURS_DATA.length > 0 ? TOURS_DATA : MOCK_TOURS));
   const [isLoading, setIsLoading] = useState<boolean>(!customTourData);
 
   useEffect(() => {
@@ -86,11 +87,6 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
     };
   }, []);
 
-  const [activeTab, setActiveTab] = useState<string>('Highlight');
-  const [selectedDate, setSelectedDate] = useState<string>('');
-  const [guests, setGuests] = useState<string>('1 Khách');
-  const [selectedDayIndex, setSelectedDayIndex] = useState<number>(0);
-
   const normalizeSlug = (slug: string) => {
     return slug
       .trim()
@@ -105,8 +101,10 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
     tours.find(t => t.slug === normalizedSlug || t.id === normalizedSlug) ||
     tours.find(t => (t.slug && normalizedSlug && (t.slug.includes(normalizedSlug) || normalizedSlug.includes(t.slug))));
 
+  const product = customTourData || tourFound || null;
+
   // If data is still loading from API and we don't have customTourData or cached tour, show loading spinner
-  if (isLoading && !customTourData && !tourFound) {
+  if (isLoading && !product) {
     return (
       <div style={{
         minHeight: '80vh',
@@ -144,7 +142,6 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
     );
   }
 
-  const product = customTourData || tourFound || null;
   if (!product) {
     return (
       <div style={{ minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#dce7df', padding: '60px 20px', textAlign: 'center' }}>
@@ -177,6 +174,40 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
       </div>
     );
   }
+
+  return (
+    <ProductDetailView
+      product={product}
+      productSlug={productSlug}
+      normalizedSlug={normalizedSlug}
+      hideTestimonials={hideTestimonials}
+      onBackHome={onBackHome}
+      onOpenBooking={onOpenBooking}
+    />
+  );
+}
+
+interface ProductDetailViewProps {
+  product: TourPackage;
+  productSlug: string;
+  normalizedSlug: string;
+  hideTestimonials?: boolean;
+  onBackHome?: () => void;
+  onOpenBooking?: (tourData?: any) => void;
+}
+
+function ProductDetailView({
+  product,
+  productSlug,
+  normalizedSlug,
+  hideTestimonials,
+  onBackHome,
+  onOpenBooking
+}: ProductDetailViewProps) {
+  const [activeTab, setActiveTab] = useState<string>('Highlight');
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [guests, setGuests] = useState<string>('1 Khách');
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number>(0);
 
   const parsedInclusions = parseArrayField(product.included).filter(s => !s.includes('Ngăn cách dấu phẩy'));
   const primaryCategory = (product.categories && product.categories[0]) || product.category || 'Retreat';
@@ -218,21 +249,9 @@ export default function ProductDetail({ productSlug = 'retreat-chua-lanh', custo
       title: item.title,
       image: getImageUrl(item.image),
       description: item.description,
-      activities: Array.isArray(item.activities)
-        ? item.activities
-        : (typeof item.activities === 'string' && item.activities.trim()
-          ? (item.activities.startsWith('[') ? JSON.parse(item.activities) : item.activities.split(';').map((s: string) => s.trim()).filter(Boolean))
-          : []),
-      transportAndCulinary: Array.isArray(item.transportAndCulinary)
-        ? item.transportAndCulinary
-        : (typeof item.transportAndCulinary === 'string' && item.transportAndCulinary.trim()
-          ? item.transportAndCulinary.split(',').map((s: string) => s.trim()).filter(Boolean)
-          : (typeof item.transport === 'string' && item.transport.trim() ? item.transport.split(',').map((s: string) => s.trim()).filter(Boolean) : [])),
-      attractions: Array.isArray(item.attractions)
-        ? item.attractions
-        : (typeof item.attractions === 'string' && item.attractions.trim()
-          ? item.attractions.split(',').map((s: string) => s.trim()).filter(Boolean)
-          : [])
+      activities: parseArrayField(item.activities),
+      transportAndCulinary: parseArrayField(item.transportAndCulinary || item.transport),
+      attractions: parseArrayField(item.attractions)
     })),
     inclusions: parsedInclusions.length > 0
       ? parsedInclusions

@@ -34,6 +34,25 @@ const findTourBySlug = (slug: string) => {
   return TOURS_DATA.find((tour) => tour.slug === slug) || null;
 };
 
+const normalizeItineraryActivities = (activities?: string[] | string): string[] => {
+  if (!activities) return [];
+  if (Array.isArray(activities)) return activities;
+  if (typeof activities === 'string') {
+    const trimmed = activities.trim();
+    if (!trimmed) return [];
+    if (trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) return parsed;
+      } catch {
+        // ignore
+      }
+    }
+    return trimmed.split(';').map((s) => s.trim()).filter(Boolean);
+  }
+  return [];
+};
+
 const buildDraft = (tour: TourPackage | null): TourPackage | null => {
   if (!tour) return null;
 
@@ -88,7 +107,7 @@ const buildDraft = (tour: TourPackage | null): TourPackage | null => {
     itinerary: tour.itinerary
       ? tour.itinerary.map((day) => ({
         ...day,
-        activities: day.activities ? [...day.activities] : [],
+        activities: normalizeItineraryActivities(day.activities),
       }))
       : [],
     departureDates: tour.departureDates ? [...tour.departureDates] : [],
@@ -2558,15 +2577,15 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                     <div style={{ backgroundColor: '#f8fafc', padding: '16px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                         <span style={{ fontSize: '13px', fontWeight: 700, color: '#1e293b' }}>
-                          Hoạt Động Chi Tiết ({dayItem.activities?.length || 0})
+                          Hoạt Động Chi Tiết ({normalizeItineraryActivities(dayItem.activities).length})
                         </span>
                         <button
                           type="button"
                           onClick={() => {
                             const updated = [...(tourDraft.itinerary || [])];
-                            const acts = [...(updated[dayIdx].activities || [])];
+                            const acts = [...normalizeItineraryActivities(updated[dayIdx].activities)];
                             acts.push('');
-                            updated[dayIdx].activities = acts;
+                            updated[dayIdx] = { ...updated[dayIdx], activities: acts };
                             setTourDraft({ ...tourDraft, itinerary: updated });
                           }}
                           style={{ backgroundColor: '#0f766e', color: '#ffffff', border: 'none', borderRadius: '6px', padding: '4px 10px', fontSize: '11.5px', fontWeight: 700, cursor: 'pointer' }}
@@ -2575,7 +2594,7 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                         </button>
                       </div>
 
-                      {(dayItem.activities || []).map((act, actIdx) => (
+                      {normalizeItineraryActivities(dayItem.activities).map((act, actIdx) => (
                         <div key={actIdx} style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
                           <input
                             type="text"
@@ -2583,9 +2602,9 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                             value={act}
                             onChange={(e) => {
                               const updated = [...(tourDraft.itinerary || [])];
-                              const acts = [...(updated[dayIdx].activities || [])];
+                              const acts = [...normalizeItineraryActivities(updated[dayIdx].activities)];
                               acts[actIdx] = e.target.value;
-                              updated[dayIdx].activities = acts;
+                              updated[dayIdx] = { ...updated[dayIdx], activities: acts };
                               setTourDraft({ ...tourDraft, itinerary: updated });
                             }}
                             style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px' }}
@@ -2594,7 +2613,8 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                             type="button"
                             onClick={() => {
                               const updated = [...(tourDraft.itinerary || [])];
-                              updated[dayIdx].activities = (updated[dayIdx].activities || []).filter((_, i) => i !== actIdx);
+                              const acts = normalizeItineraryActivities(updated[dayIdx].activities).filter((_, i) => i !== actIdx);
+                              updated[dayIdx] = { ...updated[dayIdx], activities: acts };
                               setTourDraft({ ...tourDraft, itinerary: updated });
                             }}
                             style={{ backgroundColor: '#fee2e2', color: '#dc2626', border: '1px solid #fca5a5', borderRadius: '8px', padding: '8px 10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -2604,7 +2624,7 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                           </button>
                         </div>
                       ))}
-                      {(!dayItem.activities || dayItem.activities.length === 0) && (
+                      {normalizeItineraryActivities(dayItem.activities).length === 0 && (
                         <p style={{ fontSize: '12px', color: '#94a3b8', margin: 0, fontStyle: 'italic' }}>
                           Chưa có mốc hoạt động chi tiết (tùy chọn).
                         </p>
