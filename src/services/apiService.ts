@@ -29,6 +29,7 @@ import {
   saveAllLandingSectionTemplates
 } from '../data/landingSectionData';
 import { getStoredToken } from './authService';
+import { syncToursDataFromApi } from '../data/toursData';
 
 export const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://127.0.0.1:3001';
 
@@ -427,7 +428,7 @@ export function sanitizeConsultationPayload(data: any, isUpdate = false) {
 }
 
 // --------------------------------------------------------------------------
-// QUERY CACHE ENGINE (Memory TTL & Smart Invalidation System)
+// PERSISTENT & MEMORY QUERY CACHE ENGINE (Stale-While-Revalidate)
 // --------------------------------------------------------------------------
 interface CacheEntry<T = any> {
   data: T;
@@ -435,7 +436,65 @@ interface CacheEntry<T = any> {
 }
 
 const queryCache: Map<string, CacheEntry> = new Map();
-const DEFAULT_CACHE_TTL = 10 * 60 * 1000; // 10 minutes memory TTL
+const DEFAULT_CACHE_TTL = 10 * 60 * 1000; // 10 minutes TTL
+const STORAGE_CACHE_PREFIX = '4u_real_cache_';
+
+export function getPersistentCache<T = any>(key: string, ttl: number = DEFAULT_CACHE_TTL): T | null {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return null;
+    const raw = window.localStorage.getItem(`${STORAGE_CACHE_PREFIX}${key}`);
+    if (!raw) return null;
+    const entry = JSON.parse(raw);
+    if (!entry || typeof entry.timestamp !== 'number' || !entry.data) return null;
+    if (Date.now() - entry.timestamp > ttl) {
+      window.localStorage.removeItem(`${STORAGE_CACHE_PREFIX}${key}`);
+      return null;
+    }
+    return entry.data as T;
+  } catch {
+    return null;
+  }
+}
+
+export function setPersistentCache<T = any>(key: string, data: T): T {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem(
+        `${STORAGE_CACHE_PREFIX}${key}`,
+        JSON.stringify({ data, timestamp: Date.now() })
+      );
+    }
+  } catch (err) {
+    console.warn('[STORAGE CACHE WARNING] Quota exceeded or storage unavailable', err);
+  }
+  return data;
+}
+
+export function removePersistentCache(keyPattern?: string) {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return;
+    if (!keyPattern) {
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < window.localStorage.length; i++) {
+        const k = window.localStorage.key(i);
+        if (k && k.startsWith(STORAGE_CACHE_PREFIX)) {
+          keysToRemove.push(k);
+        }
+      }
+      keysToRemove.forEach((k) => window.localStorage.removeItem(k));
+      return;
+    }
+
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const k = window.localStorage.key(i);
+      if (k && k.startsWith(STORAGE_CACHE_PREFIX) && k.includes(keyPattern)) {
+        keysToRemove.push(k);
+      }
+    }
+    keysToRemove.forEach((k) => window.localStorage.removeItem(k));
+  } catch {}
+}
 
 export function getCachedQuery<T = any>(key: string, ttl: number = DEFAULT_CACHE_TTL): T | null {
   const entry = queryCache.get(key);
@@ -455,6 +514,7 @@ export function setCachedQuery<T = any>(key: string, data: T): T {
 export function invalidateQueryCache(keyPattern?: string) {
   if (!keyPattern) {
     queryCache.clear();
+    removePersistentCache();
     return;
   }
   for (const key of queryCache.keys()) {
@@ -462,13 +522,54 @@ export function invalidateQueryCache(keyPattern?: string) {
       queryCache.delete(key);
     }
   }
+  removePersistentCache(keyPattern);
 }
 
 // --------------------------------------------------------------------------
-// TOURS MODULE API CALLS (WITH QUERY CACHE)
+// TOURS MODULE API CALLS (WITH PERSISTENT CACHE & STALE-WHILE-REVALIDATE)
 // --------------------------------------------------------------------------
 
 let inflightToursPromise: Promise<any> | null = null;
+let isRevalidatingTours = false;
+
+// Background revalidation: checks MS SQL server quietly without interrupting user
+async function triggerToursRevalidation(currentCached: any[]) {
+  if (isRevalidatingTours || USE_MOCK_DATA) return;
+  isRevalidatingTours = true;
+  try {
+    const response = await fetch(`${API_BASE_URL}/tours`, {
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+    });
+    if (response.ok) {
+      const rawList = await response.json();
+      if (Array.isArray(rawList) && rawList.length > 0) {
+        isBackendOffline = false;
+        const freshList = rawList.map(parseTourJsonFields);
+        const currentSample = (currentCached || [])
+          .map((t: any) => `${t.id}:${t.price}:${t.title}:${t.heroImage}:${(t.departureDates || []).join(',')}`)
+          .join('|');
+        const freshSample = freshList
+          .map((t: any) => `${t.id}:${t.price}:${t.title}:${t.heroImage}:${(t.departureDates || []).join(',')}`)
+          .join('|');
+
+        if (currentSample !== freshSample) {
+          // Fresh real data has updated from MS SQL Server!
+          setCachedQuery('tours', freshList);
+          setPersistentCache('tours', freshList);
+          syncToursDataFromApi(freshList);
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('tours-data-updated', { detail: freshList }));
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('[Stale-While-Revalidate] Silent background revalidation error', err);
+  } finally {
+    isRevalidatingTours = false;
+  }
+}
 
 export async function fetchToursApi(forceRefresh = false) {
   if (USE_MOCK_DATA) {
@@ -476,17 +577,31 @@ export async function fetchToursApi(forceRefresh = false) {
     return setCachedQuery('tours', mockList);
   }
 
+  // 1. Instant check in RAM query cache
   if (!forceRefresh) {
-    const cached = getCachedQuery('tours');
-    if (cached) {
-      return cached;
+    const memCached = getCachedQuery('tours');
+    if (memCached && Array.isArray(memCached) && memCached.length > 0) {
+      syncToursDataFromApi(memCached);
+      triggerToursRevalidation(memCached);
+      return memCached;
+    }
+
+    // 2. Instant check in localStorage persistent cache (0ms load on refresh / new tab)
+    const storedCached = getPersistentCache<any[]>('tours');
+    if (storedCached && Array.isArray(storedCached) && storedCached.length > 0) {
+      setCachedQuery('tours', storedCached);
+      syncToursDataFromApi(storedCached);
+      triggerToursRevalidation(storedCached);
+      return storedCached;
     }
   }
 
+  // 3. If in-flight request is already underway, reuse it
   if (inflightToursPromise) {
     return inflightToursPromise;
   }
 
+  // 4. Fresh fetch from MS SQL / LoopBack 4 backend
   inflightToursPromise = (async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/tours`, {
@@ -502,7 +617,10 @@ export async function fetchToursApi(forceRefresh = false) {
       if (Array.isArray(rawList) && rawList.length > 0) {
         isBackendOffline = false;
         const parsedList = rawList.map(parseTourJsonFields);
-        return setCachedQuery('tours', parsedList);
+        setCachedQuery('tours', parsedList);
+        setPersistentCache('tours', parsedList);
+        syncToursDataFromApi(parsedList);
+        return parsedList;
       }
       return setCachedQuery('tours', getMockTours());
     } catch (err) {

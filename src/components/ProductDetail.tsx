@@ -650,8 +650,8 @@ function ProductDetailView({
                             : (Array.isArray((currentDay as any).images) && (currentDay as any).images.length > 0
                               ? (currentDay as any).images
                               : (pageData.galleryImages && pageData.galleryImages[selectedDayIndex]
-                                  ? [pageData.galleryImages[selectedDayIndex]]
-                                  : (pageData.heroImage ? [pageData.heroImage] : []))));
+                                ? [pageData.galleryImages[selectedDayIndex]]
+                                : (pageData.heroImage ? [pageData.heroImage] : []))));
 
                           const dayMoments = rawImages
                             .map((img: string) => {

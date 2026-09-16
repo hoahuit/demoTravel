@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
 import { fetchToursApi, getImageUrl } from '../services/apiService';
+import SmartImage from './ui/SmartImage';
 
 export interface HeroProps {
   onOpenBooking?: () => void;
@@ -13,10 +14,17 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
   useEffect(() => {
     fetchToursApi().then((data) => {
       if (Array.isArray(data) && data.length > 0) {
-        syncToursDataFromApi(data);
         setTours([...data]);
       }
     });
+
+    const handleUpdate = (e: any) => {
+      if (Array.isArray(e.detail)) {
+        setTours([...e.detail]);
+      }
+    };
+    window.addEventListener('tours-data-updated', handleUpdate);
+    return () => window.removeEventListener('tours-data-updated', handleUpdate);
   }, []);
 
   const khoangDungTour = tours.find(
@@ -58,7 +66,7 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
           paddingTop: '120px'
         }}
       >
-        {/* ── DESTINATION BACKGROUND IMAGE ── */}
+        {/* ── DESTINATION BACKGROUND IMAGE WITH SKELETON SHIMMER ── */}
         <div
           className="tile-image-wrapper"
           style={{
@@ -68,18 +76,16 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
             zIndex: 0
           }}
         >
-          <img
+          <SmartImage
             src={heroImageSrc}
             alt="Khoảng Dừng - 4U Retreat"
-            className="hero-destination-image is-revealed"
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = '/images/hero_khoangdung.jpg';
-            }}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover'
-            }}
+            aspectRatio="full"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            fallbackSrc="/images/hero_khoangdung.jpg"
+            imgClassName="hero-destination-image is-revealed"
+            className="w-full h-full"
           />
         </div>
 

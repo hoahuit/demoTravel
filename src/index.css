@@ -1723,3 +1723,141 @@ body {
     opacity: 1 !important;
   }
 }
+
+/* ============================================
+   SMART IMAGE & SKELETON LOADING SYSTEM
+   Rule 84 Compliant: Design Tokens, Transitions & Zero CLS
+   ============================================ */
+.smart-img-root {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  width: 100%;
+  background-color: rgba(22, 48, 29, 0.05);
+}
+
+.smart-img-aspect-16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+.smart-img-aspect-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+.smart-img-aspect-1-1 {
+  aspect-ratio: 1 / 1;
+}
+
+.smart-img-aspect-3-4 {
+  aspect-ratio: 3 / 4;
+}
+
+.smart-img-aspect-full {
+  width: 100%;
+  height: 100%;
+}
+
+.smart-img-skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(22, 48, 29, 0.04) 25%,
+    rgba(22, 48, 29, 0.10) 50%,
+    rgba(22, 48, 29, 0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: smartImageShimmer 1.8s infinite linear;
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.smart-img-skeleton.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes smartImageShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.smart-img-tag {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+  z-index: 2;
+  position: relative;
+  display: block;
+}
+
+.smart-img-tag.is-loaded {
+  opacity: 1;
+}
+
+/* --- Tour Card Skeleton Grid --- */
+.tour-skeleton-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(22, 48, 29, 0.08);
+  box-shadow: 0 4px 18px rgba(22, 48, 29, 0.04);
+}
+
+.tour-skeleton-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: rgba(22, 48, 29, 0.06);
+  overflow: hidden;
+}
+
+.tour-skeleton-content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tour-skeleton-shimmer-bar {
+  background: linear-gradient(
+    90deg,
+    rgba(22, 48, 29, 0.05) 25%,
+    rgba(22, 48, 29, 0.11) 50%,
+    rgba(22, 48, 29, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: smartImageShimmer 1.8s infinite linear;
+  border-radius: 6px;
+}
+
+.tour-skeleton-bar-title {
+  height: 22px;
+  width: 80%;
+}
+
+.tour-skeleton-bar-sub {
+  height: 14px;
+  width: 92%;
+}
+
+.tour-skeleton-bar-meta {
+  height: 14px;
+  width: 55%;
+}
+
+.tour-skeleton-bar-price {
+  height: 24px;
+  width: 45%;
+  margin-top: 8px;
+}

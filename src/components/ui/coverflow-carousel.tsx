@@ -3,7 +3,8 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
+import SmartImage from "./SmartImage";
 
 const useIsoLayoutEffect =
   typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
@@ -301,12 +302,14 @@ export function CoverflowCarousel({
                   border: index === selected ? "2px solid rgba(255, 255, 255, 0.85)" : "1px solid rgba(255, 255, 255, 0.3)"
                 }}
               >
-                <img
+                <SmartImage
                   src={slide.src}
                   alt={slide.alt}
-                  draggable={false}
-                  className="h-full w-full select-none object-cover"
-                  style={{ borderRadius: "24px" }}
+                  aspectRatio="full"
+                  loading={index <= 2 ? "eager" : "lazy"}
+                  decoding="async"
+                  imgClassName="h-full w-full select-none object-cover"
+                  className="h-full w-full rounded-[24px] overflow-hidden"
                 />
 
                 {/* Top Badge: Độc Quyền */}

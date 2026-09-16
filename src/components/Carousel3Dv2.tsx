@@ -17,10 +17,17 @@ export default function Carousel3Dv2({ onOpenBooking, onOpenConsultation, onNavi
   useEffect(() => {
     fetchToursApi().then((data) => {
       if (Array.isArray(data) && data.length > 0) {
-        syncToursDataFromApi(data);
         setTours([...data]);
       }
     });
+
+    const handleUpdate = (e: any) => {
+      if (Array.isArray(e.detail)) {
+        setTours([...e.detail]);
+      }
+    };
+    window.addEventListener('tours-data-updated', handleUpdate);
+    return () => window.removeEventListener('tours-data-updated', handleUpdate);
   }, []);
 
   // Helper to format category tags cleanly in Vietnamese

@@ -103,11 +103,39 @@ export interface TourPackage {
   tourImages?: any[];
 }
 
-// 100% REAL DATA STORE (EMPTY UNTIL LOADED FROM LOOPBACK 4 / SQL SERVER)
-export let TOURS_DATA: TourPackage[] = [];
+// 100% REAL DATA STORE (LOADED INSTANTLY FROM PERSISTENT CACHE OR BACKEND API)
+function getInitialToursFromStorage(): TourPackage[] {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const raw = window.localStorage.getItem('4u_real_cache_tours');
+      if (raw) {
+        const entry = JSON.parse(raw);
+        if (entry && Array.isArray(entry.data) && entry.data.length > 0) {
+          // Verify TTL 10 mins
+          if (Date.now() - (entry.timestamp || 0) < 10 * 60 * 1000) {
+            return entry.data;
+          }
+        }
+      }
+    }
+  } catch {}
+  return [];
+}
+
+export let TOURS_DATA: TourPackage[] = getInitialToursFromStorage();
 
 export function syncToursDataFromApi(liveTours: TourPackage[]) {
   if (Array.isArray(liveTours)) {
     TOURS_DATA.splice(0, TOURS_DATA.length, ...liveTours);
   }
 }
+
+// Global Event Listener: Automatically keep in-memory TOURS_DATA synchronized with background revalidation
+if (typeof window !== 'undefined') {
+  window.addEventListener('tours-data-updated', (event: any) => {
+    if (event && Array.isArray(event.detail)) {
+      syncToursDataFromApi(event.detail);
+    }
+  });
+}
+

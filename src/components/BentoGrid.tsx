@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ScrollReveal from './ScrollReveal';
-import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
+import { TOURS_DATA, TourPackage } from '../data/toursData';
 import { fetchToursApi, getImageUrl } from '../services/apiService';
 import { ArrowRight, ChevronDown, Calendar, MapPin } from 'lucide-react';
 import EmptyState from './ui/EmptyState';
+import TourCardSkeleton from './ui/TourCardSkeleton';
+import SmartImage from './ui/SmartImage';
 
 export interface BentoGridProps {
   onOpenBooking?: (tourData?: any) => void;
@@ -13,14 +15,24 @@ export interface BentoGridProps {
 export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps) {
   const [showAll, setShowAll] = useState<boolean>(false);
   const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
+  const [isLoading, setIsLoading] = useState<boolean>(TOURS_DATA.length === 0);
 
   useEffect(() => {
     fetchToursApi().then((data) => {
       if (Array.isArray(data) && data.length > 0) {
-        syncToursDataFromApi(data);
         setTours([...data]);
       }
+      setIsLoading(false);
     });
+
+    const handleUpdate = (e: any) => {
+      if (Array.isArray(e.detail)) {
+        setTours([...e.detail]);
+        setIsLoading(false);
+      }
+    };
+    window.addEventListener('tours-data-updated', handleUpdate);
+    return () => window.removeEventListener('tours-data-updated', handleUpdate);
   }, []);
 
   // Tours assigned to "Sắp Khởi Hành" (isFeatured = true or category 'sap-khoi-hanh')
@@ -201,7 +213,9 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
         </ScrollReveal>
 
         {/* ── 2. EDITORIAL 2-COLUMN GRID (AS DESTINATION STYLE) ── */}
-        {items.length === 0 ? (
+        {isLoading && items.length === 0 ? (
+          <TourCardSkeleton count={2} columns={2} />
+        ) : items.length === 0 ? (
           <EmptyState
             title="Chưa có sản phẩm sắp khởi hành"
             description="Hiện tại chưa có tour nào phù hợp ở danh mục Sắp khởi hành. Hãy quay lại sau để cập nhật mới nhất!"
@@ -228,9 +242,16 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
                     }
                   }}
                 >
-                  {/* Photo Frame */}
+                  {/* Photo Frame with SmartImage & Skeleton Shimmer */}
                   <div className="dest-editorial-img-wrap">
-                    <img src={item.image} alt={item.title} loading="lazy" />
+                    <SmartImage
+                      src={item.image}
+                      alt={item.title}
+                      aspectRatio="full"
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full"
+                    />
 
                     {/* Minimalist Departure Badge */}
                     <div

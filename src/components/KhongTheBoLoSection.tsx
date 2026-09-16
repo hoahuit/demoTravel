@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ScrollReveal from './ScrollReveal';
-import { TOURS_DATA, syncToursDataFromApi, TourPackage } from '../data/toursData';
+import { TOURS_DATA, TourPackage } from '../data/toursData';
 import { fetchToursApi, getImageUrl } from '../services/apiService';
 import { Star, ArrowRight, ChevronDown, Sparkles } from 'lucide-react';
 import EmptyState from './ui/EmptyState';
+import TourCardSkeleton from './ui/TourCardSkeleton';
+import SmartImage from './ui/SmartImage';
 
 export interface KhongTheBoLoSectionProps {
   onOpenBooking?: (tourData?: any) => void;
@@ -13,14 +15,24 @@ export interface KhongTheBoLoSectionProps {
 export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: KhongTheBoLoSectionProps) {
   const [showAll, setShowAll] = useState<boolean>(false);
   const [tours, setTours] = useState<TourPackage[]>(TOURS_DATA);
+  const [isLoading, setIsLoading] = useState<boolean>(TOURS_DATA.length === 0);
 
   useEffect(() => {
     fetchToursApi().then((data) => {
       if (Array.isArray(data) && data.length > 0) {
-        syncToursDataFromApi(data);
         setTours([...data]);
       }
+      setIsLoading(false);
     });
+
+    const handleUpdate = (e: any) => {
+      if (Array.isArray(e.detail)) {
+        setTours([...e.detail]);
+        setIsLoading(false);
+      }
+    };
+    window.addEventListener('tours-data-updated', handleUpdate);
+    return () => window.removeEventListener('tours-data-updated', handleUpdate);
   }, []);
 
   // Tours assigned to "Không Thể Bỏ Lỡ" (isHot = true or category 'khong-the-bo-lo' / 'hot')
@@ -186,7 +198,9 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
         </ScrollReveal>
 
         {/* ── 2. EDITORIAL 2-COLUMN GRID (AS DESTINATION STYLE) ── */}
-        {unmissableTours.length === 0 ? (
+        {isLoading && unmissableTours.length === 0 ? (
+          <TourCardSkeleton count={2} columns={2} />
+        ) : unmissableTours.length === 0 ? (
           <EmptyState
             title="Chưa có tour nổi bật"
             description="Hiện tại chưa có tour nào phù hợp ở mục Trải nghiệm không thể bỏ lỡ. Hãy quay lại sau để cập nhật mới nhất!"
@@ -218,9 +232,16 @@ export default function KhongTheBoLoSection({ onOpenBooking, onNavigate }: Khong
                       }
                     }}
                   >
-                    {/* Photo Frame */}
+                    {/* Photo Frame with SmartImage & Skeleton Shimmer */}
                     <div className="ktbl-editorial-img-wrap">
-                      <img src={heroImg} alt={tour.title} loading="lazy" />
+                      <SmartImage
+                        src={heroImg}
+                        alt={tour.title}
+                        aspectRatio="full"
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full"
+                      />
 
                       {/* Top Badges */}
                       <div
