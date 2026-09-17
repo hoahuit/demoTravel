@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { LogOut, ShieldCheck, User as UserIcon, Lock, AlertTriangle } from 'lucide-react';
+import { LogOut, ShieldCheck, User as UserIcon, Lock, AlertTriangle, Upload, Loader2, Image as ImageIcon } from 'lucide-react';
 import AdminToursManager from './admin/AdminToursManager';
 import AdminBookingsManager from './admin/AdminBookingsManager';
 import AdminConsultationsManager from './admin/AdminConsultationsManager';
@@ -35,7 +35,7 @@ import { TEAM_DATA, TeamMember } from '../data/teamData';
 import { TESTIMONIALS_DATA, CustomerReviewItem } from '../data/testimonialsData';
 import { ABOUT_DATA } from '../data/aboutData';
 import { TOURS_DATA } from '../data/toursData';
-import { saveSectionItemApi, fetchSectionItemsApi } from '../services/apiService';
+import { saveSectionItemApi, fetchSectionItemsApi, uploadImageApi, getImageUrl } from '../services/apiService';
 import { ToastProvider, useToast } from './ui/Toast';
 
 import './Admin.css';
@@ -119,6 +119,27 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
   const [modalOpen, setModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [editingTarget, setEditingTarget] = useState<{ section: AdminSectionId; isNew: boolean; item: any } | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState<boolean>(false);
+
+  const handleModalImageUpload = async (key: string, file: File) => {
+    if (!editingTarget) return;
+    try {
+      setIsUploadingImage(true);
+      const res = await uploadImageApi(file);
+      const uploadedUrl = typeof res === 'string' ? res : (res?.url || res?.fileUrl || '');
+      if (uploadedUrl) {
+        setEditingTarget({
+          ...editingTarget,
+          item: { ...editingTarget.item, [key]: uploadedUrl }
+        });
+        toast.success('Đã tải hình ảnh thành công!');
+      }
+    } catch (err: any) {
+      toast.error(`Tải ảnh thất bại: ${err?.message || err}`);
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
 
   useEffect(() => {
     setActiveSection(effectiveSection);
@@ -748,15 +769,108 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
                   discountBadge: 'Huy Hiệu Hiển Thị (VD: GIẢM 10%, FLASH SALE)',
                   category: 'Phân Loại Danh Mục',
                   expiryDate: 'Ngày Hết Hạn (VD: 2026-12-31 hoặc 31/12/2026)',
-                  name: 'Họ và Tên / Tiêu Đề',
+                  name: 'Tên Đối Tác / Họ Tên',
                   role: 'Chức Vụ / Vai Trò',
                   department: 'Phòng Ban',
                   question: 'Câu Hỏi',
                   answer: 'Câu Trả Lời',
-                  logoText: 'Tên Logo / Đối Tác',
+                  logoText: 'Hình Ảnh / Logo Đối Tác',
+                  heroImage: 'Ảnh Đại Diện (Hero Image)',
+                  portrait: 'Ảnh Chân Dung Nhân Sự',
+                  avatar: 'Ảnh Đại Diện (Avatar)',
                   bannerImage: 'Ảnh Banner URL'
                 };
                 const fieldLabel = FIELD_LABELS[key] || key;
+
+                const isImageField = ['logoText', 'heroImage', 'portrait', 'avatar', 'bannerImage', 'image', 'imageUrl', 'logo'].includes(key) || key.toLowerCase().includes('image');
+
+                if (isImageField) {
+                  const hasImage = Boolean(val && typeof val === 'string' && (val.startsWith('http') || val.startsWith('/uploads') || val.startsWith('data:image') || /\.(png|jpe?g|svg|webp|gif)$/i.test(val)));
+                  return (
+                    <div key={key}>
+                      <label style={{ fontSize: '12px', fontWeight: 700, color: '#0f766e', textTransform: 'uppercase', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <ImageIcon size={14} />
+                        <span>{fieldLabel}</span>
+                      </label>
+
+                      {hasImage && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', backgroundColor: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '8px' }}>
+                          <div style={{ width: '64px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff', borderRadius: '6px', border: '1px solid #cbd5e1', overflow: 'hidden', padding: '4px' }}>
+                            <img
+                              src={getImageUrl(val)}
+                              alt="Preview"
+                              style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                            />
+                          </div>
+                          <div style={{ flex: 1, overflow: 'hidden' }}>
+                            <div style={{ fontSize: '12px', fontWeight: 600, color: '#334155', marginBottom: '2px' }}>Ảnh hiện tại</div>
+                            <div style={{ fontSize: '11px', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{val}</div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingTarget({
+                                ...editingTarget,
+                                item: { ...editingTarget.item, [key]: '' }
+                              });
+                            }}
+                            style={{ padding: '4px 8px', fontSize: '11px', fontWeight: 600, color: '#b91c1c', backgroundColor: '#fee2e2', border: '1px solid #fecaca', borderRadius: '6px', cursor: 'pointer' }}
+                          >
+                            Xóa ảnh
+                          </button>
+                        </div>
+                      )}
+
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <label
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            padding: '9px 14px',
+                            backgroundColor: isUploadingImage ? '#94a3b8' : '#0f766e',
+                            color: '#ffffff',
+                            borderRadius: '8px',
+                            fontSize: '13px',
+                            fontWeight: 600,
+                            cursor: isUploadingImage ? 'not-allowed' : 'pointer',
+                            whiteSpace: 'nowrap',
+                            boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+                            transition: 'all 0.15s ease'
+                          }}
+                        >
+                          {isUploadingImage ? <Loader2 size={15} style={{ animation: 'spin 1s linear infinite' }} /> : <Upload size={15} />}
+                          <span>{isUploadingImage ? 'Đang tải...' : 'Tải Ảnh Từ Máy'}</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            disabled={isUploadingImage}
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                await handleModalImageUpload(key, file);
+                                e.target.value = '';
+                              }
+                            }}
+                          />
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Hoặc dán URL / link ảnh trực tiếp..."
+                          value={val ?? ''}
+                          onChange={(e) => {
+                            setEditingTarget({
+                              ...editingTarget,
+                              item: { ...editingTarget.item, [key]: e.target.value }
+                            });
+                          }}
+                          style={{ flex: 1, padding: '9px 12px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '13.5px', boxSizing: 'border-box' }}
+                        />
+                      </div>
+                    </div>
+                  );
+                }
 
                 if (key === 'discountPercent') {
                   return (

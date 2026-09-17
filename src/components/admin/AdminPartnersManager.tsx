@@ -1,5 +1,6 @@
 import React from 'react';
-import { RefreshCw, Plus, Edit2, Trash2 } from 'lucide-react';
+import { RefreshCw, Plus, Edit2, Trash2, Building2 } from 'lucide-react';
+import { getImageUrl } from '../../services/apiService';
 
 interface AdminPartnersManagerProps {
   partnersList: any[];
@@ -91,56 +92,122 @@ export default function AdminPartnersManager({
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#0f766e')}
           >
             <Plus size={15} />
-            <span>Thêm Mới</span>
+            <span>Thêm Đối Tác</span>
           </button>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px' }}>
-        {filtered.map((partner) => (
-          <div key={partner.id} style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '20px', border: '1px solid rgba(6, 27, 14, 0.08)', textAlign: 'center' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#081f13', margin: '0 0 6px 0' }}>{partner.name}</h3>
-            <span style={{ fontSize: '12px', color: '#525a54' }}>{partner.category}</span>
-            <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center', gap: '8px' }}>
-              <button
-                onClick={() => openEditModal('partners', partner)}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))', gap: '20px' }}>
+        {filtered.map((partner) => {
+          const logoSrc = partner.logoText || partner.logo || partner.imageUrl;
+          const isImage = typeof logoSrc === 'string' && (
+            logoSrc.startsWith('http') ||
+            logoSrc.startsWith('/uploads') ||
+            logoSrc.startsWith('data:image') ||
+            /\.(png|jpe?g|svg|webp|gif)$/i.test(logoSrc)
+          );
+
+          return (
+            <div
+              key={partner.id}
+              style={{
+                backgroundColor: '#ffffff',
+                borderRadius: '14px',
+                padding: '20px',
+                border: '1px solid #e2e8f0',
+                textAlign: 'center',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {/* Logo Display Box */}
+              <div
                 style={{
-                  width: '50px',
-                  height: '32px',
-                  backgroundColor: '#081f13',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  display: 'inline-flex',
+                  width: '100%',
+                  height: '84px',
+                  borderRadius: '10px',
+                  backgroundColor: '#f8fafc',
+                  border: '1px solid #f1f5f9',
+                  display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  marginBottom: '14px',
+                  padding: '10px',
+                  overflow: 'hidden'
                 }}
-                title="Chỉnh sửa"
               >
-                <Edit2 size={14} />
-              </button>
-              <button
-                onClick={() => handleDeleteItem('partners', partner.id)}
-                style={{
-                  width: '50px',
-                  height: '32px',
-                  backgroundColor: '#fee2e2',
-                  color: '#dc2626',
-                  border: '1px solid #fca5a5',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-                title="Xóa"
-              >
-                <Trash2 size={14} />
-              </button>
+                {isImage ? (
+                  <img
+                    src={getImageUrl(logoSrc)}
+                    alt={partner.name}
+                    style={{ maxHeight: '64px', maxWidth: '100%', objectFit: 'contain' }}
+                  />
+                ) : logoSrc ? (
+                  <span style={{ fontSize: '15px', fontWeight: 700, color: '#0f766e' }}>{logoSrc}</span>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#94a3b8', fontSize: '12px', fontWeight: 500 }}>
+                    <Building2 size={18} />
+                    <span>Chưa có ảnh logo</span>
+                  </div>
+                )}
+              </div>
+
+              <h3 style={{ fontSize: '15.5px', fontWeight: 700, color: '#0f172a', margin: '0 0 6px 0', lineHeight: 1.3 }}>
+                {partner.name}
+              </h3>
+              <span style={{ fontSize: '11.5px', fontWeight: 600, color: '#0f766e', backgroundColor: '#f0fdf4', padding: '2px 8px', borderRadius: '6px', border: '1px solid #bbf7d0' }}>
+                {partner.category || 'Đối tác'}
+              </span>
+
+              {/* Action buttons unified per Rule 85.4 */}
+              <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center', gap: '8px', width: '100%' }}>
+                <button
+                  type="button"
+                  onClick={() => openEditModal('partners', partner)}
+                  style={{
+                    width: '50px',
+                    height: '32px',
+                    border: '1px solid #e5e7eb',
+                    background: '#f9fafb',
+                    color: '#374151',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.15s ease'
+                  }}
+                  title="Chỉnh sửa logo & thông tin"
+                >
+                  <Edit2 size={14} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDeleteItem('partners', partner.id)}
+                  style={{
+                    width: '50px',
+                    height: '32px',
+                    border: '1px solid #fecaca',
+                    background: '#fff1f2',
+                    color: '#b91c1c',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.15s ease'
+                  }}
+                  title="Xóa đối tác"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

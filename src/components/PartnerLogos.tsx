@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ShieldCheck } from 'lucide-react';
-import { fetchSectionItemsApi } from '../services/apiService';
+import { fetchSectionItemsApi, getImageUrl } from '../services/apiService';
 import { PARTNERS_DATA, syncPartnersDataFromApi } from '../data/partnersData';
 import './PartnerLogos.css';
 
@@ -102,11 +102,31 @@ export default function PartnerLogos() {
         <div className="partner-logos-track-wrap">
           <div className="partner-logos-track-overflow">
             <div className="infinite-slider-track" style={{ display: 'flex', gap: '60px', alignItems: 'center', width: 'max-content' }}>
-              {duplicatedLogos.map((brand, idx) => (
-                <div key={idx} className="partner-logos-item" style={{ fontSize: '20px', fontWeight: 700, color: '#1E4A3D' }}>
-                  {brand.svg ? brand.svg : brand.name || brand.logoText}
-                </div>
-              ))}
+              {duplicatedLogos.map((brand, idx) => {
+                const logoSrc = brand.logoText || brand.logo || brand.imageUrl;
+                const isImage = typeof logoSrc === 'string' && (
+                  logoSrc.startsWith('http') ||
+                  logoSrc.startsWith('/uploads') ||
+                  logoSrc.startsWith('data:image') ||
+                  /\.(png|jpe?g|svg|webp|gif)$/i.test(logoSrc)
+                );
+
+                return (
+                  <div key={idx} className="partner-logos-item" style={{ fontSize: '20px', fontWeight: 700, color: '#1E4A3D', display: 'flex', alignItems: 'center' }}>
+                    {brand.svg ? (
+                      brand.svg
+                    ) : isImage ? (
+                      <img
+                        src={getImageUrl(logoSrc)}
+                        alt={brand.name || 'Đối tác'}
+                        style={{ height: '38px', maxWidth: '150px', objectFit: 'contain', display: 'block' }}
+                      />
+                    ) : (
+                      brand.name || brand.logoText
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
