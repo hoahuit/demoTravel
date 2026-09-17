@@ -40,6 +40,7 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
     : 'Châu Đốc • 3 Ngày 2 Đêm';
 
   const subtitleText = khoangDungTour?.subtitle || 'Tạm gác những Xô bồ thường nhật để sống chậm lại giữa Châu Đốc, An Giang an yên';
+  const cleanSubtitle = subtitleText.replace(/^[“"']?Khoảng Dừng[”"']?\s*[—–-]\s*/i, '');
 
   return (
     <section
@@ -137,17 +138,16 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
           {/* Main Headline */}
           <h1
             style={{
-              fontSize: 'clamp(48px, 6.4vw, 84px)',
+              fontSize: 'clamp(52px, 7.2vw, 92px)',
               fontWeight: 800,
-              lineHeight: 1.05,
-              letterSpacing: '-0.03em',
+              lineHeight: 1.08,
+              letterSpacing: '-0.02em',
               color: '#ffffff',
               margin: '0 0 20px 0',
               fontFamily: "'Plus Jakarta Sans', sans-serif"
             }}
           >
-            Trở Về Với{' '}
-            <span
+            “<span
               style={{
                 fontStyle: 'italic',
                 fontWeight: 800,
@@ -158,8 +158,8 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
                 display: 'inline-block'
               }}
             >
-              Chính Mình
-            </span>
+              Khoảng Dừng
+            </span>”
           </h1>
 
           {/* Subhead Paragraph */}
@@ -174,7 +174,21 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
               fontFamily: "'Plus Jakarta Sans', sans-serif"
             }}
           >
-            “Khoảng Dừng” — {subtitleText}. Đắm mình giữa thiên nhiên nguyên sơ, lướt nhẹ qua những dòng nước tĩnh lặng và tái tạo trọn vẹn năng lượng cho Thân · Tâm · Trí.
+            {cleanSubtitle.includes('Châu Đốc, An Giang') ? (
+              <>
+                Tạm gác những Xô bồ thường nhật để sống chậm lại giữa Châu Đốc,
+                <br />
+                An Giang an yên. Đắm mình giữa thiên nhiên nguyên sơ, lướt nhẹ qua những dòng nước tĩnh lặng và tái tạo trọn vẹn năng lượng cho
+                <br />
+                Thân · Tâm · Trí.
+              </>
+            ) : (
+              <>
+                {cleanSubtitle}. Đắm mình giữa thiên nhiên nguyên sơ, lướt nhẹ qua những dòng nước tĩnh lặng và tái tạo trọn vẹn năng lượng cho
+                <br />
+                Thân · Tâm · Trí.
+              </>
+            )}
           </p>
         </div>
       </div>

@@ -55,10 +55,7 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
 
               <div className="footer-license-info">
                 <div className="footer-nowrap">
-                  <strong className="footer-white-bold">Công ty TNHH THƯƠNG MẠI DU LỊCH BỐN TIỆN ÍCH</strong>
-                </div>
-                <div className="footer-nowrap">
-                  Giấy phép: <strong className="footer-white-bold">79-367 / 2012</strong> (Lữ hành quốc tế)
+                  <strong className="footer-white-bold">Công ty Cổ phần Thương mại Du lịch Bốn Tối Ưu</strong>
                 </div>
                 <div className="footer-nowrap">
                   Mã số thuế: <strong className="footer-white-bold">030 807 8390</strong>
@@ -109,14 +106,14 @@ export default function Footer({ onNavigate }: FooterProps = {}) {
               </h4>
               <ul className="footer-contact-list">
                 <li className="footer-contact-row">
-                  <a href="mailto:customercare@4utours.com" className="footer-link-white">
-                    customercare@4utours.com
+                  <a href="mailto:customercare@4uwellness.com.vn" className="footer-link-white">
+                    customercare@4uwellness.com.vn
                   </a>
                 </li>
 
                 <li className="footer-contact-row">
                   <div>
-                    <div><a href="tel:0896472601" className="footer-link-white" style={{ fontWeight: '600' }}>076 488 6877</a></div>
+                    <div><a href="tel:0848180826" className="footer-link-white" style={{ fontWeight: '600' }}>084 818 0826</a></div>
                   </div>
                 </li>
 
