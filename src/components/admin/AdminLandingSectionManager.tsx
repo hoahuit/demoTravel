@@ -18,7 +18,9 @@ import {
   X,
   Monitor,
   Tablet,
-  Smartphone
+  Smartphone,
+  Upload,
+  Loader2
 } from 'lucide-react';
 import SectionLandingPage from '../SectionLandingPage';
 import AdminVisualLandingEditor from './AdminVisualLandingEditor';
@@ -38,7 +40,8 @@ import {
   createLandingSectionTemplateApi,
   deleteLandingSectionTemplateApi,
   duplicateLandingSectionTemplateApi,
-  resetLandingSectionTemplatesApi
+  resetLandingSectionTemplatesApi,
+  uploadImageApi
 } from '../../services/apiService';
 
 interface AdminLandingSectionManagerProps {
@@ -84,6 +87,31 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
   const [selectedStatusFilter, setSelectedStatusFilter] = useState<'All' | 'active' | 'draft'>('All');
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isUploadingAboutImg, setIsUploadingAboutImg] = useState<boolean>(false);
+  const [isUploadingTeacherImg, setIsUploadingTeacherImg] = useState<boolean>(false);
+  const [isUploadingOrgLogo, setIsUploadingOrgLogo] = useState<boolean>(false);
+  const [deletingTemplate, setDeletingTemplate] = useState<LandingSectionTemplate | null>(null);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+
+  const handleUploadFile = async (
+    file: File,
+    onSuccess: (url: string) => void,
+    setLoadingState?: (loading: boolean) => void
+  ) => {
+    setLoadingState?.(true);
+    try {
+      const res = await uploadImageApi(file);
+      const url = typeof res === 'string' ? res : (res?.url || res?.fileUrl || '');
+      if (url) {
+        onSuccess(url);
+        toast.success('Tải ảnh lên thành công!');
+      }
+    } catch (err: any) {
+      toast.error('Lỗi tải ảnh: ' + (err?.message || err));
+    } finally {
+      setLoadingState?.(false);
+    }
+  };
 
   // Close preview on ESC
   useEffect(() => {
@@ -173,9 +201,8 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
     }
   };
 
-  const handleDelete = async (id: string) => {
-    const target = templates.find((t) => t.id === id);
-    if (target?.isDefault && templates.length > 1) {
+  const handleRequestDelete = (tpl: LandingSectionTemplate) => {
+    if (tpl.isDefault && templates.length > 1) {
       toast.error('Không thể xóa mẫu đang được đặt làm Mặc Định. Hãy chọn mẫu khác làm mặc định trước!');
       return;
     }
@@ -183,16 +210,23 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
       toast.error('Hệ thống phải có ít nhất 1 mẫu Section!');
       return;
     }
+    setDeletingTemplate(tpl);
+  };
 
-    if (window.confirm(`Bạn có chắc chắn muốn xóa mẫu "${target?.name}" không?`)) {
-      try {
-        await deleteLandingSectionTemplateApi(id);
-        deleteLandingSectionTemplate(id);
-        setTemplates((prev) => prev.filter((t) => t.id !== id));
-        toast.success('Đã xóa mẫu thành công!');
-      } catch (e: any) {
-        toast.error(`Lỗi khi xóa: ${e?.message || e}`);
-      }
+  const handleConfirmDelete = async () => {
+    if (!deletingTemplate) return;
+    setIsDeleting(true);
+    const id = deletingTemplate.id;
+    try {
+      await deleteLandingSectionTemplateApi(id);
+      deleteLandingSectionTemplate(id);
+      setTemplates((prev) => prev.filter((t) => t.id !== id));
+      toast.success(`Đã xóa mẫu "${deletingTemplate.name}" thành công!`);
+      setDeletingTemplate(null);
+    } catch (e: any) {
+      toast.error(`Lỗi khi xóa: ${e?.message || e}`);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -1224,18 +1258,212 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
                       <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
                         Đường Dẫn Hình Ảnh Minh Họa
                       </label>
-                      <input
-                        type="text"
-                        value={editingTemplate.data.about.image}
-                        onChange={(e) =>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <input
+                          type="text"
+                          value={editingTemplate.data.about.image}
+                          onChange={(e) =>
+                            setEditingTemplate({
+                              ...editingTemplate,
+                              data: { ...editingTemplate.data, about: { ...editingTemplate.data.about, image: e.target.value } }
+                            })
+                          }
+                          placeholder="/images/yoga-practice-guide.jpg"
+                          style={{ flex: 1, padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                        />
+                        <label
+                          style={{
+                            padding: '9px 16px',
+                            backgroundColor: '#e8f5e9',
+                            color: '#006d36',
+                            border: '1px solid #bbf7d0',
+                            borderRadius: '8px',
+                            fontSize: '13px',
+                            fontWeight: 700,
+                            cursor: isUploadingAboutImg ? 'not-allowed' : 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            whiteSpace: 'nowrap'
+                          }}
+                        >
+                          <input
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            disabled={isUploadingAboutImg}
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                handleUploadFile(
+                                  file,
+                                  (url) =>
+                                    setEditingTemplate({
+                                      ...editingTemplate,
+                                      data: { ...editingTemplate.data, about: { ...editingTemplate.data.about, image: url } }
+                                    }),
+                                  setIsUploadingAboutImg
+                                );
+                                e.target.value = '';
+                              }
+                            }}
+                          />
+                          {isUploadingAboutImg ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : <Upload size={16} />}
+                          <span>{isUploadingAboutImg ? 'Đang tải...' : 'Tải ảnh từ máy'}</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* About Checklist Items */}
+                  <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '20px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                      <div>
+                        <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a', margin: 0 }}>
+                          Danh Sách Tiêu Chí (Checklist Giới Thiệu)
+                        </h4>
+                        <p style={{ fontSize: '12.5px', color: '#64748b', margin: '3px 0 0 0' }}>
+                          Các gạch đầu dòng giải thích phương pháp (Thể Dục ĐÚNG, Hơi Thở ĐÚNG, Thư Giãn ĐÚNG...)
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const defaultItems = [
+                            { title: 'Thể Dục ĐÚNG:', description: 'Các tư thế vận động kéo giãn và giải tỏa áp lực đĩa đệm, giải phóng tắc nghẽn vùng cổ vai gáy và cột sống nhẹ nhàng.' },
+                            { title: 'Hơi Thở ĐÚNG:', description: 'Kỹ thuật Hơi thở sử dụng tối đa dung tích Phổi, cung cấp đủ Oxy, giảm Stress trong vài phút, tăng Tập trung và cải thiện Giấc ngủ ngay tuần đầu.' },
+                            { title: 'Thư Giãn ĐÚNG:', description: 'Kỹ thuật Thư giãn sâu giải toả Căng thẳng tích tụ, chữa lành tổn thương Thể chất và Tinh thần, cảm nhận sự Tĩnh lặng và Kết nối với Bản thân.' }
+                          ];
+                          const current = (editingTemplate.data.about.checklist && editingTemplate.data.about.checklist.length > 0)
+                            ? [...editingTemplate.data.about.checklist]
+                            : defaultItems;
+                          current.push({
+                            title: 'Tiêu chí mới:',
+                            description: 'Nhập nội dung giải thích chi tiết cho tiêu chí này...'
+                          });
                           setEditingTemplate({
                             ...editingTemplate,
-                            data: { ...editingTemplate.data, about: { ...editingTemplate.data.about, image: e.target.value } }
-                          })
-                        }
-                        placeholder="/images/yoga-practice-guide.jpg"
-                        style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
-                      />
+                            data: {
+                              ...editingTemplate.data,
+                              about: { ...editingTemplate.data.about, checklist: current }
+                            }
+                          });
+                        }}
+                        style={{
+                          padding: '6px 14px',
+                          borderRadius: '6px',
+                          backgroundColor: '#e8f5e9',
+                          color: '#006d36',
+                          border: '1px solid #bbf7d0',
+                          fontSize: '12.5px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px'
+                        }}
+                      >
+                        <Plus size={14} />
+                        <span>+ Thêm Tiêu Chí</span>
+                      </button>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {((editingTemplate.data.about.checklist && editingTemplate.data.about.checklist.length > 0)
+                        ? editingTemplate.data.about.checklist
+                        : [
+                            { title: 'Thể Dục ĐÚNG:', description: 'Các tư thế vận động kéo giãn và giải tỏa áp lực đĩa đệm, giải phóng tắc nghẽn vùng cổ vai gáy và cột sống nhẹ nhàng.' },
+                            { title: 'Hơi Thở ĐÚNG:', description: 'Kỹ thuật Hơi thở sử dụng tối đa dung tích Phổi, cung cấp đủ Oxy, giảm Stress trong vài phút, tăng Tập trung và cải thiện Giấc ngủ ngay tuần đầu.' },
+                            { title: 'Thư Giãn ĐÚNG:', description: 'Kỹ thuật Thư giãn sâu giải toả Căng thẳng tích tụ, chữa lành tổn thương Thể chất và Tinh thần, cảm nhận sự Tĩnh lặng và Kết nối với Bản thân.' }
+                          ]
+                      ).map((cItem, cIdx, arr) => (
+                        <div
+                          key={cIdx}
+                          style={{
+                            display: 'flex',
+                            gap: '12px',
+                            alignItems: 'flex-start',
+                            backgroundColor: '#f8fafc',
+                            padding: '12px 16px',
+                            borderRadius: '8px',
+                            border: '1px solid #e2e8f0'
+                          }}
+                        >
+                          <div style={{ width: '220px', flexShrink: 0 }}>
+                            <label style={{ fontSize: '11.5px', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: '4px' }}>
+                              Tiêu Đề In Đậm
+                            </label>
+                            <input
+                              type="text"
+                              value={cItem.title}
+                              onChange={(e) => {
+                                const nextList = [...arr];
+                                nextList[cIdx] = { ...nextList[cIdx], title: e.target.value };
+                                setEditingTemplate({
+                                  ...editingTemplate,
+                                  data: {
+                                    ...editingTemplate.data,
+                                    about: { ...editingTemplate.data.about, checklist: nextList }
+                                  }
+                                });
+                              }}
+                              placeholder="Thể Dục ĐÚNG:"
+                              style={{ width: '100%', padding: '7px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 700, boxSizing: 'border-box' }}
+                            />
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <label style={{ fontSize: '11.5px', fontWeight: 600, color: '#64748b', display: 'block', marginBottom: '4px' }}>
+                              Nội Dung Chi Tiết
+                            </label>
+                            <textarea
+                              rows={2}
+                              value={cItem.description}
+                              onChange={(e) => {
+                                const nextList = [...arr];
+                                nextList[cIdx] = { ...nextList[cIdx], description: e.target.value };
+                                setEditingTemplate({
+                                  ...editingTemplate,
+                                  data: {
+                                    ...editingTemplate.data,
+                                    about: { ...editingTemplate.data.about, checklist: nextList }
+                                  }
+                                });
+                              }}
+                              placeholder="Mô tả tiêu chí..."
+                              style={{ width: '100%', padding: '7px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                            />
+                          </div>
+                          {arr.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const nextList = arr.filter((_, i) => i !== cIdx);
+                                setEditingTemplate({
+                                  ...editingTemplate,
+                                  data: {
+                                    ...editingTemplate.data,
+                                    about: { ...editingTemplate.data.about, checklist: nextList }
+                                  }
+                                });
+                              }}
+                              title="Xóa dòng này"
+                              style={{
+                                marginTop: '20px',
+                                background: '#fee2e2',
+                                border: '1px solid #fca5a5',
+                                color: '#dc2626',
+                                borderRadius: '6px',
+                                padding: '6px 10px',
+                                cursor: 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <Trash2 size={15} />
+                            </button>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   </div>
 
@@ -1647,25 +1875,73 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
                           />
                         </div>
                         <div>
-                          <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Link Ảnh Chân Dung</label>
-                          <input
-                            type="text"
-                            value={editingTemplate.data.trust.teacher?.image || ''}
-                            onChange={(e) =>
-                              setEditingTemplate({
-                                ...editingTemplate,
-                                data: {
-                                  ...editingTemplate.data,
-                                  trust: {
-                                    ...editingTemplate.data.trust,
-                                    teacher: { ...(editingTemplate.data.trust.teacher || {}), image: e.target.value } as any
+                          <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Ảnh Chân Dung Chuyên Gia</label>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                            <input
+                              type="text"
+                              value={editingTemplate.data.trust.teacher?.image || ''}
+                              onChange={(e) =>
+                                setEditingTemplate({
+                                  ...editingTemplate,
+                                  data: {
+                                    ...editingTemplate.data,
+                                    trust: {
+                                      ...editingTemplate.data.trust,
+                                      teacher: { ...(editingTemplate.data.trust.teacher || {}), image: e.target.value } as any
+                                    }
                                   }
-                                }
-                              })
-                            }
-                            placeholder="/images/yoga-teacher-portrait.jpg"
-                            style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
-                          />
+                                })
+                              }
+                              placeholder="/images/yoga-teacher-portrait.jpg"
+                              style={{ flex: 1, padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                            />
+                            <label
+                              style={{
+                                padding: '8px 14px',
+                                backgroundColor: '#ffffff',
+                                color: '#006d36',
+                                border: '1px solid #bbf7d0',
+                                borderRadius: '6px',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                cursor: isUploadingTeacherImg ? 'not-allowed' : 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '5px',
+                                whiteSpace: 'nowrap'
+                              }}
+                            >
+                              <input
+                                type="file"
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                disabled={isUploadingTeacherImg}
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    handleUploadFile(
+                                      file,
+                                      (url) =>
+                                        setEditingTemplate({
+                                          ...editingTemplate,
+                                          data: {
+                                            ...editingTemplate.data,
+                                            trust: {
+                                              ...editingTemplate.data.trust,
+                                              teacher: { ...(editingTemplate.data.trust.teacher || {}), image: url } as any
+                                            }
+                                          }
+                                        }),
+                                      setIsUploadingTeacherImg
+                                    );
+                                    e.target.value = '';
+                                  }
+                                }}
+                              />
+                              {isUploadingTeacherImg ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> : <Upload size={14} />}
+                              <span>{isUploadingTeacherImg ? 'Đang tải...' : 'Tải ảnh'}</span>
+                            </label>
+                          </div>
                         </div>
                       </div>
 
@@ -1737,25 +2013,73 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
                           />
                         </div>
                         <div>
-                          <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Link Logo Tổ Chức</label>
-                          <input
-                            type="text"
-                            value={editingTemplate.data.trust.organization?.logo || ''}
-                            onChange={(e) =>
-                              setEditingTemplate({
-                                ...editingTemplate,
-                                data: {
-                                  ...editingTemplate.data,
-                                  trust: {
-                                    ...editingTemplate.data.trust,
-                                    organization: { ...(editingTemplate.data.trust.organization || {}), logo: e.target.value } as any
+                          <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '4px' }}>Logo Tổ Chức</label>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                            <input
+                              type="text"
+                              value={editingTemplate.data.trust.organization?.logo || ''}
+                              onChange={(e) =>
+                                setEditingTemplate({
+                                  ...editingTemplate,
+                                  data: {
+                                    ...editingTemplate.data,
+                                    trust: {
+                                      ...editingTemplate.data.trust,
+                                      organization: { ...(editingTemplate.data.trust.organization || {}), logo: e.target.value } as any
+                                    }
                                   }
-                                }
-                              })
-                            }
-                            placeholder="/Logo-4U-Wellness.png"
-                            style={{ width: '100%', padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
-                          />
+                                })
+                              }
+                              placeholder="/Logo-4U-Wellness.png"
+                              style={{ flex: 1, padding: '8px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '13px', boxSizing: 'border-box' }}
+                            />
+                            <label
+                              style={{
+                                padding: '8px 14px',
+                                backgroundColor: '#ffffff',
+                                color: '#006d36',
+                                border: '1px solid #bbf7d0',
+                                borderRadius: '6px',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                cursor: isUploadingOrgLogo ? 'not-allowed' : 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '5px',
+                                whiteSpace: 'nowrap'
+                              }}
+                            >
+                              <input
+                                type="file"
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                disabled={isUploadingOrgLogo}
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    handleUploadFile(
+                                      file,
+                                      (url) =>
+                                        setEditingTemplate({
+                                          ...editingTemplate,
+                                          data: {
+                                            ...editingTemplate.data,
+                                            trust: {
+                                              ...editingTemplate.data.trust,
+                                              organization: { ...(editingTemplate.data.trust.organization || {}), logo: url } as any
+                                            }
+                                          }
+                                        }),
+                                      setIsUploadingOrgLogo
+                                    );
+                                    e.target.value = '';
+                                  }
+                                }}
+                              />
+                              {isUploadingOrgLogo ? <Loader2 size={14} style={{ animation: 'spin 1s linear infinite' }} /> : <Upload size={14} />}
+                              <span>{isUploadingOrgLogo ? 'Đang tải...' : 'Tải logo'}</span>
+                            </label>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1809,6 +2133,24 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
                         style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                      Mô Tả Khối
+                    </label>
+                    <input
+                      type="text"
+                      value={editingTemplate.data.steps.description || ''}
+                      onChange={(e) =>
+                        setEditingTemplate({
+                          ...editingTemplate,
+                          data: { ...editingTemplate.data, steps: { ...editingTemplate.data.steps, description: e.target.value } }
+                        })
+                      }
+                      placeholder="Chỉ với các bước đơn giản để bước vào hành trình 21 ngày chuyển hóa sức khỏe."
+                      style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                    />
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '14px', marginTop: '8px' }}>
@@ -2033,6 +2375,24 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
                         style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', fontWeight: 600, boxSizing: 'border-box' }}
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <label style={{ fontSize: '13px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '6px' }}>
+                      Mô Tả Khối
+                    </label>
+                    <input
+                      type="text"
+                      value={editingTemplate.data.faq.description || ''}
+                      onChange={(e) =>
+                        setEditingTemplate({
+                          ...editingTemplate,
+                          data: { ...editingTemplate.data, faq: { ...editingTemplate.data.faq, description: e.target.value } }
+                        })
+                      }
+                      placeholder="Những câu hỏi thường gặp về chương trình 21 ngày Zen."
+                      style={{ width: '100%', padding: '9px 13px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13.5px', boxSizing: 'border-box' }}
+                    />
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '6px' }}>
@@ -2522,7 +2882,7 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
                         {!isDefaultTpl && (
                           <button
                             type="button"
-                            onClick={() => handleDelete(tpl.id)}
+                            onClick={() => handleRequestDelete(tpl)}
                             style={{
                               width: '50px',
                               height: '32px',
@@ -2550,6 +2910,113 @@ export default function AdminLandingSectionManager({ toast }: AdminLandingSectio
           </tbody>
         </table>
       </div>
+
+      {/* In-App Delete Confirmation Modal */}
+      {deletingTemplate && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(15, 23, 42, 0.65)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            padding: '20px'
+          }}
+          onClick={() => !isDeleting && setDeletingTemplate(null)}
+        >
+          <div
+            style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '16px',
+              padding: '28px',
+              maxWidth: '440px',
+              width: '100%',
+              boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '12px',
+                  backgroundColor: '#fee2e2',
+                  color: '#dc2626',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}
+              >
+                <Trash2 size={22} />
+              </div>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '17px', fontWeight: 800, color: '#0f172a' }}>
+                  Xác Nhận Xóa Mẫu Section
+                </h3>
+                <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#64748b' }}>
+                  Hành động này sẽ xóa vĩnh viễn mẫu khỏi hệ thống.
+                </p>
+              </div>
+            </div>
+
+            <p style={{ margin: 0, fontSize: '14px', color: '#334155', lineHeight: 1.6 }}>
+              Bạn có chắc chắn muốn xóa mẫu{' '}
+              <strong style={{ color: '#0f172a' }}>"{deletingTemplate.name}"</strong> (ID: <code style={{ fontSize: '12px', backgroundColor: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>{deletingTemplate.id}</code>) không?
+            </p>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '8px' }}>
+              <button
+                type="button"
+                id="btn-cancel-delete-template"
+                disabled={isDeleting}
+                onClick={() => setDeletingTemplate(null)}
+                style={{
+                  padding: '9px 18px',
+                  borderRadius: '8px',
+                  border: '1px solid #cbd5e1',
+                  backgroundColor: '#ffffff',
+                  color: '#475569',
+                  fontSize: '13.5px',
+                  fontWeight: 600,
+                  cursor: isDeleting ? 'not-allowed' : 'pointer'
+                }}
+              >
+                Hủy
+              </button>
+              <button
+                type="button"
+                id="btn-confirm-delete-template"
+                disabled={isDeleting}
+                onClick={handleConfirmDelete}
+                style={{
+                  padding: '9px 20px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  backgroundColor: '#dc2626',
+                  color: '#ffffff',
+                  fontSize: '13.5px',
+                  fontWeight: 700,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  cursor: isDeleting ? 'not-allowed' : 'pointer'
+                }}
+              >
+                {isDeleting ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
+                <span>{isDeleting ? 'Đang xóa...' : 'Xác Nhận Xóa'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Live Preview Modal (nếu người dùng bấm chế độ xem riêng) */}
       {renderPreviewModal()}

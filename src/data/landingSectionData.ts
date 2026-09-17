@@ -8,6 +8,11 @@ export interface LandingSectionFeatureItem {
   description: string;
 }
 
+export interface LandingSectionChecklistItem {
+  title: string;
+  description: string;
+}
+
 export interface LandingSectionSignalItem {
   title: string;
   description: string;
@@ -60,6 +65,7 @@ export interface LandingSectionData {
     para1: string;
     para2: string;
     image: string;
+    checklist?: LandingSectionChecklistItem[];
   };
   method: {
     eyebrow: string;
@@ -95,6 +101,7 @@ export interface LandingSectionData {
   steps: {
     eyebrow: string;
     heading: string;
+    description?: string;
     items: LandingSectionStepItem[];
   };
   pricing: {
@@ -109,6 +116,7 @@ export interface LandingSectionData {
   faq: {
     eyebrow: string;
     heading: string;
+    description?: string;
     items: LandingSectionFaqItem[];
   };
 }
@@ -166,7 +174,21 @@ export const DEFAULT_LANDING_SECTION_DATA: LandingSectionData = {
     headingHighlight: 'uốn dẻo',
     para1: 'Phương pháp 3Đ là 3 Điểm Vàng đã được Truyền thống Sivananda gìn giữ hơn 5,000 năm: Thể Dục ĐÚNG, Hít Thở ĐÚNG, Thư Giãn ĐÚNG.',
     para2: 'KHÔNG cần dẻo dai, KHÔNG cần thuộc Kinh sách. Chỉ cần 60 phút mỗi sáng, liên tục 21 ngày, để thấy Cơ thể và Tâm trí thay đổi rõ rệt.',
-    image: '/images/yoga-practice-guide.jpg'
+    image: '/images/yoga-practice-guide.jpg',
+    checklist: [
+      {
+        title: 'Thể Dục ĐÚNG:',
+        description: 'Các tư thế vận động kéo giãn và giải tỏa áp lực đĩa đệm, giải phóng tắc nghẽn vùng cổ vai gáy và cột sống nhẹ nhàng.'
+      },
+      {
+        title: 'Hơi Thở ĐÚNG:',
+        description: 'Kỹ thuật Hơi thở sử dụng tối đa dung tích Phổi, cung cấp đủ Oxy, giảm Stress trong vài phút, tăng Tập trung và cải thiện Giấc ngủ ngay tuần đầu.'
+      },
+      {
+        title: 'Thư Giãn ĐÚNG:',
+        description: 'Kỹ thuật Thư giãn sâu giải toả Căng thẳng tích tụ, chữa lành tổn thương Thể chất và Tinh thần, cảm nhận sự Tĩnh lặng và Kết nối với Bản thân.'
+      }
+    ]
   },
   method: {
     eyebrow: 'Phương pháp Cổ điển từ Sivananda',
@@ -229,10 +251,10 @@ export const DEFAULT_LANDING_SECTION_DATA: LandingSectionData = {
     heading: 'Truyền thống Sivananda hơn 5,000 năm Lịch sử',
     description: 'Không phải Phương pháp thử nghiệm. Là Truyền thống đã được giảng dạy tại 80+ Quốc gia, hướng dẫn bởi Đội ngũ Chuyên gia được truyền thừa chính thống.',
     stats: [
-      { number: '21', label: 'Ngày thực hành\nliên tục' },
-      { number: "60'", label: 'Mỗi buổi sáng\n07:00 đến 08:00' },
-      { number: '80+', label: 'Quốc gia đã áp dụng\nPhương pháp Sivananda' },
-      { number: '100+', label: 'Năm Lịch sử\nTruyền thống Sivananda' }
+      { number: '21', label: 'Ngày Chuyển Hóa' },
+      { number: '60', label: 'Phút Mỗi Ngày' },
+      { number: '80+', label: 'Quốc Gia Áp Dụng' },
+      { number: '100+', label: 'Năm Kế Thừa' }
     ],
     features: [
       {
@@ -268,6 +290,7 @@ export const DEFAULT_LANDING_SECTION_DATA: LandingSectionData = {
   steps: {
     eyebrow: 'Quy trình ĐƠN GIẢN',
     heading: 'Bắt đầu Hành trình trong 04 bước',
+    description: 'Chỉ với các bước đơn giản để bước vào hành trình 21 ngày chuyển hóa sức khỏe.',
     items: [
       {
         step: 'Bước 01',
@@ -308,6 +331,7 @@ export const DEFAULT_LANDING_SECTION_DATA: LandingSectionData = {
   faq: {
     eyebrow: 'Giải đáp thắc mắc',
     heading: 'Câu hỏi thường gặp',
+    description: 'Những câu hỏi thường gặp về chương trình 21 ngày Zen.',
     items: [
       {
         question: 'Tôi chưa từng tập vận động bao giờ, có theo được không?',

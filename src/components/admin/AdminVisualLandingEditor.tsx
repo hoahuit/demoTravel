@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import '../SectionLandingPage.css';
 import {
     ArrowRight,
@@ -18,9 +18,11 @@ import {
     Brain,
     ShieldCheck,
     Camera,
-    PlusCircle
+    PlusCircle,
+    Loader2
 } from 'lucide-react';
 import { LandingSectionData } from '../../data/landingSectionData';
+import { uploadImageApi } from '../../services/apiService';
 
 interface AdminVisualLandingEditorProps {
     templateData: LandingSectionData;
@@ -35,6 +37,10 @@ export default function AdminVisualLandingEditor({
 }: AdminVisualLandingEditorProps) {
     const [data, setData] = useState<LandingSectionData>(templateData);
     const [activeFaq, setActiveFaq] = useState<number | null>(0);
+    const [isUploadingAboutImg, setIsUploadingAboutImg] = useState<boolean>(false);
+    const [isUploadingTeacherImg, setIsUploadingTeacherImg] = useState<boolean>(false);
+    const aboutFileInputRef = useRef<HTMLInputElement>(null);
+    const teacherFileInputRef = useRef<HTMLInputElement>(null);
 
     React.useEffect(() => {
         setData(templateData);
@@ -124,9 +130,94 @@ export default function AdminVisualLandingEditor({
         onChange(next);
     };
 
+    // Image Upload Handlers
+    const handleAboutImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setIsUploadingAboutImg(true);
+        try {
+            const res = await uploadImageApi(file);
+            const uploadedUrl = typeof res === 'string' ? res : (res?.url || res?.fileUrl || '');
+            if (uploadedUrl) {
+                updateAboutField('image', uploadedUrl);
+            }
+        } catch (err: any) {
+            alert('Lỗi tải ảnh: ' + (err?.message || err));
+        } finally {
+            setIsUploadingAboutImg(false);
+            if (e.target) e.target.value = '';
+        }
+    };
+
+    const handleTeacherImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setIsUploadingTeacherImg(true);
+        try {
+            const res = await uploadImageApi(file);
+            const uploadedUrl = typeof res === 'string' ? res : (res?.url || res?.fileUrl || '');
+            if (uploadedUrl) {
+                updateTeacherField('image', uploadedUrl);
+            }
+        } catch (err: any) {
+            alert('Lỗi tải ảnh: ' + (err?.message || err));
+        } finally {
+            setIsUploadingTeacherImg(false);
+            if (e.target) e.target.value = '';
+        }
+    };
+
     // About
-    const updateAboutField = (field: keyof LandingSectionData['about'], val: string) => {
+    const updateAboutField = (field: keyof LandingSectionData['about'], val: any) => {
         const next = { ...data, about: { ...data.about, [field]: val } };
+        setData(next);
+        onChange(next);
+    };
+
+    const defaultChecklist = [
+        {
+            title: 'Thể Dục ĐÚNG:',
+            description: 'Các tư thế vận động kéo giãn và giải tỏa áp lực đĩa đệm, giải phóng tắc nghẽn vùng cổ vai gáy và cột sống nhẹ nhàng.'
+        },
+        {
+            title: 'Hơi Thở ĐÚNG:',
+            description: 'Kỹ thuật Hơi thở sử dụng tối đa dung tích Phổi, cung cấp đủ Oxy, giảm Stress trong vài phút, tăng Tập trung và cải thiện Giấc ngủ ngay tuần đầu.'
+        },
+        {
+            title: 'Thư Giãn ĐÚNG:',
+            description: 'Kỹ thuật Thư giãn sâu giải toả Căng thẳng tích tụ, chữa lành tổn thương Thể chất và Tinh thần, cảm nhận sự Tĩnh lặng và Kết nối với Bản thân.'
+        }
+    ];
+
+    const currentChecklist = (data.about.checklist && data.about.checklist.length > 0)
+        ? data.about.checklist
+        : defaultChecklist;
+
+    const updateAboutChecklistItem = (idx: number, field: 'title' | 'description', val: string) => {
+        const nextList = [...currentChecklist];
+        nextList[idx] = { ...nextList[idx], [field]: val };
+        const next = { ...data, about: { ...data.about, checklist: nextList } };
+        setData(next);
+        onChange(next);
+    };
+
+    const addAboutChecklistItem = () => {
+        const nextList = [
+            ...currentChecklist,
+            {
+                title: 'Tiêu chí mới:',
+                description: 'Nhập nội dung giải thích chi tiết cho tiêu chí này...'
+            }
+        ];
+        const next = { ...data, about: { ...data.about, checklist: nextList } };
+        setData(next);
+        onChange(next);
+    };
+
+    const removeAboutChecklistItem = (idx: number) => {
+        if (currentChecklist.length <= 1) return;
+        const nextList = currentChecklist.filter((_, i) => i !== idx);
+        const next = { ...data, about: { ...data.about, checklist: nextList } };
         setData(next);
         onChange(next);
     };
@@ -171,7 +262,7 @@ export default function AdminVisualLandingEditor({
     };
 
     // Teacher
-    const updateTeacherField = (field: 'title' | 'bio' | 'image', val: string) => {
+    const updateTeacherField = (field: 'title' | 'bio' | 'image' | 'badge', val: string) => {
         const next = {
             ...data,
             trust: { ...data.trust, teacher: { ...data.trust.teacher, [field]: val } }
@@ -180,8 +271,43 @@ export default function AdminVisualLandingEditor({
         onChange(next);
     };
 
+    // Organization
+    const updateOrganizationField = (field: 'title' | 'badge' | 'bio' | 'logo', val: string) => {
+        const next = {
+            ...data,
+            trust: {
+                ...data.trust,
+                organization: {
+                    ...(data.trust.organization || { title: '4U Wellness', badge: 'Non-profit', bio: '', logo: '' }),
+                    [field]: val
+                }
+            }
+        };
+        setData(next);
+        onChange(next);
+    };
+
+    // Trust Stats
+    const updateTrustStat = (idx: number, field: 'number' | 'label', val: string) => {
+        const currentStats = data.trust.stats && data.trust.stats.length > 0
+            ? [...data.trust.stats]
+            : [
+                { number: '21', label: 'Ngày Chuyển Hóa' },
+                { number: '60', label: 'Phút Mỗi Ngày' },
+                { number: '80+', label: 'Quốc Gia Áp Dụng' },
+                { number: '100+', label: 'Năm Kế Thừa' }
+              ];
+        currentStats[idx] = { ...currentStats[idx], [field]: val };
+        const next = {
+            ...data,
+            trust: { ...data.trust, stats: currentStats }
+        };
+        setData(next);
+        onChange(next);
+    };
+
     // Steps (4 Steps Process)
-    const updateStepsField = (field: 'heading', val: string) => {
+    const updateStepsField = (field: 'heading' | 'description' | 'eyebrow', val: string) => {
         const next = { ...data, steps: { ...data.steps, [field]: val } };
         setData(next);
         onChange(next);
@@ -219,7 +345,7 @@ export default function AdminVisualLandingEditor({
     };
 
     // FAQ
-    const updateFaqField = (field: 'heading', val: string) => {
+    const updateFaqField = (field: 'heading' | 'description' | 'eyebrow', val: string) => {
         const next = { ...data, faq: { ...data.faq, [field]: val } };
         setData(next);
         onChange(next);
@@ -623,87 +749,7 @@ export default function AdminVisualLandingEditor({
                     </div>
                 </section>
 
-                {/* ── 3. Benefits (21 Days Transformation) ── */}
-                <section id="benefits" className="zen-section">
-                    <div className="zen-container">
-                        <div className="zen-section-header">
-                            <h2 className="zen-headline-lg">
-                                <EditableText
-                                    value={benefits.heading || '21 ngày liên tục sẽ thay đổi điều gì?'}
-                                    onSave={(val) => updateBenefitsField('heading', val)}
-                                />
-                            </h2>
-                            <p className="zen-body-lg">
-                                <EditableText
-                                    value={benefits.description || 'Đồng hành cùng chúng tôi trong 21 ngày để cảm nhận sự chuyển hóa rõ rệt từ bên trong.'}
-                                    onSave={(val) => updateBenefitsField('description', val)}
-                                />
-                            </p>
-                        </div>
-
-                        <div className="zen-benefits-grid">
-                            {benefits.items.map((item, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`zen-benefit-card admin-card-container ${getBenefitSpanClass(idx, benefits.items.length)}`}
-                                    style={{ gridColumn: getBenefitSpanStyle(idx, benefits.items.length) }}
-                                >
-                                    <button
-                                        type="button"
-                                        className="admin-card-delete-btn"
-                                        onClick={() => removeBenefitItem(idx)}
-                                        title="Xóa lợi ích này"
-                                    >
-                                        <X size={15} />
-                                    </button>
-                                    <div className="zen-benefit-icon">
-                                        {getBenefitIcon(idx)}
-                                    </div>
-                                    <div>
-                                        <h4>
-                                            <EditableText
-                                                value={item.title}
-                                                onSave={(val) => updateBenefitItem(idx, 'title', val)}
-                                            />
-                                        </h4>
-                                        <p>
-                                            <EditableText
-                                                value={item.description}
-                                                onSave={(val) => updateBenefitItem(idx, 'description', val)}
-                                            />
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Add Benefit Button Outside Grid */}
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                            <button
-                                type="button"
-                                onClick={addBenefitItem}
-                                style={{
-                                    padding: '10px 24px',
-                                    borderRadius: '999px',
-                                    border: '1.5px dashed #006d36',
-                                    backgroundColor: '#e8f5e9',
-                                    color: '#006d36',
-                                    fontSize: '13.5px',
-                                    fontWeight: 700,
-                                    cursor: 'pointer',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '8px'
-                                }}
-                            >
-                                <PlusCircle size={18} />
-                                <span>+ Thêm Lợi Ích 21 Ngày</span>
-                            </button>
-                        </div>
-                    </div>
-                </section>
-
-                {/* ── 4. Method (3 Pillars) ── */}
+                {/* ── 3. Method (3 Pillars & About) ── */}
                 <section id="method" className="zen-section">
                     <div className="zen-container">
                         <div id="about-3d" className="zen-about-grid" style={{ marginBottom: '60px' }}>
@@ -716,14 +762,59 @@ export default function AdminVisualLandingEditor({
                                 />
                                 <div
                                     className="admin-img-overlay"
-                                    onClick={() => {
-                                        const newUrl = window.prompt('Nhập đường dẫn ảnh Giới thiệu mới:', ABOUT_IMG);
-                                        if (newUrl && newUrl.trim()) updateAboutField('image', newUrl.trim());
-                                    }}
+                                    style={{ flexDirection: 'column', gap: '8px' }}
                                 >
-                                    <button type="button" style={{ background: '#006d36', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '999px', fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
-                                        <Camera size={16} />
-                                        <span>Đổi ảnh Giới thiệu</span>
+                                    <input
+                                        type="file"
+                                        ref={aboutFileInputRef}
+                                        onChange={handleAboutImageSelect}
+                                        style={{ display: 'none' }}
+                                        accept="image/*"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            aboutFileInputRef.current?.click();
+                                        }}
+                                        disabled={isUploadingAboutImg}
+                                        style={{
+                                            background: '#006d36',
+                                            color: '#fff',
+                                            border: 'none',
+                                            padding: '8px 18px',
+                                            borderRadius: '999px',
+                                            fontSize: '13px',
+                                            fontWeight: 700,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '6px',
+                                            cursor: 'pointer',
+                                            boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                                        }}
+                                    >
+                                        {isUploadingAboutImg ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : <Camera size={16} />}
+                                        <span>{isUploadingAboutImg ? 'Đang tải ảnh...' : 'Tải ảnh từ máy'}</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const newUrl = window.prompt('Hoặc dán link ảnh URL:', ABOUT_IMG);
+                                            if (newUrl && newUrl.trim()) updateAboutField('image', newUrl.trim());
+                                        }}
+                                        style={{
+                                            background: 'rgba(255,255,255,0.92)',
+                                            color: '#1e293b',
+                                            border: 'none',
+                                            padding: '4px 12px',
+                                            borderRadius: '999px',
+                                            fontSize: '11.5px',
+                                            fontWeight: 600,
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        Dán link URL
                                     </button>
                                 </div>
                             </div>
@@ -748,26 +839,73 @@ export default function AdminVisualLandingEditor({
                                     />
                                 </p>
 
-                                <ul className="zen-checklist">
-                                    <li className="zen-checklist-item">
-                                        <CheckCircle2 size={22} className="zen-check-icon" />
-                                        <span>
-                                            <strong>Thể Dục ĐÚNG:</strong> Các tư thế vận động kéo giãn và giải tỏa áp lực đĩa đệm, giải phóng tắc nghẽn vùng cổ vai gáy và cột sống nhẹ nhàng.
-                                        </span>
-                                    </li>
-                                    <li className="zen-checklist-item">
-                                        <CheckCircle2 size={22} className="zen-check-icon" />
-                                        <span>
-                                            <strong>Hơi Thở ĐÚNG:</strong> Kỹ thuật Hơi thở sử dụng tối đa dung tích Phổi, cung cấp đủ Oxy, giảm Stress trong vài phút, tăng Tập trung và cải thiện Giấc ngủ ngay tuần đầu.
-                                        </span>
-                                    </li>
-                                    <li className="zen-checklist-item">
-                                        <CheckCircle2 size={22} className="zen-check-icon" />
-                                        <span>
-                                            <strong>Thư Giãn ĐÚNG:</strong> Kỹ thuật Thư giãn sâu giải toả Căng thẳng tích tụ, chữa lành tổn thương Thể chất và Tinh thần, cảm nhận sự Tĩnh lặng và Kết nối với Bản thân.
-                                        </span>
-                                    </li>
+                                <ul className="zen-checklist" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                    {currentChecklist.map((cItem, cIdx) => (
+                                        <li key={cIdx} className="zen-checklist-item admin-card-container" style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '6px 8px', borderRadius: '8px', transition: 'background-color 0.15s ease' }}>
+                                            <CheckCircle2 size={22} className="zen-check-icon" style={{ flexShrink: 0, marginTop: '2px' }} />
+                                            <span style={{ flex: 1 }}>
+                                                <strong style={{ marginRight: '6px' }}>
+                                                    <EditableText
+                                                        value={cItem.title}
+                                                        onSave={(val) => updateAboutChecklistItem(cIdx, 'title', val)}
+                                                        placeholder="Tiêu đề tiêu chí..."
+                                                    />
+                                                </strong>
+                                                <EditableText
+                                                    value={cItem.description}
+                                                    onSave={(val) => updateAboutChecklistItem(cIdx, 'description', val)}
+                                                    placeholder="Mô tả tiêu chí..."
+                                                />
+                                            </span>
+                                            {currentChecklist.length > 1 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeAboutChecklistItem(cIdx)}
+                                                    title="Xóa dòng này"
+                                                    style={{
+                                                        background: '#fee2e2',
+                                                        border: '1px solid #fca5a5',
+                                                        color: '#dc2626',
+                                                        borderRadius: '50%',
+                                                        width: '24px',
+                                                        height: '24px',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        cursor: 'pointer',
+                                                        flexShrink: 0,
+                                                        padding: 0
+                                                    }}
+                                                >
+                                                    <X size={13} />
+                                                </button>
+                                            )}
+                                        </li>
+                                    ))}
                                 </ul>
+
+                                <div style={{ marginTop: '12px', marginBottom: '24px' }}>
+                                    <button
+                                        type="button"
+                                        onClick={addAboutChecklistItem}
+                                        style={{
+                                            padding: '7px 16px',
+                                            borderRadius: '8px',
+                                            border: '1.5px dashed #006d36',
+                                            backgroundColor: '#e8f5e9',
+                                            color: '#006d36',
+                                            fontSize: '12.5px',
+                                            fontWeight: 700,
+                                            cursor: 'pointer',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '6px'
+                                        }}
+                                    >
+                                        <Plus size={15} />
+                                        <span>+ Thêm dòng tiêu chí</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -854,6 +992,86 @@ export default function AdminVisualLandingEditor({
                     </div>
                 </section>
 
+                {/* ── 4. Benefits (21 Days Transformation) ── */}
+                <section id="benefits" className="zen-section">
+                    <div className="zen-container">
+                        <div className="zen-section-header">
+                            <h2 className="zen-headline-lg">
+                                <EditableText
+                                    value={benefits.heading || '21 ngày liên tục sẽ thay đổi điều gì?'}
+                                    onSave={(val) => updateBenefitsField('heading', val)}
+                                />
+                            </h2>
+                            <p className="zen-body-lg">
+                                <EditableText
+                                    value={benefits.description || 'Đồng hành cùng chúng tôi trong 21 ngày để cảm nhận sự chuyển hóa rõ rệt từ bên trong.'}
+                                    onSave={(val) => updateBenefitsField('description', val)}
+                                />
+                            </p>
+                        </div>
+
+                        <div className="zen-benefits-grid">
+                            {benefits.items.map((item, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`zen-benefit-card admin-card-container ${getBenefitSpanClass(idx, benefits.items.length)}`}
+                                    style={{ gridColumn: getBenefitSpanStyle(idx, benefits.items.length) }}
+                                >
+                                    <button
+                                        type="button"
+                                        className="admin-card-delete-btn"
+                                        onClick={() => removeBenefitItem(idx)}
+                                        title="Xóa lợi ích này"
+                                    >
+                                        <X size={15} />
+                                    </button>
+                                    <div className="zen-benefit-icon">
+                                        {getBenefitIcon(idx)}
+                                    </div>
+                                    <div>
+                                        <h4>
+                                            <EditableText
+                                                value={item.title}
+                                                onSave={(val) => updateBenefitItem(idx, 'title', val)}
+                                            />
+                                        </h4>
+                                        <p>
+                                            <EditableText
+                                                value={item.description}
+                                                onSave={(val) => updateBenefitItem(idx, 'description', val)}
+                                            />
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Add Benefit Button Outside Grid */}
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                            <button
+                                type="button"
+                                onClick={addBenefitItem}
+                                style={{
+                                    padding: '10px 24px',
+                                    borderRadius: '999px',
+                                    border: '1.5px dashed #006d36',
+                                    backgroundColor: '#e8f5e9',
+                                    color: '#006d36',
+                                    fontSize: '13.5px',
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}
+                            >
+                                <PlusCircle size={18} />
+                                <span>+ Thêm Lợi Ích 21 Ngày</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
                 {/* ── 5. Trust & Numbers / Expert ── */}
                 <section id="ve-chung-toi" className="zen-section">
                     <div className="zen-container">
@@ -877,14 +1095,59 @@ export default function AdminVisualLandingEditor({
                                     />
                                     <div
                                         className="admin-img-overlay"
-                                        onClick={() => {
-                                            const newUrl = window.prompt('Nhập đường dẫn avatar chuyên gia:', EXPERT_IMG);
-                                            if (newUrl && newUrl.trim()) updateTeacherField('image', newUrl.trim());
-                                        }}
+                                        style={{ flexDirection: 'column', gap: '6px' }}
                                     >
-                                        <button type="button" style={{ background: '#006d36', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '999px', fontSize: '11.5px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}>
-                                            <Camera size={14} />
-                                            <span>Đổi ảnh</span>
+                                        <input
+                                            type="file"
+                                            ref={teacherFileInputRef}
+                                            onChange={handleTeacherImageSelect}
+                                            style={{ display: 'none' }}
+                                            accept="image/*"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                teacherFileInputRef.current?.click();
+                                            }}
+                                            disabled={isUploadingTeacherImg}
+                                            style={{
+                                                background: '#006d36',
+                                                color: '#fff',
+                                                border: 'none',
+                                                padding: '6px 14px',
+                                                borderRadius: '999px',
+                                                fontSize: '11.5px',
+                                                fontWeight: 700,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '4px',
+                                                cursor: 'pointer',
+                                                boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+                                            }}
+                                        >
+                                            {isUploadingTeacherImg ? <Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} /> : <Camera size={14} />}
+                                            <span>{isUploadingTeacherImg ? 'Đang tải...' : 'Đổi ảnh từ máy'}</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                const newUrl = window.prompt('Hoặc dán URL avatar chuyên gia:', EXPERT_IMG);
+                                                if (newUrl && newUrl.trim()) updateTeacherField('image', newUrl.trim());
+                                            }}
+                                            style={{
+                                                background: 'rgba(255,255,255,0.92)',
+                                                color: '#1e293b',
+                                                border: 'none',
+                                                padding: '3px 8px',
+                                                borderRadius: '999px',
+                                                fontSize: '10.5px',
+                                                fontWeight: 600,
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            Dán URL
                                         </button>
                                     </div>
                                 </div>
@@ -904,32 +1167,43 @@ export default function AdminVisualLandingEditor({
                                     </p>
                                     <div className="zen-expert-tag">
                                         <span style={{ fontFamily: 'var(--zen-font-serif)', fontWeight: 700, color: 'var(--zen-primary)' }}>
-                                            4U Wellness
+                                            <EditableText
+                                                value={trust.organization?.title || '4U Wellness'}
+                                                onSave={(val) => updateOrganizationField('title', val)}
+                                            />
                                         </span>
                                         <span style={{ fontSize: '11px', backgroundColor: 'rgba(35, 79, 47, 0.12)', padding: '2px 8px', borderRadius: '4px', color: 'var(--zen-moss-darkest)', fontWeight: 600 }}>
-                                            Non-profit
+                                            <EditableText
+                                                value={trust.organization?.badge || 'Non-profit'}
+                                                onSave={(val) => updateOrganizationField('badge', val)}
+                                            />
                                         </span>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="zen-stats-4col">
-                                <div className="zen-stat-tile">
-                                    <div className="zen-stat-num">21</div>
-                                    <div className="zen-stat-lbl">Ngày Chuyển Hóa</div>
-                                </div>
-                                <div className="zen-stat-tile">
-                                    <div className="zen-stat-num">60</div>
-                                    <div className="zen-stat-lbl">Phút Mỗi Ngày</div>
-                                </div>
-                                <div className="zen-stat-tile">
-                                    <div className="zen-stat-num">80+</div>
-                                    <div className="zen-stat-lbl">Quốc Gia Áp Dụng</div>
-                                </div>
-                                <div className="zen-stat-tile">
-                                    <div className="zen-stat-num">100+</div>
-                                    <div className="zen-stat-lbl">Năm Kế Thừa</div>
-                                </div>
+                                {(trust.stats && trust.stats.length > 0 ? trust.stats : [
+                                    { number: '21', label: 'Ngày Chuyển Hóa' },
+                                    { number: '60', label: 'Phút Mỗi Ngày' },
+                                    { number: '80+', label: 'Quốc Gia Áp Dụng' },
+                                    { number: '100+', label: 'Năm Kế Thừa' }
+                                ]).map((statItem, idx) => (
+                                    <div key={idx} className="zen-stat-tile">
+                                        <div className="zen-stat-num">
+                                            <EditableText
+                                                value={statItem.number}
+                                                onSave={(val) => updateTrustStat(idx, 'number', val)}
+                                            />
+                                        </div>
+                                        <div className="zen-stat-lbl">
+                                            <EditableText
+                                                value={statItem.label}
+                                                onSave={(val) => updateTrustStat(idx, 'label', val)}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -946,7 +1220,10 @@ export default function AdminVisualLandingEditor({
                                 />
                             </h2>
                             <p className="zen-body-lg">
-                                Chỉ với các bước đơn giản để bước vào hành trình 21 ngày chuyển hóa sức khỏe.
+                                <EditableText
+                                    value={steps.description || 'Chỉ với các bước đơn giản để bước vào hành trình 21 ngày chuyển hóa sức khỏe.'}
+                                    onSave={(val) => updateStepsField('description', val)}
+                                />
                             </p>
                         </div>
 
@@ -1017,7 +1294,10 @@ export default function AdminVisualLandingEditor({
                                 />
                             </h2>
                             <p className="zen-body-lg">
-                                Những câu hỏi thường gặp về chương trình 21 ngày Zen.
+                                <EditableText
+                                    value={faq.description || 'Những câu hỏi thường gặp về chương trình 21 ngày Zen.'}
+                                    onSave={(val) => updateFaqField('description', val)}
+                                />
                             </p>
                         </div>
 

@@ -41,8 +41,8 @@ export interface HeaderProps {
 
 export const LANDING_PAGE_SUBMENUS = [
   { id: 'signals', label: 'Vì sao cần?', targetId: 'signals' },
-  { id: 'benefits', label: 'Lợi ích', targetId: 'benefits' },
   { id: 'method', label: 'Phương pháp', targetId: 'method' },
+  { id: 'benefits', label: 'Lợi ích', targetId: 'benefits' },
   { id: 'faq', label: 'Hỏi · Đáp', targetId: 'faq' }
 ];
 

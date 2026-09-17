@@ -288,42 +288,10 @@ export default function SectionLandingPage({
                     </div>
                 </section>
 
-                {/* ── 3. Lợi ích Section (21-Day Transformation) ── */}
-                <section id="benefits" className="zen-section">
-                    <div className="zen-container">
-                        <div className="zen-section-header">
-                            <h2 className="zen-headline-lg">
-                                {benefits.heading || '21 ngày liên tục sẽ thay đổi điều gì?'}
-                            </h2>
-                            <p className="zen-body-lg">
-                                {benefits.description || 'Đồng hành cùng chúng tôi trong 21 ngày để cảm nhận sự chuyển hóa rõ rệt từ bên trong.'}
-                            </p>
-                        </div>
-
-                        <div className="zen-benefits-grid">
-                            {benefits.items.map((item, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`zen-benefit-card ${getBenefitSpanClass(idx, benefits.items.length)}`}
-                                    style={{ gridColumn: getBenefitSpanStyle(idx, benefits.items.length) }}
-                                >
-                                    <div className="zen-benefit-icon">
-                                        {getBenefitIcon(idx)}
-                                    </div>
-                                    <div>
-                                        <h4>{item.title}</h4>
-                                        <p>{item.description}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* ── 4. Phương pháp Section (What is 3Đ?, 3 Pillars, Expert & 4 Steps) ── */}
+                {/* ── 3. Phương pháp Section (What is 3Đ?, 3 Pillars) ── */}
                 <section id="method" className="zen-section">
                     <div className="zen-container">
-                        {/* 4.1. Solution Introduction (What is 3Đ?) */}
+                        {/* 3.1. Solution Introduction (What is 3Đ?) */}
                         <div id="about-3d" className="zen-about-grid" style={{ marginBottom: '60px' }}>
                             <div className="zen-about-col">
                                 <img
@@ -346,29 +314,36 @@ export default function SectionLandingPage({
                                 </p>
 
                                 <ul className="zen-checklist">
-                                    <li className="zen-checklist-item">
-                                        <CheckCircle2 size={22} className="zen-check-icon" />
-                                        <span>
-                                            <strong>Thể Dục ĐÚNG:</strong> Các tư thế vận động kéo giãn và giải tỏa áp lực đĩa đệm, giải phóng tắc nghẽn vùng cổ vai gáy và cột sống nhẹ nhàng.
-                                        </span>
-                                    </li>
-                                    <li className="zen-checklist-item">
-                                        <CheckCircle2 size={22} className="zen-check-icon" />
-                                        <span>
-                                            <strong>Hơi Thở ĐÚNG:</strong> Kỹ thuật Hơi thở sử dụng tối đa dung tích Phổi, cung cấp đủ Oxy, giảm Stress trong vài phút, tăng Tập trung và cải thiện Giấc ngủ ngay tuần đầu.
-                                        </span>
-                                    </li>
-                                    <li className="zen-checklist-item">
-                                        <CheckCircle2 size={22} className="zen-check-icon" />
-                                        <span>
-                                            <strong>Thư Giãn ĐÚNG:</strong> Kỹ thuật Thư giãn sâu giải toả Căng thẳng tích tụ, chữa lành tổn thương Thể chất và Tinh thần, cảm nhận sự Tĩnh lặng và Kết nối với Bản thân.
-                                        </span>
-                                    </li>
+                                    {(about.checklist && about.checklist.length > 0
+                                        ? about.checklist
+                                        : [
+                                            {
+                                                title: 'Thể Dục ĐÚNG:',
+                                                description: 'Các tư thế vận động kéo giãn và giải tỏa áp lực đĩa đệm, giải phóng tắc nghẽn vùng cổ vai gáy và cột sống nhẹ nhàng.'
+                                            },
+                                            {
+                                                title: 'Hơi Thở ĐÚNG:',
+                                                description: 'Kỹ thuật Hơi thở sử dụng tối đa dung tích Phổi, cung cấp đủ Oxy, giảm Stress trong vài phút, tăng Tập trung và cải thiện Giấc ngủ ngay tuần đầu.'
+                                            },
+                                            {
+                                                title: 'Thư Giãn ĐÚNG:',
+                                                description: 'Kỹ thuật Thư giãn sâu giải toả Căng thẳng tích tụ, chữa lành tổn thương Thể chất và Tinh thần, cảm nhận sự Tĩnh lặng và Kết nối với Bản thân.'
+                                            }
+                                        ]
+                                    ).map((cItem, cIdx) => (
+                                        <li key={cIdx} className="zen-checklist-item">
+                                            <CheckCircle2 size={22} className="zen-check-icon" />
+                                            <span>
+                                                {cItem.title ? <strong>{cItem.title} </strong> : null}
+                                                {cItem.description}
+                                            </span>
+                                        </li>
+                                    ))}
                                 </ul>
                             </div>
                         </div>
 
-                        {/* 4.2. Three Golden Pillars */}
+                        {/* 3.2. Three Golden Pillars */}
                         <div className="zen-section-header" style={{ marginBottom: '40px' }}>
                             <h2 className="zen-headline-lg">
                                 {method.heading || '3 Trụ Cột Vàng Cho Sức Khỏe'}
@@ -403,6 +378,38 @@ export default function SectionLandingPage({
                     </div>
                 </section>
 
+                {/* ── 4. Lợi ích Section (21-Day Transformation) ── */}
+                <section id="benefits" className="zen-section">
+                    <div className="zen-container">
+                        <div className="zen-section-header">
+                            <h2 className="zen-headline-lg">
+                                {benefits.heading || '21 ngày liên tục sẽ thay đổi điều gì?'}
+                            </h2>
+                            <p className="zen-body-lg">
+                                {benefits.description || 'Đồng hành cùng chúng tôi trong 21 ngày để cảm nhận sự chuyển hóa rõ rệt từ bên trong.'}
+                            </p>
+                        </div>
+
+                        <div className="zen-benefits-grid">
+                            {benefits.items.map((item, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`zen-benefit-card ${getBenefitSpanClass(idx, benefits.items.length)}`}
+                                    style={{ gridColumn: getBenefitSpanStyle(idx, benefits.items.length) }}
+                                >
+                                    <div className="zen-benefit-icon">
+                                        {getBenefitIcon(idx)}
+                                    </div>
+                                    <div>
+                                        <h4>{item.title}</h4>
+                                        <p>{item.description}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
                 {/* ── 4.3. Trust & Numbers / Expert Section ── */}
                 <section id="ve-chung-toi" className="zen-section">
                     <div className="zen-container">
@@ -429,38 +436,33 @@ export default function SectionLandingPage({
                                     </p>
                                     <div className="zen-expert-tag">
                                         <span style={{ fontFamily: 'var(--zen-font-serif)', fontWeight: 700, color: 'var(--zen-primary)' }}>
-                                            4U Wellness
+                                            {trust.organization?.title || '4U Wellness'}
                                         </span>
                                         <span style={{ fontSize: '11px', backgroundColor: 'rgba(35, 79, 47, 0.12)', padding: '2px 8px', borderRadius: '4px', color: 'var(--zen-moss-darkest)', fontWeight: 600 }}>
-                                            Non-profit
+                                            {trust.organization?.badge || 'Non-profit'}
                                         </span>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="zen-stats-4col">
-                                <div className="zen-stat-tile">
-                                    <div className="zen-stat-num">21</div>
-                                    <div className="zen-stat-lbl">Ngày Chuyển Hóa</div>
-                                </div>
-                                <div className="zen-stat-tile">
-                                    <div className="zen-stat-num">60</div>
-                                    <div className="zen-stat-lbl">Phút Mỗi Ngày</div>
-                                </div>
-                                <div className="zen-stat-tile">
-                                    <div className="zen-stat-num">80+</div>
-                                    <div className="zen-stat-lbl">Quốc Gia Áp Dụng</div>
-                                </div>
-                                <div className="zen-stat-tile">
-                                    <div className="zen-stat-num">100+</div>
-                                    <div className="zen-stat-lbl">Năm Kế Thừa</div>
-                                </div>
+                                {(trust.stats && trust.stats.length > 0 ? trust.stats : [
+                                    { number: '21', label: 'Ngày Chuyển Hóa' },
+                                    { number: '60', label: 'Phút Mỗi Ngày' },
+                                    { number: '80+', label: 'Quốc Gia Áp Dụng' },
+                                    { number: '100+', label: 'Năm Kế Thừa' }
+                                ]).map((statItem, idx) => (
+                                    <div key={idx} className="zen-stat-tile">
+                                        <div className="zen-stat-num">{statItem.number}</div>
+                                        <div className="zen-stat-lbl">{statItem.label}</div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* ── 4.4. Process Section (4 Steps) ── */}
+                {/* ── 4.4. Process Section (Steps) ── */}
                 <section id="lich-trinh" className="zen-section">
                     <div className="zen-container">
                         <div className="zen-section-header">
@@ -468,40 +470,20 @@ export default function SectionLandingPage({
                                 {steps.heading || 'Hành Trình Bắt Đầu Đơn Giản'}
                             </h2>
                             <p className="zen-body-lg">
-                                Chỉ với 4 bước đơn giản để bước vào hành trình 21 ngày chuyển hóa sức khỏe.
+                                {steps.description || 'Chỉ với các bước đơn giản để bước vào hành trình 21 ngày chuyển hóa sức khỏe.'}
                             </p>
                         </div>
 
                         <div className="zen-steps-container">
                             <div className="zen-steps-line"></div>
 
-                            {/* Step 1 */}
-                            <div className="zen-step-col">
-                                <div className="zen-step-circle">1</div>
-                                <h4>{steps.items[0]?.title ? steps.items[0].title.replace(/^Bước \d+\s*·\s*/, '') : 'Đăng Ký'}</h4>
-                                <p>{steps.items[0]?.description || 'Để lại thông tin tham gia Info Session miễn phí.'}</p>
-                            </div>
-
-                            {/* Step 2 */}
-                            <div className="zen-step-col">
-                                <div className="zen-step-circle">2</div>
-                                <h4>{steps.items[1]?.title ? steps.items[1].title.replace(/^Bước \d+\s*·\s*/, '') : 'Tham Gia'}</h4>
-                                <p>{steps.items[1]?.description || 'Dự buổi tư vấn để hiểu rõ phương pháp 3Đ.'}</p>
-                            </div>
-
-                            {/* Step 3 */}
-                            <div className="zen-step-col">
-                                <div className="zen-step-circle">3</div>
-                                <h4>{steps.items[2]?.title ? steps.items[2].title.replace(/^Bước \d+\s*·\s*/, '') : 'Nhận Lịch'}</h4>
-                                <p>{steps.items[2]?.description || 'Chọn khung giờ và hình thức học phù hợp.'}</p>
-                            </div>
-
-                            {/* Step 4 */}
-                            <div className="zen-step-col">
-                                <div className="zen-step-circle">4</div>
-                                <h4>{steps.items[3]?.title ? steps.items[3].title.replace(/^Bước \d+\s*·\s*/, '') : 'Bắt Đầu'}</h4>
-                                <p>{steps.items[3]?.description || 'Chính thức bắt đầu hành trình 21 ngày phục hồi.'}</p>
-                            </div>
+                            {(steps.items || []).map((stepItem, idx) => (
+                                <div key={idx} className="zen-step-col">
+                                    <div className="zen-step-circle">{idx + 1}</div>
+                                    <h4>{stepItem.title ? stepItem.title.replace(/^Bước \d+\s*·\s*/, '') : `Bước ${idx + 1}`}</h4>
+                                    <p>{stepItem.description || ''}</p>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </section>
@@ -514,7 +496,7 @@ export default function SectionLandingPage({
                                 {faq.heading || 'Giải đáp thắc mắc'}
                             </h2>
                             <p className="zen-body-lg">
-                                Những câu hỏi thường gặp về chương trình 21 ngày Zen.
+                                {faq.description || 'Những câu hỏi thường gặp về chương trình 21 ngày Zen.'}
                             </p>
                         </div>
 
