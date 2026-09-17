@@ -123,7 +123,7 @@ export default function AdminPartnersManager({
                 transition: 'all 0.2s ease'
               }}
             >
-              {/* Logo Display Box */}
+              {/* Logo Display Box - Standardized uniform dimension */}
               <div
                 style={{
                   width: '100%',
@@ -135,7 +135,8 @@ export default function AdminPartnersManager({
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginBottom: '14px',
-                  padding: '10px',
+                  padding: '8px',
+                  boxSizing: 'border-box',
                   overflow: 'hidden'
                 }}
               >
@@ -143,10 +144,10 @@ export default function AdminPartnersManager({
                   <img
                     src={getImageUrl(logoSrc)}
                     alt={partner.name}
-                    style={{ maxHeight: '64px', maxWidth: '100%', objectFit: 'contain' }}
+                    style={{ width: '140px', height: '56px', objectFit: 'contain', display: 'block' }}
                   />
                 ) : logoSrc ? (
-                  <span style={{ fontSize: '15px', fontWeight: 700, color: '#0f766e' }}>{logoSrc}</span>
+                  <span style={{ fontSize: '15px', fontWeight: 700, color: '#0f766e', maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{logoSrc}</span>
                 ) : (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#94a3b8', fontSize: '12px', fontWeight: 500 }}>
                     <Building2 size={18} />

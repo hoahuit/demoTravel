@@ -193,12 +193,13 @@ export async function getApiErrorMessage(response: Response): Promise<string> {
 
 // Upload image file or base64 to backend server
 export async function uploadImageApi(
-  fileInput: File | { filename: string; data: string }
+  fileInput: File | { filename: string; data: string },
+  maxDimension = 1920
 ): Promise<{ success: boolean; filename: string; url: string; fileUrl: string }> {
   let payload: { filename: string; data: string };
 
   if (fileInput instanceof File) {
-    const base64 = await compressImageFile(fileInput);
+    const base64 = await compressImageFile(fileInput, maxDimension);
     payload = { filename: fileInput.name, data: base64 };
   } else {
     payload = fileInput;

@@ -125,14 +125,16 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
     if (!editingTarget) return;
     try {
       setIsUploadingImage(true);
-      const res = await uploadImageApi(file);
+      // Auto-resize / downscale logos, portraits and avatars to standard 800px max dimension
+      const maxDim = ['logoText', 'logo', 'avatar', 'portrait'].includes(key) ? 800 : 1920;
+      const res = await uploadImageApi(file, maxDim);
       const uploadedUrl = typeof res === 'string' ? res : (res?.url || res?.fileUrl || '');
       if (uploadedUrl) {
         setEditingTarget({
           ...editingTarget,
           item: { ...editingTarget.item, [key]: uploadedUrl }
         });
-        toast.success('Đã tải hình ảnh thành công!');
+        toast.success('Đã tải và tối ưu kích thước hình ảnh thành công!');
       }
     } catch (err: any) {
       toast.error(`Tải ảnh thất bại: ${err?.message || err}`);
@@ -795,11 +797,11 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
 
                       {hasImage && (
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', backgroundColor: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', marginBottom: '8px' }}>
-                          <div style={{ width: '64px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff', borderRadius: '6px', border: '1px solid #cbd5e1', overflow: 'hidden', padding: '4px' }}>
+                          <div style={{ width: '80px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff', borderRadius: '6px', border: '1px solid #cbd5e1', overflow: 'hidden', padding: '4px', flexShrink: 0 }}>
                             <img
                               src={getImageUrl(val)}
                               alt="Preview"
-                              style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                              style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
                             />
                           </div>
                           <div style={{ flex: 1, overflow: 'hidden' }}>

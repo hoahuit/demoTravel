@@ -112,17 +112,32 @@ export default function PartnerLogos() {
                 );
 
                 return (
-                  <div key={idx} className="partner-logos-item" style={{ fontSize: '20px', fontWeight: 700, color: '#1E4A3D', display: 'flex', alignItems: 'center' }}>
+                  <div
+                    key={idx}
+                    className="partner-logos-item"
+                    style={{
+                      height: '48px',
+                      width: '150px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}
+                  >
                     {brand.svg ? (
-                      brand.svg
+                      <div style={{ height: '38px', maxWidth: '130px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {brand.svg}
+                      </div>
                     ) : isImage ? (
                       <img
                         src={getImageUrl(logoSrc)}
                         alt={brand.name || 'Đối tác'}
-                        style={{ height: '38px', maxWidth: '150px', objectFit: 'contain', display: 'block' }}
+                        style={{ height: '38px', width: '130px', objectFit: 'contain', display: 'block' }}
                       />
                     ) : (
-                      brand.name || brand.logoText
+                      <span style={{ fontSize: '18px', fontWeight: 700, color: '#1E4A3D', maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {brand.name || brand.logoText}
+                      </span>
                     )}
                   </div>
                 );
