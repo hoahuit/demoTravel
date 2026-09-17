@@ -68,9 +68,16 @@ export function getImageUrl(imagePath?: string): string {
     return trimmed;
   }
 
-  // If already a full remote URL (Dropbox, Unsplash, external CDN, etc.)
+  // If the URL points to our backend host or current domain, strip origin so it can be resolved through API_BASE_URL/proxy
+  trimmed = trimmed.replace(/^https?:\/\/(?:216\.92\.34\.22(?::\d+)?|localhost(?::\d+)?|127\.0\.0\.1(?::\d+)?|(?:www\.)?4uretreats\.com\.vn(?::\d+)?)/i, '');
+
+  // If already a full remote external URL (Dropbox, Unsplash, external CDN, etc.)
   if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-    // If it points to our domain with duplicate /uploads/uploads/, sanitize it
+    // If it points to an unencrypted http URL, and current page is HTTPS, browsers block it as Mixed Content.
+    if (typeof window !== 'undefined' && window.location.protocol === 'https:' && trimmed.startsWith('http://')) {
+      trimmed = 'https://' + trimmed.slice(7);
+    }
+    // If it points to external CDN with duplicate /uploads/, sanitize it
     return trimmed.replace(/(\/uploads)+/gi, '/uploads');
   }
 

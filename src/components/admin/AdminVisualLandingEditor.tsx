@@ -22,7 +22,7 @@ import {
     Loader2
 } from 'lucide-react';
 import { LandingSectionData } from '../../data/landingSectionData';
-import { uploadImageApi } from '../../services/apiService';
+import { uploadImageApi, getImageUrl } from '../../services/apiService';
 
 interface AdminVisualLandingEditorProps {
     templateData: LandingSectionData;
@@ -429,8 +429,8 @@ export default function AdminVisualLandingEditor({
     const { hero, signals, about, method, benefits, trust, steps, faq } = data;
 
     const HERO_BG_IMG = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBTcydIZrE8ufSGkdRS2E-bnN97g3qeDhqaz6ehh36pUofa0zokMKvgkM9G-GDVP9Ah9gWrP_iKhPNFWDJdE9G3zfcUBSW0A26PBhQEmVb9RO8r14seo75JCpyzepwPlO60zVhseqJFhMy14VKpagKzHT3PfqrKQF2t7vHnpyh_EDK1ou1rXSnh_En7kYlHr1JvMcYnZVp6mupr-C3HRrJf_RODHklr1rsSnuSxeWgne6usM0FbOZ6M';
-    const ABOUT_IMG = about.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCugcyFbQTVlM8o720zc8FSyMRmNEAxlQL9nGYt69uUjZMLJJ5W9ohqxiIg2wKUN_a1c3qG0df0X-rOlykE6j_ATlcu6BY1XoDwPIsniF4TS7jpnpDezoTGoGKxsAX0ayi4YspWBzbkct8MbGIdC4fRb-VUt-1wRx2tWcbQKUetl3l08xXSW5-URAM3XcpJwuL2y0e35PjVKlo6QFP7ILGxDYFfY1nFmGICBqmWQPTwQXUngMj1vEbq';
-    const EXPERT_IMG = trust.teacher.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCiExjxiVWNasHsG7LcpWyLE27qaLpzuRJfa9v53eT143AyOnE1neNwY4iv5563rN5p2hTKuTfouR14V46H7LDE6lTjF4Rp3k3Oh4uEZpjuRi7-ROTbGf67LsvVcCi7U6JtD6TvN2n5Tg2AGsAdx8xW6IYD0UdpenFRtD0Wfs_UtxPUBAF8tlowm-p31ncG99UOt-CoL_UOf4aDyuZ2BP0HH9rpw1nhyHptJGCQ7incu8EHkbo1aSs5';
+    const ABOUT_IMG = getImageUrl(about?.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCugcyFbQTVlM8o720zc8FSyMRmNEAxlQL9nGYt69uUjZMLJJ5W9ohqxiIg2wKUN_a1c3qG0df0X-rOlykE6j_ATlcu6BY1XoDwPIsniF4TS7jpnpDezoTGoGKxsAX0ayi4YspWBzbkct8MbGIdC4fRb-VUt-1wRx2tWcbQKUetl3l08xXSW5-URAM3XcpJwuL2y0e35PjVKlo6QFP7ILGxDYFfY1nFmGICBqmWQPTwQXUngMj1vEbq');
+    const EXPERT_IMG = getImageUrl(trust?.teacher?.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCiExjxiVWNasHsG7LcpWyLE27qaLpzuRJfa9v53eT143AyOnE1neNwY4iv5563rN5p2hTKuTfouR14V46H7LDE6lTjF4Rp3k3Oh4uEZpjuRi7-ROTbGf67LsvVcCi7U6JtD6TvN2n5Tg2AGsAdx8xW6IYD0UdpenFRtD0Wfs_UtxPUBAF8tlowm-p31ncG99UOt-CoL_UOf4aDyuZ2BP0HH9rpw1nhyHptJGCQ7incu8EHkbo1aSs5');
 
     const getPainIconColor = (idx: number) => {
         if (idx === 0) return { bg: '#ffdad6', color: '#93000a', icon: <Frown size={32} /> };
