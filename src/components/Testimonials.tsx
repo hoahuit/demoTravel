@@ -145,7 +145,7 @@ export default function Testimonials() {
       <ScrollReveal>
         <div style={{ maxWidth: '640px', margin: '0 auto 64px', textAlign: 'center', padding: '0 24px' }}>
           <div className="testimonials-header-badge">
-            <span className="dot" /> Đánh Giá & Cảm Nhận Thực Tế
+            <span className="dot" /> Cảm nhận thực tế
           </div>
           <h2
             style={{
@@ -158,10 +158,10 @@ export default function Testimonials() {
               letterSpacing: '-0.01em'
             }}
           >
-            Khách hàng nói gì về <span style={{ color: '#2D5A36', fontWeight: 700, fontStyle: 'italic' }}>chúng tôi</span>?
+            Khách hàng nói gì về <span style={{ color: '#2D5A36', fontWeight: 700, fontStyle: 'italic' }}> 4U Retreats</span>?
           </h2>
           <p style={{ fontSize: '15.5px', color: 'rgba(16,32,27,0.6)', lineHeight: 1.6, margin: 0 }}>
-            Lắng nghe cảm nhận thực tế từ các gia đình, doanh nghiệp & khách du lịch quốc tế sau chuyến đi.
+            Lắng nghe cảm nhận thực tế từ các gia đình, doanh nghiệp & khách du lịch sau chuyến đi.
           </p>
         </div>
       </ScrollReveal>
