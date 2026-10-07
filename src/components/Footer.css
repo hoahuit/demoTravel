@@ -1,34 +1,41 @@
+/* ==============================================================================
+   4U RETREATS - FOOTER COMPONENT STYLES
+   ============================================================================== */
+
 .footer-root {
   padding: 0;
   margin: 0;
   width: 100%;
   position: relative;
   overflow: hidden;
+  background-color: #081e12;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
-.footer-card {
-  background: linear-gradient(180deg, #142619 0%, #0d1a11 100%);
-  border-radius: 0;
-  padding: 64px 5vw 40px;
-  border-top: 1px solid rgba(74, 124, 89, 0.2);
+.footer-inner-card {
+  background: linear-gradient(180deg, #092315 0%, #05140b 100%);
+  padding: 60px 5vw 36px;
+  border-top: 1px solid rgba(74, 124, 89, 0.25);
   color: #e5ebe6;
 }
 
 .footer-container {
   position: relative;
   z-index: 10;
-  max-width: 1400px;
+  max-width: 1360px;
   margin: 0 auto;
 }
 
-.footer-grid {
+/* --- 3-COLUMN MAIN GRID --- */
+.footer-main-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: 1.25fr 1fr 1.15fr;
   gap: 48px;
-  padding-bottom: 48px;
+  align-items: start;
 }
 
-.footer-brand-col {
+/* --- COLUMN 1: BRAND & CONTACT --- */
+.footer-col-brand {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -39,50 +46,25 @@
   align-items: center;
 }
 
+.footer-logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
 .footer-logo-img {
   height: 48px;
+  max-width: 220px;
   width: auto;
   object-fit: contain;
 }
 
-.footer-bio-text {
-  font-size: 17px;
-  color: #a3b899;
-  line-height: 1.65;
-  margin: 0;
-}
-
-.footer-license-info {
-  font-size: 14px;
-  color: rgba(235, 245, 237, 0.85);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 6px;
-}
-
-.footer-nowrap {
-  white-space: nowrap;
-}
-
-.footer-white-bold {
-  color: #ffffff;
-}
-
-.footer-col-title {
-  font-size: 30px;
+.footer-company-name {
+  font-size: 15px;
   font-weight: 700;
   color: #ffffff;
-  margin-bottom: 22px;
-}
-
-.footer-links-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
 }
 
 .footer-contact-list {
@@ -91,97 +73,322 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 12px;
 }
 
-.footer-link-item {
-  color: #a3b899;
-  text-decoration: none;
-  font-size: 17px;
-  transition: color 0.2s ease;
+.footer-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: rgba(229, 235, 230, 0.9);
 }
 
-.footer-link-item:hover {
+.footer-contact-icon-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
   color: #4ade80;
+  flex-shrink: 0;
+  margin-top: 1px;
 }
 
-.footer-link-white {
+.footer-icon {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2;
+}
+
+.footer-contact-link {
+  color: rgba(229, 235, 230, 0.95);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  word-break: break-all;
+}
+
+.footer-contact-link:hover {
+  color: #4ade80;
+  text-decoration: underline;
+}
+
+.footer-hotline-bold {
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+.footer-contact-text {
+  color: rgba(229, 235, 230, 0.9);
+}
+
+.footer-tax-code {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Social Icon Buttons */
+.footer-social-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.footer-social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.footer-social-btn:hover {
+  background: #4ade80;
+  border-color: #4ade80;
+  color: #061c0e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 222, 128, 0.3);
+}
+
+.footer-social-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* --- COLUMN 2: KHÔNG THỂ BỎ LỠ --- */
+.footer-col-links {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-col-title-link {
+  font-size: 19px;
+  font-weight: 800;
+  color: #facc15; /* Gold / Yellow highlight matching reference screenshot */
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 22px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-col-title-link:hover {
+  color: #fef08a;
+  transform: translateX(2px);
+}
+
+.footer-products-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer-product-item {
+  margin: 0;
+}
+
+.footer-product-link {
+  font-size: 15px;
+  font-weight: 500;
   color: #ffffff;
   text-decoration: none;
-  transition: color 0.2s ease;
+  display: inline-block;
+  transition: all 0.2s ease;
+  line-height: 1.5;
 }
 
-.footer-link-white:hover {
+.footer-product-link:hover {
   color: #4ade80;
+  transform: translateX(4px);
+  text-shadow: 0 0 12px rgba(74, 222, 128, 0.25);
 }
 
-.footer-status-pill {
-  position: relative;
-  display: inline-flex;
+/* --- COLUMN 3: FANPAGE CARD --- */
+.footer-col-fanpage {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-fanpage-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  transition: border-color 0.25s ease;
+}
+
+.footer-fanpage-card:hover {
+  border-color: rgba(74, 222, 128, 0.35);
+}
+
+.footer-fanpage-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-fanpage-brand {
+  display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.footer-online-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
+.footer-fb-badge-icon {
+  width: 18px;
+  height: 18px;
+  color: #3b82f6;
+  fill: #3b82f6;
+}
+
+.footer-fanpage-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.footer-fanpage-visit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #a3b899;
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  transition: all 0.2s ease;
+}
+
+.footer-fanpage-visit-btn:hover {
   background: #4ade80;
-  box-shadow: 0 0 12px #4ade80;
-  display: inline-block;
+  color: #061c0e;
 }
 
-.footer-contact-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  font-size: 17px;
-  color: #a3b899;
+.footer-external-icon {
+  width: 12px;
+  height: 12px;
 }
 
-.footer-directory-section {
-  border-top: 1px solid rgba(74, 124, 89, 0.2);
-  padding-top: 24px;
-  padding-bottom: 24px;
+.footer-fb-iframe-container {
+  position: relative;
+  width: 100%;
+  min-height: 220px;
+  background: #ffffff;
+  overflow: hidden;
 }
 
-.footer-accordion-btn {
-  background: none;
+.footer-fb-iframe {
+  width: 100%;
+  height: 220px;
   border: none;
-  color: #a3b899;
-  font-size: 17px;
-  cursor: pointer;
+  display: block;
+}
+
+/* --- CENTERED BRAND BELONGING SECTION --- */
+.footer-brand-belong-wrap {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 48px auto 24px;
+  text-align: center;
+}
+
+.footer-belong-logo {
+  height: 36px;
+  width: auto;
+  max-width: 170px;
+  object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+}
+
+.footer-belong-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: 0.02em;
+}
+
+/* --- DIVIDER --- */
+.footer-divider {
+  border: none;
+  border-top: 1px solid rgba(74, 124, 89, 0.22);
+  margin: 16px 0 24px;
   width: 100%;
 }
 
-.footer-directory-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.footer-directory-card {
-  background: rgba(74, 124, 89, 0.12);
-  padding: 10px 14px;
-  border-radius: 12px;
-}
-
-.footer-divider {
-  border-top: 1px solid rgba(74, 124, 89, 0.2);
-  margin: 16px 0 28px;
-}
-
+/* --- BOTTOM BAR & COPYRIGHT --- */
 .footer-bottom-bar {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  font-size: 14px;
-  color: #a3b899;
+  justify-content: center;
+  text-align: center;
+}
+
+.footer-copyright-text {
+  margin: 0;
+  font-size: 13.5px;
+  color: rgba(229, 235, 230, 0.7);
+  letter-spacing: 0.02em;
+}
+
+/* --- RESPONSIVE BREAKPOINTS --- */
+@media (max-width: 1024px) {
+  .footer-main-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+  }
+
+  .footer-col-fanpage {
+    grid-column: span 2;
+    max-width: 480px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-inner-card {
+    padding: 44px 20px 28px;
+  }
+
+  .footer-main-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .footer-col-fanpage {
+    grid-column: span 1;
+    max-width: 100%;
+  }
+
+  .footer-brand-belong-wrap {
+    flex-direction: column;
+    gap: 10px;
+    margin: 36px auto 20px;
+  }
+
+  .footer-belong-logo {
+    height: 30px;
+  }
 }

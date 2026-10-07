@@ -181,7 +181,7 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
 
   const checkIsDeal = (t: TourPackage) => {
     const cats = Array.isArray(t.categories) ? t.categories : (typeof t.categories === 'string' ? JSON.parse(t.categories || '[]') : []);
-    return (t.originalPrice || 0) > (t.price || 0) || t.isPromotion === true || cats.includes('uu-dai-gio-chot') || cats.includes('last-minute');
+    return t.isPromotion === true || cats.includes('uu-dai-gio-chot') || cats.includes('last-minute');
   };
 
   const filteredTours = useMemo(() => {

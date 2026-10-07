@@ -453,7 +453,7 @@ export default function Header({
   return (
     <>
       <div
-        className="apple-header-wrapper"
+        className={`apple-header-wrapper main-header-bar ${scrolled ? 'is-scrolled' : ''}`}
         onMouseEnter={() => {
           if (!row2Visible) setRow2Visible(true);
         }}
@@ -464,11 +464,6 @@ export default function Header({
           }
         }}
         style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 10000,
           background: activeCategory
             ? 'rgba(13, 23, 16, 0.88)'
             : scrolled
@@ -481,24 +476,10 @@ export default function Header({
           borderBottom: scrolled
             ? '1px solid rgba(74, 124, 89, 0.28)'
             : 'none',
-          boxShadow: scrolled ? '0 10px 30px rgba(0, 0, 0, 0.45)' : 'none',
-          padding: scrolled ? '12px 44px' : '16px 44px',
-          fontFamily:
-            '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans", sans-serif',
-          transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+          boxShadow: scrolled ? '0 10px 30px rgba(0, 0, 0, 0.45)' : 'none'
         }}
       >
-        <div
-          style={{
-            width: '100%',
-            maxWidth: '100%',
-            padding: '0 40px',
-            margin: '0 auto',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '24px'
-          }}
-        >
+        <div className="main-header-inner">
           {/* 1. Left Column: Logo */}
           <a
             href="/"
@@ -506,15 +487,7 @@ export default function Header({
               e.preventDefault();
               if (onNavigate) onNavigate('/');
             }}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textDecoration: 'none',
-              flexShrink: 0,
-              cursor: 'pointer',
-              transition: 'opacity 0.2s ease'
-            }}
+            className="main-header-logo-link"
             onMouseEnter={(e) => {
               setActiveCategory(null);
               e.currentTarget.style.opacity = '1';
@@ -524,43 +497,16 @@ export default function Header({
             <img
               src="/Logo-4U-Wellness.png"
               alt="4U Wellness Logo"
-              style={{
-                height: '50px',
-                width: 'auto',
-                objectFit: 'contain',
-                display: 'block'
-              }}
+              className="main-header-logo-img"
             />
           </a>
 
           {/* 2. Middle Column: Navigation */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flex: 1,
-              minWidth: 0,
-              gap: '6px'
-            }}
-          >
+          <div className="main-header-nav-col">
             {/* Row 1: Fixed Badges */}
             <div
-              className="hide-mobile"
+              className="main-header-badges-row hide-mobile"
               onMouseEnter={() => setActiveCategory(null)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexWrap: 'nowrap',
-                whiteSpace: 'nowrap',
-                gap: '34px',
-                fontSize: '0.94rem',
-                fontWeight: '700',
-                letterSpacing: '0.01em',
-                minHeight: '34px'
-              }}
             >
               {fixedBadges.map((b, idx) => (
                 <a
@@ -573,20 +519,10 @@ export default function Header({
                     }
                     setActiveCategory(null);
                   }}
+                  className="main-header-badge-link"
                   style={{
                     color:
                       b.color || (b.isHighlight && !activeCategory ? '#4ade80' : '#ffffff'),
-                    background: 'transparent',
-                    border: 'none',
-                    padding: '0',
-                    textDecoration: 'none',
-                    transition: 'all 0.25s ease',
-                    opacity: 1,
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    whiteSpace: 'nowrap',
                     fontWeight: b.isHighlight ? 800 : 700
                   }}
                   onMouseEnter={(e) => {
@@ -684,32 +620,16 @@ export default function Header({
                   </div>
                 </nav>
               ) : (
-                <nav
-                  className="hide-mobile"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexWrap: 'nowrap',
-                    whiteSpace: 'nowrap',
-                    gap: '28px'
-                  }}
-                >
+                <nav className="main-header-menu-nav hide-mobile">
                   {menuData.map((item) => (
                     <div
                       key={item.id}
+                      className="main-header-menu-item"
                       onMouseEnter={() =>
                         item.hasSubmenu
                           ? setActiveCategory(item.id)
                           : setActiveCategory(null)
                       }
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        position: 'relative',
-                        whiteSpace: 'nowrap',
-                        flexShrink: 0
-                      }}
                     >
                       {item.hasSubmenu ? (
                         <button
@@ -724,20 +644,10 @@ export default function Header({
                               );
                             }
                           }}
+                          className="main-header-menu-btn"
                           style={{
-                            background: 'none',
-                            border: 'none',
                             color:
-                              activeCategory === item.id ? '#4ade80' : (item.color || '#ffffff'),
-                            fontSize: '1.02rem',
-                            fontWeight: '700',
-                            cursor: 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '6px',
-                            padding: '0',
-                            whiteSpace: 'nowrap',
-                            transition: 'color 0.2s ease'
+                              activeCategory === item.id ? '#4ade80' : (item.color || '#ffffff')
                           }}
                           onMouseEnter={(e) =>
                             (e.currentTarget.style.color = '#4ade80')
@@ -778,17 +688,9 @@ export default function Header({
                             }
                             setActiveCategory(null);
                           }}
+                          className="main-header-menu-btn"
                           style={{
-                            color: item.color || '#ffffff',
-                            fontSize: '1.02rem',
-                            fontWeight: '700',
-                            textDecoration: 'none',
-                            padding: '0',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '6px',
-                            whiteSpace: 'nowrap',
-                            transition: 'color 0.2s ease'
+                            color: item.color || '#ffffff'
                           }}
                           onMouseEnter={(e) =>
                             (e.currentTarget.style.color = '#4ade80')
@@ -812,15 +714,7 @@ export default function Header({
           </div>
 
           {/* 3. Right Column: Action Buttons */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              flexShrink: 0,
-              gap: '10px'
-            }}
-          >
+          <div className="main-header-actions-col">
             {/* Button Lịch Khởi Hành */}
             <button
               type="button"
@@ -832,28 +726,7 @@ export default function Header({
                   onNavigate('/retreat/sapkhoihanh');
                 }
               }}
-              className="hide-mobile"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '7px',
-                height: '38px',
-                padding: '0 18px',
-                borderRadius: '999px',
-                background: 'linear-gradient(135deg, #c27803 0%, #854d0e 100%)',
-                color: '#ffffff',
-                fontSize: '0.88rem',
-                fontWeight: '700',
-                letterSpacing: '0.01em',
-                textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
-                boxShadow: '0 6px 20px rgba(133, 77, 14, 0.45)',
-                border: '1px solid rgba(254, 240, 138, 0.45)',
-                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                flexShrink: 0
-              }}
+              className="header-btn-calendar hide-mobile"
               onMouseEnter={(e) => {
                 setActiveCategory(null);
                 e.currentTarget.style.background =
@@ -882,27 +755,7 @@ export default function Header({
               onClick={() => {
                 if (onOpenBooking) onOpenBooking();
               }}
-              className="hide-mobile"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                height: '38px',
-                padding: '0 20px',
-                borderRadius: '999px',
-                background: 'linear-gradient(135deg, #436e55 0%, #284c39 100%)',
-                color: '#ffffff',
-                fontWeight: '700',
-                fontSize: '0.88rem',
-                letterSpacing: '0.01em',
-                textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
-                boxShadow: '0 6px 20px rgba(40, 76, 57, 0.4)',
-                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                border: '1px solid rgba(163, 184, 153, 0.45)',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap'
-              }}
+              className="header-btn-booking hide-mobile"
               onMouseEnter={(e) => {
                 setActiveCategory(null);
                 e.currentTarget.style.background =
@@ -929,16 +782,6 @@ export default function Header({
             {/* Mobile Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              style={{
-                display: 'none',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '4px',
-                color: '#ffffff',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
               className="mobile-toggle-btn"
             >
               {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}

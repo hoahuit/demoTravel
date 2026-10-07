@@ -140,10 +140,10 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
             style={{
               fontSize: 'clamp(52px, 7.2vw, 92px)',
               fontWeight: 800,
-              lineHeight: 1.08,
+              lineHeight: 1.22,
               letterSpacing: '-0.02em',
               color: '#ffffff',
-              margin: '0 0 20px 0',
+              margin: '0 0 16px 0',
               fontFamily: "'Plus Jakarta Sans', sans-serif"
             }}
           >
@@ -155,7 +155,10 @@ export default function Hero({ onOpenBooking, onOpenCustomTour }: HeroProps = {}
                 background: 'linear-gradient(135deg, #fff7ed 0%, #facc15 50%, #eab308 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                display: 'inline-block'
+                display: 'inline-block',
+                paddingBottom: '0.22em',
+                marginBottom: '-0.22em',
+                paddingRight: '0.08em'
               }}
             >
               Khoảng Dừng

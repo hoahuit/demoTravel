@@ -37,8 +37,8 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
   // Region recognition helpers
   const NORTH_CITIES = ['Yên Tử', 'Sa Pa', 'Pù Luông', 'Vịnh Lan Hạ', 'Hải Phòng', 'Hà Giang', 'Ninh Bình', 'Hà Nội', 'Quảng Ninh', 'Ba Bể', 'Cao Bằng', 'Thanh Hóa', 'Lào Cai', 'Bắc'];
-  const CENTRAL_CITIES = ['Hội An', 'Huế', 'Phú Yên', 'Vịnh Vĩnh Hy', 'Ninh Thuận', 'Đà Nẵng', 'Nha Trang', 'Khánh Hòa', 'Quy Nhơn', 'Bình Định', 'Quảng Nam', 'Quảng Trị', 'Quảng Bình', 'Cam Ranh', 'Trung'];
-  const SOUTH_CITIES = ['Côn Đảo', 'Nam Cát Tiên', 'Đà Lạt', 'Hồ Lắk', 'Phú Quốc', 'TP.HCM', 'Sài Gòn', 'Đồng Nai', 'Bà Rịa - Vũng Tàu', 'Kiên Giang', 'Cần Thơ', 'Tây Ninh', 'Lâm Đồng', 'Đắk Lắk', 'Nam'];
+  const CENTRAL_CITIES = ['Hội An', 'Huế', 'Phú Yên', 'Vịnh Vĩnh Hy', 'Ninh Thuận', 'Đà Nẵng', 'Nha Trang', 'Khánh Hòa', 'Quy Nhơn', 'Bình Định', 'Quảng Nam', 'Quảng Trị', 'Quảng Bình', 'Cam Ranh', 'Đà Lạt', 'Lâm Đồng', 'Đắk Lắk', 'Hồ Lắk', 'Buôn Ma Thuột', 'Trung', 'Tây Nguyên'];
+  const SOUTH_CITIES = ['Côn Đảo', 'Nam Cát Tiên', 'Phú Quốc', 'TP.HCM', 'Sài Gòn', 'Đồng Nai', 'Bà Rịa - Vũng Tàu', 'Bà Rịa', 'Long Hải', 'Kiên Giang', 'Cần Thơ', 'Tây Ninh', 'Châu Đốc', 'An Giang', 'Nam', 'Miền Tây'];
 
   const isNorthCity = (city?: string): boolean => {
     if (!city) return false;
@@ -51,6 +51,26 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
   const isSouthCity = (city?: string): boolean => {
     if (!city) return false;
     return SOUTH_CITIES.some(c => city.toLowerCase().includes(c.toLowerCase()));
+  };
+
+  // Tag-first region matching: prioritize explicit categories/region tag over auto city detection
+  const matchTourRegion = (tour: any, targetRegion: string): boolean => {
+    const cats = Array.isArray(tour.categories) ? tour.categories : [];
+    const hasExplicitTag = tour.region === targetRegion || cats.includes(targetRegion) || cats.includes(`mien-${targetRegion}`);
+    if (hasExplicitTag) return true;
+
+    const hasAnyRegionTag = !!(
+      tour.region ||
+      cats.some((c: string) => ['bac', 'trung', 'nam', 'mien-bac', 'mien-trung', 'mien-nam'].includes(c))
+    );
+
+    // Only fallback to city name if the tour does NOT have any explicit region tag configured
+    if (!hasAnyRegionTag) {
+      if (targetRegion === 'bac') return isNorthCity(tour.city);
+      if (targetRegion === 'trung') return isCentralCity(tour.city);
+      if (targetRegion === 'nam') return isSouthCity(tour.city);
+    }
+    return false;
   };
 
   // Parse structured URL segments (e.g. /series-retreat/chua-lanh/hot, /series-retreat/bac/hot, etc.)
@@ -201,8 +221,8 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
         heroImage: subFilter === 'bac'
           ? 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=85&w=2560&auto=format&fit=crop'
           : subFilter === 'trung'
-          ? 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=85&w=2560&auto=format&fit=crop'
-          : 'https://images.unsplash.com/photo-1511497584788-876761c119ef?q=85&w=2560&auto=format&fit=crop'
+            ? 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?q=85&w=2560&auto=format&fit=crop'
+            : 'https://images.unsplash.com/photo-1511497584788-876761c119ef?q=85&w=2560&auto=format&fit=crop'
       };
     }
 
@@ -299,13 +319,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       // 2. Match Region
       let matchesRegion = true;
       if (region && region !== 'all') {
-        if (region === 'bac') {
-          matchesRegion = tour.region === 'bac' || isNorthCity(tour.city) || (Array.isArray(tour.categories) && (tour.categories.includes('bac') || tour.categories.includes('mien-bac')));
-        } else if (region === 'trung') {
-          matchesRegion = tour.region === 'trung' || isCentralCity(tour.city) || (Array.isArray(tour.categories) && (tour.categories.includes('trung') || tour.categories.includes('mien-trung')));
-        } else if (region === 'nam') {
-          matchesRegion = tour.region === 'nam' || isSouthCity(tour.city) || (Array.isArray(tour.categories) && (tour.categories.includes('nam') || tour.categories.includes('mien-nam')));
-        }
+        matchesRegion = matchTourRegion(tour, region);
       }
 
       // 3. Match Sub Filter
@@ -316,13 +330,9 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
         } else if (subFilter === 'moi' || subFilter === 'new') {
           matchesSub = tour.isNew === true || (Array.isArray(tour.categories) && (tour.categories.includes('moi') || tour.categories.includes('new')));
         } else if (subFilter === 'last-minute' || subFilter === 'uu-dai-gio-chot') {
-          matchesSub = tour.isPromotion === true || ((tour.originalPrice || 0) > (tour.price || 0)) || (Array.isArray(tour.categories) && (tour.categories.includes('last-minute') || tour.categories.includes('uu-dai-gio-chot')));
-        } else if (subFilter === 'bac') {
-          matchesSub = tour.region === 'bac' || isNorthCity(tour.city) || (Array.isArray(tour.categories) && (tour.categories.includes('bac') || tour.categories.includes('mien-bac')));
-        } else if (subFilter === 'trung') {
-          matchesSub = tour.region === 'trung' || isCentralCity(tour.city) || (Array.isArray(tour.categories) && (tour.categories.includes('trung') || tour.categories.includes('mien-trung')));
-        } else if (subFilter === 'nam') {
-          matchesSub = tour.region === 'nam' || isSouthCity(tour.city) || (Array.isArray(tour.categories) && (tour.categories.includes('nam') || tour.categories.includes('mien-nam')));
+          matchesSub = tour.isPromotion === true || (Array.isArray(tour.categories) && (tour.categories.includes('last-minute') || tour.categories.includes('uu-dai-gio-chot')));
+        } else if (['bac', 'trung', 'nam'].includes(subFilter)) {
+          matchesSub = matchTourRegion(tour, subFilter);
         }
       }
 
@@ -337,7 +347,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
       } else if (currentPath.includes('/retreat/khongthebolo') || currentPath.includes('/khong-the-khong-co')) {
         matchesLegacy = tour.isHot === true || (Array.isArray(tour.categories) && (tour.categories.includes('khong-the-bo-lo') || tour.categories.includes('hot')));
       } else if (currentPath.includes('/retreat/uudaigiochot') || currentPath.includes('/uu-dai-gio-chot') || currentPath.includes('/uu-dai') || currentPath.includes('/promotions')) {
-        matchesLegacy = tour.isPromotion === true || ((tour.originalPrice || 0) > (tour.price || 0)) || (Array.isArray(tour.categories) && (tour.categories.includes('uu-dai-gio-chot') || tour.categories.includes('last-minute')));
+        matchesLegacy = tour.isPromotion === true || (Array.isArray(tour.categories) && (tour.categories.includes('uu-dai-gio-chot') || tour.categories.includes('last-minute')));
       }
 
       const matchesCity = selectedCity === 'All' || (tour.city && tour.city.includes(selectedCity));
@@ -678,8 +688,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
             {filteredTours.length > 1 && (
               <section style={{ padding: '0 48px', marginTop: '72px', paddingTop: '48px', borderTop: '1px solid rgba(26, 23, 20, 0.12)' }}>
                 <h2 style={{ fontSize: '32px', fontWeight: 800, color: '#1a1714', marginBottom: '36px' }}>
-                  Hành trình tiếp theo (More Retreats)
-                </h2>
+                  Các Retreat tiếp theo                </h2>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '48px 36px', marginBottom: '80px' }}>
                   {filteredTours.slice(1).map((tour) => (

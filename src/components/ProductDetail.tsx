@@ -435,25 +435,8 @@ function ProductDetailView({
         </div>
 
         {/* ── 3. MAIN CONTENT BODY (FULL SCREEN FOR ALL TABS) ── */}
-        <section style={{ padding: '40px 48px 80px', width: '100%', boxSizing: 'border-box' }}>
-          <div
-            style={
-              activeTab === 'PriceDescription'
-                ? {
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 360px',
-                  gap: '36px',
-                  maxWidth: '100%',
-                  margin: '0',
-                  width: '100%'
-                }
-                : {
-                  width: '100%',
-                  maxWidth: '100%',
-                  margin: '0'
-                }
-            }
-          >
+        <section className="pd-main-section">
+          <div className={activeTab === 'PriceDescription' ? 'pd-price-grid-layout' : 'pd-tab-fullwidth-layout'}>
 
             {/* TAB CONTENT PANEL */}
             <div style={{ width: '100%' }}>
@@ -523,72 +506,60 @@ function ProductDetailView({
 
               {/* TAB 2: LỊCH TRÌNH TRẢI NGHIỆM CHUYÊN SÂU (ROVER PLAN CONCEPT) */}
               {activeTab === 'Itinerary' && (
-                <div style={{ width: '100%', maxWidth: '100%', margin: '0' }}>
+                <div className="pd-tab-fullwidth-layout">
 
                   {/* Top Cover & Summary Card (Rover Plan Style) */}
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'minmax(280px, 340px) 1fr',
-                    gap: '32px',
-                    background: '#dce7df',
-                    borderRadius: '24px',
-                    padding: '24px',
-                    border: '1px solid rgba(45, 90, 54, 0.18)',
-                    boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
-                    marginBottom: '40px',
-                    alignItems: 'center'
-                  }}>
+                  <div className="pd-itinerary-hero-card">
                     {/* Left Cover Image */}
-                    <div style={{ width: '100%', height: '220px', borderRadius: '18px', overflow: 'hidden' }}>
+                    <div className="pd-itinerary-hero-image-box">
                       <img
                         src={pageData.heroImage}
                         alt={pageData.title}
                         onError={(e) => {
                           (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80';
                         }}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
                     </div>
 
                     {/* Right Summary Info */}
-                    <div>
-                      <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', flexWrap: 'wrap' }}>
-                        <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontWeight: 800, fontSize: '0.78rem', padding: '4px 14px', borderRadius: '20px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    <div className="pd-itinerary-hero-info">
+                      <div className="pd-itinerary-badges">
+                        <span className="pd-itinerary-badge">
                           🌙 {pageData.duration}
                         </span>
-                        <span style={{ background: '#cbe0d0', color: '#1e4a3d', fontWeight: 800, fontSize: '0.78rem', padding: '4px 14px', borderRadius: '20px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <span className="pd-itinerary-badge">
                           🎯 {pageData.location}
                         </span>
                       </div>
 
-                      <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#10201B', margin: '0 0 10px 0', lineHeight: 1.3 }}>
+                      <h2 className="pd-itinerary-hero-title">
                         {pageData.title}
                       </h2>
 
-                      <p style={{ fontSize: '0.88rem', color: '#415a47', margin: '0 0 16px 0', fontWeight: 500 }}>
-                        <strong style={{ color: '#10201B' }}>Lộ trình:</strong> {pageData.location} — {pageData.subtitle}
+                      <p className="pd-itinerary-hero-subtitle">
+                        <strong>Lộ trình:</strong> {pageData.location} — {pageData.subtitle}
                       </p>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', paddingTop: '14px', borderTop: '1px solid rgba(45, 90, 54, 0.18)' }}>
+                      <div className="pd-itinerary-expert-box">
                         <img
                           src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=120&auto=format&fit=crop"
                           alt="Planner"
-                          style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover' }}
+                          className="pd-itinerary-expert-avatar"
                         />
                         <div>
-                          <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#10201B' }}>Chuyên Gia 4U Retreat</div>
-                          <div style={{ fontSize: '0.78rem', color: '#527059' }}>Đã đồng hành 180+ chuyến đi thành công</div>
+                          <div className="pd-itinerary-expert-name">Chuyên Gia 4U Retreat</div>
+                          <div className="pd-itinerary-expert-desc">Đã đồng hành 180+ chuyến đi thành công</div>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Main Two-Column Days Navigation & Content Panel */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '48px', alignItems: 'start' }}>
+                  <div className="pd-itinerary-layout">
 
-                    {/* Left Days Sidebar */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#10201B', marginBottom: '8px', paddingLeft: '8px' }}>
+                    {/* Left Days Sidebar / Mobile Horizontal Tabs */}
+                    <div className="pd-itinerary-nav">
+                      <div className="pd-itinerary-nav-label">
                         Days
                       </div>
 
@@ -598,20 +569,7 @@ function ProductDetailView({
                           <button
                             key={idx}
                             onClick={() => setSelectedDayIndex(idx)}
-                            style={{
-                              width: '100%',
-                              padding: '12px 20px',
-                              borderRadius: '24px',
-                              border: isActive ? 'none' : '1px solid rgba(45, 90, 54, 0.18)',
-                              fontSize: '0.92rem',
-                              fontWeight: isActive ? 800 : 600,
-                              textAlign: 'left',
-                              cursor: 'pointer',
-                              background: isActive ? '#1e4a3d' : '#dce7df',
-                              color: isActive ? '#ffffff' : '#10201B',
-                              boxShadow: isActive ? '0 8px 20px rgba(30, 74, 61, 0.25)' : 'none',
-                              transition: 'all 0.2s ease',
-                            }}
+                            className={`pd-itinerary-day-btn ${isActive ? 'active' : ''}`}
                           >
                             Ngày {idx + 1}
                           </button>
@@ -621,27 +579,14 @@ function ProductDetailView({
                       {/* Tips Tab */}
                       <button
                         onClick={() => setSelectedDayIndex(pageData.itinerary ? pageData.itinerary.length : 99)}
-                        style={{
-                          width: '100%',
-                          padding: '12px 20px',
-                          borderRadius: '24px',
-                          border: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? 'none' : '1px solid rgba(45, 90, 54, 0.18)',
-                          fontSize: '0.92rem',
-                          fontWeight: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? 800 : 600,
-                          textAlign: 'left',
-                          cursor: 'pointer',
-                          background: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? '#1e4a3d' : '#dce7df',
-                          color: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? '#ffffff' : '#10201B',
-                          boxShadow: selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? '0 8px 20px rgba(30, 74, 61, 0.25)' : 'none',
-                          transition: 'all 0.2s ease',
-                        }}
+                        className={`pd-itinerary-day-btn ${selectedDayIndex === (pageData.itinerary ? pageData.itinerary.length : 99) ? 'active' : ''}`}
                       >
                         Lưu Ý & Mẹo
                       </button>
                     </div>
 
                     {/* Right Content Panel for Selected Day */}
-                    <div style={{ background: '#dce7df', borderRadius: '24px', padding: '36px', border: '1px solid rgba(45,90,54,0.18)', minHeight: '480px' }}>
+                    <div className="pd-itinerary-content-panel">
                       {selectedDayIndex < (pageData.itinerary ? pageData.itinerary.length : 0) ? (
                         (() => {
                           const currentDay = pageData.itinerary[selectedDayIndex];
@@ -666,12 +611,12 @@ function ProductDetailView({
                           return (
                             <div>
                               {/* Day Title */}
-                              <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: '0 0 18px 0' }}>
+                              <h3 className="pd-itinerary-day-title">
                                 {currentDay.title || `Ngày ${selectedDayIndex + 1}`}
                               </h3>
 
                               {/* Day Overview Paragraph */}
-                              <div style={{ fontSize: '0.98rem', color: '#475569', lineHeight: 1.85, marginBottom: '24px' }}>
+                              <div className="pd-itinerary-day-desc">
                                 {currentDay.description && (
                                   <p style={{ margin: '0 0 18px 0' }}>
                                     {currentDay.description}
@@ -688,20 +633,19 @@ function ProductDetailView({
 
                               {/* Moments Section - Only shown when images exist */}
                               {dayMoments.length > 0 && (
-                                <div style={{ marginBottom: '36px' }}>
-                                  <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 16px 0' }}>
+                                <div style={{ marginBottom: '32px' }}>
+                                  <h4 className="pd-itinerary-section-heading">
                                     Khoảnh Khắc Trong Ngày
                                   </h4>
-                                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '12px' }}>
+                                  <div className="pd-itinerary-moments-grid">
                                     {dayMoments.slice(0, 6).map((imgUrl: string, imgIdx: number) => (
-                                      <div key={imgIdx} style={{ width: '100%', height: '88px', borderRadius: '14px', overflow: 'hidden', background: '#f1f5f9' }}>
+                                      <div key={imgIdx} className="pd-itinerary-moment-card">
                                         <img
                                           src={imgUrl}
                                           alt={`Khoảnh khắc ${imgIdx + 1}`}
                                           onError={(e) => {
                                             (e.currentTarget as HTMLImageElement).src = pageData.heroImage || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80';
                                           }}
-                                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                         />
                                       </div>
                                     ))}
@@ -712,12 +656,12 @@ function ProductDetailView({
                               {/* Transport Section - Only shown when transport/culinary tags exist */}
                               {Array.isArray(currentDay.transportAndCulinary) && currentDay.transportAndCulinary.length > 0 && (
                                 <div style={{ marginBottom: '28px' }}>
-                                  <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#10201B', margin: '0 0 12px 0' }}>
+                                  <h4 className="pd-itinerary-section-heading">
                                     Phương Tiện & Ẩm Thực
                                   </h4>
-                                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                  <div className="pd-itinerary-tags-wrap">
                                     {currentDay.transportAndCulinary.map((tag: string, tagIdx: number) => (
-                                      <span key={tagIdx} style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
+                                      <span key={tagIdx} className="pd-itinerary-tag">
                                         {tag}
                                       </span>
                                     ))}
@@ -728,12 +672,12 @@ function ProductDetailView({
                               {/* Attractions Section - Only shown when attractions exist */}
                               {Array.isArray(currentDay.attractions) && currentDay.attractions.length > 0 && (
                                 <div>
-                                  <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#10201B', margin: '0 0 12px 0' }}>
+                                  <h4 className="pd-itinerary-section-heading">
                                     Điểm Đến Nổi Bật
                                   </h4>
-                                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                  <div className="pd-itinerary-tags-wrap">
                                     {currentDay.attractions.map((attraction: string, attractionIdx: number) => (
-                                      <span key={attractionIdx} style={{ background: '#cbe0d0', color: '#1e4a3d', fontSize: '0.82rem', fontWeight: 700, padding: '8px 16px', borderRadius: '12px' }}>
+                                      <span key={attractionIdx} className="pd-itinerary-tag">
                                         {attraction}
                                       </span>
                                     ))}
@@ -747,10 +691,10 @@ function ProductDetailView({
                       ) : (
                         /* Tips Panel */
                         <div>
-                          <h3 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: '0 0 18px 0' }}>
+                          <h3 className="pd-itinerary-day-title">
                             Lưu Ý & Mẹo Cho Chuyến Đi
                           </h3>
-                          <div style={{ fontSize: '0.98rem', color: '#475569', lineHeight: 1.85, marginBottom: '24px' }}>
+                          <div className="pd-itinerary-day-desc">
                             <p style={{ marginBottom: '12px' }}>• <strong>Trang phục:</strong> Quý khách nên chuẩn bị quần áo rộng rãi, thoáng mát (vải lanh hoặc cotton) thích hợp cho các buổi tập thiền định & yoga.</p>
                             <p style={{ marginBottom: '12px' }}>• <strong>Giày đi bộ:</strong> Mang theo 01 đôi giày đi bộ êm chân để tham gia hành trình tắm rừng Shinrin-Yoku.</p>
                             <p style={{ marginBottom: '12px' }}>• <strong>Thiết bị điện tử:</strong> Khuyến khích hạn chế sử dụng điện thoại thông minh để tận hưởng sự thanh tĩnh trọn vẹn.</p>
@@ -774,7 +718,7 @@ function ProductDetailView({
                   </h3>
 
                   {/* Enhanced Price Table */}
-                  <div style={{ marginBottom: '36px', overflowX: 'auto' }}>
+                  <div className="pd-price-table-container">
                     <table className="pd-price-table">
                       <thead>
                         <tr>
@@ -784,28 +728,41 @@ function ProductDetailView({
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td style={{ fontWeight: '700' }}>Người lớn (Từ 12 tuổi)</td>
-                          <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.15rem' }}>
-                            <div>{pageData.priceText}</div>
+                        <tr className="pd-price-row">
+                          <td className="pd-price-td-tier">Người lớn (Từ 12 tuổi)</td>
+                          <td className="pd-price-td-price">
+                            <div className="pd-price-main-val">{pageData.priceText}</div>
                             {pageData.originalPriceText && (
-                              <div style={{ fontSize: '0.82rem', color: '#94a3b8', textDecoration: 'line-through', fontWeight: 500 }}>
+                              <div className="pd-price-orig-val">
                                 {pageData.originalPriceText}
                               </div>
                             )}
-                            <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 500 }}>Chưa gồm thuế</div>
+                            <div className="pd-price-tax-note">Chưa gồm thuế</div>
                           </td>
-                          <td style={{ color: '#5b6561' }}>{pageData.adultNote}</td>
+                          <td className="pd-price-td-notes">
+                            <span className="pd-price-note-label">Quyền lợi: </span>
+                            {pageData.adultNote}
+                          </td>
                         </tr>
-                        <tr>
-                          <td style={{ fontWeight: '700' }}>Trẻ em (5 - 11 tuổi)</td>
-                          <td style={{ color: '#006d36', fontWeight: '800', fontSize: '1.05rem' }}>{pageData.childPriceText}</td>
-                          <td style={{ color: '#5b6561' }}>{pageData.childNote}</td>
+                        <tr className="pd-price-row">
+                          <td className="pd-price-td-tier">Trẻ em (5 - 11 tuổi)</td>
+                          <td className="pd-price-td-price">
+                            <div className="pd-price-main-val">{pageData.childPriceText}</div>
+                          </td>
+                          <td className="pd-price-td-notes">
+                            <span className="pd-price-note-label">Quyền lợi: </span>
+                            {pageData.childNote}
+                          </td>
                         </tr>
-                        <tr>
-                          <td style={{ fontWeight: '700' }}>Em bé (&lt; 5 tuổi)</td>
-                          <td style={{ color: '#27ae60', fontWeight: '800', fontSize: '1.05rem' }}>{pageData.infantPriceText}</td>
-                          <td style={{ color: '#5b6561' }}>{pageData.infantNote}</td>
+                        <tr className="pd-price-row">
+                          <td className="pd-price-td-tier">Em bé (&lt; 5 tuổi)</td>
+                          <td className="pd-price-td-price">
+                            <div className="pd-price-main-val pd-price-infant-val">{pageData.infantPriceText}</div>
+                          </td>
+                          <td className="pd-price-td-notes">
+                            <span className="pd-price-note-label">Quyền lợi: </span>
+                            {pageData.infantNote}
+                          </td>
                         </tr>
                       </tbody>
                     </table>
