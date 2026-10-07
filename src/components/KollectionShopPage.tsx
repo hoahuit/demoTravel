@@ -1684,16 +1684,17 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                         flexShrink: 0
                       }}>
                         <img
-                          src={`https://api.vietqr.io/image/970422-0987654321-compact.png?amount=${cartTotalPrice}&addInfo=${encodeURIComponent('4U ' + (orderForm.phone ? orderForm.phone.replace(/\s+/g, '') : 'KOLLECTION'))}&accountName=4U%20WELLNESS%20RETREAT`}
-                          alt="Mã QR Chuyển Khoản"
+                          src={`https://api.vietqr.io/image/970416-59584569-compact.png?amount=${cartTotalPrice}&addInfo=${encodeURIComponent('4U ' + (orderForm.phone ? orderForm.phone.replace(/\s+/g, '') : 'KOLLECTION'))}&accountName=CONG%20TY%20CP%20THUONG%20MAI%20DU%20LICH%20BON%20TOI%20UU`}
+                          alt="Mã QR Chuyển Khoản ACB"
                           style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                         />
                       </div>
 
                       <div style={{ flex: 1, minWidth: '160px', fontSize: '12px', color: '#334155', display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                        <div><span style={{ color: '#64748b' }}>Ngân hàng:</span> <strong style={{ color: '#081f13' }}>MB Bank</strong></div>
-                        <div><span style={{ color: '#64748b' }}>Số tài khoản:</span> <strong style={{ color: '#065f46', fontFamily: 'monospace', fontSize: '13px' }}>0987 654 321</strong></div>
-                        <div><span style={{ color: '#64748b' }}>Chủ tài khoản:</span> <strong style={{ color: '#081f13' }}>4U WELLNESS & RETREAT</strong></div>
+                        <div><span style={{ color: '#64748b' }}>Ngân hàng:</span> <strong style={{ color: '#081f13' }}>Ngân hàng TMCP Á Châu (ACB)</strong></div>
+                        <div><span style={{ color: '#64748b' }}>Chi nhánh:</span> <strong style={{ color: '#081f13' }}>ACB - PGD NGUYEN DU</strong></div>
+                        <div><span style={{ color: '#64748b' }}>Số tài khoản:</span> <strong style={{ color: '#065f46', fontFamily: 'monospace', fontSize: '13px' }}>5958 4569</strong></div>
+                        <div><span style={{ color: '#64748b' }}>Chủ tài khoản:</span> <strong style={{ color: '#081f13' }}>CONG TY CP THUONG MAI DU LICH BON TOI UU</strong></div>
                         <div><span style={{ color: '#64748b' }}>Số tiền:</span> <strong style={{ color: '#065f46', fontSize: '13px' }}>{formatVnd(cartTotalPrice)}</strong></div>
                       </div>
                     </div>
@@ -2178,14 +2179,15 @@ export default function KollectionShopPage({ currentPath = '/kollection-4u', onN
                     flexShrink: 0
                   }}>
                     <img
-                      src={`https://api.vietqr.io/image/970422-0987654321-compact.png?amount=${lastPlacedOrder?.totalAmount || finalCombinedTotalPrice}&addInfo=${encodeURIComponent('4U ' + (lastOrderCode || 'KOLLECTION'))}&accountName=4U%20WELLNESS%20RETREAT`}
-                      alt="Mã QR Chuyển Khoản"
+                      src={`https://api.vietqr.io/image/970416-59584569-compact.png?amount=${lastPlacedOrder?.totalAmount || finalCombinedTotalPrice}&addInfo=${encodeURIComponent('4U ' + (lastOrderCode || 'KOLLECTION'))}&accountName=CONG%20TY%20CP%20THUONG%20MAI%20DU%20LICH%20BON%20TOI%20UU`}
+                      alt="Mã QR Chuyển Khoản ACB"
                       style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                     />
                   </div>
                   <div style={{ fontSize: '12px', color: '#334155', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                    <div><span style={{ color: '#64748b' }}>MB Bank:</span> <strong style={{ fontFamily: 'monospace', color: '#065f46' }}>0987 654 321</strong></div>
-                    <div><span style={{ color: '#64748b' }}>Chủ TK:</span> <strong>4U WELLNESS & RETREAT</strong></div>
+                    <div><span style={{ color: '#64748b' }}>Ngân hàng:</span> <strong style={{ color: '#081f13' }}>ACB (PGD NGUYEN DU)</strong></div>
+                    <div><span style={{ color: '#64748b' }}>Số TK:</span> <strong style={{ fontFamily: 'monospace', color: '#065f46' }}>5958 4569</strong></div>
+                    <div><span style={{ color: '#64748b' }}>Chủ TK:</span> <strong>CONG TY CP THUONG MAI DU LICH BON TOI UU</strong></div>
                     <div><span style={{ color: '#64748b' }}>Nội dung:</span> <code style={{ backgroundColor: '#ffffff', padding: '1px 5px', borderRadius: '3px' }}>4U {lastOrderCode || 'KOLLECTION'}</code></div>
                   </div>
                 </div>
