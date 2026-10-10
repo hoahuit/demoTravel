@@ -1,12 +1,14 @@
 export interface PromotionItem {
-  id: string;
+  id: string | number;
   code: string;
   title: string;
   subtitle?: string;
   discountBadge: string;
+  discountPercent?: number;
   category: string;
   expiryDate: string;
   bannerImage?: string;
+  applicableTourSlugs?: string;
   applicableToursSlugs?: string[];
   terms?: string;
 }

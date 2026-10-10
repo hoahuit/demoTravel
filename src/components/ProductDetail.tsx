@@ -448,23 +448,6 @@ function ProductDetailView({
 
                   {/* Editorial Text Section (No white card background, pure typography & clean accents) */}
                   <div className="pd-editorial-wrapper">
-                    <div className="pd-editorial-header">
-                      <span className="pd-editorial-badge">
-                        <Sparkles size={14} /> TRẢI NGHIỆM ĐỘC BẢN
-                      </span>
-                    </div>
-
-                    <h3 className="pd-editorial-title" style={{ marginBottom: '20px' }}>
-                      {pageData.experienceTitle}
-                    </h3>
-
-                    <p className="pd-editorial-lead">
-                      {pageData.experiencePara1}
-                    </p>
-                    <p className="pd-editorial-body">
-                      {pageData.experiencePara2}
-                    </p>
-
                     {/* 4 Core Pillars Highlights */}
                     <div className="pd-highlights-grid">
                       <div className="pd-highlight-item">

@@ -158,9 +158,9 @@ export default function Testimonials() {
               letterSpacing: '-0.01em'
             }}
           >
-            Khách hàng nói gì về <span style={{ color: '#2D5A36', fontWeight: 700, fontStyle: 'italic' }}> 4U Retreats</span>?
+            Khách hàng nói gì về <span style={{ color: '#2D5A36', fontWeight: 700, fontStyle: 'italic' }}><br></br> 4U Retreats</span>?
           </h2>
-          <p style={{ fontSize: '15.5px', color: 'rgba(16,32,27,0.6)', lineHeight: 1.6, margin: 0 }}>
+          <p style={{ fontSize: '13.5px', color: 'rgba(16,32,27,0.6)', lineHeight: 1.6, margin: 0 }}>
             Lắng nghe cảm nhận thực tế từ các gia đình, doanh nghiệp & khách du lịch sau chuyến đi.
           </p>
         </div>

@@ -10,8 +10,10 @@ import {
   uploadImageApi,
   fetchMenuCategoriesApi,
   fetchLandingSectionTemplatesApi,
+  fetchProductsApi,
   downloadExcelTemplate,
-  MenuCategoryItem
+  MenuCategoryItem,
+  KollectionProduct
 } from '../../services/apiService';
 import AdminExcelImportModal from './AdminExcelImportModal';
 import { getAllLandingSectionTemplates } from '../../data/landingSectionData';
@@ -116,6 +118,32 @@ const buildDraft = (tour: TourPackage | null): TourPackage | null => {
     excluded: tour.excluded ? [...tour.excluded] : [],
     notes: tour.notes ? [...tour.notes] : [],
     travelTips: tour.travelTips ? [...tour.travelTips] : [],
+    recommendedProductIds: tour.recommendedProductIds
+      ? [...tour.recommendedProductIds]
+      : (() => {
+          const rawLists = [...(tour.notes || []), ...(tour.travelTips || [])];
+          for (const item of rawLists) {
+            if (typeof item === 'string' && item.includes('__kollections__:')) {
+              try {
+                const parsed = JSON.parse(item.split('__kollections__:')[1]);
+                if (Array.isArray(parsed)) return parsed;
+              } catch {}
+            }
+          }
+          return [];
+        })(),
+    addonDiscountPercent: typeof tour.addonDiscountPercent === 'number'
+      ? tour.addonDiscountPercent
+      : (() => {
+          const rawLists = [...(tour.notes || []), ...(tour.travelTips || [])];
+          for (const item of rawLists) {
+            if (typeof item === 'string' && item.includes('__addon_discount__:')) {
+              const val = Number(item.split('__addon_discount__:')[1]);
+              if (!isNaN(val)) return val;
+            }
+          }
+          return 10;
+        })(),
   };
 };
 
@@ -123,6 +151,7 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
   const [toursList, setToursList] = useState<TourPackage[]>([]);
   const [availableCategories, setAvailableCategories] = useState<MenuCategoryItem[]>([]);
   const [availableLandingTemplates, setAvailableLandingTemplates] = useState<any[]>(() => getAllLandingSectionTemplates());
+  const [availableProducts, setAvailableProducts] = useState<KollectionProduct[]>([]);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [tourDraft, setTourDraft] = useState<TourPackage | null>(null);
   const [isCreatingNew, setIsCreatingNew] = useState<boolean>(false);
@@ -130,15 +159,17 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [categoryFilter, setCategoryFilter] = useState<string>('All');
   const [isImportModalOpen, setIsImportModalOpen] = useState<boolean>(false);
+  const [productSearchKeyword, setProductSearchKeyword] = useState<string>('');
   const coverFileRef = useRef<HTMLInputElement>(null);
   const galleryFileRef = useRef<HTMLInputElement>(null);
 
   const loadLiveToursAndCategories = async (isManual = false) => {
     try {
-      const [liveData, catsData, tplsData] = await Promise.all([
+      const [liveData, catsData, tplsData, prodsData] = await Promise.all([
         fetchToursApi(isManual),
         fetchMenuCategoriesApi(isManual),
-        fetchLandingSectionTemplatesApi(isManual)
+        fetchLandingSectionTemplatesApi(isManual),
+        fetchProductsApi(isManual)
       ]);
       if (Array.isArray(liveData) && liveData.length > 0) {
         setToursList(liveData);
@@ -150,6 +181,9 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
       }
       if (Array.isArray(tplsData) && tplsData.length > 0) {
         setAvailableLandingTemplates(tplsData);
+      }
+      if (Array.isArray(prodsData) && prodsData.length > 0) {
+        setAvailableProducts(prodsData);
       }
       if (isManual) {
         toast?.success?.('Đã làm mới danh sách tour!');
@@ -246,7 +280,8 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
       destinationMap: '',
       travelTips: [],
       faq: [],
-      reviews: []
+      reviews: [],
+      recommendedProductIds: []
     };
 
     setSelectedSlug(newTour.slug);
@@ -265,15 +300,32 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
     if (!tourDraft) return;
 
     try {
-      if (isCreatingNew) {
-        await createTourApi(tourDraft);
-        setToursList((prev) => [tourDraft, ...prev]);
-        toast.success(`Đã tạo mới tour "${tourDraft.title}" thành công!`);
-      } else {
-        await saveTourApi(tourDraft.slug, tourDraft);
-        setToursList((prev) => prev.map((t) => (t.slug === tourDraft.slug ? tourDraft : t)));
-        toast.success(`Đã lưu thay đổi tour "${tourDraft.title}"!`);
+      // Encode recommendedProductIds and addonDiscountPercent into notes for dual-compatibility with MySQL
+      const cleanNotes = (tourDraft.notes || []).filter(
+        (n: string) => typeof n === 'string' && !n.startsWith('__kollections__:') && !n.startsWith('__addon_discount__:')
+      );
+      if (Array.isArray(tourDraft.recommendedProductIds) && tourDraft.recommendedProductIds.length > 0) {
+        cleanNotes.push(`__kollections__:${JSON.stringify(tourDraft.recommendedProductIds)}`);
       }
+      const discountToSave = typeof tourDraft.addonDiscountPercent === 'number' ? tourDraft.addonDiscountPercent : 10;
+      cleanNotes.push(`__addon_discount__:${discountToSave}`);
+
+      const draftToSave = {
+        ...tourDraft,
+        addonDiscountPercent: discountToSave,
+        notes: cleanNotes
+      };
+
+      if (isCreatingNew) {
+        await createTourApi(draftToSave);
+        setToursList((prev) => [draftToSave, ...prev]);
+        toast.success(`Đã tạo mới tour "${draftToSave.title}" thành công!`);
+      } else {
+        await saveTourApi(draftToSave.slug, draftToSave);
+        setToursList((prev) => prev.map((t) => (t.slug === draftToSave.slug ? draftToSave : t)));
+        toast.success(`Đã lưu thay đổi tour "${draftToSave.title}"!`);
+      }
+      setTourDraft(draftToSave);
       setIsCreatingNew(false);
     } catch (err: any) {
       toast.error(`Lỗi khi lưu tour: ${err?.message || err}`);
@@ -866,6 +918,7 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                   { id: 'highlights', label: 'Điểm Nổi Bật' },
                   { id: 'itinerary', label: 'Lịch Trình Chi Tiết' },
                   { id: 'gallery', label: 'Bộ Sưu Tập Ảnh' },
+                  { id: 'kollection-addons', label: '🛍️ Kollection Đề Xuất' },
                   { id: 'live-preview', label: 'Xem Trước Chi Tiết' },
                 ].map((tab) => (
                   <button
@@ -2809,6 +2862,450 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
                       </button>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* TAB: KOLLECTION ADDONS RECOMMENDATION */}
+            {activeSection === 'kollection-addons' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                {/* Header Card */}
+                <div style={{
+                  backgroundColor: '#ffffff',
+                  borderRadius: '14px',
+                  border: '1px solid #e5e7eb',
+                  padding: '24px 28px',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                        <span style={{ fontSize: '11px', fontWeight: 800, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                          CROSS-SELL & UP-SELL
+                        </span>
+                        <span style={{ height: '4px', width: '4px', borderRadius: '50%', backgroundColor: '#cbd5e1' }} />
+                        <span style={{ fontSize: '12px', fontWeight: 600, color: '#64748b' }}>
+                          Vật phẩm mua kèm khi đặt tour
+                        </span>
+                      </div>
+                      <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '22px', color: '#081f13', margin: '0 0 6px 0', fontWeight: 700 }}>
+                        🛍️ Cài Đặt Kollection Đề Xuất Cho Tour Này
+                      </h3>
+                      <p style={{ fontSize: '13.5px', color: '#475569', margin: 0, maxWidth: '720px', lineHeight: 1.5 }}>
+                        Cài đặt những sản phẩm Kollection 4U xuất hiện trong mục <strong>&ldquo;Trang bị khuyên dùng cho Chuyến đi này&rdquo;</strong> tại Form Đăng Ký Tour. Khách hàng có thể tích chọn mua kèm với ưu đãi -10% ngay khi đặt vé.
+                      </p>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '6px 14px',
+                        borderRadius: '999px',
+                        fontSize: '12.5px',
+                        fontWeight: 700,
+                        backgroundColor: (tourDraft.recommendedProductIds && tourDraft.recommendedProductIds.length > 0) ? '#dcfce7' : '#f1f5f9',
+                        color: (tourDraft.recommendedProductIds && tourDraft.recommendedProductIds.length > 0) ? '#15803d' : '#475569',
+                        border: (tourDraft.recommendedProductIds && tourDraft.recommendedProductIds.length > 0) ? '1px solid #86efac' : '1px solid #cbd5e1'
+                      }}>
+                        {(tourDraft.recommendedProductIds && tourDraft.recommendedProductIds.length > 0)
+                          ? `🎯 Tùy chọn riêng: Đã chọn ${tourDraft.recommendedProductIds.length} sản phẩm`
+                          : '🌐 Đang dùng mặc định (Kollection nổi bật)'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Mode Selector Cards */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px', marginBottom: '24px' }}>
+                    <div
+                      onClick={() => setTourDraft({ ...tourDraft, recommendedProductIds: [] })}
+                      style={{
+                        padding: '16px 18px',
+                        borderRadius: '12px',
+                        border: (!tourDraft.recommendedProductIds || tourDraft.recommendedProductIds.length === 0) ? '2px solid #059669' : '1px solid #e2e8f0',
+                        backgroundColor: (!tourDraft.recommendedProductIds || tourDraft.recommendedProductIds.length === 0) ? '#f0fdf4' : '#ffffff',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                        <input
+                          type="radio"
+                          name="recommendMode"
+                          checked={!tourDraft.recommendedProductIds || tourDraft.recommendedProductIds.length === 0}
+                          onChange={() => setTourDraft({ ...tourDraft, recommendedProductIds: [] })}
+                          style={{ accentColor: '#059669', width: '16px', height: '16px' }}
+                        />
+                        <strong style={{ fontSize: '14px', color: '#0f172a' }}>Tự động theo Kollection Nổi Bật (Mặc định)</strong>
+                      </div>
+                      <p style={{ fontSize: '12px', color: '#64748b', margin: 0, paddingLeft: '24px' }}>
+                        Tự động hiển thị các sản phẩm Kollection được bật cờ &ldquo;⭐ Recommend Tour&rdquo; trong kho hàng.
+                      </p>
+                    </div>
+
+                    <div
+                      onClick={() => {
+                        if (!tourDraft.recommendedProductIds || tourDraft.recommendedProductIds.length === 0) {
+                          const featuredIds = availableProducts.filter(p => p.isFeatured).map(p => p.id || p.slug);
+                          setTourDraft({ ...tourDraft, recommendedProductIds: featuredIds.length > 0 ? featuredIds : availableProducts.slice(0, 2).map(p => p.id || p.slug) });
+                        }
+                      }}
+                      style={{
+                        padding: '16px 18px',
+                        borderRadius: '12px',
+                        border: (tourDraft.recommendedProductIds && tourDraft.recommendedProductIds.length > 0) ? '2px solid #059669' : '1px solid #e2e8f0',
+                        backgroundColor: (tourDraft.recommendedProductIds && tourDraft.recommendedProductIds.length > 0) ? '#f0fdf4' : '#ffffff',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                        <input
+                          type="radio"
+                          name="recommendMode"
+                          checked={Boolean(tourDraft.recommendedProductIds && tourDraft.recommendedProductIds.length > 0)}
+                          onChange={() => {
+                            if (!tourDraft.recommendedProductIds || tourDraft.recommendedProductIds.length === 0) {
+                              const featuredIds = availableProducts.filter(p => p.isFeatured).map(p => p.id || p.slug);
+                              setTourDraft({ ...tourDraft, recommendedProductIds: featuredIds.length > 0 ? featuredIds : availableProducts.slice(0, 2).map(p => p.id || p.slug) });
+                            }
+                          }}
+                          style={{ accentColor: '#059669', width: '16px', height: '16px' }}
+                        />
+                        <strong style={{ fontSize: '14px', color: '#0f172a' }}>Tùy chọn Kollection riêng cho Tour này</strong>
+                      </div>
+                      <p style={{ fontSize: '12px', color: '#64748b', margin: 0, paddingLeft: '24px' }}>
+                        Chỉ định chính xác từng sản phẩm (ví dụ: thiền phục, nến thơm, túi vải, trà) cho riêng tour này.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Configurable Addon Discount Percent Bar */}
+                  <div style={{
+                    marginBottom: '22px',
+                    padding: '16px 20px',
+                    borderRadius: '12px',
+                    backgroundColor: '#f8fafc',
+                    border: '1px solid #e2e8f0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '14px'
+                  }}>
+                    <div style={{ flex: '1', minWidth: '240px' }}>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px' }}>
+                        <span>🏷️ Mức Ưu Đãi Mua Kèm (%) Cho Chuyến Đi Này</span>
+                        <span style={{ fontSize: '11px', fontWeight: 800, padding: '2px 8px', borderRadius: '4px', backgroundColor: '#dcfce7', color: '#15803d' }}>
+                          -{tourDraft.addonDiscountPercent ?? 10}%
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '12.5px', color: '#64748b', lineHeight: 1.4 }}>
+                        Tỷ lệ % chiết khấu do bạn quyết định cho khách khi mua kèm Kollection với tour này. Form đặt tour sẽ hiển thị: <strong>&ldquo;Ưu Đãi Mua Kèm -{tourDraft.addonDiscountPercent ?? 10}%&rdquo;</strong>.
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <label style={{ fontSize: '13px', fontWeight: 600, color: '#475569' }}>Mức giảm:</label>
+                      <input
+                        type="number"
+                        min={0}
+                        max={100}
+                        value={tourDraft.addonDiscountPercent ?? 10}
+                        onChange={(e) => {
+                          const val = Math.max(0, Math.min(100, Number(e.target.value) || 0));
+                          setTourDraft({ ...tourDraft, addonDiscountPercent: val });
+                        }}
+                        style={{
+                          width: '85px',
+                          padding: '8px 10px',
+                          borderRadius: '8px',
+                          border: '1px solid #059669',
+                          backgroundColor: '#ffffff',
+                          fontSize: '15px',
+                          fontWeight: 800,
+                          textAlign: 'center',
+                          color: '#059669',
+                          outline: 'none'
+                        }}
+                      />
+                      <span style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>%</span>
+                    </div>
+                  </div>
+
+                  {/* Product Search & Quick Actions Bar */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '18px' }}>
+                    <div style={{ flex: '1', minWidth: '240px' }}>
+                      <input
+                        type="text"
+                        placeholder="Tìm theo tên sản phẩm Kollection, mã SKU, danh mục..."
+                        value={productSearchKeyword}
+                        onChange={(e) => setProductSearchKeyword(e.target.value)}
+                        style={{
+                          width: '100%',
+                          padding: '10px 14px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '13.5px',
+                          boxSizing: 'border-box'
+                        }}
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const allIds = availableProducts.map(p => p.id || p.slug);
+                          setTourDraft({ ...tourDraft, recommendedProductIds: allIds });
+                        }}
+                        style={{
+                          padding: '8px 14px',
+                          borderRadius: '8px',
+                          border: '1px solid #e2e8f0',
+                          backgroundColor: '#f8fafc',
+                          color: '#334155',
+                          fontSize: '12.5px',
+                          fontWeight: 600,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Chọn Tất Cả
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTourDraft({ ...tourDraft, recommendedProductIds: [] })}
+                        style={{
+                          padding: '8px 14px',
+                          borderRadius: '8px',
+                          border: '1px solid #e2e8f0',
+                          backgroundColor: '#f8fafc',
+                          color: '#64748b',
+                          fontSize: '12.5px',
+                          fontWeight: 600,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Bỏ Chọn Hết
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Products Grid */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '14px' }}>
+                    {availableProducts
+                      .filter(p => {
+                        if (!productSearchKeyword.trim()) return true;
+                        const kw = productSearchKeyword.toLowerCase();
+                        return (
+                          p.title.toLowerCase().includes(kw) ||
+                          (p.sku && p.sku.toLowerCase().includes(kw)) ||
+                          p.category.toLowerCase().includes(kw)
+                        );
+                      })
+                      .map((p) => {
+                        const prodId = p.id || p.slug;
+                        const isSelected = Array.isArray(tourDraft.recommendedProductIds) &&
+                          tourDraft.recommendedProductIds.some(id => String(id) === String(prodId));
+
+                        const toggleProd = () => {
+                          const current = Array.isArray(tourDraft.recommendedProductIds) ? [...tourDraft.recommendedProductIds] : [];
+                          const exists = current.some(id => String(id) === String(prodId));
+                          const updated = exists
+                            ? current.filter(id => String(id) !== String(prodId))
+                            : [...current, prodId];
+                          setTourDraft({ ...tourDraft, recommendedProductIds: updated });
+                        };
+
+                        const currentDiscount = typeof tourDraft.addonDiscountPercent === 'number' ? tourDraft.addonDiscountPercent : 10;
+                        const crossSellPrice = currentDiscount > 0 ? Math.round(p.price * (1 - currentDiscount / 100)) : p.price;
+
+                        return (
+                          <div
+                            key={prodId}
+                            onClick={toggleProd}
+                            style={{
+                              borderRadius: '12px',
+                              border: isSelected ? '2px solid #059669' : '1px solid #e2e8f0',
+                              backgroundColor: isSelected ? '#f4fbf7' : '#ffffff',
+                              padding: '14px',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent: 'space-between',
+                              gap: '10px',
+                              boxShadow: isSelected ? '0 4px 12px rgba(5, 150, 105, 0.12)' : '0 1px 3px rgba(0,0,0,0.02)',
+                              transition: 'all 0.15s ease',
+                              position: 'relative'
+                            }}
+                          >
+                            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                              <img
+                                src={getImageUrl(p.heroImage)}
+                                alt={p.title}
+                                style={{
+                                  width: '54px',
+                                  height: '54px',
+                                  borderRadius: '8px',
+                                  objectFit: 'cover',
+                                  border: '1px solid #e5e7eb',
+                                  flexShrink: 0
+                                }}
+                              />
+                              <div style={{ minWidth: 0, flex: 1 }}>
+                                <div style={{ fontSize: '11px', fontWeight: 700, color: '#059669', marginBottom: '2px' }}>
+                                  {p.category}
+                                </div>
+                                <div style={{
+                                  fontSize: '13px',
+                                  fontWeight: 700,
+                                  color: '#0f172a',
+                                  lineHeight: 1.3,
+                                  display: '-webkit-box',
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: 'vertical',
+                                  overflow: 'hidden'
+                                }}>
+                                  {p.title}
+                                </div>
+                                {p.sku && (
+                                  <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
+                                    SKU: {p.sku}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '8px', borderTop: '1px solid #f1f5f9' }}>
+                              <div>
+                                <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#004532' }}>
+                                  {crossSellPrice.toLocaleString('vi-VN')} ₫
+                                  {currentDiscount > 0 && (
+                                    <span style={{ fontSize: '10px', color: '#16a34a', marginLeft: '4px', fontWeight: 700 }}>(-{currentDiscount}%)</span>
+                                  )}
+                                </div>
+                                <div style={{ fontSize: '11px', color: '#94a3b8', textDecoration: 'line-through' }}>
+                                  {p.price.toLocaleString('vi-VN')} ₫
+                                </div>
+                              </div>
+
+                              <span style={{
+                                padding: '4px 10px',
+                                borderRadius: '6px',
+                                fontSize: '11.5px',
+                                fontWeight: 700,
+                                backgroundColor: isSelected ? '#059669' : '#f1f5f9',
+                                color: isSelected ? '#ffffff' : '#64748b',
+                                border: isSelected ? 'none' : '1px solid #cbd5e1'
+                              }}>
+                                {isSelected ? '✓ Đã chọn' : '+ Chọn'}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+
+                {/* Simulation Preview Card */}
+                <div style={{
+                  backgroundColor: '#ffffff',
+                  borderRadius: '14px',
+                  border: '1px solid #e5e7eb',
+                  padding: '24px 28px',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 700, color: '#0f766e', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                      Xem Trước Giao Diện Thực Tế
+                    </span>
+                    <span style={{ height: '4px', width: '4px', borderRadius: '50%', backgroundColor: '#cbd5e1' }} />
+                    <span style={{ fontSize: '12px', color: '#64748b' }}>
+                      (Mô phỏng Form Đặt Tour của khách hàng)
+                    </span>
+                  </div>
+
+                  <div style={{
+                    backgroundColor: '#f4fbf7',
+                    borderRadius: '12px',
+                    border: '1px solid #bbf7d0',
+                    padding: '16px',
+                    maxWidth: '560px'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '6px' }}>
+                      <span style={{ fontSize: '13px', fontWeight: 700, color: '#065f46' }}>
+                        Trang bị khuyên dùng cho Chuyến đi này
+                      </span>
+                      <span style={{ fontSize: '11px', fontWeight: 700, backgroundColor: '#dcfce7', color: '#15803d', padding: '2px 8px', borderRadius: '4px', border: '1px solid #86efac' }}>
+                        {(tourDraft.addonDiscountPercent ?? 10) > 0 ? `Ưu Đãi Mua Kèm -${tourDraft.addonDiscountPercent ?? 10}%` : 'Vật Phẩm Mua Kèm'}
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {(() => {
+                        const currentDiscount = typeof tourDraft.addonDiscountPercent === 'number' ? tourDraft.addonDiscountPercent : 10;
+                        const selectedItems = availableProducts.filter(p =>
+                          Array.isArray(tourDraft.recommendedProductIds) &&
+                          tourDraft.recommendedProductIds.some(id => String(id) === String(p.id || p.slug))
+                        );
+                        const displayList = selectedItems.length > 0
+                          ? selectedItems
+                          : availableProducts.filter(p => p.isFeatured).slice(0, 2);
+
+                        if (displayList.length === 0) {
+                          return (
+                            <div style={{ fontSize: '12px', color: '#64748b', fontStyle: 'italic', padding: '8px' }}>
+                              Chưa có sản phẩm nào được chọn hoặc kích hoạt.
+                            </div>
+                          );
+                        }
+
+                        return displayList.map(item => {
+                          const discountedPrice = currentDiscount > 0 ? Math.round(item.price * (1 - currentDiscount / 100)) : item.price;
+                          return (
+                            <div
+                              key={item.id || item.slug}
+                              style={{
+                                backgroundColor: '#ffffff',
+                                border: '1px solid #d1fae5',
+                                borderRadius: '10px',
+                                padding: '10px 12px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                gap: '12px'
+                              }}
+                            >
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: 1 }}>
+                                <img
+                                  src={getImageUrl(item.heroImage)}
+                                  alt={item.title}
+                                  style={{ width: '42px', height: '42px', borderRadius: '6px', objectFit: 'cover', flexShrink: 0 }}
+                                />
+                                <div style={{ minWidth: 0, flex: 1 }}>
+                                  <div style={{ fontSize: '10.5px', fontWeight: 700, color: '#059669' }}>
+                                    {item.category}
+                                  </div>
+                                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#111827', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {item.title}
+                                  </div>
+                                </div>
+                              </div>
+                              <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                                <div style={{ fontSize: '13px', fontWeight: 800, color: '#004532' }}>
+                                  {discountedPrice.toLocaleString('vi-VN')} ₫
+                                </div>
+                                <div style={{ fontSize: '11px', color: '#94a3b8', textDecoration: 'line-through' }}>
+                                  {item.price.toLocaleString('vi-VN')} ₫
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        });
+                      })()}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}

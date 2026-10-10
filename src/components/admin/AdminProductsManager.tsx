@@ -260,6 +260,17 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
     }
   };
 
+  const handleToggleRecommendTour = async (item: KollectionProduct) => {
+    const newFeatured = !item.isFeatured;
+    try {
+      await saveProductApi(item.id || item.slug, { ...item, isFeatured: newFeatured });
+      setProducts(prev => prev.map(p => p.id === item.id ? { ...p, isFeatured: newFeatured } : p));
+      toast?.show?.(newFeatured ? `Đã bật "Đề xuất kèm Tour" cho "${item.title}"!` : `Đã tắt đề xuất tour cho "${item.title}".`, 'success');
+    } catch (err: any) {
+      toast?.show?.('Lỗi cập nhật: ' + (err?.message || err), 'error');
+    }
+  };
+
   // Filtered list
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
@@ -536,7 +547,7 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
                 <th style={{ padding: '14px 16px' }}>Phân Loại</th>
                 <th style={{ padding: '14px 16px' }}>Giá Bán</th>
                 <th style={{ padding: '14px 16px' }}>Tồn Kho</th>
-                <th style={{ padding: '14px 16px' }}>Đặc Điểm</th>
+                <th style={{ padding: '14px 16px' }}>Đề Xuất Tour</th>
                 <th style={{ padding: '14px 20px', textAlign: 'right' }}>Thao Tác</th>
               </tr>
             </thead>
@@ -594,23 +605,28 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
                   </td>
 
                   <td style={{ padding: '14px 16px' }}>
-                    <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-                      {p.isFeatured && (
-                        <span style={{ fontSize: '10px', fontWeight: 800, background: '#fef9c3', color: '#854d0e', padding: '2px 6px', borderRadius: '4px' }}>
-                          Nổi bật
-                        </span>
-                      )}
-                      {p.isBestSeller && (
-                        <span style={{ fontSize: '10px', fontWeight: 800, background: '#ffedd5', color: '#9a3412', padding: '2px 6px', borderRadius: '4px' }}>
-                          Bán chạy
-                        </span>
-                      )}
-                      {p.isNewArrival && (
-                        <span style={{ fontSize: '10px', fontWeight: 800, background: '#e0f2fe', color: '#0369a1', padding: '2px 6px', borderRadius: '4px' }}>
-                          Mới
-                        </span>
-                      )}
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleToggleRecommendTour(p)}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '5px 12px',
+                        borderRadius: '8px',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        border: p.isFeatured ? '1px solid #86efac' : '1px solid #e2e8f0',
+                        background: p.isFeatured ? '#dcfce7' : '#f8fafc',
+                        color: p.isFeatured ? '#15803d' : '#64748b',
+                        transition: 'all 0.15s ease'
+                      }}
+                      title="Bấm để bật/tắt đề xuất sản phẩm này trong Form Đăng Ký Tour"
+                    >
+                      <Sparkles size={13} color={p.isFeatured ? '#15803d' : '#94a3b8'} />
+                      <span>{p.isFeatured ? '⭐ Recommend Tour' : 'Chưa bật'}</span>
+                    </button>
                   </td>
 
                   <td style={{ padding: '14px 20px', textAlign: 'right' }}>
@@ -948,7 +964,7 @@ export default function AdminProductsManager({ toast, onNavigate }: AdminProduct
                     onChange={(e) => setEditingItem({ ...editingItem, isFeatured: e.target.checked })}
                     style={{ width: '16px', height: '16px', accentColor: '#006d36' }}
                   />
-                  ⭐ Sản Phẩm Nổi Bật (Featured)
+                  ⭐ Recommend khi Đặt Tour (Khuyên dùng mua kèm)
                 </label>
 
                 <label style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 700, color: '#334155', cursor: 'pointer' }}>

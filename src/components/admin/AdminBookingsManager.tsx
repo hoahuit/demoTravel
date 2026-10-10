@@ -16,6 +16,7 @@ import {
   MapPin,
   Sparkles,
   Phone,
+  Mail,
   CreditCard,
   Package,
   ShoppingBag,
@@ -82,6 +83,7 @@ export default function AdminBookingsManager({
         !q ||
         String(item.customerName || item.customer || '').toLowerCase().includes(q) ||
         String(item.customerPhone || item.phone || '').toLowerCase().includes(q) ||
+        String(item.customerEmail || item.email || (typeof item.customer === 'object' ? item.customer.email : '') || '').toLowerCase().includes(q) ||
         String(item.tourTitle || item.tour || '').toLowerCase().includes(q) ||
         String(item.bookingCode || item.id || '').toLowerCase().includes(q);
 
@@ -304,6 +306,7 @@ export default function AdminBookingsManager({
                 const code = item.bookingCode || item.id || `BK-${idx + 1}`;
                 const custName = item.customerName || (typeof item.customer === 'object' ? item.customer.fullName : item.customer) || 'Khách hàng 4U';
                 const custPhone = item.customerPhone || (typeof item.customer === 'object' ? item.customer.phone : item.phone) || 'Chưa cung cấp';
+                const custEmail = item.customerEmail || item.email || (typeof item.customer === 'object' ? item.customer.email : '') || '';
                 const tourTitle = item.tourTitle || item.tour || 'Retreat May Đo';
                 const departureDate = item.departureDate || item.date || item.selectedDate || 'Theo yêu cầu';
                 const guests = item.numberOfGuests || item.guests || 1;
@@ -337,6 +340,32 @@ export default function AdminBookingsManager({
                           {copiedKey === `phone-${item.id || idx}` ? <Check size={12} color="#16a34a" /> : <Copy size={12} />}
                         </button>
                       </div>
+                      {custEmail ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px' }}>
+                          <a
+                            href={`mailto:${custEmail}`}
+                            style={{ fontSize: '12px', color: '#475569', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px', minWidth: 0 }}
+                            title={`Gửi email: ${custEmail}`}
+                          >
+                            <Mail size={11} color="#64748b" style={{ flexShrink: 0 }} />
+                            <span style={{ maxWidth: '175px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {custEmail}
+                            </span>
+                          </a>
+                          <button
+                            type="button"
+                            onClick={(e) => handleCopyText(custEmail, `email-${item.id || idx}`, e)}
+                            title="Sao chép Email"
+                            style={{ background: 'none', border: 'none', padding: '2px', cursor: 'pointer', color: '#94a3b8', flexShrink: 0 }}
+                          >
+                            {copiedKey === `email-${item.id || idx}` ? <Check size={12} color="#16a34a" /> : <Copy size={12} />}
+                          </button>
+                        </div>
+                      ) : (
+                        <div style={{ fontSize: '11px', color: '#94a3b8', fontStyle: 'italic', marginTop: '2px' }}>
+                          Chưa có email
+                        </div>
+                      )}
                     </td>
 
                     {/* Tour Info */}
@@ -504,6 +533,30 @@ export default function AdminBookingsManager({
                     <span style={{ color: '#94a3b8' }}>SĐT:</span>{' '}
                     <strong style={{ color: '#0f766e' }}>{selectedDetailItem.customerPhone || (typeof selectedDetailItem.customer === 'object' ? selectedDetailItem.customer.phone : selectedDetailItem.phone)}</strong>
                   </div>
+                  {(() => {
+                    const modalEmail = selectedDetailItem.customerEmail || selectedDetailItem.email || (typeof selectedDetailItem.customer === 'object' ? selectedDetailItem.customer.email : '') || '';
+                    if (!modalEmail) return null;
+                    return (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ color: '#94a3b8' }}>Email:</span>{' '}
+                        <a
+                          href={`mailto:${modalEmail}`}
+                          style={{ color: '#0f766e', fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                        >
+                          <Mail size={12} color="#0f766e" />
+                          <span>{modalEmail}</span>
+                        </a>
+                        <button
+                          type="button"
+                          onClick={(e) => handleCopyText(modalEmail, 'modal-email', e)}
+                          title="Sao chép Email"
+                          style={{ background: 'none', border: 'none', padding: '2px', cursor: 'pointer', color: '#94a3b8' }}
+                        >
+                          {copiedKey === 'modal-email' ? <Check size={12} color="#16a34a" /> : <Copy size={12} />}
+                        </button>
+                      </div>
+                    );
+                  })()}
                   {selectedDetailItem.shippingAddress && (
                     <div>
                       <span style={{ color: '#94a3b8' }}>Địa chỉ nhận đồ:</span> {selectedDetailItem.shippingAddress}

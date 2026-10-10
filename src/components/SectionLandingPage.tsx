@@ -293,14 +293,6 @@ export default function SectionLandingPage({
                     <div className="zen-container">
                         {/* 3.1. Solution Introduction (What is 3Đ?) */}
                         <div id="about-3d" className="zen-about-grid" style={{ marginBottom: '60px' }}>
-                            <div className="zen-about-col">
-                                <img
-                                    src={ABOUT_IMG}
-                                    alt="Zen garden & restorative wellness"
-                                    className="zen-about-img"
-                                    loading="lazy"
-                                />
-                            </div>
 
                             <div className="zen-about-col">
                                 <span className="zen-eyebrow">
@@ -341,6 +333,16 @@ export default function SectionLandingPage({
                                     ))}
                                 </ul>
                             </div>
+                            <div className="zen-about-col">
+                                <img
+                                    src={ABOUT_IMG}
+                                    alt="Zen garden & restorative wellness"
+                                    className="zen-about-img"
+                                    loading="lazy"
+                                />
+                            </div>
+
+
                         </div>
 
                         {/* 3.2. Three Golden Pillars */}
@@ -363,7 +365,6 @@ export default function SectionLandingPage({
                                     <div className="zen-pillar-body">
                                         <div className="zen-pillar-top">
                                             <span className="zen-pillar-number">{mItem.point || (idx < 9 ? `0${idx + 1}` : `${idx + 1}`)}</span>
-                                            <span className="zen-pillar-tag">{mItem.title}</span>
                                         </div>
                                         <h3 className="zen-headline-md">
                                             {mItem.title}

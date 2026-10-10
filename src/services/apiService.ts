@@ -31,7 +31,8 @@ import {
 import { getStoredToken } from './authService';
 import { syncToursDataFromApi } from '../data/toursData';
 
-export const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://127.0.0.1:3001';
+const rawApiBase = (import.meta as any).env?.VITE_API_BASE_URL || 'https://www.4uretreats.com.vn/api-proxy/';
+export const API_BASE_URL = String(rawApiBase).replace(/\/explorer\/?#?\/?$/i, '').replace(/\/+$/, '');
 
 export function getAuthHeader(): string {
   const token = getStoredToken();
@@ -260,7 +261,7 @@ export function parseTourJsonFields(tour: any) {
 
   const arrayFields = [
     'categories', 'highlights', 'itinerary', 'gallery', 'included', 'excluded',
-    'departureDates', 'notes', 'travelTips', 'faq', 'reviews'
+    'departureDates', 'notes', 'travelTips', 'faq', 'reviews', 'recommendedProductIds'
   ];
 
   for (let i = 0; i < arrayFields.length; i++) {
@@ -328,6 +329,36 @@ export function parseTourJsonFields(tour: any) {
     tour.categories = ['Retreat'];
   }
 
+  // Extract recommended Kollection product IDs if stored in notes/travelTips
+  if (!tour.recommendedProductIds || tour.recommendedProductIds.length === 0) {
+    const rawLists = [...(Array.isArray(tour.notes) ? tour.notes : []), ...(Array.isArray(tour.travelTips) ? tour.travelTips : [])];
+    for (const item of rawLists) {
+      if (typeof item === 'string' && item.includes('__kollections__:')) {
+        try {
+          const parsed = JSON.parse(item.split('__kollections__:')[1]);
+          if (Array.isArray(parsed)) {
+            tour.recommendedProductIds = parsed;
+            break;
+          }
+        } catch {}
+      }
+    }
+  }
+
+  // Extract addonDiscountPercent if stored in notes/travelTips
+  if (tour.addonDiscountPercent === undefined || tour.addonDiscountPercent === null) {
+    const rawLists = [...(Array.isArray(tour.notes) ? tour.notes : []), ...(Array.isArray(tour.travelTips) ? tour.travelTips : [])];
+    for (const item of rawLists) {
+      if (typeof item === 'string' && item.includes('__addon_discount__:')) {
+        const val = Number(item.split('__addon_discount__:')[1]);
+        if (!isNaN(val)) {
+          tour.addonDiscountPercent = val;
+          break;
+        }
+      }
+    }
+  }
+
   return tour;
 }
 
@@ -357,7 +388,7 @@ export function sanitizeTourPayload(tourData: any, isUpdate = false) {
   const arrayKeys = new Set([
     'categories', 'departureDates', 'highlights', 'itinerary',
     'gallery', 'included', 'excluded', 'notes', 'travelTips',
-    'faq', 'reviews'
+    'faq', 'reviews', 'recommendedProductIds'
   ]);
 
   const validKeys = [
@@ -369,7 +400,8 @@ export function sanitizeTourPayload(tourData: any, isUpdate = false) {
     'isHot', 'isFeatured', 'isExclusive', 'isCustomer', 'isAdminApproved', 'isAdminAprove',
     'departureDates', 'airline', 'hotel', 'transportation', 'rating', 'reviewsCount',
     'highlights', 'itinerary', 'gallery', 'included', 'excluded', 'notes', 'destinationMap',
-    'travelTips', 'faq', 'reviews', 'landingSectionTemplateId', 'yoga3dTemplateId'
+    'travelTips', 'faq', 'reviews', 'landingSectionTemplateId', 'yoga3dTemplateId', 'recommendedProductIds',
+    'addonDiscountPercent'
   ];
 
   // If region is specified in draft, ensure it is added to categories
@@ -1027,6 +1059,7 @@ export interface CustomTourRequestItem {
   destination?: string;
   durationDays?: number;
   numberOfGuests?: number;
+  guestCount?: string;
   budgetPerPerson?: number;
   travelStyle?: string;
   departureMonth?: string;
@@ -1398,21 +1431,23 @@ export interface CouponValidationResult {
   discountPercent: number;
   title: string;
   code: string;
+  message?: string;
+  applicableTourSlugs?: string[];
 }
 
-export async function validateCouponCodeApi(code: string): Promise<CouponValidationResult> {
+export async function validateCouponCodeApi(code: string, tourSlug?: string, tourTitle?: string): Promise<CouponValidationResult> {
   try {
     const response = await fetch(`${API_BASE_URL}/promotions/validate-code`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ code, tourSlug, tourTitle }),
     });
     if (!response.ok) {
-      return { valid: false, discountPercent: 0, title: '', code };
+      return { valid: false, discountPercent: 0, title: '', code, message: 'Không thể xác thực mã giảm giá' };
     }
     return await response.json();
   } catch {
-    return { valid: false, discountPercent: 0, title: '', code };
+    return { valid: false, discountPercent: 0, title: '', code, message: 'Lỗi kết nối máy chủ' };
   }
 }
 

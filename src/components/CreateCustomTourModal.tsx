@@ -21,7 +21,7 @@ export default function CreateCustomTourModal({
     name: '',
     phone: '',
     email: '',
-    guestCount: '2 người',
+    guestCount: '2 người (Cặp đôi)',
     destination: initialDestination || '',
     region: 'Miền Trung',
     notes: ''
@@ -70,14 +70,35 @@ export default function CreateCustomTourModal({
 
     try {
       const targetPlace = formData.destination.trim() || formData.region;
+      const guestScaleText = formData.guestCount || '2 người (Cặp đôi)';
+
+      let guestNumber = 2;
+      if (guestScaleText.includes('1 người') || guestScaleText.includes('Cá nhân') || guestScaleText.includes('Solo')) {
+        guestNumber = 1;
+      } else if (guestScaleText.includes('2 người') || guestScaleText.includes('Cặp đôi')) {
+        guestNumber = 2;
+      } else if (guestScaleText.includes('3 - 5') || guestScaleText.includes('3-5') || guestScaleText.includes('Gia đình')) {
+        guestNumber = 4;
+      } else if (guestScaleText.includes('6 - 10') || guestScaleText.includes('6-10') || guestScaleText.includes('Nhóm bạn')) {
+        guestNumber = 8;
+      } else if (guestScaleText.includes('10') || guestScaleText.includes('Doanh nghiệp') || guestScaleText.includes('Đoàn thể')) {
+        guestNumber = 15;
+      }
+
+      const noteText = formData.notes.trim();
+      const enrichedRequests = noteText
+        ? `[Quy mô đoàn: ${guestScaleText}]\n${noteText}`
+        : `[Quy mô đoàn: ${guestScaleText}]`;
+
       await saveSectionItemApi('custom-tours', 'create', {
         requestCode: `CTR-${Date.now().toString().slice(-6)}`,
         customerName: formData.name.trim(),
         customerPhone: formData.phone.trim(),
         customerEmail: formData.email.trim(),
         destination: targetPlace,
-        numberOfGuests: Number(formData.guestCount) || 2,
-        specialRequests: formData.notes.trim() || '',
+        numberOfGuests: guestNumber,
+        guestCount: guestScaleText,
+        specialRequests: enrichedRequests,
         preferredCallTime: 'Linh hoạt (Bất kỳ lúc nào)',
         status: 'Chưa tư vấn',
         createdAt: new Date().toISOString()
@@ -299,11 +320,11 @@ export default function CreateCustomTourModal({
                     onChange={e => setFormData({ ...formData, guestCount: e.target.value })}
                     style={{ backgroundColor: 'transparent' }}
                   >
-                    <option value="1 người (Solo)">1 người (Cá nhân / Solo)</option>
+                    <option value="1 người (Cá nhân / Solo)">1 người (Cá nhân / Solo)</option>
                     <option value="2 người (Cặp đôi)">2 người (Cặp đôi)</option>
                     <option value="3 - 5 người (Gia đình)">3 - 5 người (Gia đình)</option>
                     <option value="6 - 10 người (Nhóm bạn)">6 - 10 người (Nhóm bạn)</option>
-                    <option value="Đoàn trên 10 người (Doanh nghiệp)">Đoàn trên 10 người (Doanh nghiệp)</option>
+                    <option value="Đoàn trên 10 người (Doanh nghiệp)">Đoàn trên 10 người (Doanh nghiệp / Đoàn thể)</option>
                   </select>
                 </div>
 

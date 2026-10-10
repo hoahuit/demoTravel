@@ -101,6 +101,8 @@ export interface TourPackage {
   tourReviews?: any[];
   tourCategoryMappings?: any[];
   tourImages?: any[];
+  recommendedProductIds?: (string | number)[];
+  addonDiscountPercent?: number;
 }
 
 // 100% REAL DATA STORE (LOADED INSTANTLY FROM PERSISTENT CACHE OR BACKEND API)

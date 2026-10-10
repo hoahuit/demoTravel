@@ -5,7 +5,8 @@ import path from 'path';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
-  const apiTarget = env.VITE_API_BASE_URL || 'http://127.0.0.1:3001';
+  const rawTarget = env.VITE_API_BASE_URL || 'https://www.4uretreats.com.vn/api-proxy/';
+  const apiTarget = rawTarget.replace(/\/explorer\/?#?\/?$/i, '').replace(/\/+$/, '');
 
   return {
     plugins: [react(), tailwindcss()],

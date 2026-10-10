@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   AlertCircle,
   PhoneCall,
+  Mail,
   Search,
   Trash2,
   Edit2,
@@ -54,6 +55,51 @@ export default function AdminCustomToursManager({
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
+  const formatGuestsDisplay = (item: any): string => {
+    if (!item) return '2 người (Cặp đôi)';
+
+    // 1. Direct guestCount string if available
+    if (item.guestCount && typeof item.guestCount === 'string' && item.guestCount.trim()) {
+      return item.guestCount.trim();
+    }
+
+    // 2. Extract [Quy mô đoàn: ...] from specialRequests
+    if (item.specialRequests && typeof item.specialRequests === 'string') {
+      const match = item.specialRequests.match(/\[Quy mô đoàn:\s*([^\]]+)\]/i);
+      if (match && match[1]) {
+        return match[1].trim();
+      }
+    }
+
+    // 3. Match based on numeric numberOfGuests
+    const n = Number(item.numberOfGuests);
+    if (!isNaN(n) && n > 0) {
+      if (n === 1) return '1 người (Cá nhân / Solo)';
+      if (n === 2) return '2 người (Cặp đôi)';
+      if (n >= 3 && n <= 5) return `${n} người (Gia đình)`;
+      if (n >= 6 && n <= 10) return `${n} người (Nhóm bạn)`;
+      if (n > 10) return `${n} người (Doanh nghiệp / Đoàn thể)`;
+      return `${n} khách`;
+    }
+
+    // 4. Heuristics from specialRequests for legacy items
+    if (item.specialRequests && typeof item.specialRequests === 'string') {
+      const lower = item.specialRequests.toLowerCase();
+      if (lower.includes('gia đình')) return '3 - 5 người (Gia đình)';
+      if (lower.includes('doanh nghiệp') || lower.includes('đoàn thể') || lower.includes('công ty')) return 'Đoàn trên 10 người (Doanh nghiệp)';
+      if (lower.includes('nhóm bạn')) return '6 - 10 người (Nhóm bạn)';
+      if (lower.includes('1 người') || lower.includes('cá nhân') || lower.includes('solo')) return '1 người (Cá nhân / Solo)';
+    }
+
+    return '2 người (Cặp đôi)';
+  };
+
+  const getCleanSpecialRequests = (notes?: string): string => {
+    if (!notes) return 'Không có ghi chú thêm';
+    const cleaned = notes.replace(/\[Quy mô đoàn:\s*[^\]]+\]\n?/i, '').trim();
+    return cleaned || notes;
+  };
+
   const filteredItems = useMemo(() => {
     return customToursList.filter((item) => {
       const q = searchFilter.toLowerCase().trim();
@@ -63,7 +109,9 @@ export default function AdminCustomToursManager({
         (item.customerPhone && item.customerPhone.includes(q)) ||
         (item.customerEmail && item.customerEmail.toLowerCase().includes(q)) ||
         (item.destination && item.destination.toLowerCase().includes(q)) ||
-        (item.requestCode && item.requestCode.toLowerCase().includes(q));
+        (item.requestCode && item.requestCode.toLowerCase().includes(q)) ||
+        (item.specialRequests && item.specialRequests.toLowerCase().includes(q)) ||
+        (item.guestCount && item.guestCount.toLowerCase().includes(q));
 
       const matchStatus =
         selectedStatusTab === 'all' ||
@@ -324,6 +372,31 @@ export default function AdminCustomToursManager({
                           {copiedKey === `phone-${item.id}` ? <Check size={12} color="#16a34a" /> : <Copy size={12} color="#9ca3af" />}
                         </button>
                       </div>
+                      {item.customerEmail ? (
+                        <div style={{ fontSize: '12px', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px' }}>
+                          <a
+                            href={`mailto:${item.customerEmail}`}
+                            style={{ color: '#4b5563', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px', minWidth: 0 }}
+                            title={`Gửi email: ${item.customerEmail}`}
+                          >
+                            <Mail size={11} color="#6b7280" style={{ flexShrink: 0 }} />
+                            <span style={{ maxWidth: '175px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {item.customerEmail}
+                            </span>
+                          </a>
+                          <button
+                            onClick={(e) => handleCopyText(item.customerEmail, `email-${item.id}`, e)}
+                            title="Sao chép Email"
+                            style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}
+                          >
+                            {copiedKey === `email-${item.id}` ? <Check size={12} color="#16a34a" /> : <Copy size={12} color="#9ca3af" />}
+                          </button>
+                        </div>
+                      ) : (
+                        <div style={{ fontSize: '11px', color: '#9ca3af', fontStyle: 'italic', marginTop: '2px' }}>
+                          Chưa có email
+                        </div>
+                      )}
                     </td>
                     <td style={{ padding: '14px 16px', verticalAlign: 'middle' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 600, color: '#1f2937' }}>
@@ -335,9 +408,9 @@ export default function AdminCustomToursManager({
                       </div>
                     </td>
                     <td style={{ padding: '14px 16px', verticalAlign: 'middle' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#374151' }}>
-                        <Users size={14} color="#6b7280" />
-                        <strong>{item.numberOfGuests || 2} khách</strong>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#1f2937' }}>
+                        <Users size={14} color="#0d9488" style={{ flexShrink: 0 }} />
+                        <strong style={{ fontSize: '13px', color: '#111827' }}>{formatGuestsDisplay(item)}</strong>
                       </div>
                       {item.budgetPerPerson && (
                         <div style={{ fontSize: '12px', color: '#059669', fontWeight: 600, marginTop: '2px' }}>
@@ -458,7 +531,7 @@ export default function AdminCustomToursManager({
               </button>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '20px' }}>
               <div>
                 <span style={{ fontSize: '12px', color: '#6b7280', display: 'block' }}>Khách hàng</span>
                 <strong style={{ fontSize: '15px', color: '#111827' }}>{selectedDetailItem.customerName}</strong>
@@ -468,12 +541,35 @@ export default function AdminCustomToursManager({
                 <strong style={{ fontSize: '15px', color: '#059669' }}>{selectedDetailItem.customerPhone}</strong>
               </div>
               <div>
+                <span style={{ fontSize: '12px', color: '#6b7280', display: 'block' }}>Email liên hệ</span>
+                {selectedDetailItem.customerEmail ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                    <a
+                      href={`mailto:${selectedDetailItem.customerEmail}`}
+                      style={{ fontSize: '14px', color: '#059669', fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                    >
+                      <Mail size={13} color="#059669" />
+                      <span style={{ wordBreak: 'break-all' }}>{selectedDetailItem.customerEmail}</span>
+                    </a>
+                    <button
+                      onClick={(e) => handleCopyText(selectedDetailItem.customerEmail, 'modal-email', e)}
+                      title="Sao chép Email"
+                      style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}
+                    >
+                      {copiedKey === 'modal-email' ? <Check size={12} color="#16a34a" /> : <Copy size={12} color="#9ca3af" />}
+                    </button>
+                  </div>
+                ) : (
+                  <span style={{ fontSize: '13px', color: '#9ca3af', fontStyle: 'italic' }}>Chưa cung cấp</span>
+                )}
+              </div>
+              <div>
                 <span style={{ fontSize: '12px', color: '#6b7280', display: 'block' }}>Điểm đến mong muốn</span>
                 <strong style={{ fontSize: '14px', color: '#111827' }}>{selectedDetailItem.destination || 'Theo tư vấn'}</strong>
               </div>
               <div>
-                <span style={{ fontSize: '12px', color: '#6b7280', display: 'block' }}>Số lượng khách</span>
-                <strong style={{ fontSize: '14px', color: '#111827' }}>{selectedDetailItem.numberOfGuests || 2} người</strong>
+                <span style={{ fontSize: '12px', color: '#6b7280', display: 'block' }}>Số lượng khách / Quy mô đoàn</span>
+                <strong style={{ fontSize: '14px', color: '#0f766e', fontWeight: 700 }}>{formatGuestsDisplay(selectedDetailItem)}</strong>
               </div>
               <div>
                 <span style={{ fontSize: '12px', color: '#6b7280', display: 'block' }}>Thời gian gọi thuận tiện</span>
@@ -493,7 +589,7 @@ export default function AdminCustomToursManager({
                   Yêu Cầu & Ghi Chú Đặc Biệt:
                 </span>
                 <p style={{ margin: 0, fontSize: '13.5px', color: '#334155', whiteSpace: 'pre-wrap' }}>
-                  {selectedDetailItem.specialRequests}
+                  {getCleanSpecialRequests(selectedDetailItem.specialRequests)}
                 </p>
               </div>
             )}
