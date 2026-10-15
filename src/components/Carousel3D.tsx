@@ -47,7 +47,8 @@ export default function Carousel3D({ onOpenBooking, onNavigate }: Carousel3DProp
   const CARDS: CardItem[] = useMemo(() => {
     // Only tours assigned to the "Retreats Độc Quyền" category appear here.
     const exclusiveTours = tours.filter((t) =>
-      t.isExclusive === true || (Array.isArray(t.categories) && (t.categories.includes('doc-quyen') || t.categories.includes('Doc-Quyen')))
+      (t.isAdminApproved !== false && (t as any).isAdminAprove !== false) &&
+      (t.isExclusive === true || (Array.isArray(t.categories) && (t.categories.includes('doc-quyen') || t.categories.includes('Doc-Quyen'))))
     );
 
     if (exclusiveTours.length > 0) {

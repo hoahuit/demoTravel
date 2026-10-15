@@ -155,6 +155,9 @@ export default function DestinationsPage({ currentPath = '/diem-den', onNavigate
     const destClean = destName.replace(/^(vịnh|núi|đảo|thành phố|tỉnh|huyện|thị xã)\s+/i, '').trim();
 
     return tours.filter((t) => {
+      if (t.isAdminApproved === false || (t as any).isAdminAprove === false) {
+        return false;
+      }
       const city = (t.city || '').toLowerCase();
       const title = (t.title || '').toLowerCase();
       const subtitle = (t.subtitle || '').toLowerCase();

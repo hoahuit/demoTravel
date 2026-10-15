@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { X, CheckCircle2, ArrowRight } from 'lucide-react';
 import { saveSectionItemApi } from '../services/apiService';
+import CustomerTourDesignerForm from './CustomerTourDesignerForm';
+import { getAppSettings } from '../services/settingsService';
 
 interface CreateCustomTourModalProps {
   isOpen: boolean;
@@ -15,6 +17,15 @@ export default function CreateCustomTourModal({
 }: CreateCustomTourModalProps) {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [enableCustomDesign, setEnableCustomDesign] = useState<boolean>(() => getAppSettings().enableCustomTourDesign);
+
+  useEffect(() => {
+    const handleSettingsUpdate = () => {
+      setEnableCustomDesign(getAppSettings().enableCustomTourDesign);
+    };
+    window.addEventListener('app-settings-updated', handleSettingsUpdate);
+    return () => window.removeEventListener('app-settings-updated', handleSettingsUpdate);
+  }, []);
 
   // Form State - core fields
   const [formData, setFormData] = useState({
@@ -53,6 +64,98 @@ export default function CreateCustomTourModal({
     setSubmitted(false);
     onClose();
   };
+
+  if (enableCustomDesign) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 999999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'rgba(16, 32, 27, 0.75)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          padding: '24px 16px',
+          boxSizing: 'border-box'
+        }}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            resetAndClose();
+          }
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: '#f8faf9',
+            color: '#10201B',
+            width: '100%',
+            maxWidth: '920px',
+            maxHeight: 'min(900px, calc(100vh - 40px))',
+            overflowY: 'auto',
+            boxShadow: '0 25px 80px rgba(8, 31, 19, 0.45)',
+            position: 'relative',
+            borderRadius: '18px',
+            border: '1px solid rgba(16, 32, 27, 0.12)',
+            fontFamily: "'Work Sans', 'Plus Jakarta Sans', sans-serif",
+            margin: 'auto',
+            padding: '28px 32px 32px 32px',
+            boxSizing: 'border-box'
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Close Button */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid rgba(16, 32, 27, 0.08)', paddingBottom: '14px' }}>
+            <div>
+              <span style={{ fontSize: '11px', fontWeight: 800, color: '#059669', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                4U RETREAT • TAILOR-MADE STUDIO
+              </span>
+              <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '24px', fontWeight: 700, color: '#081f13', margin: '4px 0 0 0' }}>
+                Thiết Kế Chuyến Đi Độc Bản Riêng Bạn
+              </h2>
+            </div>
+
+            <button
+              type="button"
+              onClick={resetAndClose}
+              aria-label="Đóng"
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                backgroundColor: '#ffffff',
+                border: '1px solid #e2e8f0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: '#334155',
+                transition: 'all 0.2s ease',
+                flexShrink: 0
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#fee2e2';
+                e.currentTarget.style.color = '#dc2626';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#ffffff';
+                e.currentTarget.style.color = '#334155';
+              }}
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          <CustomerTourDesignerForm
+            initialDestination={initialDestination || formData.destination}
+            onClose={resetAndClose}
+          />
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

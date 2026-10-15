@@ -102,10 +102,24 @@ function AdminDashboardContent({ currentPath, onNavigate }: AdminDashboardProps)
   const [teamList, setTeamList] = useState<TeamMember[]>([]);
   const [testimonialsList, setTestimonialsList] = useState<CustomerReviewItem[]>([]);
   const [aboutState, setAboutState] = useState({ ...ABOUT_DATA });
-  const [settingsState, setSettingsState] = useState({
-    supportHotline: '1900 6868 - 090 123 4567',
-    adminEmail: 'booking@4utours.com',
-    seoTitle: '4U Tours & Retreats International - Luxury Wellness Travel'
+  const [settingsState, setSettingsState] = useState(() => {
+    const defaultSettings = {
+      supportHotline: '1900 6868 - 090 123 4567',
+      adminEmail: 'booking@4utours.com',
+      seoTitle: '4U Tours & Retreats International - Luxury Wellness Travel',
+      enableCustomTourDesign: false
+    };
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const stored = window.localStorage.getItem('4u_app_settings');
+        if (stored) {
+          return { ...defaultSettings, ...JSON.parse(stored) };
+        }
+      }
+    } catch {
+      // Fallback to default
+    }
+    return defaultSettings;
   });
   const [bookingsList, setBookingsList] = useState<any[]>([
     { id: 'BK-178902', customer: 'Nguyễn Văn An', phone: '0901234567', email: 'an.nguyen@gmail.com', tour: 'Hành Trình Chữa Lành Thân Tâm 3D2N', date: '15/08/2026', guests: 2, amount: 13000000, status: 'Confirmed' },

@@ -37,8 +37,8 @@ export default function BentoGrid({ onOpenBooking, onNavigate }: BentoGridProps)
 
   // Tours assigned to "Sắp Khởi Hành" (isFeatured = true or category 'sap-khoi-hanh')
   const featuredTours = tours.filter((t) =>
-    t.isFeatured === true ||
-    (Array.isArray(t.categories) && t.categories.includes('sap-khoi-hanh'))
+    (t.isAdminApproved !== false && (t as any).isAdminAprove !== false) &&
+    (t.isFeatured === true || (Array.isArray(t.categories) && t.categories.includes('sap-khoi-hanh')))
   );
 
   const items = featuredTours.map((tour) => ({

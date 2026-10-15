@@ -79,14 +79,14 @@ const buildDraft = (tour: TourPackage | null): TourPackage | null => {
       childDiscountPercent = 50;
       infantDiscountPercent = 80;
     } else {
-      // Default to Danny standard template for brand new tours
-      cost = 5472000;
-      marginPercent = 40;
-      promotionPercent = 23.36;
-      group3Percent = 27;
-      group5Percent = 30;
-      childDiscountPercent = 50;
-      infantDiscountPercent = 80;
+      // Do not auto-populate fake numbers for brand new tours
+      cost = 0;
+      marginPercent = 0;
+      promotionPercent = 0;
+      group3Percent = 0;
+      group5Percent = 0;
+      childDiscountPercent = 0;
+      infantDiscountPercent = 0;
     }
   }
 
@@ -253,9 +253,9 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
       slug: `tour-${timestamp}`,
       title: '',
       subtitle: '',
-      category: 'Healing',
-      categories: ['chua-lanh', 'doc-quyen'],
-      country: 'Vietnam',
+      category: '',
+      categories: [],
+      country: 'Việt Nam',
       city: '',
       duration: '',
       durationDays: 1,
@@ -697,15 +697,23 @@ export default function AdminToursManager({ onNavigate, toast }: AdminToursManag
 
                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
                   <div>
-                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#059669', textTransform: 'uppercase' }}>{tour.city} • {(tour.categories && tour.categories[0]) || tour.category || 'Retreat'}</span>
-                    <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '18px', color: '#081f13', margin: '4px 0 6px 0', fontWeight: 600 }}>{tour.title}</h3>
-                    <p style={{ fontSize: '13px', color: '#525a54', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{tour.subtitle}</p>
+                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#059669', textTransform: 'uppercase' }}>
+                      {(tour.city && tour.city.trim()) ? tour.city : '--'} • {(tour.categories && tour.categories[0]) || tour.category || '--'}
+                    </span>
+                    <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: '18px', color: '#081f13', margin: '4px 0 6px 0', fontWeight: 600 }}>
+                      {tour.title || '--'}
+                    </h3>
+                    <p style={{ fontSize: '13px', color: '#525a54', margin: 0, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {tour.subtitle || '--'}
+                    </p>
                   </div>
 
                   <div style={{ marginTop: '18px', paddingTop: '14px', borderTop: '1px solid rgba(8,31,19,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                       <span style={{ fontSize: '11px', color: '#525a54', display: 'block' }}>Giá từ</span>
-                      <strong style={{ fontSize: '16px', color: '#081f13', fontFamily: 'monospace' }}>{(tour.price || 0).toLocaleString('vi-VN')} ₫</strong>
+                      <strong style={{ fontSize: '16px', color: '#081f13', fontFamily: 'monospace' }}>
+                        {(tour.price && tour.price > 0) ? `${tour.price.toLocaleString('vi-VN')} ₫` : '--'}
+                      </strong>
                     </div>
 
                     <div style={{ display: 'flex', gap: '6px' }}>

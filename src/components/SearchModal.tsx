@@ -45,8 +45,9 @@ export default function SearchModal({ isOpen, onClose, onNavigate }: SearchModal
 
   if (!isOpen) return null;
 
+  const approvedTours = tours.filter(t => t.isAdminApproved !== false && (t as any).isAdminAprove !== false);
   const filteredTours = query.trim()
-    ? tours.filter(
+    ? approvedTours.filter(
         t =>
           (t.title && t.title.toLowerCase().includes(query.toLowerCase())) ||
           (t.city && t.city.toLowerCase().includes(query.toLowerCase())) ||
@@ -54,7 +55,7 @@ export default function SearchModal({ isOpen, onClose, onNavigate }: SearchModal
           (Array.isArray(t.categories) && t.categories.some((c: string) => c.toLowerCase().includes(query.toLowerCase()))) ||
           (t.subtitle && t.subtitle.toLowerCase().includes(query.toLowerCase()))
       )
-    : tours.slice(0, 6);
+    : approvedTours.slice(0, 6);
 
   return (
     <div

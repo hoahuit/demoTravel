@@ -46,8 +46,9 @@ export default function Carousel3Dv2({ onOpenBooking, onOpenConsultation, onNavi
 
   // Tours assigned to "Retreats Độc Quyền" or with isExclusive = true appear here.
   const carouselTours = tours.filter((tour) =>
-    (Array.isArray(tour.categories) && tour.categories.includes('doc-quyen')) ||
-    tour.isExclusive === true
+    (tour.isAdminApproved !== false && (tour as any).isAdminAprove !== false) &&
+    ((Array.isArray(tour.categories) && tour.categories.includes('doc-quyen')) ||
+    tour.isExclusive === true)
   );
 
   const slides: CoverflowSlide[] = carouselTours.map((tour) => {

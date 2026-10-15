@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { MessageCircle, ChevronUp, X, CheckCircle2, ArrowRight, Sparkles, Compass, PhoneCall } from 'lucide-react';
 import { saveSectionItemApi } from '../services/apiService';
+import { getAppSettings } from '../services/settingsService';
+import CustomerTourDesignerForm from './CustomerTourDesignerForm';
 
 export interface ConsultationModalProps {
   externalOpen?: boolean;
@@ -45,6 +47,15 @@ export default function ConsultationModal({
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [enableCustomDesign, setEnableCustomDesign] = useState<boolean>(() => getAppSettings().enableCustomTourDesign);
+
+  useEffect(() => {
+    const handleSettingsUpdate = () => {
+      setEnableCustomDesign(getAppSettings().enableCustomTourDesign);
+    };
+    window.addEventListener('app-settings-updated', handleSettingsUpdate);
+    return () => window.removeEventListener('app-settings-updated', handleSettingsUpdate);
+  }, []);
 
   useEffect(() => {
     if (externalOpen !== undefined) {
@@ -385,16 +396,16 @@ export default function ConsultationModal({
             }
           `}</style>
 
-          {/* MODAL CONTAINER (Fixed 650px Height) */}
+          {/* MODAL CONTAINER (Dynamic Width & Height for Custom Tour Designer) */}
           <div
             style={{
               backgroundColor: '#e5efe8',
               color: '#10201B',
               width: '100%',
-              maxWidth: '680px',
-              minWidth: 'min(680px, calc(100vw - 32px))',
-              height: '650px',
-              maxHeight: 'min(650px, calc(100vh - 40px))',
+              maxWidth: activeTab === 'custom_tour' && enableCustomDesign ? '920px' : '680px',
+              minWidth: activeTab === 'custom_tour' && enableCustomDesign ? 'min(920px, calc(100vw - 32px))' : 'min(680px, calc(100vw - 32px))',
+              height: activeTab === 'custom_tour' && enableCustomDesign ? 'min(900px, calc(100vh - 40px))' : '650px',
+              maxHeight: activeTab === 'custom_tour' && enableCustomDesign ? 'min(900px, calc(100vh - 40px))' : 'min(650px, calc(100vh - 40px))',
               display: 'flex',
               flexDirection: 'column',
               boxShadow: '0 25px 80px rgba(16, 32, 27, 0.45)',
@@ -404,7 +415,8 @@ export default function ConsultationModal({
               fontFamily: "'Work Sans', 'Plus Jakarta Sans', sans-serif",
               margin: 'auto',
               boxSizing: 'border-box',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              transition: 'max-width 0.3s ease, height 0.3s ease'
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -671,144 +683,153 @@ export default function ConsultationModal({
 
                 {/* ── TAB 2: FORM THIẾT KẾ RIÊNG ── */}
                 {activeTab === 'custom_tour' && (
-                  <form onSubmit={handleCustomSubmit} style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, boxSizing: 'border-box' }}>
-                    <div style={{ padding: '20px 32px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '18px', width: '100%', boxSizing: 'border-box' }}>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px 24px', width: '100%', boxSizing: 'border-box' }}>
-                        <div>
-                          <label className="consult-journey-label">Họ và tên *</label>
-                          <input
-                            type="text"
-                            className="consult-journey-input"
-                            placeholder="Nguyễn Văn A"
-                            required
-                            value={customData.name}
-                            onChange={e => setCustomData({ ...customData, name: e.target.value })}
-                          />
-                        </div>
-
-                        <div>
-                          <label className="consult-journey-label">Số điện thoại / Zalo *</label>
-                          <input
-                            type="tel"
-                            className="consult-journey-input"
-                            placeholder="0912 345 678"
-                            required
-                            value={customData.phone}
-                            onChange={e => setCustomData({ ...customData, phone: e.target.value })}
-                          />
-                        </div>
-                      </div>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px 24px', width: '100%', boxSizing: 'border-box' }}>
-                        <div>
-                          <label className="consult-journey-label">Email nhận lịch trình đề xuất *</label>
-                          <input
-                            type="email"
-                            className="consult-journey-input"
-                            placeholder="email@example.com"
-                            required
-                            value={customData.email}
-                            onChange={e => setCustomData({ ...customData, email: e.target.value })}
-                          />
-                        </div>
-
-                        <div>
-                          <label className="consult-journey-label">Điểm đến cụ thể (Nếu đã có)</label>
-                          <input
-                            type="text"
-                            className="consult-journey-input"
-                            placeholder="Ví dụ: Sa Pa, Đà Lạt, Hội An hoặc 'Nhờ 4U gợi ý'..."
-                            value={customData.destination}
-                            onChange={e => setCustomData({ ...customData, destination: e.target.value })}
-                          />
-                        </div>
-                      </div>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px 24px', width: '100%', boxSizing: 'border-box' }}>
-                        <div>
-                          <label className="consult-journey-label">Vùng miền mong muốn</label>
-                          <select
-                            className="consult-journey-input"
-                            value={customData.region}
-                            onChange={e => setCustomData({ ...customData, region: e.target.value })}
-                            style={{ backgroundColor: 'transparent' }}
-                          >
-                            <option value="Miền Bắc">Miền Bắc (Hạ Long, Sa Pa, Yên Tử...)</option>
-                            <option value="Miền Trung">Miền Trung (Hội An, Huế, Quy Nhơn...)</option>
-                            <option value="Tây Nguyên & Cao Nguyên">Tây Nguyên / Cao Nguyên (Đà Lạt, Măng Đen...)</option>
-                            <option value="Miền Nam & Biển Đảo">Miền Nam & Biển Đảo (Phú Quốc, Côn Đảo...)</option>
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="consult-journey-label">Số lượng thành viên</label>
-                          <select
-                            className="consult-journey-input"
-                            value={customData.guestCount}
-                            onChange={e => setCustomData({ ...customData, guestCount: e.target.value })}
-                            style={{ backgroundColor: 'transparent' }}
-                          >
-                            <option value="1 người (Cá nhân / Solo)">1 người (Cá nhân / Solo)</option>
-                            <option value="2 người (Cặp đôi)">2 người (Cặp đôi)</option>
-                            <option value="3 - 5 người (Gia đình)">3 - 5 người (Gia đình)</option>
-                            <option value="6 - 10 người (Nhóm bạn)">6 - 10 người (Nhóm bạn)</option>
-                            <option value="Đoàn trên 10 người (Doanh nghiệp)">Đoàn trên 10 người (Doanh nghiệp / Đoàn thể)</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="consult-journey-label">Nhu cầu cụ thể & Ghi chú hành trình</label>
-                        <textarea
-                          rows={2}
-                          className="consult-journey-input"
-                          style={{ resize: 'none' }}
-                          placeholder="Ví dụ: Cần không gian thiền định yên tĩnh, resort ven biển 5 sao, ăn chay thực dưỡng..."
-                          value={customData.notes}
-                          onChange={e => setCustomData({ ...customData, notes: e.target.value })}
-                        />
-                      </div>
+                  enableCustomDesign ? (
+                    <div style={{ padding: '16px 28px 24px', flex: 1, overflowY: 'auto', boxSizing: 'border-box' }}>
+                      <CustomerTourDesignerForm
+                        initialDestination={customData.destination || initialDestination}
+                        onClose={resetAndClose}
+                      />
                     </div>
+                  ) : (
+                    <form onSubmit={handleCustomSubmit} style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, boxSizing: 'border-box' }}>
+                      <div style={{ padding: '20px 32px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '18px', width: '100%', boxSizing: 'border-box' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px 24px', width: '100%', boxSizing: 'border-box' }}>
+                          <div>
+                            <label className="consult-journey-label">Họ và tên *</label>
+                            <input
+                              type="text"
+                              className="consult-journey-input"
+                              placeholder="Nguyễn Văn A"
+                              required
+                              value={customData.name}
+                              onChange={e => setCustomData({ ...customData, name: e.target.value })}
+                            />
+                          </div>
 
-                    <div
-                      style={{
-                        backgroundColor: '#e5efe8',
-                        borderTop: '1px solid rgba(16, 32, 27, 0.12)',
-                        padding: '14px 32px',
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        alignItems: 'center',
-                        width: '100%',
-                        boxSizing: 'border-box',
-                        flexShrink: 0
-                      }}
-                    >
-                      <button
-                        type="submit"
-                        disabled={loading}
+                          <div>
+                            <label className="consult-journey-label">Số điện thoại / Zalo *</label>
+                            <input
+                              type="tel"
+                              className="consult-journey-input"
+                              placeholder="0912 345 678"
+                              required
+                              value={customData.phone}
+                              onChange={e => setCustomData({ ...customData, phone: e.target.value })}
+                            />
+                          </div>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px 24px', width: '100%', boxSizing: 'border-box' }}>
+                          <div>
+                            <label className="consult-journey-label">Email nhận lịch trình đề xuất *</label>
+                            <input
+                              type="email"
+                              className="consult-journey-input"
+                              placeholder="email@example.com"
+                              required
+                              value={customData.email}
+                              onChange={e => setCustomData({ ...customData, email: e.target.value })}
+                            />
+                          </div>
+
+                          <div>
+                            <label className="consult-journey-label">Điểm đến cụ thể (Nếu đã có)</label>
+                            <input
+                              type="text"
+                              className="consult-journey-input"
+                              placeholder="Ví dụ: Sa Pa, Đà Lạt, Hội An hoặc 'Nhờ 4U gợi ý'..."
+                              value={customData.destination}
+                              onChange={e => setCustomData({ ...customData, destination: e.target.value })}
+                            />
+                          </div>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px 24px', width: '100%', boxSizing: 'border-box' }}>
+                          <div>
+                            <label className="consult-journey-label">Vùng miền mong muốn</label>
+                            <select
+                              className="consult-journey-input"
+                              value={customData.region}
+                              onChange={e => setCustomData({ ...customData, region: e.target.value })}
+                              style={{ backgroundColor: 'transparent' }}
+                            >
+                              <option value="Miền Bắc">Miền Bắc (Hạ Long, Sa Pa, Yên Tử...)</option>
+                              <option value="Miền Trung">Miền Trung (Hội An, Huế, Quy Nhơn...)</option>
+                              <option value="Tây Nguyên & Cao Nguyên">Tây Nguyên / Cao Nguyên (Đà Lạt, Măng Đen...)</option>
+                              <option value="Miền Nam & Biển Đảo">Miền Nam & Biển Đảo (Phú Quốc, Côn Đảo...)</option>
+                            </select>
+                          </div>
+
+                          <div>
+                            <label className="consult-journey-label">Số lượng thành viên</label>
+                            <select
+                              className="consult-journey-input"
+                              value={customData.guestCount}
+                              onChange={e => setCustomData({ ...customData, guestCount: e.target.value })}
+                              style={{ backgroundColor: 'transparent' }}
+                            >
+                              <option value="1 người (Cá nhân / Solo)">1 người (Cá nhân / Solo)</option>
+                              <option value="2 người (Cặp đôi)">2 người (Cặp đôi)</option>
+                              <option value="3 - 5 người (Gia đình)">3 - 5 người (Gia đình)</option>
+                              <option value="6 - 10 người (Nhóm bạn)">6 - 10 người (Nhóm bạn)</option>
+                              <option value="Đoàn trên 10 người (Doanh nghiệp)">Đoàn trên 10 người (Doanh nghiệp / Đoàn thể)</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="consult-journey-label">Nhu cầu cụ thể & Ghi chú hành trình</label>
+                          <textarea
+                            rows={2}
+                            className="consult-journey-input"
+                            style={{ resize: 'none' }}
+                            placeholder="Ví dụ: Cần không gian thiền định yên tĩnh, resort ven biển 5 sao, ăn chay thực dưỡng..."
+                            value={customData.notes}
+                            onChange={e => setCustomData({ ...customData, notes: e.target.value })}
+                          />
+                        </div>
+                      </div>
+
+                      <div
                         style={{
-                          backgroundColor: '#1E4A3D',
-                          color: '#ffffff',
-                          border: 'none',
-                          padding: '12px 28px',
-                          fontSize: '12px',
-                          fontWeight: 700,
-                          letterSpacing: '0.12em',
-                          textTransform: 'uppercase',
-                          cursor: loading ? 'not-allowed' : 'pointer',
-                          display: 'inline-flex',
+                          backgroundColor: '#e5efe8',
+                          borderTop: '1px solid rgba(16, 32, 27, 0.12)',
+                          padding: '14px 32px',
+                          display: 'flex',
+                          justifyContent: 'flex-end',
                           alignItems: 'center',
-                          gap: '8px',
-                          borderRadius: '6px',
-                          boxShadow: '0 8px 24px rgba(30, 74, 61, 0.3)',
-                          transition: 'all 0.3s ease'
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          flexShrink: 0
                         }}
                       >
-                        <span>{loading ? 'Đang Gửi...' : 'Gửi Yêu Cầu May Đo Lịch Trình'}</span>
-                        <ArrowRight size={15} />
-                      </button>
-                    </div>
-                  </form>
+                        <button
+                          type="submit"
+                          disabled={loading}
+                          style={{
+                            backgroundColor: '#1E4A3D',
+                            color: '#ffffff',
+                            border: 'none',
+                            padding: '12px 28px',
+                            fontSize: '12px',
+                            fontWeight: 700,
+                            letterSpacing: '0.12em',
+                            textTransform: 'uppercase',
+                            cursor: loading ? 'not-allowed' : 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            borderRadius: '6px',
+                            boxShadow: '0 8px 24px rgba(30, 74, 61, 0.3)',
+                            transition: 'all 0.3s ease'
+                          }}
+                        >
+                          <span>{loading ? 'Đang Gửi...' : 'Gửi Yêu Cầu May Đo Lịch Trình'}</span>
+                          <ArrowRight size={15} />
+                        </button>
+                      </div>
+                    </form>
+                  )
                 )}
               </div>
             ) : (

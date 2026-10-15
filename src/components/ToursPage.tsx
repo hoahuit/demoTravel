@@ -313,6 +313,12 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
     const targetSeries = selectedSeries !== 'All' ? selectedSeries : routeSeries;
 
     const list = tours.filter(tour => {
+      // 0. Phê duyệt xuất bản website: Ẩn các tour chưa được Admin phê duyệt (isAdminApproved !== false)
+      const isApproved = tour.isAdminApproved !== false && (tour as any).isAdminAprove !== false;
+      if (!isApproved) {
+        return false;
+      }
+
       // 1. Match Series
       const matchesSeries = matchSeriesType(tour, targetSeries);
 
@@ -624,7 +630,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px 36px', alignItems: 'start', padding: '0 48px' }}>
                     <div>
                       <div style={{ fontSize: '14px', fontWeight: 600, color: '#8c8275', marginBottom: '12px', letterSpacing: '0.04em' }}>
-                        {feat.city} • {feat.duration} • Rating: {feat.rating}
+                        {feat.city || '--'} • {feat.duration || '--'} • Rating: {feat.rating || '--'}
                       </div>
                       <h2
                         onClick={() => onNavigate(`/sanpham/${feat.slug}`)}
@@ -639,16 +645,16 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                           wordBreak: 'break-word'
                         }}
                       >
-                        {feat.title}
+                        {feat.title || '--'}
                       </h2>
                       <div style={{ fontSize: '17px', color: '#7a6f63', marginBottom: '16px' }}>
-                        Khởi hành gần nhất: <strong style={{ color: '#1a1714' }}>{feat.departureDates ? feat.departureDates[0] : 'Hàng tuần'}</strong>
+                        Khởi hành gần nhất: <strong style={{ color: '#1a1714' }}>{feat.departureDates && feat.departureDates.length > 0 ? feat.departureDates[0] : '--'}</strong>
                       </div>
                     </div>
 
                     <div>
                       <p style={{ fontSize: '17px', lineHeight: 1.7, color: '#4a4238', marginBottom: '24px', fontWeight: 400 }}>
-                        {feat.blogStorySnippet || feat.subtitle}
+                        {feat.blogStorySnippet || feat.subtitle || '--'}
                       </p>
 
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px', paddingTop: '20px', borderTop: '1px solid rgba(26,23,20,0.1)' }}>
@@ -665,7 +671,9 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                         </div>
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-                          <span style={{ fontSize: '18px', fontWeight: 800, color: '#006d36' }}>{feat.price.toLocaleString('vi-VN')} VNĐ</span>
+                          <span style={{ fontSize: '18px', fontWeight: 800, color: '#006d36' }}>
+                            {feat.price > 0 ? `${feat.price.toLocaleString('vi-VN')} VNĐ` : '--'}
+                          </span>
                           {feat.originalPrice && feat.originalPrice > feat.price && (
                             <span style={{ fontSize: '13px', color: '#94a3b8', textDecoration: 'line-through', fontWeight: 400 }}>{feat.originalPrice.toLocaleString('vi-VN')} VNĐ</span>
                           )}
@@ -711,15 +719,15 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                         onClick={() => onNavigate(`/sanpham/${tour.slug}`)}
                         style={{ fontSize: '30px', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.25, color: '#1a1714', margin: '0 0 12px 0', cursor: 'pointer', wordBreak: 'break-word' }}
                       >
-                        {tour.title}
+                        {tour.title || '--'}
                       </h3>
 
                       <div style={{ fontSize: '14px', color: '#8c8275', marginBottom: '14px', fontWeight: 500 }}>
-                        {tour.city} • {tour.duration} • Rating: {tour.rating}
+                        {tour.city || '--'} • {tour.duration || '--'} • Rating: {tour.rating || '--'}
                       </div>
 
                       <p style={{ fontSize: '17px', lineHeight: 1.6, color: '#574e44', marginBottom: '20px', flex: 1, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                        {tour.blogStorySnippet || tour.subtitle}
+                        {tour.blogStorySnippet || tour.subtitle || '--'}
                       </p>
 
                       {/* Author + CTA */}
@@ -738,7 +746,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
 
                         <div style={{ textAlign: 'right' }}>
                           <span style={{ fontSize: '17px', fontWeight: 800, color: '#006d36', display: 'block' }}>
-                            {tour.price.toLocaleString('vi-VN')} VNĐ
+                            {tour.price > 0 ? `${tour.price.toLocaleString('vi-VN')} VNĐ` : '--'}
                           </span>
                           {tour.originalPrice && tour.originalPrice > tour.price && (
                             <span style={{ fontSize: '12px', color: '#94a3b8', textDecoration: 'line-through', display: 'block' }}>{tour.originalPrice.toLocaleString('vi-VN')} VNĐ</span>
@@ -772,8 +780,7 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                 <div style={{ position: 'relative', aspectRatio: '16 / 10', overflow: 'hidden', cursor: 'pointer' }} onClick={() => onNavigate(`/sanpham/${tour.slug}`)}>
                   <img src={getImageUrl(tour.heroImage)} alt={tour.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                   <div style={{ position: 'absolute', top: '14px', left: '14px', background: 'rgba(26,23,20,0.85)', color: '#f7f5f0', fontSize: '14px', fontWeight: 600, letterSpacing: '0.04em', padding: '5px 14px', borderRadius: '16px' }}>
-
-                    {tour.city}
+                    {tour.city || '--'}
                   </div>
                   <button
                     onClick={e => { e.stopPropagation(); setActiveGalleryTour(tour); setActivePhotoIndex(0); }}
@@ -787,8 +794,8 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                 <div style={{ padding: '28px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '14px', color: '#8c8275', marginBottom: '12px' }}>
-                      <span>{tour.duration}</span>
-                      <span style={{ color: '#c89d54', fontWeight: 600 }}>Rating: {tour.rating}</span>
+                      <span>{tour.duration || '--'}</span>
+                      <span style={{ color: '#c89d54', fontWeight: 600 }}>Rating: {tour.rating || '--'}</span>
                     </div>
 
                     <h3
@@ -803,17 +810,17 @@ export default function ToursPage({ currentPath = '/series-retreat', onNavigate,
                         cursor: 'pointer'
                       }}
                     >
-                      {tour.title}
+                      {tour.title || '--'}
                     </h3>
 
                     <p style={{ fontSize: '17px', color: '#6b5e52', margin: '0 0 18px 0', lineHeight: 1.6, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                      {tour.subtitle}
+                      {tour.subtitle || '--'}
                     </p>
                   </div>
 
                   <div style={{ paddingTop: '18px', borderTop: '1px solid rgba(26,23,20,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <span style={{ fontSize: '18px', fontWeight: 600, color: '#1a1714' }}>
-                      {tour.price.toLocaleString('vi-VN')} VNĐ
+                      {tour.price > 0 ? `${tour.price.toLocaleString('vi-VN')} VNĐ` : '--'}
                     </span>
                     {tour.originalPrice && tour.originalPrice > tour.price && (
                       <span style={{ fontSize: '12px', color: '#94a3b8', textDecoration: 'line-through', fontWeight: 400, marginLeft: '6px' }}>{tour.originalPrice.toLocaleString('vi-VN')}</span>

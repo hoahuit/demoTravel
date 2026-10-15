@@ -9,7 +9,15 @@ interface AdminSettingsManagerProps {
 
 export default function AdminSettingsManager({ settingsState, setSettingsState, toast }: AdminSettingsManagerProps) {
   const handleSaveSettings = () => {
-    toast.success('Đã lưu cấu hình hệ thống!');
+    try {
+      localStorage.setItem('4u_app_settings', JSON.stringify(settingsState));
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('app-settings-updated', { detail: settingsState }));
+      }
+      toast.success('Đã lưu cấu hình hệ thống thành công!');
+    } catch {
+      toast.error('Không thể lưu cấu hình vào bộ nhớ!');
+    }
   };
 
   return (
@@ -29,7 +37,7 @@ export default function AdminSettingsManager({ settingsState, setSettingsState, 
             Cấu Hình Hệ Thống
           </h1>
           <p style={{ margin: '4px 0 0 0', fontSize: '13.5px', color: '#64748b' }}>
-            Thiết lập thông tin liên hệ, hotline hỗ trợ, email quản trị và cấu hình SEO cho toàn bộ website.
+            Thiết lập thông tin liên hệ, hotline hỗ trợ, email quản trị và chế độ thiết kế lịch trình riêng cho khách.
           </p>
         </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -87,14 +95,88 @@ export default function AdminSettingsManager({ settingsState, setSettingsState, 
       </div>
 
       <div style={{ backgroundColor: '#ffffff', borderRadius: '16px', padding: '28px', border: '1px solid rgba(6, 27, 14, 0.08)' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {/* CUSTOM TOUR DESIGN TOGGLE */}
+          <div style={{
+            padding: '20px',
+            borderRadius: '12px',
+            backgroundColor: settingsState.enableCustomTourDesign ? '#f0fdf4' : '#f8fafc',
+            border: settingsState.enableCustomTourDesign ? '1.5px solid #86efac' : '1.5px solid #e2e8f0',
+            transition: 'all 0.2s ease'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, minWidth: '260px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <span style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    color: settingsState.enableCustomTourDesign ? '#15803d' : '#64748b',
+                    letterSpacing: '0.05em'
+                  }}>
+                    {settingsState.enableCustomTourDesign ? '✓ Chế Độ Tự Thiết Kế Tour' : '• Chế Độ Form Điền Nhanh'}
+                  </span>
+                </div>
+                <strong style={{ fontSize: '15px', color: '#0f172a', display: 'block', marginBottom: '4px' }}>
+                  Chế Độ Khách Hàng Thiết Kế Lịch Trình Riêng (Custom Tour Builder)
+                </strong>
+                <p style={{ margin: 0, fontSize: '13px', color: '#475569', lineHeight: 1.5 }}>
+                  {settingsState.enableCustomTourDesign ? (
+                    <span>
+                      <strong>Đang BẬT:</strong> Khi khách hàng vào tab <em>"Thiết Kế Lịch Trình Riêng"</em>, họ sẽ thấy Form tự lên lịch trình độc bản (tên tour, điểm đến, thời lượng, ngân sách, lịch trình theo ngày). Dữ liệu sẽ <strong>lưu trực tiếp vào bảng Tour</strong> với đánh dấu <code style={{ backgroundColor: '#dcfce7', padding: '1px 5px', borderRadius: '4px', color: '#166534' }}>isCustomer=true</code> và ở trạng thái <code style={{ backgroundColor: '#fee2e2', padding: '1px 5px', borderRadius: '4px', color: '#991b1b' }}>isAdminApproved=false</code> (chờ Admin duyệt).
+                    </span>
+                  ) : (
+                    <span>
+                      <strong>Đang TẮT (Mặc định):</strong> Khách hàng điền form liên hệ nhanh (Họ tên, SĐT, Vùng miền, Số khách, Ghi chú) lưu vào danh sách yêu cầu tư vấn CRM.
+                    </span>
+                  )}
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <label style={{ display: 'inline-flex', alignItems: 'center', cursor: 'pointer', userSelect: 'none', gap: '10px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: settingsState.enableCustomTourDesign ? '#166534' : '#64748b' }}>
+                    {settingsState.enableCustomTourDesign ? 'BẬT' : 'TẮT'}
+                  </span>
+                  <input
+                    type="checkbox"
+                    checked={Boolean(settingsState.enableCustomTourDesign)}
+                    onChange={(e) => setSettingsState({ ...settingsState, enableCustomTourDesign: e.target.checked })}
+                    style={{ display: 'none' }}
+                  />
+                  <div style={{
+                    width: '46px',
+                    height: '24px',
+                    borderRadius: '999px',
+                    backgroundColor: settingsState.enableCustomTourDesign ? '#16a34a' : '#cbd5e1',
+                    position: 'relative',
+                    transition: 'background-color 0.2s ease',
+                    boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'
+                  }}>
+                    <div style={{
+                      width: '18px',
+                      height: '18px',
+                      borderRadius: '50%',
+                      backgroundColor: '#ffffff',
+                      position: 'absolute',
+                      top: '3px',
+                      left: settingsState.enableCustomTourDesign ? '25px' : '3px',
+                      transition: 'left 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
+                    }} />
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
           <div>
             <label style={{ fontSize: '13px', fontWeight: 700, color: '#081f13', marginBottom: '6px', display: 'block' }}>Hotline Hỗ Trợ Khách Hàng</label>
             <input
               type="text"
               value={settingsState.supportHotline || ''}
               onChange={(e) => setSettingsState({ ...settingsState, supportHotline: e.target.value })}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '14px' }}
+              style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '14px', boxSizing: 'border-box' }}
             />
           </div>
 
@@ -104,7 +186,7 @@ export default function AdminSettingsManager({ settingsState, setSettingsState, 
               type="email"
               value={settingsState.adminEmail || ''}
               onChange={(e) => setSettingsState({ ...settingsState, adminEmail: e.target.value })}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '14px' }}
+              style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '14px', boxSizing: 'border-box' }}
             />
           </div>
 
@@ -114,7 +196,7 @@ export default function AdminSettingsManager({ settingsState, setSettingsState, 
               type="text"
               value={settingsState.seoTitle || ''}
               onChange={(e) => setSettingsState({ ...settingsState, seoTitle: e.target.value })}
-              style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '14px' }}
+              style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(6, 27, 14, 0.15)', fontSize: '14px', boxSizing: 'border-box' }}
             />
           </div>
         </div>

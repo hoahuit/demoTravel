@@ -60,6 +60,9 @@ export default function UuDaiGioChotSection({ onOpenBooking, onNavigate }: UuDai
 
   // Filter tours for Ưu Đãi Giờ Chót (only explicit category 'uu-dai-gio-chot' / 'last-minute' or isPromotion)
   const promoTours = tours.filter((tour) => {
+    if (tour.isAdminApproved === false || (tour as any).isAdminAprove === false) {
+      return false;
+    }
     const cats = Array.isArray(tour.categories)
       ? tour.categories
       : (typeof tour.categories === 'string' ? JSON.parse(tour.categories || '[]') : []);
