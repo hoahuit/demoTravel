@@ -414,7 +414,7 @@ export default function AdminCustomToursManager({
                       </div>
                       {item.budgetPerPerson && (
                         <div style={{ fontSize: '12px', color: '#059669', fontWeight: 600, marginTop: '2px' }}>
-                          Ngân sách: {Number(item.budgetPerPerson).toLocaleString('vi-VN')} ₫/khách
+                          Ngân sách: {isNaN(Number(item.budgetPerPerson)) ? item.budgetPerPerson : `${Number(item.budgetPerPerson).toLocaleString('vi-VN')} ₫/khách`}
                         </div>
                       )}
                     </td>

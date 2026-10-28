@@ -89,7 +89,7 @@ export default function CustomerTourDesignerForm({
   // 9. Hãng Hàng Không
   const [airline, setAirline] = useState<string>('');
 
-  // 10. Ngân Sách Ước Tính / Khách (₫)
+  // 10. Ngân Sách Ước Tính / Khách
   const [budgetPerPerson, setBudgetPerPerson] = useState<string>('');
 
   // 11. Quy mô / Số khách
@@ -110,15 +110,9 @@ export default function CustomerTourDesignerForm({
     }
   ]);
 
-  // Handle format tiền tệ tự động cho ngân sách
+  // Nhận text ngân sách tự do (hỗ trợ nhập nhiều loại tiền tệ: $, USD, VNĐ...)
   const handleBudgetChange = (val: string) => {
-    const digitsOnly = val.replace(/\D/g, '');
-    if (!digitsOnly) {
-      setBudgetPerPerson('');
-      return;
-    }
-    const formatted = Number(digitsOnly).toLocaleString('vi-VN');
-    setBudgetPerPerson(formatted);
+    setBudgetPerPerson(val);
   };
 
   const handleAddDay = () => {
@@ -241,7 +235,7 @@ export default function CustomerTourDesignerForm({
           `Khách hàng: ${customerName.trim() || '--'}`,
           `Số điện thoại: ${customerPhone.trim() || '--'}`,
           `Email: ${customerEmail.trim() || '--'}`,
-          `Ngân sách ước tính: ${parsedPrice > 0 ? parsedPrice.toLocaleString('vi-VN') + ' ₫ / khách' : '--'}`,
+          `Ngân sách ước tính: ${budgetPerPerson.trim() || '--'}`,
           `Khách sạn mong muốn: ${hotel.trim() || '--'}`,
           `Phương tiện di chuyển: ${transportation.trim() || '--'}`,
           `Hãng hàng không: ${airline.trim() || '--'}`,
@@ -291,42 +285,30 @@ export default function CustomerTourDesignerForm({
         </div>
 
         <span style={{
-          fontSize: '11px',
+          fontSize: '26px',
           fontWeight: 800,
           color: '#059669',
-          letterSpacing: '0.14em',
-          textTransform: 'uppercase',
           marginBottom: '8px'
         }}>
-          BẢN THIẾT KẾ ĐÃ ĐƯỢC TIẾP NHẬN
+          Bản thiết kế đã được tiếp nhận
         </span>
 
-        <h3 style={{
-          fontFamily: "'Playfair Display', Georgia, serif",
-          fontSize: '26px',
-          fontWeight: 700,
-          color: '#081f13',
-          margin: '0 0 16px 0',
-          lineHeight: 1.3
-        }}>
-          Hành Trình Độc Bản Của Bạn Đang Chờ Phê Duyệt!
-        </h3>
 
         <div style={{
           backgroundColor: 'transparent',
           border: '1px solid rgba(16, 32, 27, 0.15)',
           borderRadius: '14px',
           padding: '20px 24px',
-          maxWidth: '560px',
+          maxWidth: '580px',
           width: '100%',
           margin: '0 auto 24px auto',
           textAlign: 'left'
         }}>
           <div style={{ fontSize: '13.5px', color: '#475569', marginBottom: '8px' }}>
-            <strong>Mã Tour Thiết Kế:</strong> <code style={{ color: '#0f766e', fontWeight: 700, backgroundColor: '#f0fdf4', padding: '2px 8px', borderRadius: '4px' }}>{createdTourCode}</code>
+            <strong>Retreat thiết kế:</strong> <code style={{ color: '#0f766e', fontWeight: 700, backgroundColor: '#f0fdf4', padding: '2px 8px', borderRadius: '4px' }}>{createdTourCode}</code>
           </div>
           <div style={{ fontSize: '13.5px', color: '#475569', marginBottom: '8px' }}>
-            <strong>Tên Tour:</strong> {title}
+            <strong>Tên Retreat:</strong> {title}
           </div>
           <div style={{ fontSize: '13.5px', color: '#475569', marginBottom: '8px' }}>
             <strong>Điểm Đến & Quốc Gia:</strong> {getEffectiveCity() || '--'} • {country || 'Việt Nam'}
@@ -338,21 +320,20 @@ export default function CustomerTourDesignerForm({
             <strong>Khách Sạn & Phương Tiện:</strong> {hotel || '--'} • {transportation || '--'}
           </div>
           <div style={{ fontSize: '13.5px', color: '#475569', marginBottom: '8px' }}>
-            <strong>Ngân sách ước tính:</strong> {budgetPerPerson ? `${budgetPerPerson} ₫ / khách` : '--'}
+            <strong>Ngân sách ước tính:</strong> {budgetPerPerson.trim() || '--'}
           </div>
-          <div style={{ fontSize: '13.5px', color: '#475569' }}>
-            <strong>Trạng thái:</strong> <span style={{ color: '#d97706', fontWeight: 700 }}>⏳ Đã lưu vào danh sách Tour (Chờ Admin phê duyệt xuất bản)</span>
-          </div>
+
         </div>
 
         <p style={{
           fontSize: '14px',
           color: '#525a54',
-          maxWidth: '540px',
-          lineHeight: 1.65,
+          maxWidth: '580px',
+          width: '100%',
           margin: '0 0 28px 0'
         }}>
-          Cảm ơn Quý khách <strong>{customerName}</strong>. Ban chuyên môn tĩnh dưỡng 4U Retreat sẽ xem xét các yêu cầu của quý khách và liên hệ qua số <strong>{customerPhone}</strong> để phê duyệt và xuất bản hành trình lên website.
+          Cảm ơn Quý khách <strong>{customerName}</strong>.4U sẽ liên hệ Quý khách để xác nhận đặt Retreat trong 24 giờ
+          .
         </p>
 
         {onClose && (
@@ -655,17 +636,17 @@ export default function CustomerTourDesignerForm({
             <div>
               <label className="custom-designer-label">
                 <DollarSign size={14} color="#059669" />
-                <span>Ngân Sách Ước Tính / Khách (₫)</span>
+                <span>Ngân Sách Ước Tính / Khách</span>
               </label>
               <input
                 type="text"
                 className="custom-designer-input"
                 value={budgetPerPerson}
                 onChange={(e) => handleBudgetChange(e.target.value)}
-                placeholder="Ví dụ: 8.500.000 (để trống: --)"
+                placeholder="Ví dụ: 8.500.000 VNĐ, $500, 1.000 USD... (để trống: --)"
               />
               <span style={{ fontSize: '11px', color: '#64748b', display: 'block', marginTop: '4px' }}>
-                {budgetPerPerson ? `Dự kiến: ${budgetPerPerson} ₫ / khách` : 'Chưa nhập sẽ hiển thị: --'}
+                {budgetPerPerson.trim() ? `Dự kiến: ${budgetPerPerson.trim()}` : 'Chưa nhập sẽ hiển thị: --'}
               </span>
             </div>
           </div>
