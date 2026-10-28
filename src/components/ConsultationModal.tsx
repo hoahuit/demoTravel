@@ -549,10 +549,10 @@ export default function ConsultationModal({
                         margin: '0 0 4px 0',
                         lineHeight: 1.2
                       }}>
-                        May Đo Lịch Trình Riêng
+                        Thiết kế Lịch trình riêng
                       </h2>
                       <p style={{ fontSize: '13px', color: '#405246', margin: 0, lineHeight: 1.4 }}>
-                        Thiết kế chuyến đi độc bản theo số lượng khách, điểm đến và phong cách tĩnh dưỡng riêng của bạn.
+                        Tạo Retreat theo cách của Quý khách theo số lượng khách, điểm đến và phong cách tĩnh dưỡng riêng của bạn.
                       </p>
                     </div>
                   )}

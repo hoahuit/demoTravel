@@ -85,15 +85,9 @@ export default function CustomerTourDesignerDrawer({
 
   if (!isOpen) return null;
 
-  // Format số tiền tự động có dấu chấm phân cách hàng nghìn
+  // Nhận text ngân sách tự do (hỗ trợ nhập nhiều loại tiền tệ: $, USD, VNĐ...)
   const handleBudgetChange = (val: string) => {
-    const digitsOnly = val.replace(/\D/g, '');
-    if (!digitsOnly) {
-      setBudgetPerPerson('');
-      return;
-    }
-    const formatted = Number(digitsOnly).toLocaleString('vi-VN');
-    setBudgetPerPerson(formatted);
+    setBudgetPerPerson(val);
   };
 
   const handleAddDay = () => {
@@ -207,7 +201,7 @@ export default function CustomerTourDesignerDrawer({
           `Khách hàng: ${customerName.trim() || '--'}`,
           `Số điện thoại: ${customerPhone.trim() || '--'}`,
           `Email: ${customerEmail.trim() || '--'}`,
-          `Ngân sách ước tính: ${parsedPrice > 0 ? parsedPrice.toLocaleString('vi-VN') + ' ₫ / khách' : '--'}`,
+          `Ngân sách ước tính: ${budgetPerPerson.trim() || '--'}`,
           `Yêu cầu riêng: ${specialNotes.trim() || '--'}`
         ],
         rating: 5.0,
@@ -468,7 +462,7 @@ export default function CustomerTourDesignerDrawer({
                   marginBottom: '8px'
                 }}
               >
-                BẢN THIẾT KẾ ĐÃ ĐƯỢC TIẾP NHẬN
+                Bản thiết kế đã được tiếp nhận
               </span>
 
               <h3
@@ -504,7 +498,7 @@ export default function CustomerTourDesignerDrawer({
                   <strong>Tên Tour:</strong> {title}
                 </div>
                 <div style={{ fontSize: '13.5px', color: '#475569', marginBottom: '8px' }}>
-                  <strong>Ngân sách ước tính:</strong> {budgetPerPerson ? `${budgetPerPerson} ₫ / khách` : '--'}
+                  <strong>Ngân sách ước tính:</strong> {budgetPerPerson.trim() || '--'}
                 </div>
                 <div style={{ fontSize: '13.5px', color: '#475569' }}>
                   <strong>Trạng thái:</strong> <span style={{ color: '#d97706', fontWeight: 700 }}>⏳ Đã lưu vào danh sách Tour (Chờ Admin phê duyệt xuất bản)</span>
@@ -550,7 +544,7 @@ export default function CustomerTourDesignerDrawer({
             /* ── FORM SECTIONS ── */
             <form id="customer-tour-designer-drawer-form" onSubmit={handleSubmit}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                
+
                 {/* BANNER THÔNG BÁO QUY TRÌNH & NGUYÊN TẮC NHẬP GÌ HIỂN THỊ NẤY */}
                 <div
                   style={{
@@ -699,17 +693,17 @@ export default function CustomerTourDesignerDrawer({
                     <div>
                       <label className="luxury-label">
                         <DollarSign size={14} color="#059669" />
-                        <span>Ngân Sách Ước Tính / Khách (₫)</span>
+                        <span>Ngân Sách Ước Tính / Khách</span>
                       </label>
                       <input
                         type="text"
                         className="luxury-input-field"
                         value={budgetPerPerson}
                         onChange={(e) => handleBudgetChange(e.target.value)}
-                        placeholder="Nhập số tiền (VD: 8.500.000)"
+                        placeholder="Ví dụ: 8.500.000 VNĐ, $500, 1.000 USD... (để trống: --)"
                       />
                       <span style={{ fontSize: '11px', color: '#64748b', display: 'block', marginTop: '5px' }}>
-                        {budgetPerPerson ? `Dự kiến: ${budgetPerPerson} ₫ / người` : 'Chưa nhập sẽ hiển thị: --'}
+                        {budgetPerPerson.trim() ? `Dự kiến: ${budgetPerPerson.trim()}` : 'Chưa nhập sẽ hiển thị: --'}
                       </span>
                     </div>
 
@@ -957,7 +951,7 @@ export default function CustomerTourDesignerDrawer({
                 Hành trình: <strong style={{ color: '#0f172a' }}>{itineraryDays.length} Ngày</strong> • Điểm đến: <strong style={{ color: '#0f172a' }}>{city.trim() || '--'}</strong>
               </span>
               <span style={{ fontSize: '13px', color: '#059669', fontWeight: 700 }}>
-                {budgetPerPerson ? `Ngân sách: ${budgetPerPerson} ₫ / người` : 'Ngân sách: --'}
+                {budgetPerPerson.trim() ? `Ngân sách: ${budgetPerPerson.trim()}` : 'Ngân sách: --'}
               </span>
             </div>
 
